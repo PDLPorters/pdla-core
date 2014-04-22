@@ -54,6 +54,7 @@ $PDLA::toolongtoprint = 10000;  # maximum pdl size to stringify for printing
 *at		= \&PDLA::at;	  *flows	= \&PDLA::flows;
 *sclr           = \&PDLA::sclr;    *shape        = \&PDLA::shape;
 
+
 for (map {
   [ PDLA::Types::typefld($_,'convertfunc'), PDLA::Types::typefld($_,'numval') ]
 } PDLA::Types::typesrtkeys()) {
@@ -61,7 +62,7 @@ for (map {
   no strict 'refs';
   *$conv = *{"PDLA::$conv"} = sub {
     return bless [$val], "PDLA::Type" unless @_;
-    convert(alltopdl('PDLA', (scalar(@_)>1 ? [@_] : shift)), $val);
+    alltopdl('PDLA', (scalar(@_)>1 ? [@_] : shift), PDLA::Type->new($val));
   };
 }
 
@@ -2197,6 +2198,10 @@ sub PDLA::topdl {
 # Convert everything to PDLA if not blessed
 
 sub alltopdl {
+    if (ref $_[2] eq 'PDLA::Type') {
+      return convert($_[1], $_[2]) if blessed($_[1]);
+      return $_[0]->new($_[2], $_[1]) if $_[0] eq 'PDLA';
+    }
     return $_[1] if blessed($_[1]); # Fall through
     return $_[0]->new($_[1]);
 0;}
