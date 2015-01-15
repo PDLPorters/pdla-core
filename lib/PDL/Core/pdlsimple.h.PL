@@ -2,8 +2,9 @@
 
 use Config;
 use File::Basename qw(&basename &dirname);
+use lib 'lib';
 
-require 'Types.pm';
+require PDL::Types;
 my $PDL_DATATYPES = PDL::Types::datatypes_header();
 
 # List explicitly here the variables you want Configure to

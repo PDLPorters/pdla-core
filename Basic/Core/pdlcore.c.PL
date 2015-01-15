@@ -6,18 +6,15 @@ use strict;
 use Config;
 use File::Basename qw(&basename &dirname);
 
-require 'Dev.pm'; PDL::Core::Dev->import;
+use PDL::Core::Dev;
 use vars qw( %PDL_DATATYPES );
 
 # check for bad value support
-require './Config.pm'; # to load the PDL not the Perl one
+use PDL::Config;
 die "No PDL::Config found" unless %PDL::Config;
 my $bvalflag = $PDL::Config{WITH_BADVAL};
 my $usenan = $PDL::Config{BADVAL_USENAN};
-require 'Types.pm';
-PDL::Types->import(':All');
-
-
+use PDL::Types ':All';
 
 # This forces PL files to create target in same directory as PL file.
 # This is so that make depend always knows where to find PL derivatives.

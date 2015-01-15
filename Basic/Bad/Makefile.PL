@@ -27,9 +27,7 @@ if ( $bvalflag ) {
 print "\n";
 
 my @pack = (["bad.pd",qw(Bad PDL::Bad)]);
-
 my %hash = pdlpp_stdargs_int(@pack);
-
 #$hash{LIBS} = ['-lm'];
 
 undef &MY::postamble; # suppress warning

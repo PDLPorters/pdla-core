@@ -337,7 +337,7 @@ iscontig(x)
     RETVAL
 
 # using "perl" not $^X because that doesn't work on "perl in space"
-INCLUDE_COMMAND: perl -e "require q{Dev.pm}; PDL::Core::Dev::generate_core_flags()"
+INCLUDE_COMMAND: perl -e "require q{../../lib/PDL/Core/Dev.pm}; PDL::Core::Dev::generate_core_flags()"
 
 #if 0
 =begin windows_mmap

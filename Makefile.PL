@@ -3,11 +3,11 @@ use warnings;
 
 # using absolute path to make it valid also for Makefile.PL files in subdirectories
 use Cwd;
-use lib Cwd::abs_path('inc');
+use lib Cwd::abs_path('lib'), Cwd::abs_path('inc');
 
 use Devel::CheckLib;
 use 5.010_000;
-use ExtUtils::MakeMaker 6.56;  # for CONFIGURE_REQUIRES support
+use ExtUtils::MakeMaker 7.05_07;  # for XSMULTI
 use Config;
 use File::Spec;
 
@@ -92,7 +92,7 @@ unless $ENV{PDL_INC_OK};
 # and historically this has been done by directly accessing %PDL_CONFIG
 # (or %::PDL_CONFIG) variable. However, there are times that this information
 # is also needed during the actual build (ie 'make' cycle), at which point
-# the variable is not available. However Basic/Core/Config.pm is available,
+# the variable is not available. However lib/PDL/Config.pm is available,
 # but this uses the %PDL::Config variable to access the data.
 #
 # So, we try to avoid this dichotomy by creating a %PDL::Config during
@@ -225,12 +225,12 @@ sub check_f77conf {
 }
 
 sub make_Version_pm {
-  # Get Version from Basic/PDL.pm and generated Basic/Core/Version.pm from it
-  require 'Basic/PDL.pm';
+  # Get VERSION from lib/PDL.pm and generate lib/PDL/Version.pm from it
+  require 'lib/PDL.pm';
   # keep version info in $PDL::Config
   $PDL::Config{PDL_BUILD_VERSION} = "$PDL::VERSION";
 
-  my $versionFile = 'Basic/Core/Version.pm';
+  my $versionFile = 'lib/PDL/Version.pm';
   open my $fh, ">", $versionFile or
     die("Can't Open '$versionFile' for Writing!\n");
   print $fh <<"EOVF";
@@ -247,13 +247,13 @@ EOVF
 
 sub make_Types_pm {
   # make sure we have Types.pm ready for prime time
-  die "Types.pm.PL not found in Basic/Core"
-    unless -f 'Basic/Core/Types.pm.PL';
+  die "Types.pm.PL not found in lib/PDL"
+    unless -f 'lib/PDL/Types.pm.PL';
   my $usebvals = $PDL::Config{WITH_BADVAL} ? "BADVALS=1" : "";
-  system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', $usebvals);
-  unless ( -f 'Basic/Core/Types.pm' ) {
-     warn "system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', $usebvals) was run...\n";
-     die "error creating Basic/Core/Types.pm";
+  system( $Config{perlpath}, 'lib/PDL/Types.pm.PL', $usebvals);
+  unless ( -f 'lib/PDL/Types.pm' ) {
+     warn "system( $Config{perlpath}, 'lib/PDL/Types.pm.PL', $usebvals) was run...\n";
+     die "error creating lib/PDL/Types.pm";
   }
 }
 
@@ -275,9 +275,9 @@ sub myformat {
 }
 
 sub make_PDL_Config_pm {
-  print "Writing Basic/Core/Config.pm\n";
+  print "Writing lib/PDL/Config.pm\n";
 
-  my $versionFile = "Basic/Core/Config.pm";
+  my $versionFile = "lib/PDL/Config.pm";
   open my $fh, ">", $versionFile
     or die "Couldn't open $versionFile for writing";
   print $fh "
@@ -376,22 +376,19 @@ make_Types_pm();
 # this will make PDL::Core::Dev's functions available
 # in Makefile.PL files in all subdirectories
 # IMPORTANT: it has to be after make_Types_pm()
-require "Basic/Core/Dev.pm"; PDL::Core::Dev->import();
+require "PDL/Core/Dev.pm"; PDL::Core::Dev->import();
 
 # only perform one test if required modules are missing
 # the test will print an informational message and fail
 my %notestsifmodulesmissing = @hasnt ? # are any required modules missing ?
   (test => {TESTS => 't/requiredmods.t'}) : ();
 
-my @podpms = map { $_.".pod", '$(INST_LIBDIR)/PDL/' . $_ .".pod"}
-  qw/Bugs/;
-
 my @prereq = (
 	   'Astro::FITS::Header' => 0,
            'Carp'                => 0,         # Need to run
            'Convert::UU'         => 0,         # for PDL::IO::Dumper
            'Data::Dumper'        => 2.121,     # for PDL::IO::Dumper
-           'ExtUtils::MakeMaker' => 6.56,      # for CONFIGURE_REQUIRES support
+           'ExtUtils::MakeMaker' => 7.05_07,   # XSMULTI
 	   'File::Map'           => 0.57,      # test new mmap implementation
 	   'File::Spec'          => 0.6,
 	   'File::Temp'          => 0,
@@ -409,13 +406,13 @@ my @prereq = (
 
 # add OpenGL version dependency for CPAN to follow
 push @prereq, ('OpenGL' => $PDL::Config{POGL_VERSION}) if $PDL::Config{USE_POGL};
-
 # push @prereq, ('ExtUtils::F77' => 1.10) unless $seen_f77conf;
 
-my @exe_files = qw(perldl pdldoc);
-push @exe_files, "pdl$Config{exe_ext}" if $^O !~ /MSWin/;
-my @cleanup = ("pdl$Config{exe_ext}", qw(
-    pdldoc.db pdldoc.pod perldl.pod Changes.new
+my @exe_files = map "bin/$_", qw(perldl pdldoc pptemplate);
+my $pdlexe = "bin/pdl$Config{exe_ext}";
+push @exe_files, $pdlexe if $^O !~ /MSWin/;
+my @cleanup = ($pdlexe, qw(
+    bin/pdldoc.db Changes.new
     t/callext$(OBJ_EXT) t/callext.$(DLEXT)
 ));
 
@@ -432,55 +429,61 @@ my $preop = '';
 $preop .= q[git log --stat --since='29 Apr 2009' > Changes.new && $(MV) Changes.new $(DISTVNAME)/Changes] if $^O ne 'MSWin32';
 
 my %makefile_hash = (
-	      'PREREQ_PM' => { @prereq },
-              'CONFIGURE_REQUIRES' => {
-                'Devel::CheckLib' => 1.01,
-                'Carp'            => 1.20,    # EU::MM seems to need this not to crash
-                'ExtUtils::MakeMaker' => 6.56,
-              },
-              TEST_REQUIRES => {
-                'CPAN::Meta' => '2.120900',
-                'Test::Exception' => 0,
-              },
-              BUILD_REQUIRES => {
-                'ExtUtils::MakeMaker' => 0,
-                'ExtUtils::ParseXS' => 3.01, # avoids 2.21, known broken
-              },
-              'MIN_PERL_VERSION' => '5.010',
-	      'NAME' => 'PDL',
-	      'VERSION_FROM' => 'Basic/Core/Version.pm',
-	      'EXE_FILES' => \@exe_files,
-	      'PM' => { @podpms }, #so that the script docs are picked up
-              'META_MERGE' => {
-                 resources => {
-                    homepage => 'http://pdl.perl.org/',
-                    bugtracker  => 'http://sourceforge.net/p/pdl/bugs/',
-                    repository  => {
-                       url => 'git://git.code.sf.net/p/pdl/code',
-                       type => 'git',
-                       web => 'http://sourceforge.net/p/pdl/code/ci/master/tree/',
-                    },
-                 },
-              },
-	      'OPTIMIZE'  => $PDL::Config{OPTIMIZE} || $Config{optimize},
-	      'CCFLAGS' => $ccflags,
-	      'dist'     => { COMPRESS => 'gzip',
-                              SUFFIX   => 'gz',
-                              ($preop ? (PREOP => $preop) : ()), },
-	      'clean' => {
-		'FILES' => join ' ', @cleanup, qw(
-                  tbyte.tif tmp0 tmp0.hdr tushort.tif
-                  MANIFEST.bak tmp1* tmpraw* t/tmpraw* t/tmp1*
-                  _Inline/ .inlinepdlpp/ .inlinewith/ *.xfig
-                ),
-              },
-	      'realclean' => {'FILES' => 'Basic/Core/Config.pm'},
-              'AUTHOR' => 'PerlDL Developers (perldl@jach.hawaii.edu)',
-              'ABSTRACT' => 'Perl Data Language',
-              'BINARY_LOCATION' => 'PDL.tar.gz',
+  'PREREQ_PM' => { @prereq },
+  'CONFIGURE_REQUIRES' => {
+    'Carp'            => 1.20, # EU::MM seems to need this not to crash
+    'Devel::CheckLib' => 1.01,
+    'ExtUtils::MakeMaker' => 7.05_07,
+  },
+  BUILD_REQUIRES => {
+    'ExtUtils::MakeMaker' => 0,
+    'ExtUtils::ParseXS' => 3.01, # avoids 2.21, known broken
+  },
+  TEST_REQUIRES => {
+    'CPAN::Meta' => '2.120900',
+    'Test::Exception' => 0,
+  },
+  'NAME' => 'PDL',
+  'VERSION_FROM' => 'lib/PDL/Version.pm',
+  'EXE_FILES' => \@exe_files,
+  'MIN_PERL_VERSION' => '5.010',
+  'META_MERGE' => {
+     resources => {
+        homepage => 'http://pdl.perl.org/',
+        bugtracker  => 'http://sourceforge.net/p/pdl/bugs/',
+        repository  => {
+           url => 'git://git.code.sf.net/p/pdl/code',
+           type => 'git',
+           web => 'http://sourceforge.net/p/pdl/code/ci/master/tree/',
+        },
+     },
+  },
+  'OPTIMIZE'  => $PDL::Config{OPTIMIZE} || $Config{optimize},
+  'CCFLAGS' => $ccflags,
+  'dist'     => {
+    COMPRESS => 'gzip',
+    SUFFIX   => 'gz',
+    ($preop ? (PREOP => $preop) : ()),
+  },
+  'clean' => {
+    'FILES' => join ' ', @cleanup, qw(
+      tbyte.tif tmp0 tmp0.hdr tushort.tif
+      MANIFEST.bak tmp1* tmpraw* t/tmpraw* t/tmp1*
+      _Inline/ .inlinepdlpp/ .inlinewith/ *.xfig
+    ),
+  },
+  'realclean' => {
+    'FILES' => join ' ', map "lib/PDL/$_", qw(
+      Config.pm Types.pm Version.pm Doc/Config.pm PP/Dump.pm
+      Core/pdl.h Core/pdlcore.h Core/pdlsimple.h
+    )
+  },
+  'AUTHOR' => 'PerlDL Developers (perldl@jach.hawaii.edu)',
+  'ABSTRACT' => 'Perl Data Language',
+  'BINARY_LOCATION' => 'PDL.tar.gz',
 
-	      %notestsifmodulesmissing,
-    );
+  %notestsifmodulesmissing,
+);
 
 =begin comment
 
@@ -514,12 +517,42 @@ WriteMakefile(%makefile_hash);
 # are set by the recursively called Makefile.PLs
 make_PDL_Config_pm(); # write out config to PDL::Config
 
-# Extra build target to build the doc database
+sub make_from_PL {
+    my ($head, $extradeps) = @_;
+    $extradeps //= '';
+    sprintf <<'EOF', $head, "$head.PL $extradeps", "$head.PL $head";
+%s :: %s
+	$(PERLRUNINST) %s
+
+EOF
+}
+
 sub MY::postamble {
   my ($self) = @_;
   package MY;
-  my  $text =
-'
+  my @m = PDL::Core::Dev::postamble() . "\n\n";
+  push @m, ::make_from_PL('lib/PDL/Core/pdl.h', 'lib/PDL/Types.pm');
+  push @m, map { ::make_from_PL("lib/PDL/Core/$_", 'lib/PDL/Types.pm') }
+    qw( pdlsimple.h pdlcore.h );
+  if (!$self->is_make_type('dmake')) {
+    push @m, <<'EOF';
+# Bits of C code we generate from special perl scripts
+# there must be a more elegant way of saying that
+# certain files have additional dependencies!
+lib/PDL/Core/pdlthread.c :: lib/PDL/Core/pdlcore.h
+lib/PDL/Core/pdlhash.c :: lib/PDL/Core/pdlcore.h
+lib/PDL/Core/pdlapi.c :: lib/PDL/Core/pdlcore.h
+lib/PDL/Core/pdlmagic.c :: lib/PDL/Core/pdlcore.h
+
+EOF
+    push @m, map { ::make_from_PL("lib/PDL/Core/$_", 'lib/PDL/Types.pm') }
+      qw( pdlsimple.h pdlconv.c pdlcore.c );
+    push @m, map { ::make_from_PL("Basic/Core/$_") }
+      qw( pdlcore.c );
+  }
+
+  # Extra build target to build the doc database
+  my $text = '
 doctest ::
 	$(NOECHO) $(ECHO) "doctest: Building PDL documentation database in blib ..."
 	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl
@@ -550,13 +583,14 @@ doc_perl_install ::
   } else {
     $text=~ s/\%HTML\%//og; # Remove just %HTML% markers
   }
+  push @m, $text;
 
 $text .= <<EOT if $^O !~ /MSWin/;
-pdl$Config::Config{exe_ext} : pdl.c
+bin/pdl$Config::Config{exe_ext} : bin/pdl.c
 	\$(CC) \$< -o \$\@
 EOT
 
-$text .= << 'EOT' if $^O =~ /MSWin/;
+  push @m, << 'EOT' if $^O =~ /MSWin/;
 
 DISTWIN32NAME=$(DISTVNAME)-win32
 
@@ -609,8 +643,7 @@ coretest : core
 	prove -b $coretest
 EOF
 
-return $text
-
+  join '', @m;
 }
 
 # remove pdl.c from making EUMM think this dir has XS in it
@@ -620,6 +653,20 @@ sub MY::init_dirscan {
     $self->SUPER::init_dirscan;
     $self->{C} = [];
     $self->{O_FILES} = [];
+}
+
+sub MY::init_PM {
+  package MY;
+  my ($self) = @_;
+  $self->SUPER::init_PM;
+  for my $pm (keys %{ $self->{PM} }) {
+    next unless (my $nonPL = $pm) =~ s/\.PL$//;
+    $self->{PM}{$nonPL} = delete $self->{PM}{$pm};
+    $self->{PM}{$nonPL} =~ s/\.PL$//i;
+    $self->{realclean}{FILES} .= " $nonPL";
+    next if $nonPL =~ /Types\.pm/; # we do that ourselves already
+    $self->{PL_FILES}{$pm} = $nonPL;
+  }
 }
 
 # warn if vital modules are missing
