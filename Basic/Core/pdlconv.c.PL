@@ -6,7 +6,7 @@ use strict;
  
 use Config;
 use File::Basename qw(&basename &dirname);
-require './Dev.pm'; PDLA::Core::Dev->import;
+use PDLA::Core::Dev;
 my $sym2type = PDLA::Core::Dev::load_Types();
 
 # This forces PL files to create target in same directory as PL file.

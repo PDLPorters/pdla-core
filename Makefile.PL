@@ -3,7 +3,7 @@ use warnings;
 
 eval { require Devel::CheckLib; Devel::CheckLib->import; };
 use 5.010_000;
-use ExtUtils::MakeMaker 6.56;  # for CONFIGURE_REQUIRES support
+use ExtUtils::MakeMaker 7.05_07;  # for XSMULTI
 use Config;
 use File::Spec;
 
@@ -88,7 +88,7 @@ unless $ENV{PDLA_INC_OK};
 # and historically this has been done by directly accessing %PDLA_CONFIG
 # (or %::PDLA_CONFIG) variable. However, there are times that this information
 # is also needed during the actual build (ie 'make' cycle), at which point
-# the variable is not available. However Basic/Core/Config.pm is available,
+# the variable is not available. However lib/PDLA/Config.pm is available,
 # but this uses the %PDLA::Config variable to access the data.
 #
 # So, we try to avoid this dichotomy by creating a %PDLA::Config during
@@ -213,12 +213,12 @@ EOD
 }
 
 sub make_Version_pm {
-  # Get Version from Basic/PDLA.pm and generated Basic/Core/Version.pm from it
-  require './Basic/PDLA.pm';
+  # Get VERSION from lib/PDLA.pm and generate lib/PDLA/Version.pm from it
+  require './lib/PDLA.pm';
   # keep version info in $PDLA::Config
   $PDLA::Config{PDLA_BUILD_VERSION} = "$PDLA::VERSION";
 
-  my $versionFile = 'Basic/Core/Version.pm';
+  my $versionFile = 'lib/PDLA/Version.pm';
   open my $fh, ">", $versionFile or
     die("Can't Open '$versionFile' for Writing!\n");
   print $fh <<"EOVF";
@@ -235,12 +235,12 @@ EOVF
 
 sub make_Types_pm {
   # make sure we have Types.pm ready for prime time
-  die "Types.pm.PL not found in Basic/Core"
-    unless -f 'Basic/Core/Types.pm.PL';
-  system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', 'Basic/Core/Types.pm');
-  unless ( -f 'Basic/Core/Types.pm' ) {
-     warn "system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', 'Basic/Core/Types.pm') was run...\n";
-     die "error creating Basic/Core/Types.pm";
+  die "Types.pm.PL not found in lib/PDLA"
+    unless -f 'lib/PDLA/Types.pm.PL';
+  system( $Config{perlpath}, 'lib/PDLA/Types.pm.PL', 'lib/PDLA/Types.pm');
+  unless ( -f 'lib/PDLA/Types.pm' ) {
+     warn "system( $Config{perlpath}, 'lib/PDLA/Types.pm.PL', 'lib/PDLA/Types.pm') was run...\n";
+     die "error creating lib/PDLA/Types.pm";
   }
 }
 
@@ -262,8 +262,8 @@ sub myformat {
 }
 
 sub make_PDLA_Config_pm {
-  print "Writing Basic/Core/Config.pm\n";
-  my $versionFile = "Basic/Core/Config.pm";
+  print "Writing lib/PDLA/Config.pm\n";
+  my $versionFile = "lib/PDLA/Config.pm";
   require IO::Handle; # enable method calls on FHs
   open my $fh, ">", $versionFile
     or die "Couldn't open $versionFile for writing";
@@ -345,15 +345,12 @@ make_Types_pm();
 # this will make PDLA::Core::Dev's functions available
 # in Makefile.PL files in all subdirectories
 # IMPORTANT: it has to be after make_Types_pm()
-require "./Basic/Core/Dev.pm"; PDLA::Core::Dev->import();
+require "./lib/PDLA/Core/Dev.pm"; PDLA::Core::Dev->import();
 
 # only perform one test if required modules are missing
 # the test will print an informational message and fail
 my %notestsifmodulesmissing = @hasnt ? # are any required modules missing ?
   (test => {TESTS => 't/requiredmods.t'}) : ();
-
-my @podpms = map { $_.".pod", '$(INST_LIBDIR)/PDLA/' . $_ .".pod"}
-  qw/Bugs/;
 
 my @prereq = (
            'Convert::UU'         => 0,         # for PDLA::IO::Dumper
@@ -370,10 +367,11 @@ my @prereq = (
 	   'Text::Balanced'      => 1.89,      # for PDLA::NiceSlice
 	  );
 
-my @exe_files = qw(perldla pdladoc);
-push @exe_files, "pdla$Config{exe_ext}" if $^O !~ /MSWin/;
-my @cleanup = ("pdla$Config{exe_ext}", qw(
-    pdladoc.db pdladoc.pod perldla.pod Changes.new
+my @exe_files = map "bin/$_", qw(perldla pdladoc pptemplate);
+my $pdlaexe = "bin/pdla$Config{exe_ext}";
+push @exe_files, $pdlaexe if $^O !~ /MSWin/;
+my @cleanup = ($pdlaexe, qw(
+    bin/pdladoc.db Changes.new
 ));
 
 ##############################
@@ -391,77 +389,81 @@ my $preop = '$(PERL) -I$(INST_ARCHLIB) -I$(INST_LIB) -MPDLA::Core::Dev -e pdlpp_
 my @optimize = (OPTIMIZE => $PDLA::Config{OPTIMIZE}) if $PDLA::Config{OPTIMIZE};
 
 my %makefile_hash = (
-	      'PREREQ_PM' => { @prereq },
-              'LICENSE' => 'perl',
-              'CONFIGURE_REQUIRES' => {
-                'Devel::CheckLib' => 1.01,
-                'Carp'            => 1.20,    # EU::MM seems to need this not to crash
-                'ExtUtils::MakeMaker' => 6.56,
-                'File::Path'          => 0,
-                'ExtUtils::ParseXS'   => 3.01, # avoids 2.21, known broken
-              },
-              TEST_REQUIRES => {
-                'CPAN::Meta' => '2.120900',
-                'IPC::Cmd' => 0.72,
-                'Test::Exception' => 0,
-                'Test::Warn' => 0,  # for t/pptest.t
-                'Test::Deep' => 0,
-              },
-              BUILD_REQUIRES => {
-                'ExtUtils::MakeMaker' => 0,
-                'File::Path'          => 0,
-              },
-              'MIN_PERL_VERSION' => '5.010',
-	      'NAME' => 'PDLA::Core',
-	      'VERSION_FROM' => 'Basic/Core/Version.pm',
-	      'EXE_FILES' => \@exe_files,
-	      'PM' => { @podpms }, #so that the script docs are picked up
-              'META_MERGE' => {
-                "meta-spec" => { version => 2 },
-                resources => {
-                  homepage => 'http://pdlporters.github.io',
-                  bugtracker  => {web=>'https://github.com/PDLPorters/pdla-core/issues'},
-                  repository  => {
-                    url => 'git://github.com/PDLPorters/pdla-core',
-                    type => 'git',
-                    web => 'https://github.com/PDLPorters/pdla-core',
-                  },
-                  x_IRC => 'irc://irc.perl.org/#pdl',
-                },
-                no_index => { file => ['Doc/scantree.pl'] },
-                prereqs => {
-                  runtime => {
-                    suggests => {
-                      'Astro::FITS::Header' => 0,
-                    },
-                  },
-                  test => {
-                    suggests => {
-                      'Inline' => 0.83, # fixed ILSM-finding
-                      'Inline::C' => 0.62,
-                    },
-                  },
-                },
-              },
-	      @optimize,
-	      'CCFLAGS' => $ccflags,
-	      'dist'     => { COMPRESS => 'gzip',
-                              SUFFIX   => 'gz',
-                              PREOP    => $preop },
-	      'clean' => {
-		'FILES' => join ' ', @cleanup, qw(
-                  tbyte.tif tmp0 tmp0.hdr tushort.tif
-                  MANIFEST.bak tmp1* tmpraw* t/tmpraw* t/tmp1*
-                  _Inline/ .inlinepdlpp/ .inline-ct/ .inlinewith/ *.xfig
-                ),
-              },
-	      'realclean' => {'FILES' => 'Basic/Core/Config.pm'},
-              'AUTHOR' => 'PerlDL Developers (pdl-general@lists.sourceforge.net)',
-              'ABSTRACT' => 'Perl Data Language',
-              'BINARY_LOCATION' => 'PDLA.tar.gz',
+  'PREREQ_PM' => { @prereq },
+  'LICENSE' => 'perl',
+  'CONFIGURE_REQUIRES' => {
+    'Devel::CheckLib' => 1.01,
+    'Carp'            => 1.20,    # EU::MM seems to need this not to crash
+    'ExtUtils::MakeMaker' => 7.34,   # XSMULTI
+    'File::Path'          => 0,
+    'ExtUtils::ParseXS'   => 3.01, # avoids 2.21, known broken
+  },
+  TEST_REQUIRES => {
+    'CPAN::Meta' => '2.120900',
+    'IPC::Cmd' => 0.72,
+    'Test::Exception' => 0,
+    'Test::Warn' => 0,  # for t/pptest.t
+    'Test::Deep' => 0,
+  },
+  BUILD_REQUIRES => {
+    'ExtUtils::MakeMaker' => 0,
+    'File::Path'          => 0,
+  },
+  'MIN_PERL_VERSION' => '5.010',
+  'NAME' => 'PDLA::Core',
+  'VERSION_FROM' => 'lib/PDLA/Version.pm',
+  'EXE_FILES' => \@exe_files,
+  'META_MERGE' => {
+    "meta-spec" => { version => 2 },
+    resources => {
+      homepage => 'http://pdlporters.github.io',
+      bugtracker  => {web=>'https://github.com/PDLPorters/pdla-core/issues'},
+      repository  => {
+        url => 'git://github.com/PDLPorters/pdla-core',
+        type => 'git',
+        web => 'https://github.com/PDLPorters/pdla-core',
+      },
+      x_IRC => 'irc://irc.perl.org/#pdl',
+    },
+    no_index => { file => ['Doc/scantree.pl'] },
+    prereqs => {
+      runtime => {
+        suggests => {
+          'Astro::FITS::Header' => 0,
+        },
+      },
+      test => {
+        suggests => {
+          'Inline' => 0.83, # fixed ILSM-finding
+          'Inline::C' => 0.62,
+        },
+      },
+    },
+  },
+  @optimize,
+  'CCFLAGS' => $ccflags,
+  'dist'     => { COMPRESS => 'gzip',
+                  SUFFIX   => 'gz',
+                  PREOP    => $preop },
+  'clean' => {
+    'FILES' => join ' ', @cleanup, qw(
+      tbyte.tif tmp0 tmp0.hdr tushort.tif
+      MANIFEST.bak tmp1* tmpraw* t/tmpraw* t/tmp1*
+      _Inline/ .inlinepdlpp/ .inline-ct/ .inlinewith/ *.xfig
+    ),
+  },
+  'realclean' => {
+    'FILES' => join ' ', map "lib/PDLA/$_", qw(
+      Config.pm Types.pm Version.pm Doc/Config.pm PP/Dump.pm
+      Core/pdl.h Core/pdlcore.h Core/pdlsimple.h
+    )
+  },
+  'AUTHOR' => 'PerlDL Developers (pdl-general@lists.sourceforge.net)',
+  'ABSTRACT' => 'Perl Data Language',
+  'BINARY_LOCATION' => 'PDLA.tar.gz',
 
-	      %notestsifmodulesmissing,
-    );
+  %notestsifmodulesmissing,
+);
 
 =begin comment
 
@@ -489,13 +491,47 @@ for $k(sort keys %makefile_hash) {
 
 =cut
 
+# do *before* WriteMakefile - no options
+# are set by the recursively called Makefile.PLs
+# and avoids having to bodge in the Config to get copied into blib
+make_PDLA_Config_pm(); # write out config to PDLA::Config
+
 WriteMakefile(%makefile_hash);
+
+sub make_from_PL {
+    my ($head, $extradeps) = @_;
+    $extradeps //= '';
+    sprintf <<'EOF', $head, "$head.PL $extradeps", "$head.PL $head";
+%s :: %s
+	$(PERLRUNINST) %s
+
+EOF
+}
 
 sub MY::postamble {
   my ($self) = @_;
   package MY;
-  my  $text =
-'
+  my @m = PDLA::Core::Dev::postamble() . "\n\n";
+  push @m, ::make_from_PL('lib/PDLA/Core/pdl.h', 'lib/PDLA/Types.pm');
+  push @m, map { ::make_from_PL("lib/PDLA/Core/$_", 'lib/PDLA/Types.pm') }
+    qw( pdlsimple.h pdlcore.h );
+  if (!$self->is_make_type('dmake')) {
+    push @m, <<'EOF';
+# Bits of C code we generate from special perl scripts
+# there must be a more elegant way of saying that
+# certain files have additional dependencies!
+lib/PDLA/Core/pdlthread.c :: lib/PDLA/Core/pdlcore.h
+lib/PDLA/Core/pdlhash.c :: lib/PDLA/Core/pdlcore.h
+lib/PDLA/Core/pdlapi.c :: lib/PDLA/Core/pdlcore.h
+lib/PDLA/Core/pdlmagic.c :: lib/PDLA/Core/pdlcore.h
+
+EOF
+    push @m, map { ::make_from_PL("lib/PDLA/Core/$_", 'lib/PDLA/Types.pm') }
+      qw( pdlsimple.h pdlconv.c pdlcore.c );
+  }
+
+  # Extra build target to build the doc database
+  my $text = '
 doctest ::
 	$(NOECHO) $(ECHO) "doctest: Building PDLA documentation database in blib ..."
 	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl
@@ -526,15 +562,16 @@ doc_perl_install ::
   } else {
     $text=~ s/\%HTML\%//og; # Remove just %HTML% markers
   }
+  push @m, $text;
 
 # Here, `pdla.c` is used directly because some makes (e.g., on Solaris) do not
 # support the `$<` variable in explicit rules
 $text .= <<EOT if $^O !~ /MSWin/;
-pdla$Config::Config{exe_ext} : pdla.c
-	\$(CC) \$(CFLAGS) \$(LDFLAGS) \$(CPPFLAGS) pdla.c -o \$\@
+bin/pdla$Config::Config{exe_ext} : bin/pdla.c
+	\$(CC) \$(CFLAGS) \$(LDFLAGS) \$(CPPFLAGS) bin/pdla.c -o \$\@
 EOT
 
-$text .= << 'EOT' if $^O =~ /MSWin/;
+  push @m, << 'EOT' if $^O =~ /MSWin/;
 
 DISTWIN32NAME=$(DISTVNAME)-win32
 
@@ -557,16 +594,15 @@ ppm : doctest ppd
 	$(RM_RF) $(DISTWIN32NAME)
 EOT
 
-$text .= "\n" . ::coretarget($self);
-my $coretest = join ' ', map File::Spec->catfile('t', $_), qw(core.t ops.t);
-$text .= <<EOF;
+  push @m, "\n" . ::coretarget($self);
+  my $coretest = join ' ', map File::Spec->catfile('t', $_), qw(core.t ops.t);
+  push @m, <<EOF;
 
 coretest : core
 	prove -b $coretest
 EOF
 
-return $text
-
+  join '', @m;
 }
 
 sub coretarget {
@@ -580,19 +616,11 @@ sub coretarget {
     # all a left's rights are made concurrently, no sequence - list ALL prereqs
     my @left2rights = (
         [
-            basics => [
-                [ [ qw(Basic) ], [ qw(pm_to_blib) ], ],
-                [ [ qw(Basic Core) ], [ qw(pm_to_blib) ], ],
-                [ [ qw(Basic Gen) ], [ qw(all) ], ],
-            ]
-        ],
-        [
             core => [
-                [ [ qw(Basic SourceFilter) ], [ qw(pm_to_blib) ], ],
                 map { [
                     [ 'Basic', $_ ],
-                    [ 'pm_to_blib', 'dynamic' ],
-                    [ 'basics' ],
+                    [ qw(pm_to_blib dynamic) ],
+                    [ qw(pm_to_blib lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h) ],
                 # the modules in PDLA::LiteF, used in t/core.t
                 ] } qw(Core Ops Primitive Ufunc Slices Bad Math MatrixOps),
             ]
@@ -652,6 +680,20 @@ sub MY::init_dirscan {
     $self->SUPER::init_dirscan;
     $self->{C} = [];
     $self->{O_FILES} = [];
+}
+
+sub MY::init_PM {
+  package MY;
+  my ($self) = @_;
+  $self->SUPER::init_PM;
+  for my $pm (keys %{ $self->{PM} }) {
+    next unless (my $nonPL = $pm) =~ s/\.PL$//;
+    $self->{PM}{$nonPL} = delete $self->{PM}{$pm};
+    $self->{PM}{$nonPL} =~ s/\.PL$//i;
+    $self->{realclean}{FILES} .= " $nonPL";
+    next if $nonPL =~ /Types\.pm/; # we do that ourselves already
+    $self->{PL_FILES}{$pm} = $nonPL;
+  }
 }
 
 # warn if vital modules are missing

@@ -334,7 +334,7 @@ iscontig(x)
   OUTPUT:
     RETVAL
 
-INCLUDE_COMMAND: $^X -e "require q{./Dev.pm}; PDLA::Core::Dev::generate_core_flags()"
+INCLUDE_COMMAND: $^X -e "require q{../../lib/PDLA/Core/Dev.pm}; PDLA::Core::Dev::generate_core_flags()"
 
 #if 0
 =begin windows_mmap

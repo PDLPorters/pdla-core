@@ -1,19 +1,7 @@
 # -*-perl-*-
 
-##############################
-#
-# Be sure to increment $pdl_core_version (about 20 lines below this note)
+# Be sure to increment $pdl_core_version
 # if you change any prototypes or modify the Core structure!
-#
-##############################
-
-use strict;
-use Config;
-use File::Basename qw(&basename &dirname);
-
-require './Dev.pm'; PDLA::Core::Dev->import;
-my $sym2type = PDLA::Core::Dev::load_Types();
-
 # version 2 is for versions after PDLA 2.1.1
 # version 4 has pdl_hard_copy included in the Core structure.
 # version 6 is introduced after 2.4.2, due to the experimental
@@ -25,32 +13,23 @@ my $sym2type = PDLA::Core::Dev::load_Types();
 # version 10 for 64bit index support (PDLA index datatype)
 # version 11 for core cleanup (proto-PDLA-3)
 # version 12 for PDLA_Anyval union data type (full 64bit support)
-use vars qw( $pdl_core_version );
-$pdl_core_version = 12;
+our $pdl_core_version = 12;
 
-# List explicitly here the variables you want Configure to
-# generate.  Metaconfig only looks for shell variables, so you
-# have to mention them as if they were shell variables, not
-# %Config entries.  Thus you write
-#  $startperl
-# to ensure Configure will look for $Config{startperl}.
+use strict;
+use Config;
+use File::Basename qw(&basename &dirname);
 
-# This forces PL files to create target in same directory as PL file.
-# This is so that make depend always knows where to find PL derivatives.
-chdir(dirname($0));
-my $file;
-($file = basename($0)) =~ s/\.PL$//;
-$file =~ s/\.pl$//
-	if ($Config{'osname'} eq 'VMS' or
-	    $Config{'osname'} eq 'OS2');  # "case-forgiving"
+use lib 'lib';
+use PDLA::Core::Dev;
+my $sym2type = PDLA::Core::Dev::load_Types();
 
+my $file = shift @ARGV;
 print "Extracting $file\n";
 open OUT,">$file" or die "Can't create $file: $!";
 chmod 0644, $file;
 
 # In this section, perl variables will be expanded during extraction.
 # You can use $Config{...} to use Configure variables.
-
 
 print OUT <<'!NO!SUBS!';
 /*
@@ -349,7 +328,7 @@ double NaN_double;
 
     # fortunately it looks like Types.pm.PL is processed before this
     # file
-    require "./Types.pm";  # ie PDLA::Types
+use PDLA::Types;
 
 for (PDLA::Types::typesrtkeys()) {
    my $ctype = $PDLA::Types::typehash{$_}{ctype};
@@ -380,4 +359,3 @@ Core *pdl__Core_get_Core(); /* INTERNAL TO CORE! DON'T CALL FROM OUTSIDE */
 #endif
 
 !NO!SUBS!
-

@@ -4,13 +4,14 @@ use strict;
 use warnings;
 use Config;
 use File::Basename qw(&basename &dirname);
+use lib 'lib';
 
 # how many variable types (ie PDLA_Byte, ...) are there?
-require './Types.pm';
+use PDLA::Types;
 my $ntypes = $#PDLA::Types::names;
 my $PDLA_DATATYPES = PDLA::Types::datatypes_header();
 
-require './Config.pm';
+use PDLA::Config;
 die "No PDLA::Config found" unless %PDLA::Config;
 my $mymalloc = $PDLA::Config{MALLOCDBG}->{define} // '';
 

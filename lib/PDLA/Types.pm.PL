@@ -6,7 +6,8 @@
 
 use strict;
 
-require './Basic/Core/Config.pm';
+use lib 'lib';
+use PDLA::Config;
 use Config;
 use File::Basename qw(&basename &dirname);
 

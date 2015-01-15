@@ -99,10 +99,11 @@ sub whereami_any {
 	return abs_path($dir);
 }
 
+# true arg will return something containing Core
 sub whereami {
-   for my $dir (qw|. .. ../.. ../../.. ../../../..|,@INC) {
-      return ($_[0] ? $dir . '/Basic' : $dir)
-	if -e "$dir/Basic/Core/Dev.pm";
+   for my $dir (qw|lib ../lib ../../lib ../../../lib ../../../../lib|,@INC) {
+      return ($_[0] ? $dir . '/PDLA' : $dir)
+	if -e "$dir/PDLA/Core/Dev.pm";
    }
    die "Unable to determine UNINSTALLED directory path to PDLA::Core::Dev module\n"
     if !$_[0];
@@ -132,14 +133,14 @@ unless ( %PDLA::Config ) {
     my $dir;
     $dir = whereami(1);
     if ( defined $dir ) {
-	$dir = abs_path($dir . "/Core");
+	$dir = abs_path($dir);
     } else {
 	# as no argument given whereami_inst will die if it fails
         # (and it also returns a slightly different path than whereami(1)
         #  does, since it does not include "/PDLA")
 	#
 	$dir = whereami_inst;
-	$dir = abs_path($dir . "/PDLA");
+	$dir = abs_path($dir);
     }
 
     my $dir2 = $dir;
@@ -154,8 +155,8 @@ unless ( %PDLA::Config ) {
 # get the map from Types.pm
 sub loadmod_Types {
   # load PDLA::Types only if it has not been previously loaded
-  return if grep (m%(PDLA|Core)/Types[.]pm$%, keys %INC);
-  eval { require(whereami_any().'/Core/Types.pm') }; # lets dist Types.pm win
+  return if grep (m%PDLA/Types[.]pm$%, keys %INC);
+  eval { require(whereami_any().'/Types.pm') }; # lets dist Types.pm win
   return if !$@;
   # if PDLA::Types doesn't work try with full path (during build)
   my $foo = $@;
@@ -385,25 +386,29 @@ EOF
 # This is the function internal for PDLA.
 #
 sub pdlpp_postamble_int {
-	join '',map { my($src,$pref,$mod,$callpack) = @$_;
-	my $w = whereami_any();
-	$w =~ s%/((PDLA)|(Basic))$%%;  # remove the trailing subdir
-	my $top = File::Spec->abs2rel($w);
-	my $basic = File::Spec->catdir($top, 'Basic');
-	my $core = File::Spec->catdir($basic, 'Core');
-	my $gen = File::Spec->catdir($basic, 'Gen');
-	$callpack //= '';
+    require ExtUtils::MM;
+    join '',map { my($src,$pref,$mod,$callpack) = @$_;
+    my $w = whereami_any();
+    my @d = File::Spec->splitdir($w);
+    if ($d[-1] eq 'Basic') {
+        splice @d, -1;
+    } elsif ($d[-2] eq 'lib' and $d[-1] eq 'PDLA') {
+        splice @d, -2;
+    }
+    $callpack //= '';
+    my $top = File::Spec->abs2rel(File::Spec->catdir(@d));
+    my $lib = File::Spec->catdir($top, qw(lib));
 qq|
 
-$pref.pm: $src $core/Types.pm
-	\$(PERLRUNINST) \"-MPDLA::PP qw[$mod $mod $pref $callpack]\" $src
+$pref.pm : $src $lib/PDLA/Types.pm
+	\$(PERLRUN) \"-I$lib\" \"-MPDLA::PP qw[$mod $mod $pref $callpack]\" $src
 
-$pref.xs: $pref.pm
+$pref.xs : $pref.pm
 	\$(TOUCH) \$@
 
-$pref.c: $pref.xs
+$pref.c : $pref.xs
 
-$pref\$(OBJ_EXT): $pref.c
+$pref\$(OBJ_EXT) : $pref.c
 |
 	} (@_)
 }
@@ -445,12 +450,11 @@ sub pdlpp_stdargs_int {
    $PDLA::Config{MALLOCDBG}->{libs} : '';
  my $mallocinc = exists $PDLA::Config{MALLOCDBG}->{include} ?
    $PDLA::Config{MALLOCDBG}->{include} : '';
-my $libsarg = $libs || $malloclib ? "$libs $malloclib " : ''; # for Win32
- require ExtUtils::MakeMaker;
+ my $libsarg = $libs || $malloclib ? "$libs $malloclib " : ''; # for Win32
  return (
  	%::PDLA_OPTIONS,
 	 'NAME'  	=> $mod,
-	 'VERSION_FROM' => "$w/Basic/Core/Version.pm",
+	 'VERSION_FROM' => "$w/PDLA/Version.pm",
 	 'TYPEMAPS'     => [&PDLA_TYPEMAP()],
 	 'OBJECT'       => "$pref\$(OBJ_EXT)",
 	 PM 	=> {"$pref.pm" => "\$(INST_LIBDIR)/$pref.pm"},
@@ -458,7 +462,7 @@ my $libsarg = $libs || $malloclib ? "$libs $malloclib " : ''; # for Win32
 	 'INC'          => &PDLA_INCLUDE()." $inc $mallocinc",
 	 'LIBS'         => $libsarg ? [$libsarg] : [],
 	 'clean'        => {'FILES'  => "$pref.xs $pref.pm $pref\$(OBJ_EXT) $pref.c"},
-     (eval ($ExtUtils::MakeMaker::VERSION) >= 6.57_02 ? ('NO_MYMETA' => 1) : ()),
+         NO_MYMETA => 1,
  );
 }
 
@@ -477,7 +481,7 @@ sub pdlpp_stdargs {
 	 'LIBS'         => $libs ? ["$libs "] : [],
 	 'clean'        => {'FILES'  => "$pref.xs $pref.pm $pref\$(OBJ_EXT) $pref.c"},
 	 'dist'         => {'PREOP'  => '$(PERL) "-I$(INST_ARCHLIB)" "-I$(INST_LIB)" -MPDLA::Core::Dev -e pdlpp_mkgen $(DISTVNAME)' },
-     (eval ($ExtUtils::MakeMaker::VERSION) >= 6.57_02 ? ('NO_MYMETA' => 1) : ()),
+         'NO_MYMETA' => 1,
  );
 }
 
