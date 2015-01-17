@@ -1,0 +1,62 @@
+diff --git a/.travis.yml b/.travis.yml
+index d2172c7..519cb08 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -1,29 +1,5 @@
+ language: perl
+ sudo: false
+-addons:
+-  apt:
+-#    sources:
+-#    - deadsnakes
+-#    - ubuntu-toolchain-r-test
+-    packages:
+-    - build-essential
+-    - libx11-dev
+-    - libgd2-xpm-dev
+-    - libhdf4-alt-dev
+-    - libproj-dev
+-    - proj-bin
+-    - libcfitsio3-dev
+-    - libreadline-dev
+-    - gfortran
+-    - pgplot5
+-    - libvpx-dev
+-    - libxpm-dev
+-    # these are for OpenGL:
+-    - libxi-dev
+-    - libxmu-dev
+-    - freeglut3-dev
+-    - libgsl0-dev
+-    - libnetpbm10-dev
+ matrix:
+   include:
+     # start the first coverage early so that it starts before everything else
+@@ -52,17 +28,13 @@ matrix:
+     - perl: "5.20"
+       env: PDLA_WITH_BADVAL=1 PDLA_BADVAL_USENAN=1 PDLA_BADVAL_PER_PDLA=1
+     - perl: "5.20"
+-      env: DISABLE_FORTRAN=1 # what if we don't have Fortran installed?
+-    - perl: "5.20"
+       env: CC="clang" # use `clang` instead of `gcc` default
+   allow_failures:
+     - perl: blead
+ before_install:
+-  - mkdir -p ~/bin; export PATH="$HOME/bin:$PATH"; G="$HOME/bin/gfortran"; if [ "$DISABLE_FORTRAN" == 1 ]; then touch "$G"; chmod a+x "$G"; echo 'false' >"$G"; else rm -f "$G"; fi # set DISABLE_FORTRAN = 1 to not have working gfortran
+   # clang is already installed in Travis-CI environment. Using PERL_MM_OPT does not work with subdirectory Makefile.PLs so we override Config.pm
+   # Also, both $Config{cc} and $Config{ld} need to be set because under ELF environments (such as Travis-CI's Ubuntu), this is what Perl's Config.pm does.
+   - if [ "$CC" == "clang" ]; then mkdir build_aux; echo 'package force_clang; use ExtUtils::MakeMaker::Config; $Config{cc} = $Config{ld} = "clang"; 1' > build_aux/force_clang.pm; export PERL5OPT="-I$(pwd)/build_aux -Mforce_clang"; fi
+-  - export PGPLOT_DEV=/NULL
+   - perl -pi -e 's|WITH_BADVAL => 1|WITH_BADVAL => 0|       if defined $ENV{PDLA_WITH_BADVAL}    && $ENV{PDLA_WITH_BADVAL}     == 0' perldl.conf # disable bad value support
+   - perl -pi -e 's|BADVAL_USENAN => 0|BADVAL_USENAN => 1|   if defined $ENV{PDLA_BADVAL_USENAN}  && $ENV{PDLA_BADVAL_USENAN}   == 1' perldl.conf # enable BADVAL_USENAN
+   - perl -pi -e 's|BADVAL_PER_PDLA => 0|BADVAL_PER_PDLA => 1| if defined $ENV{PDLA_BADVAL_PER_PDLA} && $ENV{PDLA_BADVAL_PER_PDLA}  == 1' perldl.conf # enable BADVAL_PER_PDLA
+@@ -71,9 +43,7 @@ before_install:
+   - source ~/travis-perl-helpers/init
+   - build-perl
+   - perl -V
+-  - cpanm --quiet --notest ExtUtils::F77 Term::ReadLine::Gnu PGPLOT # do not need tests
+   - cpanm --quiet --notest Devel::CheckLib # specify this now because this is a CONFIGURE_REQUIRES for author-side
+-  - cpanm --verbose Alien::HDF4
+   - if [ "$AUTHOR_TESTING" == 1 ]; then cpanm --quiet --notest CPAN::Changes; fi # for author tests (AUTHOR_TESTING is set to true by default by init)
+   - cpanm --notest --verbose ExtUtils::ParseXS # we install the latest ExtUtils::ParseXS
+   - if [ "$EUMM_BLEAD" == 1 ]; then cpanm --quiet --notest --dev ExtUtils::MakeMaker; fi
