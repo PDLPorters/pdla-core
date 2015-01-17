@@ -435,9 +435,6 @@ if($Config{archname}=~m/x86_64/) {
     $ccflags .= " -fPIC";
 }
 
-# create GENERATED subdir with *.pm files during 'make dist' (to make metacpan.org happy)
-my $preop = '$(PERL) -I$(INST_ARCHLIB) -I$(INST_LIB) -MPDLA::Core::Dev -e pdlpp_mkgen $(DISTVNAME)';
-
 my %makefile_hash = (
 	      'PREREQ_PM' => { @prereq },
               'CONFIGURE_REQUIRES' => {
@@ -476,7 +473,7 @@ my %makefile_hash = (
 	      'CCFLAGS' => $ccflags,
 	      'dist'     => { COMPRESS => 'gzip',
                               SUFFIX   => 'gz',
-                              PREOP    => $preop },
+                            },
 	      'clean' => {
 		'FILES' => join ' ', @cleanup, qw(
                   tbyte.tif tmp0 tmp0.hdr tushort.tif
