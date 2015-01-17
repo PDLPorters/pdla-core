@@ -519,11 +519,9 @@ make_PDL_Config_pm(); # write out config to PDL::Config
 
 sub make_from_PL {
     my ($head, $extradeps) = @_;
-    $extradeps //= '';
-    sprintf <<'EOF', $head, "$head.PL $extradeps", "$head.PL $head";
+    return unless defined $extradeps;
+    sprintf <<'EOF', $head, $extradeps;
 %s :: %s
-	$(PERLRUNINST) %s
-
 EOF
 }
 
