@@ -349,7 +349,9 @@ EOF
 
 sub postamble {
   my ($self) = @_;
-  sprintf <<'EOF', genpp_cmdline(qw($< $@));
+  my $oneliner = genpp_cmdline(qw($< $@));
+  $oneliner =~ s/ABSPERLRUN/${&}INST/; # include blib for PDL::{Config,Types}
+  sprintf <<'EOF', $oneliner;
 
 # Rules for the generic preprocessor
 
