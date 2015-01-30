@@ -1,4 +1,35 @@
-pp_addpm({At=>'Top'},<<'EOD');
+package PDLA::Ops;
+
+use strict;
+use warnings;
+use PDLA::Core;
+use Inline Pdlapp => Config => clean_after_build => 0;
+use Inline Pdlapp => 'DATA', name => __PACKAGE__;
+use parent 'PDLA::Exporter';
+
+our @EXPORT_OK  = qw( log10 assgn ipow );
+our %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
+
+*log10 = \&PDLA::log10;
+*assgn = \&PDLA::assgn;
+*ipow = \&PDLA::ipow;
+
+sub PDLA::log10 {
+    my $x = shift;
+    if ( ! UNIVERSAL::isa($x,"PDLA") ) { return log($x) / log(10); }
+    my $y;
+    if ( $x->is_inplace ) { $x->set_inplace(0); $y = $x; }
+    elsif( ref($x) eq "PDLA"){
+	#PDLA Objects, use nullcreate:
+	$y = PDLA->nullcreate($x);
+    }else{
+	#PDLA-Derived Object, use copy: (Consistent with
+	#  Auto-creation docs in Objects.pod)
+	$y = $x->copy;
+    }
+    &PDLA::_log10_int( $x, $y );
+    return $y;
+}
 
 =head1 NAME
 
@@ -10,21 +41,247 @@ This module provides the functions used by PDLA to
 overload the basic mathematical operators (C<+ - / *>
 etc.) and functions (C<sin sqrt> etc.)
 
+=head1 FUNCTIONS
+
+=head2 log10
+
 It also includes the function C<log10>, which should
 be a perl function so that we can overload it!
 
 Matrix multiplication (the operator C<x>) is handled
 by the module L<PDLA::Primitive|PDLA::Primitive>.
 
+=head2 assgn
+
+Also provides C<assgn>. This is used to implement the C<.=> operator.
+
+If C<a> is a child piddle (e.g., the result of a slice) and bad values are generated in C<b>,
+the bad value flag is set in C<b>, but it is B<NOT> automatically propagated back to the parent of C<a>.
+The following idiom ensures that the badflag is propagated back to the parent of C<a>:
+
+ $pdl->slice(":,(1)") .= PDLA::Bad_aware_func();
+ $pdl->badflag(1);
+ $pdl->check_badflag();
+
+This is unnecessary if $pdl->badflag is known to be 1 before the slice is performed.
+
+See L<http://pdl.perl.org/PDLAdocs/BadValues.html#dataflow_of_the_badflag> for details.
+
+=head2 ipow
+
+=for ref
+
+raise piddle C<$a> to integer power C<$b>
+
+=for example
+
+   $z = $x->ipow($y,0);     # explicit function call
+   $z = ipow $x, $y;
+   $x->inplace->ipow($y,0);  # modify $x inplace
+
+It can be made to work inplace with the C<$x-E<gt>inplace> syntax.
+Note that when calling this function explicitly you need to supply
+a third argument that should generally be zero (see first example).
+This restriction is expected to go away in future releases.
+
+Algorithm from L<Wikipedia|http://en.wikipedia.org/wiki/Exponentiation_by_squaring>
+
+=cut
+
+
 =head1 SYNOPSIS
 
 none
 
-=cut
+=head1 OPERATOR TYPES
 
-EOD
+All can be made to work inplace with the C<$a-E<gt>inplace> syntax.
 
-pp_addpm({At=>'Bot'},<<'EOPM');
+=head2 Binary operators
+
+=for ref
+
+They are used to overload the relevant Perl binary operator. Note that
+when calling this function explicitly you need to supply a third argument
+that should generally be zero (see first example).
+
+This restriction is expected to go away in future releases.
+
+=for example
+
+   $z = plus $x, $y, 0;     # explicit call with trailing 0
+   $z = $x + $y;            # overloaded call
+   $x->inplace->plus($y,0); # modify $x inplace
+
+=head3 Arithmetic ops
+
+=over 2
+
+=item plus OVERLOADS +
+
+add two piddles
+
+=item mult OVERLOADS *
+
+multiply two piddles
+
+=item minus OVERLOADS -
+
+subtract two piddles
+
+=item divide OVERLOADS /
+
+divide two piddles', Exception => '$b() == 0' );
+
+=back
+
+=head3 Comparison ops
+
+=over 2
+
+=item gt OVERLOADS E<gt>
+
+the binary E<gt> (greater than) operation
+
+=item lt OVERLOADS E<lt>
+
+the binary E<lt> (less than) operation
+
+=item le OVERLOADS E<lt>=
+
+the binary E<lt>= (less equal) operation
+
+=item ge OVERLOADS E<gt>=
+
+the binary E<gt>= (greater equal) operation
+
+=item eq OVERLOADS ==
+
+binary I<equal to> operation (C<==>)
+
+=item ne OVERLOADS !=
+
+binary I<not equal to> operation (C<!=>)
+
+=back
+
+=head3 Bit ops
+
+These are limited to the right types: bytes, unsigned, shorts and longs.
+
+=over 2
+
+=item shiftleft OVERLOADS <<
+
+leftshift C<$x> by C<$y>
+
+=item shiftright OVERLOADS >>
+
+rightshift C<$x> by C<$y>
+
+=item or2 OVERLOADS |
+
+binary I<or> of two piddles
+
+=item and2 OVERLOADS &
+
+binary I<and> of two piddles
+
+=item xor OVERLOADS ^
+
+binary I<exclusive or> of two piddles
+
+=back
+
+=head2 Simple binary functions
+
+=for ref
+
+They are used to overload the relevant binary function.
+Note that when calling these explicitly you need to supply
+a third argument that should generally be zero (see first example).
+This restriction is expected to go away in future releases.
+
+=for example
+
+   $z = $x->pow($y,0);     # explicit function call
+   $z = $x ** $y;          # INFIX - overloaded use
+   $z = atan2 $x, $y;      # OTHERWISE - overloaded use
+   $x->inplace->pow($y,0); # modify $x inplace
+
+=over 2
+
+=item power OVERLOADS C<**>.
+
+(infix) raise piddle C<$x> to the power C<$y> (doubles only)
+
+=item atan2
+
+atan2
+
+elementwise C<atan2> of two piddles (doubles only)
+
+=item modulo OVERLOADS C<%>.
+
+(infix) elementwise C<modulo> operation (unsigned only)
+
+=item spaceship OVERLOADS C<E<lt>=E<gt>>.
+
+(infix) elementwise "E<lt>=E<gt>" operation
+
+=back
+
+=head2 Unary functions
+
+=for ref
+
+These are used to overload unary operators/functions.
+
+=for example
+
+   $y = ~ $x;
+   $x->inplace->bitnot;  # modify $x inplace
+
+=over 2
+
+=item bitnot
+
+OVERLOAD ~. unary bit negation.
+
+=item sqrt
+
+elementwise square root.
+
+=item abs
+
+elementwise absolute value. Double, float, signed, long.
+
+=item sin
+
+the sin function
+
+=item cos
+
+the cos function
+
+=item not
+
+OVERLOAD !. The elementwise I<not> operation.
+
+=item exp
+
+the exponential function, doubles only.
+
+=item log
+
+the natural logarithm, doubles only.
+
+=item log10
+
+The base 10 logarithm. Doubles only. Works on scalars (returning scalars)
+as well as piddles.
+
+=back
 
 =head1 AUTHOR
 
@@ -37,9 +294,13 @@ and Craig DeForest (deforest@boulder.swri.edu).
 
 =cut
 
-EOPM
+1;
 
-pp_addhdr('
+__DATA__
+
+__Pdlapp__
+
+pp_addhdr(<<'EOF');
 #include <math.h>
 
 /* MOD requires hackage to map properly into the positive-definite numbers. */
@@ -62,7 +323,7 @@ pp_addhdr('
 #define SPACE(A,B)   ( ((A)<(B)) ? -1 : ((A)!=(B)) )
 #define ABS(A)       ( (A)>=0 ? (A) : -(A) )
 #define NOTHING
-');
+EOF
 
 sub protect_chars {
   my ($txt) = @_;
@@ -76,7 +337,7 @@ sub protect_chars {
 # simple binary operators
 
 sub biop {
-    my ($name,$op,$swap,$doc,%extra) = @_;
+    my ($name,$op,$swap,%extra) = @_;
     my $optxt = protect_chars ref $op eq 'ARRAY' ? $op->[1] : $op;
     $op = $op->[0] if ref $op eq 'ARRAY';
 
@@ -136,31 +397,12 @@ EOH
                $SETPDLASTATEBAD(c);
             }',
 	   %extra,
-	   Doc => << "EOD");
-=for ref
-
-$doc
-
-=for example
-
-   \$c = $name \$x, \$y, 0;     # explicit call with trailing 0
-   \$c = \$x $op \$y;           # overloaded call
-   \$x->inplace->$name(\$y,0);  # modify \$x inplace
-
-It can be made to work inplace with the C<\$x-E<gt>inplace> syntax.
-This function is used to overload the binary C<$optxt> operator.
-Note that when calling this function explicitly you need to supply
-a third argument that should generally be zero (see first example).
-This restriction is expected to go away in future releases.
-
-=cut
-
-EOD
+    );
 } # sub: biop()
 
 #simple binary functions
 sub bifunc {
-    my ($name,$func,$swap,$doc,%extra) = @_;
+    my ($name,$func,$swap,%extra) = @_;
     my $funcov = ref $func eq 'ARRAY' ? $func->[1] : $func;
     my $isop=0; if ($funcov =~ s/^op//) { $isop = 1; }
     my $funcovp = protect_chars $funcov;
@@ -222,31 +464,12 @@ ENDCODE
                $SETPDLASTATEBAD(c);
             }',
 	   %extra,
-	   Doc => << "EOD");
-=for ref
-
-$doc
-
-=for example
-
-   \$c = \$x->$name(\$y,0); # explicit function call
-   $ovcall
-   \$x->inplace->$name(\$y,0);     # modify \$x inplace
-
-It can be made to work inplace with the C<\$x-E<gt>inplace> syntax.
-This function is used to overload the binary C<$funcovp> function.
-Note that when calling this function explicitly you need to supply
-a third argument that should generally be zero (see first example).
-This restriction is expected to go away in future releases.
-
-=cut
-
-EOD
+    );
 } # sub: bifunc()
 
 # simple unary functions and operators
 sub ufunc {
-    my ($name,$func,$doc,%extra) = @_;
+    my ($name,$func,%extra) = @_;
     my $funcov = ref $func eq 'ARRAY' ? $func->[1] : $func;
     my $funcovp = protect_chars $funcov;
     $func = $func->[0] if ref $func eq 'ARRAY';
@@ -277,22 +500,7 @@ sub ufunc {
 	      $SETBAD(b());
 	   else' . "\n  \$b() = $func(\$a());\n",
 	   %extra,
-	   Doc => << "EOD");
-=for ref
-
-$doc
-
-=for example
-
-   \$y = $funcov \$x;
-   \$x->inplace->$name;  # modify \$x inplace
-
-It can be made to work inplace with the C<\$x-E<gt>inplace> syntax.
-This function is used to overload the unary C<$funcovp> operator/function.
-
-=cut
-
-EOD
+    );
 } # sub: ufunc()
 
 ######################################################################
@@ -317,63 +525,59 @@ EOD
 
 ## arithmetic ops
 # no swap needed but set anyway fixing sf bug #391
-biop('plus','+',1,'add two piddles');
-biop('mult','*',1,'multiply two piddles');
+biop('plus','+',1);
+biop('mult','*',1);
 
 # all those need swapping
-biop('minus','-',1,'subtract two piddles');
-biop('divide','/',1,'divide two piddles', Exception => '$b() == 0' );
+biop('minus','-',1);
+biop('divide','/',1, Exception => '$b() == 0' );
 
 ## note: divide should perhaps trap division by zero as well
 
 ## comparison ops
 # need swapping
-biop('gt','>',1,'the binary E<gt> (greater than) operation', Comparison => 1 );
-biop('lt','<',1,'the binary E<lt> (less than) operation', Comparison => 1 );
-biop('le','<=',1,'the binary E<lt>= (less equal) operation', Comparison => 1 );
-biop('ge','>=',1,'the binary E<gt>= (greater equal) operation', Comparison => 1 );
+biop('gt','>',1, Comparison => 1 );
+biop('lt','<',1, Comparison => 1 );
+biop('le','<=',1, Comparison => 1 );
+biop('ge','>=',1, Comparison => 1 );
 # no swap required but set anyway fixing sf bug #391
-biop('eq','==',1,'binary I<equal to> operation (C<==>)', Comparison => 1 );
-biop('ne','!=',1,'binary I<not equal to> operation (C<!=>)', Comparison => 1 );
+biop('eq','==',1, Comparison => 1 );
+biop('ne','!=',1, Comparison => 1 );
 
 ## bit ops
 # those need to be limited to the right types
 my $T = [B,U,S,L,N,Q]; # the sensible types here
-biop('shiftleft','<<',1,'leftshift C<$a> by C<$b>',GenericTypes => $T);
-biop('shiftright','>>',1,'rightshift C<$a> by C<$b>',GenericTypes => $T);
-biop('or2','|',1,'binary I<or> of two piddles',GenericTypes => $T,
-      Bitwise => 1);
-biop('and2','&',1,'binary I<and> of two piddles',GenericTypes => $T,
-      Bitwise => 1);
-biop('xor','^',1,'binary I<exclusive or> of two piddles',GenericTypes => $T,
-      Bitwise => 1);
+biop('shiftleft','<<',1,GenericTypes => $T);
+biop('shiftright','>>',1,GenericTypes => $T);
+biop('or2','|',1,GenericTypes => $T, Bitwise => 1);
+biop('and2','&',1,GenericTypes => $T, Bitwise => 1);
+biop('xor','^',1,GenericTypes => $T, Bitwise => 1);
 
-# really an ufunc
-ufunc('bitnot','~','unary bit negation',GenericTypes => $T);
+# by itself to preserve order for diffing with ops.pd
+ufunc('bitnot','~',GenericTypes => $T);
 
 # some standard binary functions
-bifunc('power',['pow','op**'],1,'raise piddle C<$a> to the power C<$b>',GenericTypes => [D]);
-bifunc('atan2','atan2',1,'elementwise C<atan2> of two piddles',GenericTypes => [D]);
-bifunc('modulo',['MOD','op%'],1,'elementwise C<modulo> operation',unsigned=>1);
-bifunc('spaceship',['SPACE','op<=>'],1,'elementwise "<=>" operation');
+bifunc('power',['pow','**'],1,GenericTypes => [D]);
+bifunc('atan2','atan2',1,GenericTypes => [D]);
+bifunc('modulo',['MOD','%'],1,unsigned=>1);
+bifunc('spaceship',['SPACE','<=>'],1);
 
 # some standard unary functions
-ufunc('sqrt','sqrt','elementwise square root', Exception => '$a() < 0' );
-ufunc('abs',['ABS','abs'],'elementwise absolute value',GenericTypes => [D,F,S,L]);
-ufunc('sin','sin','the sin function');
-ufunc('cos','cos','the cos function');
-ufunc('not','!','the elementwise I<not> operation');
-ufunc('exp','exp','the exponential function',GenericTypes => [D]);
-ufunc('log','log','the natural logarithm',GenericTypes => [D],
-      Exception => '$a() <= 0' );
+ufunc('sqrt','sqrt', Exception => '$a() < 0' );
+ufunc('abs',['ABS','abs'],GenericTypes => [D,F,S,L]);
+ufunc('sin','sin');
+ufunc('cos','cos');
+ufunc('not','!');
+ufunc('exp','exp',GenericTypes => [D]);
+ufunc('log','log',GenericTypes => [D], Exception => '$a() <= 0' );
 
 pp_export_nothing();
 
 # make log10() work on scalars (returning scalars)
 # as well as piddles
-ufunc('log10','log10','the base 10 logarithm', GenericTypes => [D],
+ufunc('log10','log10', GenericTypes => [D],
       Exception => '$a() <= 0',
-      PMCode =>
+      PMCode => # include PMCode anyway as this makes PP generate _log10_int
 '
 sub PDLA::log10 {
     my $x = shift;
@@ -381,12 +585,12 @@ sub PDLA::log10 {
     my $y;
     if ( $x->is_inplace ) { $x->set_inplace(0); $y = $x; }
     elsif( ref($x) eq "PDLA"){
-    	#PDLA Objects, use nullcreate:
-	$y = PDLA->nullcreate($x);
+       #PDLA Objects, use nullcreate:
+       $y = PDLA->nullcreate($x);
     }else{
-    	#PDLA-Derived Object, use copy: (Consistent with
-	#  Auto-creation docs in Objects.pod)
-	$y = $x->copy;
+       #PDLA-Derived Object, use copy: (Consistent with
+       #  Auto-creation docs in Objects.pod)
+       $y = $x->copy;
     }
     &PDLA::_log10_int( $x, $y );
     return $y;
@@ -413,44 +617,9 @@ pp_def(
        '$b() = $a();',
        BadCode =>
        'if ( $ISBAD(a()) ) { $SETBAD(b()); } else { $b() = $a(); }',
-       Doc =>
-'Plain numerical assignment. This is used to implement the ".=" operator',
-		BadDoc =>
-'If C<a> is a child piddle (e.g., the result of a slice) and bad values are generated in C<b>,
-the bad value flag is set in C<b>, but it is B<NOT> automatically propagated back to the parent of C<a>.
-The following idiom ensures that the badflag is propagated back to the parent of C<a>:
-
- $pdl->slice(":,(1)") .= PDLA::Bad_aware_func();
- $pdl->badflag(1);
- $pdl->check_badflag();
-
-This is unnecessary if $pdl->badflag is known to be 1 before the slice is performed.
-
-See http://pdl.perl.org/PDLAdocs/BadValues.html#dataflow_of_the_badflag for details.'
 ); # pp_def assgn
 
 pp_def('ipow',
-   Doc => qq{
-=for ref
-
-raise piddle C<\$a> to integer power C<\$b>
-
-=for example
-
-   \$c = \$x->ipow(\$y,0);     # explicit function call
-   \$c = ipow \$x, \$y;
-   \$x->inplace->ipow(\$y,0);  # modify \$x inplace
-
-It can be made to work inplace with the C<\$x-E<gt>inplace> syntax.
-Note that when calling this function explicitly you need to supply
-a third argument that should generally be zero (see first example).
-This restriction is expected to go away in future releases.
-
-Algorithm from L<Wikipedia|http://en.wikipedia.org/wiki/Exponentiation_by_squaring>
-
-=cut
-
-},
    Pars => 'a(); b(); [o] ans()',
    Code => pp_line_numbers(__LINE__, q{
       PDLA_Indx n = $b();
@@ -482,4 +651,3 @@ Algorithm from L<Wikipedia|http://en.wikipedia.org/wiki/Exponentiation_by_squari
 #pp_export_nothing();
 
 pp_done();
-

@@ -633,7 +633,7 @@ sub coretarget {
                     [ qw(pm_to_blib dynamic) ],
                     [ qw(pm_to_blib $(INST_DYNAMIC)) ],
                 # the modules in PDLA::LiteF, used in t/core.t
-                ] } qw(Ops Primitive Ufunc Slices Bad Math MatrixOps),
+                ] } qw(Primitive Ufunc Slices Bad Math MatrixOps),
             ]
         ],
     );

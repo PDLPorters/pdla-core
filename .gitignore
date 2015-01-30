@@ -96,9 +96,6 @@ Basic/Math/Math.xs
 Basic/MatrixOps/MatrixOps.c
 Basic/MatrixOps/MatrixOps.pm
 Basic/MatrixOps/MatrixOps.xs
-Basic/Ops/Ops.c
-Basic/Ops/Ops.pm
-Basic/Ops/Ops.xs
 Basic/Pod/PP-Inline.pod
 Basic/Primitive/Primitive.c
 Basic/Primitive/Primitive.pm

@@ -53,9 +53,6 @@ RCS
 ^Basic/MatrixOps/MatrixOps\.c
 ^Basic/MatrixOps/MatrixOps\.pm
 ^Basic/MatrixOps/MatrixOps\.xs
-^Basic/Ops/Ops\.c$
-^Basic/Ops/Ops\.pm$
-^Basic/Ops/Ops\.xs$
 ^Basic/Primitive/Primitive\.c$
 ^Basic/Primitive/Primitive\.pm$
 ^Basic/Primitive/Primitive\.xs$
