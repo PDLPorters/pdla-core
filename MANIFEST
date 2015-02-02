@@ -142,6 +142,7 @@ debian/source/format
 debian/write_config_debian.pl
 inc/Carp.pm
 inc/Carp/Heavy.pm
+inc/Inline/Module.pm
 lib/Inline/MakePdlppInstallable.pm
 lib/Inline/Pdlpp.pm
 lib/PDL.pm

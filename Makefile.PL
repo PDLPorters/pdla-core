@@ -3,12 +3,14 @@ use warnings;
 
 # using absolute path to make it valid also for Makefile.PL files in subdirectories
 use Cwd;
-use lib Cwd::abs_path('lib'), Cwd::abs_path('inc');
+use lib 'inc', Cwd::abs_path('lib'), Cwd::abs_path('inc');
+
 use Devel::CheckLib;
 use 5.010_000;
 use ExtUtils::MakeMaker 7.05_07;  # for XSMULTI
 use Config;
 use File::Spec;
+use Inline::Module;
 
 $::PP_VERBOSE = $::PP_VERBOSE = 0; # =1 makes PP waffle a lot
 
@@ -508,33 +510,26 @@ my %makefile_hash = (
   'BINARY_LOCATION' => 'PDL.tar.gz',
 
   %notestsifmodulesmissing,
+
+  postamble => {
+    inline => {
+      module => [ qw(PDL::Ops) ],
+      ilsm => 'Inline::Pdlpp',
+      bundle => 0,
+    },
+  },
 );
 
-=begin comment
-
-print "makefile hash is:\n";
-for $k(sort keys %makefile_hash) {
-    print "\t$k\t";
-    $v = $makefile_hash{$k};
-    unless(ref $v) {
-	print $v,"\n";
-    } elsif(ref $v eq 'HASH') {
-	print "HASH:\n";
-	for $vk(sort keys %$v) {
-	    print "\t\t$vk\t$v->{$vk}\n";
-	}
-    } elsif(ref $v eq 'ARRAY') {
-	print "ARRAY:\n";
-	for $vv(@$v) {
-	    print "\t\t$vv\n";
-	}
-    } else {print "$v\n";}
-
+my $inline_postamble = \&MY::postamble; # imported by Inline::Module->import
+{ no warnings 'redefine';
+*MY::postamble = sub {
+  my $self = shift;
+  my $pdl_text = pdl_my_postamble($self, @_);
+  my $inline_text = $self->$inline_postamble(@_);
+  $inline_text =~ s/\bABSPERLRUN\b/${&}INST/g; # PDL stuff relies on blib
+  join "\n", $pdl_text, $inline_text;
+};
 }
-
-=end comment
-
-=cut
 
 WriteMakefile(%makefile_hash);
 
@@ -550,7 +545,7 @@ sub make_from_PL {
 EOF
 }
 
-sub MY::postamble {
+sub pdl_my_postamble {
   my ($self) = @_;
   package MY;
   my @m = PDL::Core::Dev::postamble() . "\n\n";
@@ -634,7 +629,7 @@ EOT
   push @m, <<EOF;
 
 # dynamic only
-core : pm_to_blib \$(INST_DYNAMIC)
+core : pm_to_blib \$(INST_DYNAMIC) build_inline
 
 coretest : core
 	prove -b $coretest
