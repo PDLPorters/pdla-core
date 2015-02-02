@@ -1,25 +1,34 @@
-' # Needed for CPAN indexing?
 package PDLA::Bad;
-';
 
 use strict;
+use warnings;
+use PDLA::Bad::Inline Pdlapp => Config => clean_after_build => 0;
+use PDLA::Bad::Inline Pdlapp => 'DATA', internal => 1;
+use parent 'PDLA::Exporter';
 
-# check for bad value support
+use PDLA::Types;
 use PDLA::Config;
 use PDLA::Core::Dev;
+
+our @EXPORT_OK;
+our %EXPORT_TAGS = (Func=> \@EXPORT_OK);
+
 my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
 my $usenan   = $PDLA::Config{BADVAL_USENAN} || 0;
 my $bvalPerPdl = $PDLA::Config{BADVAL_PER_PDLA} || 0;
 
-pp_add_exported( '',
- 'badflag check_badflag badvalue orig_badvalue nbad nbadover ngood ngoodover ' .
- 'setbadat setbadif setvaltobad setbadtoval setnantobad setbadtonan copybad '.
- 'isbad isgood ' );
+sub import_export {
+    my ($func) = @_;
+    push @EXPORT_OK, $func;
+    no strict 'refs';
+    *$func = \&{"PDLA::$func"};
+}
 
-pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
-
-use strict;
-use PDLA::Types;
+import_export($_) for qw(
+  badflag check_badflag badvalue orig_badvalue nbad nbadover ngood ngoodover
+  setbadat setbadif setvaltobad setbadtoval setnantobad setbadtonan copybad
+  isbad isgood
+);
 
 =head1 NAME
 
@@ -72,38 +81,10 @@ C<BADVAL_PER_PDLA> option set, 0 otherwise.
 
 =cut
 
-*badflag         = \&PDLA::badflag;
-*badvalue        = \&PDLA::badvalue;
-*orig_badvalue   = \&PDLA::orig_badvalue;
-*check_badflag = \&PDLA::check_badflag;
-*isbad  = \&PDLA::isbad;
-*isgood = \&PDLA::isgood;
-*nbadover  = \&PDLA::nbadover;
-*ngoodover = \&PDLA::ngoodover;
-*nbad      = \&PDLA::nbad;
-*ngood     = \&PDLA::ngood;
-*setbadat = \&PDLA::setbadat;
-*setbadif = \&PDLA::setbadif;
-*setvaltobad = \&PDLA::setvaltobad;
-*setbadtoval = \&PDLA::setvaltobad;
-*setnantobad = \&PDLA::setnantobad;
-*setbadtonan = \&PDLA::setbadtonan;
-*copybad = \&PDLA::copybad;
-
-!NO!SUBS!
-
-pp_addpm(<<"!WITH!SUBS!");
-
 # really should be constants
-\$PDLA::Bad::Status = $bvalflag;
-\$PDLA::Bad::UseNaN = $usenan;
-\$PDLA::Bad::PerPdl = $bvalPerPdl;
-
-!WITH!SUBS!
-
-pp_addpm(<<'!NO!SUBS!');
-############################################################
-############################################################
+$PDLA::Bad::Status = $bvalflag;
+$PDLA::Bad::UseNaN = $usenan;
+$PDLA::Bad::PerPdl = $bvalPerPdl;
 
 =head2 badflag
 
@@ -649,11 +630,7 @@ included in the file.
 
 =cut
 
-!NO!SUBS!
-
 if ( $bvalflag ) {
-  pp_addpm(<<'!NO!SUBS!');
-
   *PDLA::check_badflag = sub {
       my $pdl = shift;
       $pdl->badflag(0) if $pdl->badflag and $pdl->nbad == 0;
@@ -728,42 +705,33 @@ if ( $bvalflag ) {
 ############################################################
 ############################################################
 
-!NO!SUBS!
-
   # Generate small ops functions to do entire array
   foreach my $op ( 
-            ['nbad','nbadover'],
-            ['ngood','ngoodover'],
-              ) {
-      pp_addpm(<<"EOD");
-
-  *$op->[0] = \\&PDLA::$op->[0];
-  *PDLA::$op->[0] = sub {
-          my(\$x) = \@_; my \$tmp;
-          \$x->clump(-1)->$op->[1](\$tmp=PDLA->nullcreate(\$x) );
-          return \$tmp->at();
-  };
-EOD
-
+    ['nbad','nbadover'],
+    ['ngood','ngoodover'],
+  ) {
+    no strict 'refs';
+    my $otherop = $op->[1];
+    *{$op->[0]} = \&{"PDLA::$op->[0]"};
+    *{"PDLA::$op->[0]"} = sub {
+      my($x) = @_; my $tmp;
+      $x->clump(-1)->$otherop($tmp=PDLA->nullcreate($x) );
+      return $tmp->at();
+    };
   } # for $op
 
-pp_addpm(<<'!NO!SUBS!');
-
   *PDLA::setbadat = sub {
-      barf 'Usage: setbadat($pdl, $x, $y, ...)' if $#_<1;
+      PDLA::Core::barf('Usage: setbadat($pdl, $x, $y, ...)') if $#_<1;
       my $self  = shift; 
       PDLA::Core::set_c ($self, [@_], $self->badvalue);
       $self->badflag(1);
       return $self;
   };
 
-!NO!SUBS!
-# setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
-# setbadtonan /
-#
+  # setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
+  # setbadtonan /
+  #
   if ( $usenan ) {
-    pp_addpm(<<'!NO!SUBS!');
-
     *PDLA::setnantobad = sub {
         my $x = shift;
         my $y;
@@ -795,55 +763,61 @@ pp_addpm(<<'!NO!SUBS!');
         return $y;
     };
 
-!NO!SUBS!
-
   }
 } else {
   # if no bad-value support, this is easy
-  pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
+  # dummy routines
+  *PDLA::badflag = sub { return 0; }; # no piddles can contain bad values by design
+  *PDLA::badvalue = sub { return undef; };
+  *PDLA::orig_badvalue = sub { return undef; };
 
-# dummy routines
-*PDLA::badflag = sub { return 0; }; # no piddles can contain bad values by design
-*PDLA::badvalue = sub { return undef; };
-*PDLA::orig_badvalue = sub { return undef; };
+  *PDLA::check_badflag = sub { return 0; }; # no piddles can contain bad values by design
 
-*PDLA::check_badflag = sub { return 0; }; # no piddles can contain bad values by design
+  *PDLA::isbad = sub { return 0; }; # no piddles can contain bad values by design
+  *PDLA::isgood = sub { return 1; }; # no piddles can contain bad values by design
 
-*PDLA::isbad = sub { return 0; }; # no piddles can contain bad values by design
-*PDLA::isgood = sub { return 1; }; # no piddles can contain bad values by design
+  #        Pars => 'a(n); int+ [o]b();',
+  # collapse the input piddle along it's first dimension and set to 0's
+  # - using sumover to do the projection as I'm too lazy to do it
+  #   myself
+  #
+  *PDLA::nbadover = sub { return PDLA::sumover( $_[0] * 0 ); };
+  *PDLA::ngoodover = sub { return PDLA::sumover( $_[0] * 0 + 1 ); };
 
-#        Pars => 'a(n); int+ [o]b();',
-# collapse the input piddle along it's first dimension and set to 0's
-# - using sumover to do the projection as I'm too lazy to do it
-#   myself
-#
-*PDLA::nbadover = sub { return PDLA::sumover( $_[0] * 0 ); };
-*PDLA::ngoodover = sub { return PDLA::sumover( $_[0] * 0 + 1 ); };
+  *PDLA::nbad = sub { return 0; };
+  *PDLA::ngood = sub { return $_[0]->nelem; };
 
-*PDLA::nbad = sub { return 0; };
-*PDLA::ngood = sub { return $_[0]->nelem; };
+  # As these can't be done inplace we try to keep the
+  # same behaviour here
+  #
+  *PDLA::setbadat = sub { $_[0]->set_inplace(0); return $_[0]->copy; };
+  *PDLA::setbadif = sub { $_[0]->set_inplace(0); return $_[0]->copy; };
 
-# As these can't be done inplace we try to keep the
-# same behaviour here
-#
-*PDLA::setbadat = sub { $_[0]->set_inplace(0); return $_[0]->copy; };
-*PDLA::setbadif = sub { $_[0]->set_inplace(0); return $_[0]->copy; };
+  # this can be done inplace
+  # fortunately PDLA::copy handles inplace ops
+  *PDLA::setvaltobad = sub { return $_[0]->copy; };
+  *PDLA::setbadtoval = sub { return $_[0]->copy; };
+  *PDLA::setnantobad = sub { return $_[0]->copy; };
+  *PDLA::setbadtonan = sub { return $_[0]->copy; };
 
-# this can be done inplace
-# fortunately PDLA::copy handles inplace ops
-*PDLA::setvaltobad = sub { return $_[0]->copy; };
-*PDLA::setbadtoval = sub { return $_[0]->copy; };
-*PDLA::setnantobad = sub { return $_[0]->copy; };
-*PDLA::setbadtonan = sub { return $_[0]->copy; };
+  *PDLA::copybad = sub { return $_[0]->copy; }; # ignore the mask
+} # if: $bvalflag
 
-*PDLA::copybad = sub { return $_[0]->copy; }; # ignore the mask
+1;
 
-!NO!SUBS!
+__DATA__
 
+__Pdlapp__
+
+use PDLA::Config;
+use PDLA::Core::Dev;
+my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
+my $usenan   = $PDLA::Config{BADVAL_USENAN} || 0;
+
+if ( !$bvalflag ) {
     pp_done();
     exit;
-
-} # if: $bvalflag
+}
 
 #########################################################
 

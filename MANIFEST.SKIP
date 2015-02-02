@@ -42,9 +42,6 @@ RCS
 \.tar\.gz$
 \.travis\.yml$
 \b_eumm/
-^Basic/Bad/Bad\.c$
-^Basic/Bad/Bad\.pm$
-^Basic/Bad/Bad\.xs$
 ^Basic/Complex/Complex\.c
 ^Basic/Complex/Complex\.pm
 ^Basic/Complex/Complex\.xs

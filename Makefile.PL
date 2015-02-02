@@ -504,7 +504,7 @@ my %makefile_hash = (
 
   postamble => {
     inline => {
-      module => [ qw(PDLA::Ops) ],
+      module => [ qw(PDLA::Ops PDLA::Bad) ],
       ilsm => 'Inline::Pdlapp',
       bundle => 0,
     },
@@ -657,6 +657,7 @@ sub coretarget {
     # all a left's rights are made concurrently, no sequence - list ALL prereqs
     my @left2rights = (
         [ build_inline_PDLA_Ops => '$(INST_DYNAMIC)' ],
+        [ build_inline_PDLA_Bad => '$(INST_DYNAMIC)' ],
         [
             core => [
                 'build_inline',
@@ -665,7 +666,7 @@ sub coretarget {
                     [ qw(pm_to_blib dynamic) ],
                     [ qw(pm_to_blib $(INST_DYNAMIC)) ],
                 # the modules in PDLA::LiteF, used in t/core.t
-                ] } qw(Primitive Ufunc Slices Bad Math MatrixOps),
+                ] } qw(Primitive Ufunc Slices Math MatrixOps),
             ]
         ],
     );
