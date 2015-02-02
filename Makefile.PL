@@ -2,10 +2,12 @@ use strict;
 use warnings;
 
 eval { require Devel::CheckLib; Devel::CheckLib->import; };
+use lib 'inc';
 use 5.010_000;
 use ExtUtils::MakeMaker 7.05_07;  # for XSMULTI
 use Config;
 use File::Spec;
+use Inline::Module;
 
 $::PP_VERBOSE = $::PP_VERBOSE = 0; # =1 makes PP waffle a lot
 
@@ -489,6 +491,14 @@ my %makefile_hash = (
   'BINARY_LOCATION' => 'PDLA.tar.gz',
 
   %notestsifmodulesmissing,
+
+  postamble => {
+    inline => {
+      module => [ qw(PDLA::Ops) ],
+      ilsm => 'Inline::Pdlapp',
+      bundle => 0,
+    },
+  },
 );
 
 =begin comment
@@ -498,19 +508,18 @@ for $k(sort keys %makefile_hash) {
     print "\t$k\t";
     $v = $makefile_hash{$k};
     unless(ref $v) {
-	print $v,"\n";
+       print $v,"\n";
     } elsif(ref $v eq 'HASH') {
-	print "HASH:\n";
-	for $vk(sort keys %$v) {
-	    print "\t\t$vk\t$v->{$vk}\n";
-	}
+       print "HASH:\n";
+       for $vk(sort keys %$v) {
+           print "\t\t$vk\t$v->{$vk}\n";
+       }
     } elsif(ref $v eq 'ARRAY') {
-	print "ARRAY:\n";
-	for $vv(@$v) {
-	    print "\t\t$vv\n";
-	}
+       print "ARRAY:\n";
+       for $vv(@$v) {
+           print "\t\t$vv\n";
+       }
     } else {print "$v\n";}
-
 }
 
 =end comment
@@ -522,9 +531,20 @@ for $k(sort keys %makefile_hash) {
 # and avoids having to bodge in the Config to get copied into blib
 make_PDLA_Config_pm(); # write out config to PDLA::Config
 
+my $inline_postamble = \&MY::postamble; # imported by Inline::Module->import
+{ no warnings 'redefine';
+*MY::postamble = sub {
+  my $self = shift;
+  my $pdl_text = pdl_my_postamble($self, @_);
+  my $inline_text = $self->$inline_postamble(@_);
+  $inline_text =~ s/\bABSPERLRUN\b/${&}INST/g; # PDLA stuff relies on blib
+  join "\n", $pdl_text, $inline_text;
+};
+}
+
 WriteMakefile(%makefile_hash);
 
-sub MY::postamble {
+sub pdl_my_postamble {
   my ($self) = @_;
   package MY;
   my @m = PDLA::Core::Dev::postamble() . "\n";
@@ -626,12 +646,13 @@ sub coretarget {
     # @prereqs are named targets - undef=[]
     # all a left's rights are made concurrently, no sequence - list ALL prereqs
     my @left2rights = (
+        [ build_inline_PDLA_Ops => '$(INST_DYNAMIC)' ],
         [
             core => [
                 map { [
                     [ 'Basic', $_ ],
                     [ qw(pm_to_blib dynamic) ],
-                    [ qw(pm_to_blib $(INST_DYNAMIC)) ],
+                    [ qw(pm_to_blib $(INST_DYNAMIC) build_inline) ],
                 # the modules in PDLA::LiteF, used in t/core.t
                 ] } qw(Primitive Ufunc Slices Bad Math MatrixOps),
             ]
@@ -655,6 +676,7 @@ sub flatten_parallel_target {
     my ($self, $left2rights) = @_;
     my ($left, $rights) = @$left2rights;
     my (@deps, @recipes, @otherchunks);
+    $rights = [ $rights ] if !ref $rights;
     for my $right (@$rights) {
         if (ref $right) {
             #     [ \@dir, \@targets, \@prereqs ]

@@ -3,8 +3,8 @@ package PDLA::Ops;
 use strict;
 use warnings;
 use PDLA::Core;
-use Inline Pdlapp => Config => clean_after_build => 0;
-use Inline Pdlapp => 'DATA', name => __PACKAGE__;
+use PDLA::Ops::Inline Pdlapp => Config => clean_after_build => 0;
+use PDLA::Ops::Inline Pdlapp => 'DATA', internal => 1;
 use parent 'PDLA::Exporter';
 
 our @EXPORT_OK  = qw( log10 assgn ipow );
