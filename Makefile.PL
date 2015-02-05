@@ -7,7 +7,7 @@ use lib 'inc', Cwd::abs_path('lib'), Cwd::abs_path('inc');
 
 use Devel::CheckLib;
 use 5.010_000;
-use ExtUtils::MakeMaker 7.05_07;  # for XSMULTI
+use ExtUtils::MakeMaker 7.05_11;  # for XSMULTI
 use Config;
 use File::Spec;
 use Inline::Module;
@@ -389,7 +389,7 @@ my @prereq = (
            'Carp'                => 0,         # Need to run
            'Convert::UU'         => 0,         # for PDL::IO::Dumper
            'Data::Dumper'        => 2.121,     # for PDL::IO::Dumper
-           'ExtUtils::MakeMaker' => 7.05_07,   # XSMULTI
+           'ExtUtils::MakeMaker' => 7.05_11,   # XSMULTI
 	   'File::Map'           => 0.57,      # test new mmap implementation
 	   'File::Spec'          => 0.6,
 	   'File::Temp'          => 0,
@@ -442,7 +442,7 @@ my %makefile_hash = (
   'CONFIGURE_REQUIRES' => {
     'Carp'            => 1.20, # EU::MM seems to need this not to crash
     'Devel::CheckLib' => 1.01,
-    'ExtUtils::MakeMaker' => 7.05_07,
+    'ExtUtils::MakeMaker' => 7.05_11,
   },
   BUILD_REQUIRES => {
     'ExtUtils::MakeMaker' => 0,
