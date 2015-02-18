@@ -1,4 +1,27 @@
-pp_addpm({At => 'Top'},<< 'EOD');
+package PDLA::Slices;
+
+use strict;
+use warnings;
+use PDLA::Slices::Inline Pdlapp => Config => clean_after_build => 0;
+use PDLA::Slices::Inline Pdlapp => 'DATA', internal => 1;
+use PDLA::Core;
+use parent 'PDLA::Exporter';
+
+our @EXPORT_OK;
+our %EXPORT_TAGS = (Func=> \@EXPORT_OK);
+
+sub import_export {
+    my ($func) = @_;
+    push @EXPORT_OK, $func;
+    no strict 'refs';
+    *$func = \&{"PDLA::$func"};
+}
+
+import_export($_) for qw(
+  dice dice_axis slice using indexND indexNDb
+  sliceb unthread identvaff rotate splitdim lags diagonalI affine oslice mv
+  xchg converttypei flowconvert rle rld rangeb index2d index1d index
+);
 
 =head1 NAME
 
@@ -1346,8 +1369,11 @@ the copyright notice should be included in the file.
 
 =cut
 
-EOD
+1;
 
+__DATA__
+
+__Pdlapp__
 
 # $::PP_VERBOSE=1;
 
@@ -1548,7 +1574,6 @@ pp_def(
 
 
 # indexND: CED 2-Aug-2002
-pp_add_exported('','indexND indexNDb');
 pp_def(
         'rangeb',
         OtherPars => 'SV *index; SV *size; SV *boundary',
@@ -2483,7 +2508,6 @@ pp_def(
 );
 
 
-pp_add_exported('', 'using');
 
 pp_addhdr(<<END
 static int cmp_pdll(const void *a_,const void *b_) {
@@ -2848,9 +2872,6 @@ pp_def(
         ',
 );
 
-
-pp_add_exported('', 'dice dice_axis');
-pp_add_exported('', 'slice');
 
 ##########
 # This is a kludge to pull arbitrary data out of a single-element PDLA, using the Types.pm stuff,
@@ -3422,6 +3443,5 @@ SLICE-MC
 
         } # end of RedoDims for slice
 );
-
 
 pp_done();
