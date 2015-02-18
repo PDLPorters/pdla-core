@@ -42,8 +42,6 @@ Basic/MatrixOps/sslib.h
 Basic/MatrixOps/svd.c
 Basic/Primitive/Makefile.PL
 Basic/Primitive/primitive.pd
-Basic/Slices/Makefile.PL
-Basic/Slices/slices.pd
 Basic/Ufunc/Makefile.PL
 Basic/Ufunc/ufunc.pd
 COPYING
@@ -206,6 +204,7 @@ lib/PDL/Philosophy.pod
 lib/PDL/QuickStart.pod
 lib/PDL/Reduce.pm
 lib/PDL/Scilab.pod
+lib/PDL/Slices.pm
 lib/PDL/Threading.pod
 lib/PDL/Tips.pod
 lib/PDL/Tutorials.pod

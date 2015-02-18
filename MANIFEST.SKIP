@@ -39,9 +39,6 @@ RCS
 \.tar\.gz$
 \.travis\.yml$
 \b_eumm/
-^Basic/Bad/Bad\.c$
-^Basic/Bad/Bad\.pm$
-^Basic/Bad/Bad\.xs$
 ^Basic/Complex/Complex\.c
 ^Basic/Complex/Complex\.pm
 ^Basic/Complex/Complex\.xs
@@ -51,17 +48,11 @@ RCS
 ^Basic/MatrixOps/MatrixOps\.c
 ^Basic/MatrixOps/MatrixOps\.pm
 ^Basic/MatrixOps/MatrixOps\.xs
-^Basic/Ops/Ops\.c$
-^Basic/Ops/Ops\.pm$
-^Basic/Ops/Ops\.xs$
 ^Basic/Pod/Export\.pod$
 ^Basic/Pod/PP-Inline\.pod$
 ^Basic/Primitive/Primitive\.c$
 ^Basic/Primitive/Primitive\.pm$
 ^Basic/Primitive/Primitive\.xs$
-^Basic/Slices/Slices\.c$
-^Basic/Slices/Slices\.pm$
-^Basic/Slices/Slices\.xs$
 ^Basic/Ufunc/Ufunc\.c
 ^Basic/Ufunc/Ufunc\.pm
 ^Basic/Ufunc/Ufunc\.xs

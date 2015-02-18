@@ -93,9 +93,6 @@ Basic/Pod/PP-Inline.pod
 Basic/Primitive/Primitive.c
 Basic/Primitive/Primitive.pm
 Basic/Primitive/Primitive.xs
-Basic/Slices/Slices.c
-Basic/Slices/Slices.pm
-Basic/Slices/Slices.xs
 Basic/Ufunc/Ufunc.c
 Basic/Ufunc/Ufunc.pm
 Basic/Ufunc/Ufunc.xs
