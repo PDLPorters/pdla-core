@@ -88,9 +88,6 @@ Basic/MatrixOps/MatrixOps.c
 Basic/MatrixOps/MatrixOps.pm
 Basic/MatrixOps/MatrixOps.xs
 Basic/Pod/PP-Inline.pod
-Basic/Ufunc/Ufunc.c
-Basic/Ufunc/Ufunc.pm
-Basic/Ufunc/Ufunc.xs
 Demos/BAD2_demo.pm
 Demos/BAD_demo.pm
 MANIFEST.bak

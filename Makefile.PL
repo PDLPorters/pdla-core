@@ -515,7 +515,9 @@ my %makefile_hash = (
     inline => {
       # ordering matters:
       # bad loads primitive, primitive loads slices
-      module => [ qw(PDL::Ops PDL::Slices PDL::Primitive PDL::Bad) ],
+      module => [ qw(
+        PDL::Ops PDL::Slices PDL::Primitive PDL::Bad PDL::Ufunc
+      ) ],
       ilsm => 'Inline::Pdlpp',
       bundle => 0,
     },

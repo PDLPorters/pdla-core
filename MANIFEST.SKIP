@@ -50,9 +50,6 @@ RCS
 ^Basic/MatrixOps/MatrixOps\.xs
 ^Basic/Pod/Export\.pod$
 ^Basic/Pod/PP-Inline\.pod$
-^Basic/Ufunc/Ufunc\.c
-^Basic/Ufunc/Ufunc\.pm
-^Basic/Ufunc/Ufunc\.xs
 ^CVS
 ^Demos/BAD2_demo.pm$
 ^Demos/BAD_demo.pm$

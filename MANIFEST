@@ -40,8 +40,6 @@ Basic/MatrixOps/simq.c
 Basic/MatrixOps/sslib.c
 Basic/MatrixOps/sslib.h
 Basic/MatrixOps/svd.c
-Basic/Ufunc/Makefile.PL
-Basic/Ufunc/ufunc.pd
 COPYING
 Changes
 Changes_CVS
@@ -208,6 +206,7 @@ lib/PDL/Threading.pod
 lib/PDL/Tips.pod
 lib/PDL/Tutorials.pod
 lib/PDL/Types.pm.PL
+lib/PDL/Ufunc.pm
 lib/PDL/default.perldlrc
 lib/PDL/pdlapi.c
 lib/PDL/pdlbadvalinit.c.PL
