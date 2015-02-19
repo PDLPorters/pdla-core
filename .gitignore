@@ -78,9 +78,6 @@ Changes
 
 .inlinepdlpp
 .inlinewith
-Basic/Complex/Complex.c
-Basic/Complex/Complex.pm
-Basic/Complex/Complex.xs
 Basic/Math/Math.c
 Basic/Math/Math.pm
 Basic/Math/Math.xs
