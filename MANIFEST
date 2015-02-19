@@ -40,8 +40,6 @@ Basic/MatrixOps/simq.c
 Basic/MatrixOps/sslib.c
 Basic/MatrixOps/sslib.h
 Basic/MatrixOps/svd.c
-Basic/Primitive/Makefile.PL
-Basic/Primitive/primitive.pd
 Basic/Ufunc/Makefile.PL
 Basic/Ufunc/ufunc.pd
 COPYING
@@ -201,6 +199,7 @@ lib/PDL/PP/Var.pm
 lib/PDL/PP/XS.pm
 lib/PDL/ParallelCPU.pod
 lib/PDL/Philosophy.pod
+lib/PDL/Primitive.pm
 lib/PDL/QuickStart.pod
 lib/PDL/Reduce.pm
 lib/PDL/Scilab.pod

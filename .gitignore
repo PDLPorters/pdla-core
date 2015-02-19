@@ -68,15 +68,13 @@ lib/PDL/Ops/Inline.pm
 
 Changes
 
-._*
-
 # Strange mac files
 
 ._*
 
 # Directory specific build files
 # These can either be in the specific directories or specified
-# with full patch in the top level directory (as here).
+# with full path in the top level directory (as here).
 
 .inlinepdlpp
 .inlinewith
@@ -90,9 +88,6 @@ Basic/MatrixOps/MatrixOps.c
 Basic/MatrixOps/MatrixOps.pm
 Basic/MatrixOps/MatrixOps.xs
 Basic/Pod/PP-Inline.pod
-Basic/Primitive/Primitive.c
-Basic/Primitive/Primitive.pm
-Basic/Primitive/Primitive.xs
 Basic/Ufunc/Ufunc.c
 Basic/Ufunc/Ufunc.pm
 Basic/Ufunc/Ufunc.xs

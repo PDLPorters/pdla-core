@@ -50,9 +50,6 @@ RCS
 ^Basic/MatrixOps/MatrixOps\.xs
 ^Basic/Pod/Export\.pod$
 ^Basic/Pod/PP-Inline\.pod$
-^Basic/Primitive/Primitive\.c$
-^Basic/Primitive/Primitive\.pm$
-^Basic/Primitive/Primitive\.xs$
 ^Basic/Ufunc/Ufunc\.c
 ^Basic/Ufunc/Ufunc\.pm
 ^Basic/Ufunc/Ufunc\.xs
