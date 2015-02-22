@@ -100,6 +100,7 @@ unless $ENV{PDLA_INC_OK};
 #
 %PDLA::Config = ();
 
+my ($pthread_include, $pthread_library, $pthread_define);
 sub getpdl_config {
   my ($pdl_conf_file) = @_;
 
@@ -194,7 +195,10 @@ EOD
       $PDLA_CONFIG{BADVAL_USENAN} = 0;
   }
 
-  ($PDLA_CONFIG{WITH_POSIX_THREADS}) = figure_pthreads($PDLA_CONFIG{WITH_POSIX_THREADS});
+  (
+    $PDLA_CONFIG{WITH_POSIX_THREADS},
+    $pthread_include, $pthread_library, $pthread_define,
+  ) = figure_pthreads($PDLA_CONFIG{WITH_POSIX_THREADS});
 
   # create a PDLA::Config variable matching the PDLA_CONFIG structure
   # and convert yes/no answers to 1/0
@@ -388,6 +392,13 @@ my $preop = '$(PERL) -I$(INST_ARCHLIB) -I$(INST_LIB) -MPDLA::Core::Dev -e pdlpp_
 
 my @optimize = (OPTIMIZE => $PDLA::Config{OPTIMIZE}) if $PDLA::Config{OPTIMIZE};
 
+my $macos_braindamage_define = ($^O eq 'darwin') ? " -DMACOS_MZERO_BRAINDAMAGE " : "";
+my $badval_define = " -DBADVAL=$PDLA::Config{WITH_BADVAL} -DBADVAL_USENAN=$PDLA::Config{BADVAL_USENAN} -DBADVAL_PER_PDLA=$PDLA::Config{BADVAL_PER_PDLA}";
+my $core_cobj = join ' ', map qq{lib/PDLA/$_\$(OBJ_EXT)}, qw(pdlcore pdlapi pdlhash pdlthread pdlconv pdlmagic pdlsections);
+push @cleanup, $core_cobj, map "lib/PDLA/$_", qw(
+    pdlconv.c pdlsections.c pdlcore.c Core.c
+);
+
 my %makefile_hash = (
   'PREREQ_PM' => { @prereq },
   'LICENSE' => 'perl',
@@ -442,9 +453,29 @@ my %makefile_hash = (
   },
   @optimize,
   'CCFLAGS' => $ccflags,
-  'dist'     => { COMPRESS => 'gzip',
-                  SUFFIX   => 'gz',
-                  PREOP    => $preop },
+  'DEFINE' 	=> $pthread_define.$macos_braindamage_define.$badval_define,
+  'LIBS'         => ["$pthread_library $PDLA::Config{MALLOCDBG}->{libs}"],
+  'INC'          => join(' ',
+    PDLA_INCLUDE(), map {length($_) ? qq{"$_"} : ()} $pthread_include, $PDLA::Config{MALLOCDBG}->{include}
+  ),
+  TYPEMAPS => [ qw(lib/PDLA/typemap.core) ],
+  XSMULTI => 1,
+  XSBUILD => {
+    xs => {
+        'lib/PDLA/Core' => {
+            OBJECT => 'lib/PDLA/Core$(OBJ_EXT) ' . $core_cobj,
+        },
+    }
+  },
+  depend => {
+     'lib/PDLA/Core$(OBJ_EXT)' => 'config pm_to_blib lib/PDLA/pdldataswitch.c lib/PDLA/pdlbadvalinit.c lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h',
+         # Core.xs needs blib/arch for -Mblib to work, as well as pm_to_blib
+  },
+  'dist'     => {
+    COMPRESS => 'gzip',
+    SUFFIX   => 'gz',
+    ($preop ? (PREOP => $preop) : ()),
+  },
   'clean' => {
     'FILES' => join ' ', @cleanup, qw(
       tbyte.tif tmp0 tmp0.hdr tushort.tif
@@ -517,10 +548,11 @@ sub MY::postamble {
 # Bits of C code we generate from special perl scripts
 # there must be a more elegant way of saying that
 # certain files have additional dependencies!
-lib/PDLA/Core/pdlthread.c :: lib/PDLA/Core/pdlcore.h
-lib/PDLA/Core/pdlhash.c :: lib/PDLA/Core/pdlcore.h
-lib/PDLA/Core/pdlapi.c :: lib/PDLA/Core/pdlcore.h
-lib/PDLA/Core/pdlmagic.c :: lib/PDLA/Core/pdlcore.h
+lib/PDLA/pdlthread.c :: lib/PDLA/Core/pdlcore.h
+lib/PDLA/pdlhash.c :: lib/PDLA/Core/pdlcore.h
+lib/PDLA/pdlapi.c :: lib/PDLA/Core/pdlcore.h
+lib/PDLA/pdlmagic.c :: lib/PDLA/Core/pdlcore.h
+lib/PDLA/Core$(OBJ_EXT) : lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
 
 # this ensures Types.pm is in blib, where the .pd files below can find
 subdirs :: pm_to_blib
@@ -618,9 +650,9 @@ sub coretarget {
                 map { [
                     [ 'Basic', $_ ],
                     [ qw(pm_to_blib dynamic) ],
-                    [ qw(pm_to_blib lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h) ],
+                    [ qw(pm_to_blib $(INST_DYNAMIC) lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h) ],
                 # the modules in PDLA::LiteF, used in t/core.t
-                ] } qw(Core Ops Primitive Ufunc Slices Bad Math MatrixOps),
+                ] } qw(Ops Primitive Ufunc Slices Bad Math MatrixOps),
             ]
         ],
     );
@@ -683,6 +715,10 @@ sub MY::init_dirscan {
 sub MY::init_PM {
   package MY;
   my ($self) = @_;
+  my $core = 'lib/PDLA/Core';
+  $self->{XS}{"$core.xs"} = "$core.c";
+  push @{$self->{C}}, "$core.c";
+  push @{$self->{O_FILES}}, "$core$self->{OBJ_EXT}";
   $self->SUPER::init_PM;
   for my $pm (keys %{ $self->{PM} }) {
     next unless (my $nonPL = $pm) =~ s/\.PL$//;
@@ -691,6 +727,10 @@ sub MY::init_PM {
     $self->{realclean}{FILES} .= " $nonPL";
     next if $nonPL =~ /Types\.pm/; # we do that ourselves already
     $self->{PL_FILES}{$pm} = $nonPL;
+  }
+  for my $pm (keys %{ $self->{PM} }) {
+    next unless $pm =~ /(\.[cg]|\Q$Config::Config{obj_ext}\E|\Qtypemap.core\E)$/;
+    delete $self->{PM}{$pm};
   }
 }
 

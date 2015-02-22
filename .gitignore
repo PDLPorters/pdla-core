@@ -89,12 +89,6 @@ Basic/Bad/Bad.xs
 Basic/Complex/Complex.c
 Basic/Complex/Complex.pm
 Basic/Complex/Complex.xs
-Basic/Core/Core.c
-Basic/Core/pdlbadvalinit.c
-Basic/Core/pdlconv.c
-Basic/Core/pdlcore.c
-Basic/Core/pdldataswitch.c
-Basic/Core/pdlsections.c
 Basic/Math/Math.c
 Basic/Math/Math.pm
 Basic/Math/Math.xs
@@ -134,7 +128,7 @@ _Inline/
 bin/pdla
 gsl.pl
 lib/PDLA/Config.pm
-lib/PDLA/Core.pm
+lib/PDLA/Core.c
 lib/PDLA/Core/pdl.h
 lib/PDLA/Core/pdlcore.h
 lib/PDLA/Core/pdlsimple.h
@@ -142,6 +136,11 @@ lib/PDLA/Doc/Config.pm
 lib/PDLA/PP/Dump.pm
 lib/PDLA/Types.pm
 lib/PDLA/Version.pm
+lib/PDLA/pdlbadvalinit.c
+lib/PDLA/pdlconv.c
+lib/PDLA/pdlcore.c
+lib/PDLA/pdldataswitch.c
+lib/PDLA/pdlsections.c
 perldl.conf-fast
 perldl.conf-orig
 perldla.pod

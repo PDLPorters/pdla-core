@@ -46,12 +46,6 @@ RCS
 ^Basic/Complex/Complex\.c
 ^Basic/Complex/Complex\.pm
 ^Basic/Complex/Complex\.xs
-^Basic/Core/Core\.c$
-^Basic/Core/check_endian$
-^Basic/Core/pdlbadvalinit\.c$
-^Basic/Core/pdldataswitch\.c$
-^Basic/Core/pdlcore\.c$
-^Basic/Core/isbigendian.p$
 ^Basic/Math/Math\.c$
 ^Basic/Math/Math\.pm$
 ^Basic/Math/Math\.xs$
@@ -127,6 +121,10 @@ RCS
 ^lib/PDLA/Core/pdl.h$
 ^lib/PDLA/Core/pdlcore.h$
 ^lib/PDLA/Core/pdlsimple.h$
+^lib/PDLA/pdlbadvalinit\.c$
+^lib/PDLA/pdldataswitch\.c$
+^lib/PDLA/pdlcore\.c$
+^lib/PDLA/Core\.c$
 ^patch
 ^bin/pdla$
 ^pdl.*-log.txt$
