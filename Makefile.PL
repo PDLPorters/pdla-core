@@ -529,11 +529,9 @@ sub MY::postamble {
   my ($self) = @_;
   package MY;
   my @m = PDL::Core::Dev::postamble() . "\n\n";
-  push @m, ::make_from_PL('lib/PDL/Core/pdl.h', 'lib/PDL/Types.pm');
   push @m, map { ::make_from_PL("lib/PDL/Core/$_", 'lib/PDL/Types.pm') }
-    qw( pdlsimple.h pdlcore.h );
-  if (!$self->is_make_type('dmake')) {
-    push @m, <<'EOF';
+    qw( pdl.h pdlsimple.h pdlcore.h pdlconv.c pdlcore.c );
+  push @m, <<'EOF';
 # Bits of C code we generate from special perl scripts
 # there must be a more elegant way of saying that
 # certain files have additional dependencies!
@@ -543,11 +541,6 @@ lib/PDL/Core/pdlapi.c :: lib/PDL/Core/pdlcore.h
 lib/PDL/Core/pdlmagic.c :: lib/PDL/Core/pdlcore.h
 
 EOF
-    push @m, map { ::make_from_PL("lib/PDL/Core/$_", 'lib/PDL/Types.pm') }
-      qw( pdlsimple.h pdlconv.c pdlcore.c );
-    push @m, map { ::make_from_PL("Basic/Core/$_") }
-      qw( pdlcore.c );
-  }
 
   # Extra build target to build the doc database
   my $text = '
