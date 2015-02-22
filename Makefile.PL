@@ -512,9 +512,8 @@ sub MY::postamble {
   my ($self) = @_;
   package MY;
   my @m = PDLA::Core::Dev::postamble() . "\n\n";
-  push @m, ::make_from_PL('lib/PDLA/Core/pdl.h', 'lib/PDLA/Types.pm');
-  push @m, map { ::make_from_PL("lib/PDLA/Core/$_", 'lib/PDLA/Types.pm') }
-    qw( pdlsimple.h pdlcore.h );
+  push @m, map ::make_from_PL("lib/PDLA/Core/$_", 'lib/PDLA/Types.pm'),
+    qw( pdl.h pdlsimple.h pdlcore.h pdlconv.c pdlcore.c );
   if (!$self->is_make_type('dmake')) {
     push @m, <<'EOF';
 # Bits of C code we generate from special perl scripts
@@ -525,9 +524,10 @@ lib/PDLA/Core/pdlhash.c :: lib/PDLA/Core/pdlcore.h
 lib/PDLA/Core/pdlapi.c :: lib/PDLA/Core/pdlcore.h
 lib/PDLA/Core/pdlmagic.c :: lib/PDLA/Core/pdlcore.h
 
+# this ensures Types.pm is in blib, where the .pd files below can find
+subdirs :: pm_to_blib
+
 EOF
-    push @m, map { ::make_from_PL("lib/PDLA/Core/$_", 'lib/PDLA/Types.pm') }
-      qw( pdlsimple.h pdlconv.c pdlcore.c );
   }
 
   # Extra build target to build the doc database
