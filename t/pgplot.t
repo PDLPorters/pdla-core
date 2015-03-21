@@ -12,11 +12,16 @@ use strict;
 use PDLA;
 use Test::More;
 
+sub eval_skip {
+   eval "use $_[0]";
+   plan skip_all => "$_[0] not installed" if $@;
+}
+
 BEGIN{
-   eval "use PDLA::Graphics::PGPLOT; use PDLA::Graphics::PGPLOT::Window;";
-   if ($@) {
-      plan skip_all => "PDLA::Graphics::PGPLOT not installed";
-   } elsif ( !exists($ENV{'DISPLAY'}) and !exists($ENV{HARNESS_ACTIVE}) ) {
+   eval_skip "PGPLOT";
+   eval_skip "PDLA::Graphics::PGPLOT";
+   eval_skip "PDLA::Graphics::PGPLOT::Window";
+   if ( !exists($ENV{'DISPLAY'}) and !exists($ENV{HARNESS_ACTIVE}) ) {
       # We have this after the PGPLOT module is loaded so that we test whether the
       # module will at least load, even if we do not test it's
       # functionality.
