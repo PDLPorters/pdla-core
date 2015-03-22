@@ -1,10 +1,9 @@
-# -*-perl-*-
 BEGIN{
-	  # Set perl to not try to resolve all symbols at startup
-	  # The default behavior causes some problems because 
-	  # the PGPLOT code defines interfaces for all PGPLOT functions
-	  # whether or not they are linked.
-	  $ENV{'PERL_DL_NONLAZY'}=0;
+    # Set perl to not try to resolve all symbols at startup
+    # The default behavior causes some problems because
+    # the PGPLOT code defines interfaces for all PGPLOT functions
+    # whether or not they are linked.
+    $ENV{'PERL_DL_NONLAZY'}=0;
 }
 
 use strict;
@@ -21,18 +20,11 @@ BEGIN{
    eval_skip "PGPLOT";
    eval_skip "PDLA::Graphics::PGPLOT";
    eval_skip "PDLA::Graphics::PGPLOT::Window";
-   if ( !exists($ENV{'DISPLAY'}) and !exists($ENV{HARNESS_ACTIVE}) ) {
-      # We have this after the PGPLOT module is loaded so that we test whether the
-      # module will at least load, even if we do not test it's
-      # functionality.
-      #
-      plan tests => 1;
-      pass("use ok for PGPLOT PDLA modules # skip -- DISPLAY environment variable not set");
-      exit;
-   } else {
-      plan tests => 12;
-   }
+   plan skip_all => "DISPLAY environment variable not set"
+      if !exists $ENV{'DISPLAY'} and !exists $ENV{HARNESS_ACTIVE};
 }
+
+plan tests => 20;
 
 sub get_answer () {
     print STDERR "Does this look OK (y/n, y is default)? :";
@@ -48,11 +40,11 @@ sub interactive ($$) {
     if (1 == $num) {
     print STDERR <<'EOD';
 PGPLOT X device... you should see a 6 inch (153 mm) x 4 inch (102 mm)
-X window with four plots in it.  All four images should have tick marks 
+X window with four plots in it.  All four images should have tick marks
 on the outside of the axes.
 
 [ Scaled image of m51; scale        [Scaled image of m51 with scale from
-  in pixels on both axes ]           X=[-1.8, 2.0],Y=[-1.9, 1.9] arcmin, 
+  in pixels on both axes ]           X=[-1.8, 2.0],Y=[-1.9, 1.9] arcmin,
 				     with cal. wedge, centered in rect. frame]
 
 [ Square image of m51; scale        [Square image of m51 with scale as above,
@@ -85,37 +77,35 @@ EOD
 }
 
 my $interactive = exists($ENV{'PDLA_INT'});
-my $skip_interactive_msg = "interactive tests not run since environment var PDLA_INT not set";
+my $skip_interactive_msg = "no interactive tests as env var PDLA_INT not set";
 my $interactive_ctr = 0;
-
-###
-### Test code
-###
 
 my $dev = $ENV{'PGPLOT_DEV'} ? $ENV{'PGPLOT_DEV'} : "/xw";
 
-$dev = '/null' if exists $ENV{HARNESS_ACTIVE};
+$dev = '/null' if exists $ENV{HARNESS_ACTIVE} and not $interactive;
 
 my $w = PDLA::Graphics::PGPLOT::Window->new(
-					   Dev => $dev,
-					   Size=> [6,4],
-                                           NX=>2, NY=>2,
-                                           Ch=>2.5, HardCH=>2.5);
-ok( UNIVERSAL::isa($w, "PDLA::Graphics::PGPLOT::Window") );
+    Dev => $dev,
+    Size=> [6,4],
+    NX=>2, NY=>2,
+    Ch=>2.5, HardCH=>2.5
+);
+isa_ok($w, "PDLA::Graphics::PGPLOT::Window");
 
 my $a = rfits('m51.fits');
 
 ##############################
 # Page 1
 #
-foreach my $str ( (
+foreach my $str (
     '$w->imag($a,{Title=>"\$w->imag(\$a);"} );',
     '$w->fits_imag($a,{Title=>"\$w->fits_imag(\$a);"});',
     '$w->imag($a,{J=>1,Title=>"\$w->imag(\$a,{J=>1});"});',
     '$w->fits_imag($a,{J=>1,Title=>"\$w->fits_imag(\$a,{J=>1});"});'
-    ) ) {
-    eval $str;
-    ok (!$@);
+) {
+    my $result = eval $str;
+    is $@, '', "eval '$str'";
+    isnt $result, 0, 'returned true';
 }
 
 $interactive_ctr++;
@@ -123,7 +113,7 @@ SKIP: {
    skip $skip_interactive_msg, 1 unless $interactive;
    ok(interactive($interactive, $interactive_ctr), "interactive tests");
 }
-  
+
 ##############################
 # Page 2
 #
@@ -133,8 +123,9 @@ foreach my $str ( (
     '$w->imag($a,{Pitch=>300,Align=>"RT",Title=>"\$w->imag(\$a,{Pitch=>300,Align=>RT})"});',
     '$w->imag($a,{J=>2,Pitch=>600,Align=>"RT",Title=>"\$w->imag(\$a,{J=>2,Pitch=>600,Align=>RT})                     ."});',
     ) ) {
-    eval $str;
-    ok (!$@);
+    my $result = eval $str;
+    is $@, '', "eval '$str'";
+    isnt $result, 0, 'returned true';
 }
 
 $interactive_ctr++;
@@ -142,10 +133,6 @@ SKIP: {
    skip $skip_interactive_msg, 1 unless $interactive;
    ok(interactive($interactive, $interactive_ctr), "interactive tests");
 }
-  
+
 eval '$w->close';
-ok (!$@);
-
-# End
-
-
+is $@, '', "close window";
