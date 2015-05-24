@@ -1,6 +1,7 @@
-use Test;
+use Test::More tests => 2;
 
-plan tests => 2;
+use strict;
+use warnings;
 
 my @hasnt = ();
 my @test = (['Filter::Util::Call','Filter'],
@@ -13,7 +14,7 @@ for my $mod (@test) {
 }
 
 if (@hasnt) {
-        print STDERR << 'EOP';
+        diag <<'EOP';
 
 ********************************************************
 * IMPORTANT: Your installation will not work since it  *
@@ -23,10 +24,10 @@ if (@hasnt) {
 *
 EOP
 
-    for (@hasnt) { print STDERR "*\t$_\n" }
+    for (@hasnt) { diag "*\t$_\n" }
 
 
-    print STDERR << 'EOP';
+    diag <<'EOP';
 *                                                      *
 * Please install the missing module(s) and start the   *
 * PDLA build process again (perl Makefile.PL; ....)     *

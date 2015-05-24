@@ -19,10 +19,8 @@ use File::Spec;
 kill 'INT',$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 sub tapprox {
-        my($a,$b) = @_;
-        my $c = abs($a-$b);
-        my $d = max($c);
-        $d < 0.01;
+	my($pa,$pb) = @_;
+	all approx($pa, $pb, 0.01);
 }
 
 # Create the filenames
@@ -56,26 +54,26 @@ done_testing;
 
 sub loglog {
 
-   die 'Usage: loglog($x,$y)' if scalar(@_)!=2;
+	die 'Usage: loglog($x,$y)' if scalar(@_)!=2;
 
-   # Tips:
-   #
-   # (i)  topdl() forces arguments to be pdl vars even
-   #      if ordinary numbers are passed
-   #
-   # (ii) float() forces the pdl vars to be float precision
-   #      thus matching the C routine.
+	# Tips:
+	#
+	# (i)  topdl() forces arguments to be pdl vars even
+	#      if ordinary numbers are passed
+	#
+	# (ii) float() forces the pdl vars to be float precision
+	#      thus matching the C routine.
 
-   my $x = float(topdl(shift));
-   my $y = float(topdl(shift));
+	my $x = float(topdl(shift));
+	my $y = float(topdl(shift));
 
-   my $ret = $x->copy; # Make copy of $x to return
+	my $ret = $x->copy; # Make copy of $x to return
 
-   print "X = $x\n";
-   print "Y = $y\n";
+	note "X = $x\n";
+	note "Y = $y\n";
 
-   my $ldfile =
-   callext($out, "loglog_ext", $ret, $y);
+	my $ldfile =
+	callext($out, "loglog_ext", $ret, $y);
 
-   return $ret;
+	return $ret;
 }

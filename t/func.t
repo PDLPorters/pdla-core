@@ -1,10 +1,13 @@
 # -*-perl-*-
 #
-use Test;
+use Test::More;
 use PDLA::LiteF;
 
+use strict;
+use warnings;
+
+my $loaded; my $slatec;
 BEGIN {
-    $loaded = 0; $slatec = 0;
     # Must load slatec before Func since Func loads slatec itself
     # and this line will be a no-op (and so we will not be able to
     # spot that Slatec has failed)
@@ -22,7 +25,7 @@ BEGIN {
 my $x = float( 1, 2, 3, 4, 5, 6, 8, 10 );
 my $y = ($x * 3) * ($x - 2);
 
-my $obj = init PDLA::Func ( x => $x, y => $y );
+my $obj = PDLA::Func->init( x => $x, y => $y );
 ok( $obj->scheme() eq "Linear" );  # 1
 
 my $xi = $x - 0.5;
@@ -88,5 +91,4 @@ $d   = abs( $ans - $yi );
 ok( all $d <= 6 );
 
 # end
-
-
+done_testing;

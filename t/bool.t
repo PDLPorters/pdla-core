@@ -1,4 +1,4 @@
-use Test::More tests => 6;
+use Test::More tests => 5;
 use Test::Exception;
 use PDLA::LiteF;
 use strict;
@@ -15,17 +15,16 @@ kill 'INT',$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 {
 	my $pa = ones 3;
 	throws_ok { print "oops\n" if $pa } qr/multielement/;
+	ok all $pa;
 }
 
-$a = ones 3;
-eval {print "oops\n" if $a};
-like $@, qr/multielement/;
+{
+	my $pa = pdl byte, [ 0, 0, 1 ];
+	ok any $pa > 0;
+}
 
-ok all $a;
-
-$a = pdl byte, [ 0, 0, 1 ];
-ok any $a > 0;
-
-$a = ones 3;
-$b = $a + 1e-4;
-ok all PDLA::approx $a, $b, 1e-3;
+{
+	my $pa = ones 3;
+	my $pb = $pa + 1e-4;
+	ok all PDLA::approx $pa, $pb, 1e-3;
+}

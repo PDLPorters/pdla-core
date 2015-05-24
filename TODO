@@ -37,58 +37,6 @@ the work planned for the future  PDLA-2.x releases.
 |                       TESTING                         |
 +-------------------------------------------------------+
 
-
-   Refactor to use Test::More
-   * imagergb.t
-   * interp.t
-   * interp_slatec.t
-   * interpol.t
-   * limits_normalize_dsets.t
-   * linfit.t
-   * magic.t
-   * matmult.t
-   * ones.t
-   * pdlchar.t
-   * physical.t
-   * picnorgb.t
-   * picrgb.t
-   * pnm.t
-   * poly.t
-   * polyroots.t
-   * pthread.t
-   * pthread_auto.t
-   * reduce.t
-   * refs.t
-   * scope.t
-   * segfault.t
-   * thread.t
-   * thread_def.t
-   * vaffine.t
-
-   Convert from Test to Test::More
-   * bess.t
-   * conv.t
-   * diskcache.t
-   * erf.t
-   * erfi.t
-   * fft.t
-   * func.t
-   * hist.t
-   * image2d.t
-   * lut.t
-   * lvalue.t
-   * matrix.t
-   * matrixops.t
-   * niceslice.t
-   * nsdatahandle.t
-   * requiredmods.t
-   * round.t
-   * simplex.t
-   * transform.t
-   * trig.t
-   * xvals.t
-
-
    Need to test PDLA build from scratch both WITH_BADVAL and without
    * Find a way to automate this process for release testing
    * Unix/Linux/BSD

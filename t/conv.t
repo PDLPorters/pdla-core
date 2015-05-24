@@ -3,38 +3,40 @@
 
 # 1.9901 - converted to new type semantics + extra test
 
-use Test;
-BEGIN { plan tests => 7 }
+use Test::More tests => 7;
+
+use strict;
+use warnings;
 
 use PDLA::LiteF;
 use PDLA::Types;
 
-$a = pdl 42.4;
-print "A is $a\n";
+my $pa = pdl 42.4;
+note "A is $pa";
 
-ok($a->get_datatype,$PDLA_D);
+is($pa->get_datatype,$PDLA_D);
 
-$b = byte $a;
-print "B (byte $a) is $b\n";
+my $pb = byte $pa;
+note "B (byte $pa) is $pb";
 
-ok($b->get_datatype,$PDLA_B);
-ok($b->at(),42);
+is($pb->get_datatype,$PDLA_B);
+is($pb->at(),42);
 
-$c = $b * 3;
-ok($c->get_datatype, $PDLA_B); # $c is the same
-print "C ($b * 3) is $c\n";
+my $pc = $pb * 3;
+is($pc->get_datatype, $PDLA_B); # $pc is the same
+note "C ($pb * 3) is $pc";
 
-$d = $b * 600.0;
-ok($d->get_datatype, $PDLA_F); # $d is promoted to float
-print "D ($b * 600) is $d\n";
+my $pd = $pb * 600.0;
+is($pd->get_datatype, $PDLA_F); # $pd is promoted to float
+note "D ($pb * 600) is $pd";
 
-$pi = 4*atan2(1,1);
+my $pi = 4*atan2(1,1);
 
-$e = $b * $pi;
-ok($e->get_datatype, $PDLA_D); # $e needs to be double to represent result
-print "E ($b * $pi) is $e\n";
+my $pe = $pb * $pi;
+is($pe->get_datatype, $PDLA_D); # $pe needs to be double to represent result
+note "E ($pb * $pi) is $pe";
 
-$f = $b * "-2.2";
-ok($f->get_datatype, $PDLA_D); # $e check strings are handled ok
-print "F ($b * string(-2.2)) is $f\n";
+my $pf = $pb * "-2.2";
+is($pf->get_datatype, $PDLA_D); # $pe check strings are handled ok
+note "F ($pb * string(-2.2)) is $pf";
 

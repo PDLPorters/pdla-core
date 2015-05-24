@@ -1,24 +1,22 @@
 # -*-perl-*-
 
-use Test;
-
-BEGIN { plan tests => 2; }
+use Test::More tests => 2;
 
 use PDLA::LiteF;
 use PDLA::Math;
 
-kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
+use strict;
+use warnings;
 
-sub tapprox {
-        my($a,$b) = @_;
-        $c = abs($a-$b);
-        $d = max($c);
-        $d < 0.01;
-}
+kill 'INT',$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
-$a = pdl( 0.01, 0.0 );
-ok( tapprox( erfi($a), pdl(0.00886,0.0) ) );
+approx(pdl(0), pdl(0), 0.01); # set eps
+
+{
+my $pa = pdl( 0.01, 0.0 );
+ok( all approx( erfi($pa), pdl(0.00886,0.0) ) );
 
 # inplace
-$a->inplace->erfi;
-ok( tapprox( $a, pdl(0.00886,0.0) ) );
+$pa->inplace->erfi;
+ok( all approx( $pa, pdl(0.00886,0.0) ) );
+}

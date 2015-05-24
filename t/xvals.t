@@ -1,17 +1,19 @@
-use Test;
-BEGIN { plan tests => 4; }
+use strict;
+use warnings;
+
+use Test::More tests => 4;
 use PDLA::LiteF;
-kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
+kill 'INT',$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 
-$a0 = zeroes(3,2);
+my $a0 = zeroes(3,2);
 # $a0->doflow();
 
- print $a0;
+ note $a0;
 
-$a1 = $a0->slice('(1)');
+my $a1 = $a0->slice('(1)');
 
- print $a1;
+ note $a1;
 
 # $a0->dump(); $a1->dump();
 
@@ -21,19 +23,19 @@ $a1 += 4;
 
 # $a1->dump();
 
- print $a1;
+ note $a1;
 
-$dummy = PDLA::Core::new_or_inplace($a0);
-print $dummy;
-$dummy2 = $dummy->xchg(0,0);
-print $dummy2;
+my $dummy = PDLA::Core::new_or_inplace($a0);
+note $dummy;
+my $dummy2 = $dummy->xchg(0,0);
+note $dummy2;
 # $dummy2->dump();
 # $dummy->dump();
 PDLA::Primitive::axisvalues($dummy2);
 # $dummy2->dump();
 # $dummy->dump();
-print $dummy2;
-print $dummy;
+note $dummy2;
+note $dummy;
 
 
 
@@ -41,32 +43,32 @@ print $dummy;
 
 # $a0->dump(); $a1->dump();
 
-# print $a1;
+# note $a1;
 
-# print $a0;
+# note $a0;
 
-# print $a1;
+# note $a1;
 
-$a = xvals $a0;
+my $pa = xvals $a0;
 
-print $a;
+note $pa;
 
-ok($a->at(0,0) == 0);
-ok($a->at(1,0) == 1);
-ok($a->at(2,0) == 2);
-ok($a->at(1,1) == 1);
+ok($pa->at(0,0) == 0);
+ok($pa->at(1,0) == 1);
+ok($pa->at(2,0) == 2);
+ok($pa->at(1,1) == 1);
 
-$a = zeroes 5,10;
+$pa = zeroes 5,10;
 
-$b = yvals $a;
+my $pb = yvals $pa;
 
-$c = $b->copy();
+my $c = $pb->copy();
 
-$d = $b-$c;
+my $d = $pb-$c;
 
-print "$d,$b,$c";
+note "$d,$pb,$c";
 
-# print $a;
+# note $pa;
 
-print "OUTOUT\n";
+note "OUTOUT\n";
 
