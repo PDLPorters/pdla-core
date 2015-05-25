@@ -1,5 +1,5 @@
 use PDLA::LiteF;
-use Test::More tests => 38;
+use Test::More tests => 40;
 use Test::Exception;
 use Config;
 
@@ -12,7 +12,6 @@ sub tapprox {
 	all approx $pa, $pb, $tol;
 }
 
-
 my $tol = 1e-14;
 
 use PDLA::MatrixOps;
@@ -22,7 +21,7 @@ use PDLA::MatrixOps;
 
 my $pa = pdl([1,2,3],[4,5,6],[7,1,1]);
 my ($lu, $perm, $par);
-lives_ok { ($lu,$perm,$par) = lu_decomp($pa); } "lu_decomp 3x3 ran OK"; # ran OK
+lives_ok { ($lu,$perm,$par) = lu_decomp($pa); } "lu_decomp 3x3 ran OK";
 is($par, -1, "lu_decomp 3x3 correct parity");
 ok(all($perm == pdl(2,1,0)), "lu_decomp 3x3 correct permutation");
 
@@ -37,7 +36,7 @@ my $u = $lu->copy;
 ($tmp = $u->slice("1,2"))   .= 0;
 ($tmp = $u->slice("0,1:2")) .= 0;
 
-ok(tapprox($pa,matmult($l,$u)->slice(":,-1:0"),$tol), " LU = A (after depermutation)");
+ok(tapprox($pa,matmult($l,$u)->slice(":,-1:0"),$tol), "LU = A (after depermutation)");
 }
 
 {
@@ -60,8 +59,7 @@ my $identity = zeroes(3,3); (my $tmp = $identity->diagonal(0,1))++;
 
 ok(defined $a1, "3x3 inverse: defined");
 ok(ref ($opt->{lu}->[0]) eq 'PDLA',"inverse: lu_decomp first entry is a piddle");
-ok(tapprox(matmult($a1,$pa),$identity,$tol),"matrix mult by its inverse gives identity matrix")
-  or diag explain [ $a1.'', $pa.'' ];
+ok(tapprox(matmult($a1,$pa),$identity,$tol),"matrix mult by its inverse gives identity matrix");
 }
 
 {
@@ -87,7 +85,7 @@ my $a334 = $a94->reshape(3,3,4);
 my $a334inv;
 lives_ok { $a334inv = $a334->inv } "3x3x4 inv ran OK";
 my $identity = zeroes(3,3); (my $tmp = $identity->diagonal(0,1))++;
-ok(tapprox(matmult($a334,$a334inv),$identity->dummy(2,4)),"3x3x4 inv gave correct answer");
+ok(tapprox(matmult($a334,$a334inv),$identity->dummy(2,4)), "3x3x4 inv gave correct answer");
 
 undef $a94;       # clean up variables
 undef $a334;      # clean up variables
@@ -117,9 +115,8 @@ ok(tapprox($xx,pdl([2/3, -1/3]),$tol), "lu_backsub LU=A (after depermutation)");
 ### Check attempted inversion of a singular matrix
 my $b2 = undef; # avoid warning from compiler
 my $pb = pdl([1,2,3],[4,5,6],[7,8,9]);
-lives_ok { $b2 = inv($pb,{s=>1}) };
-ok(!defined $b2);
-
+lives_ok { $b2 = inv($pb,{s=>1}) } "inv of singular matrix should not barf if s=>1";
+ok(!defined $b2, "inv of singular matrix undefined if s=>1");
 }
 
 {
@@ -130,7 +127,7 @@ my $c = pdl([0,1,0,0],[1,0,0,0],[0,0,1,0],[0,0,0,1]); # det=-1
 my $d = pdl([1,2,3,4],[5,4,3,2],[0,0,3,0],[3,0,1,6]); # det=-216
 my $e = ($pa->cat($pb)) -> cat( $c->cat($d) );
 my $det = $e->determinant;
-ok(all($det == pdl([48,1],[-1,-216])),"threaded determinant");
+ok(all($det == pdl([48,1],[-1,-216])), "threaded determinant");
 }
 
 {
@@ -139,7 +136,7 @@ ok((identity(2)->flat == pdl(1,0,0,1))->all, "identity matrix");
 
 ok((stretcher(pdl(2,3))->flat == pdl(2,0,0,3))->all, "stretcher 2x2");
 
-ok((stretcher(pdl([2,3],[3,4]))->flat == pdl(2,0,0,3,3,0,0,4))->all,"stretcher 2x2x2");
+ok((stretcher(pdl([2,3],[3,4]))->flat == pdl(2,0,0,3,3,0,0,4))->all, "stretcher 2x2x2");
 }
 
 {
@@ -148,7 +145,7 @@ my $pa = pdl([3,4],[4,-3]);
 
 ### Check that eigens runs OK
 my ($vec,$val);
-lives_ok { ($vec,$val) = eigens $pa } "eigens runs OK";
+lives_ok { ($vec,$val) = eigens $pa },"eigens runs OK";
 
 ### Check that it really returns eigenvectors
 my $c = float(($pa x $vec) / $vec);
@@ -157,7 +154,7 @@ ok(all($c->slice(":,0") == $c->slice(":,1")),"eigens really returns eigenvectors
 
 ### Check that the eigenvalues are correct for this matrix
 ok((float($val->slice("0")) == - float($val->slice("1")) and
-       float($val->slice("0") * $val->slice("1")) == float(-25)),"eigenvalues are correct");
+	float($val->slice("0") * $val->slice("1")) == float(-25)),"eigenvalues are correct");
 }
 
 {
@@ -187,10 +184,8 @@ ok($esum == 61.308,"eigens sum for 8x8 correct answer");
 my $esum=0;
 lives_ok {
     $esum = sprintf "%.3f", sum scalar eigens_sym($m);
-} "eigens_sym for 8x8 ran OK";
-ok($esum == 61.308, "eigens_sym sum for 8x8 correct answer");
-}
-
+};
+ok($esum == 61.308);
 }
 
 {
@@ -207,52 +202,71 @@ ok($esum == 5);
 }
 }
 
+{
+my $esum = 0;
+lives_ok {
+    $esum = sprintf "%.3f", sum scalar eigens_sym($m);
+} "eigens_sym for 8x8 ran OK";
+ok($esum == 61.308, "eigens_sym sum for 8x8 correct answer");
+}
+
+}
 
 {
+
 if(0){ #eigens for asymmetric matrices disbled
 #The below matrix has complex eigenvalues
 my $should_be_nan = eval { sum(scalar eigens(pdl([1,1],[-1,1]))) };
 ok( ! ($should_be_nan == $should_be_nan)); #only NaN is not equal to itself
 }
-}
 
 #check singular value decomposition for MxN matrices (M=#rows, N=#columns):
 
-my ($svd_in,$this_svd_in,$u,$s,$v,$vT,$ess);
+my $svd_in = pdl([3,1,2,-1],[-1,3,0,2],[-2,3,0,0],[1,3,-1,2]);
 
-$svd_in = pdl([3,1,2,-1],[-1,3,0,2],[-2,3,0,0],[1,3,-1,2]);
-
+{
 #2x2;
-$this_svd_in = $svd_in->slice("0:1","0:1");
-($u,$s,$v) = svd($this_svd_in);
-$ess = zeroes($this_svd_in->dim(0),$this_svd_in->dim(0));
+my $this_svd_in = $svd_in->slice("0:1","0:1");
+my ($u,$s,$v) = svd($this_svd_in);
+my $ess = zeroes($this_svd_in->dim(0),$this_svd_in->dim(0));
 $ess->diagonal(0,1).=$s;
 ok(all($this_svd_in==($u x $ess x $v->transpose)), "svd 2x2");
+}
 
+{
 #3x3;
-$this_svd_in = $svd_in->slice("0:2","0:2");
-($u,$s,$v) = svd($this_svd_in);
-$ess = zeroes($this_svd_in->dim(0),$this_svd_in->dim(0));
+my $this_svd_in = $svd_in->slice("0:2","0:2");
+my ($u,$s,$v) = svd($this_svd_in);
+my $ess = zeroes($this_svd_in->dim(0),$this_svd_in->dim(0));
 $ess->diagonal(0,1).=$s;
 ok(all(approx($this_svd_in,$u x $ess x $v->transpose, 1e-8)), "svd 3x3");
+}
 
+{
 #4x4;
-$this_svd_in = $svd_in;
-($u,$s,$v) = svd($this_svd_in);
-$ess =zeroes($this_svd_in->dim(0),$this_svd_in->dim(0));
+my $this_svd_in = $svd_in;
+my ($u,$s,$v) = svd($this_svd_in);
+my $ess =zeroes($this_svd_in->dim(0),$this_svd_in->dim(0));
 $ess->diagonal(0,1).=$s;
 ok(all(approx($this_svd_in,($u x $ess x $v->transpose),1e-8)),"svd 4x4");
+}
 
+{
 #3x2
-$this_svd_in = $svd_in->slice("0:1","0:2");
-($u,$s,$v) = svd($this_svd_in);
-$ess = zeroes($this_svd_in->dim(0),$this_svd_in->dim(0));
+my $this_svd_in = $svd_in->slice("0:1","0:2");
+my ($u,$s,$v) = svd($this_svd_in);
+my $ess = zeroes($this_svd_in->dim(0),$this_svd_in->dim(0));
 $ess->slice("$_","$_").=$s->slice("$_") foreach (0,1); #generic diagonal
 ok(all(approx($this_svd_in, $u x $ess x $v->transpose,1e-8)), "svd 3x2");
+}
 
+{
 #2x3
-$this_svd_in = $svd_in->slice("0:2","0:1");
-($u,$s,$v) = svd($this_svd_in->transpose);
-$ess = zeroes($this_svd_in->dim(1),$this_svd_in->dim(1));
+my $this_svd_in = $svd_in->slice("0:2","0:1");
+my ($u,$s,$v) = svd($this_svd_in->transpose);
+my $ess = zeroes($this_svd_in->dim(1),$this_svd_in->dim(1));
 $ess->slice("$_","$_").=$s->slice("$_") foreach (0..$this_svd_in->dim(1)-1); #generic diagonal
 ok(all(approx($this_svd_in, $v x $ess x $u->transpose,1e-8)), "svd 2x3");
+}
+
+}
