@@ -1,8 +1,6 @@
 # -*-perl-*-
-
 use strict;
 use warnings;
-
 use Test::More tests => 4;
 
 use PDLA::LiteF;
@@ -23,5 +21,5 @@ ok( tapprox(cosh(2.0),3.7621) && tapprox(atan(0.6),0.54041), "cosh, atan");
 # inplace
 my $pa = pdl(0.3);
 $pa->inplace->sinh;
-ok( tapprox($pa, pdl(0.3045)), "sinh inplace");
+ok( tapprox($pa, pdl(0.3045)), "sinh inplace" );
 }
