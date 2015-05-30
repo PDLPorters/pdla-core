@@ -460,7 +460,7 @@ my %makefile_hash = (
                 'File::Path'          => 0,
               },
               'MIN_PERL_VERSION' => '5.010',
-	      'NAME' => 'PDLA',
+	      'NAME' => 'PDLA::Core',
 	      'VERSION_FROM' => 'Basic/Core/Version.pm',
 	      'EXE_FILES' => \@exe_files,
 	      'PM' => { @podpms }, #so that the script docs are picked up
