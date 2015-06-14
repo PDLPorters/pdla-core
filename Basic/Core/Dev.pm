@@ -431,6 +431,10 @@ $pref.xs: $pref.pm
 $pref.c: $pref.xs
 
 $pref\$(OBJ_EXT): $pref.c
+
+install ::
+	\@echo "Updating PDL documentation database...";
+	\$(ABSPERLRUN) -e 'exit if \$\$ENV{DESTDIR}; use PDLA::Doc; eval { PDLA::Doc::add_module(q{$mod}); }; ';
 |
 	} (@_)
 }
