@@ -125,6 +125,11 @@ my @types = (
                                      # able to compute at runtime ?!
       },
 
+# IMPORTANT:
+# PDLA_F *must* be the first non-integer type in this list
+# as there are many places in the code (.c/.xs/.pm/.pd)
+# with tests like this:
+#                        if (piddletype < PDLA_F) { ... }
 	      {
 		  identifier => 'F',
 		  pdlctype => 'PDLA_Float',
@@ -518,8 +523,8 @@ Returns the number representing this datatype (see L<get_datatype|PDLA::Core/PDL
 
 =item symbol
 
-Returns one of 'PDLA_B', 'PDLA_S', 'PDLA_US', 'PDLA_L', 'PDLA_LL', 'PDLA_F' 
-or 'PDLA_D'.
+Returns one of 'PDLA_B', 'PDLA_S', 'PDLA_US', 'PDLA_L', 'PDLA_IND', 'PDLA_LL',
+'PDLA_F' or 'PDLA_D'.
 
 =item ctype
 
