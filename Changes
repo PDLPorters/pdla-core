@@ -1,3 +1,7 @@
+v2.013002 
+ - fixup $VERSION in PDLA::Core
+ - "make core[test]" now can do parallel build which will be quicker
+
 v2.013001 2015-08-29 19:00:00+01:00
  - TODO fragile t/lut.t test
  - stop claiming packages C::StructObj C::StructType C::Type C::Var Inline::MakePdlppInstallable Inline::Pdlpp SymTab Win32::DDE::Netscape XS
