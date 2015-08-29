@@ -17,10 +17,10 @@ CHM 22-Apr-2009
 CED 11-3-2009
     mkhtmldoc.pl: suddenly stopped making docs, preventing me from 
     executing "Make install".  Traced the problem down to a nonexistent
-    directory in the POD scan path (".../HtmlDocs/pdl/PDLA"), which for
+    directory in the POD scan path (".../HtmlDocs/pdl/PDL"), which for
     some reason is now crashing the POD builder stuff that came with 
-    my MacOS-standard Perl.  Since .../pdl/PDLA seems like a silly place to 
-    look (the docs are build into just .../pdl), I dked out the "PDLA" from
+    my MacOS-standard Perl.  Since .../pdl/PDL seems like a silly place to 
+    look (the docs are build into just .../pdl), I dked out the "PDL" from
     the pod path, fixing the problem.
 CED 10-3-2009
     Fix problem with reorder() - formerly required that all dimensions
@@ -32,21 +32,21 @@ SIS 25-2-2009
     Microsoft Compiler is being used. (Rev 1.17 of math.pd)
     This ifxes sourceforge bug 2630402.
 CHM 13-Nov-2008
-    PDLA/Basic/PDLA.pm: updated VERSION to 2.4.4cvs for
+    PDL/Basic/PDL.pm: updated VERSION to 2.4.4cvs for
     post release development.
 CHM 13-Nov-2008
-    PDLA/Basic/PDLA.pm: updated VERSION to 2.4.4 for release
+    PDL/Basic/PDL.pm: updated VERSION to 2.4.4 for release
     Known_Problems: updated for release
-    This is PDLA-2.4.4 as released to CPAN
+    This is PDL-2.4.4 as released to CPAN
 CHM 06-Nov-2008
-    Basic/PDLA.pm: changed version to 2.4.3_06 for quick
+    Basic/PDL.pm: changed version to 2.4.3_06 for quick
     check release of final Makefile.PL mods.
 DAL 05-Nov-2008 
     In top-level Makefile.PL: removed debugging print statement; moved
     @podpms back to 'pm' so tht the perldl and pdldoc script manuals
-    appear in PDLA::Index.
+    appear in PDL::Index.
 DCH 03-Nov-2008
-    Added code to XS for PDLA::Graphics::PLplot::plParseOpts to 
+    Added code to XS for PDL::Graphics::PLplot::plParseOpts to 
     avoid a segfault when it is called with no options.  Also added
     test case to plplot.t.
 DCH 03-Nov-2008
@@ -58,11 +58,11 @@ CHM 01-Nov-2008
     perldl.conf: changed default build options to enable bad
     value support and updated the Release_Notes to advertise
     the new capability.
-    Basic/PDLA.pm: updated VERSION to 2.4.3_05 which will be
+    Basic/PDL.pm: updated VERSION to 2.4.3_05 which will be
     the official 2.4.4 release once the final updates are
     complete.  Changes updated to reflect these changes.
 CHM 01-Nov-2008
-    Updated Known_Problems and Release_Notes for PDLA-2.4.4
+    Updated Known_Problems and Release_Notes for PDL-2.4.4
     release to come.
 CHM 01-Nov-2008
     Graphics/IIS/iis.pd: fixes from patch #1908629 to quiet
@@ -72,7 +72,7 @@ CHM 01-Nov-2008
 CHM 01-Nov-2008
     Basic/Core/pdlcore.c.PL: added case to support creation of
     longlong piddles with pdl_from_array from patch #2107905
-    on the SF PDLA site.  Thanks to Pete Ratzlaff.
+    on the SF PDL site.  Thanks to Pete Ratzlaff.
 CHM 01-Nov-2008
     Added dragonfly OS to list of BSD flavors requiring the
     -s flag to uudecode in IO/Dumper.pm.
@@ -104,9 +104,9 @@ CHM 26-Oct-2008
     Modified t/bad.t test to use like() with a regexp rather
     than is() for some tests where the value returned had
     -0 and the test was checking with 0.
-    Basic/PDLA.pm: updated VERSION to 2.4.3_04
+    Basic/PDL.pm: updated VERSION to 2.4.3_04
 CHM 25-Oct-2008
-    Basic/PDLA.pm: update VERSION for PDLA-2.4.4 pre-release 3
+    Basic/PDL.pm: update VERSION for PDL-2.4.4 pre-release 3
 CHM 25-Oct-2008
     Makefile.PL: enabled bad value options when built within an
     automated testing framework such as used by CPAN Testers.
@@ -129,24 +129,24 @@ CHM 22-Oct-2008
     Removed the "fix" code for the case of netbsd
 DCH 22-Oct-2008
     Made change to MY::test to only run toplevel tests for 'make test'
-    Do not attempt to build all of PDLA, or attempt to look for and run subdirs tests.
+    Do not attempt to build all of PDL, or attempt to look for and run subdirs tests.
     Also commented out some debug print statements in t/storable.t which caused warnings
     during 'make test'.
 CHM 19-Oct-2008
-    Basic/PDLA.pm: change VERSION to 2.4.3_02 to indicate mods beyond
-    the PDLA-2.4.3_01 developers release just posted to CPAN
+    Basic/PDL.pm: change VERSION to 2.4.3_02 to indicate mods beyond
+    the PDL-2.4.3_01 developers release just posted to CPAN
 CHM 19-Oct-2008
-    Basic/PDLA.pm: change VERSION to 2.4.3_01 for developers release
+    Basic/PDL.pm: change VERSION to 2.4.3_01 for developers release
 CHM 19-Oct-2008
-    TODO: this file is out-of-date and is so noted for PDLA-2.4.4
-    README: added pointers for bug reporting via sf.net for PDLA-2.4.4
-    Known_Problems: updated for PDLA-2.4.4 release
+    TODO: this file is out-of-date and is so noted for PDL-2.4.4
+    README: added pointers for bug reporting via sf.net for PDL-2.4.4
+    Known_Problems: updated for PDL-2.4.4 release
     INSTALL: updated general install notes and added bug report info
     DEVELOPMENT: fixed reference to mailing lists locations
-    DEPENDENCIES: updated list of dependencies for PDLA-2.4.4.
+    DEPENDENCIES: updated list of dependencies for PDL-2.4.4.
     BUGS: updated the bug reporting information.
 CHM 19-Oct-2008
-    PDLA/Graphics/TriD{TriD.pm,TriD/{ButtonControl.pm,Control3D.pm,GL.pm,Object.pm}}
+    PDL/Graphics/TriD{TriD.pm,TriD/{ButtonControl.pm,Control3D.pm,GL.pm,Object.pm}}
     Removed explicit return calls in TriD constructors fixed to use
     fields::new() construction.  This was the original coding style
     and may be required for Lvalue subroutine support.  Tests still
@@ -157,15 +157,15 @@ SIS 19-Oct-2008
     changes to Graphics/Makefile.PL break the build process for some versions
     of File::Find.
 CHM 19-Oct-2008
-    t/proj_transform.t: added test skip if PDLA not configured with bad value
+    t/proj_transform.t: added test skip if PDL not configured with bad value
     support since the test appears to require bad value processing to succeed.
     This addresses sourceforge bug #2022265.
 CHM 18-Oct-2008
-    PDLA::Graphics::Makefile.PL: folded in patch from rt.cpan.org PDLA bug
+    PDL::Graphics::Makefile.PL: folded in patch from rt.cpan.org PDL bug
     #30276 reporter which improves the logic for finding the xdpyinfo command
     for TriD configuration.  The sourceforge bug corresponding is #1994614.
 CHM 18-Oct-2008 EDT
-    PDLA/Graphics/TriD{TriD.pm,TriD/{ButtonControl.pm,Control3D.pm,GL.pm,Object.pm}}
+    PDL/Graphics/TriD{TriD.pm,TriD/{ButtonControl.pm,Control3D.pm,GL.pm,Object.pm}}
     Replaced direct FIELDS access in field based constructors with fields::new() to
     fix problem with 5.10 where the pseudohash implementation has been eliminated.
 SIS 19-Oct-2008
@@ -174,7 +174,7 @@ SIS 19-Oct-2008
 DCH 17-Oct-2008
     Updated PLplot:  Added several new low-level functions, added the
     'stripplots' high level function.  Also enhanced the Makefile.PL
-    to make the stand-alone version of PDLA::Graphics::PLplot work better
+    to make the stand-alone version of PDL::Graphics::PLplot work better
     for CPAN installs.  Finally, applied a patch to Basic/Primitive/Makefile.PL
     to allow proper srand behavior, permitting the primitive.t tests to work.
 CHM 14-Oct-2008
@@ -185,10 +185,10 @@ SIS 12-Oct-2008
     for Windows x64 builds only (rev 1.9).
 SIS 11-Oct-2008
     In top level Makefile.PL remove EU::F77 from PREREQ_PM, and fix 
-    $PDLA::Config{TEMPDIR}, which I broke for non-Windows systems with the 
+    $PDL::Config{TEMPDIR}, which I broke for non-Windows systems with the 
     changes made on 8 Oct.(This latest change is rev 1.68 )
     Also a Windows-only change to Basic/Core/Dev.pm (rev 1.33) as part of the
-    change to $PDLA::Config{TEMPDIR}.
+    change to $PDL::Config{TEMPDIR}.
 SIS 09-Oct-2008
     Amend Lib/Slatec/Makefile.PL (rev 1.17) so that '*make realclean' doesn't 
     clobber libg2c.a and libgcc.a when a Microsoft compiler is in use.
@@ -197,7 +197,7 @@ SIS 09-Oct-2008
     compilers. (All of these changes should be invisible to other compilers.)
 SIS 08-Oct-2008
     Amend top-level Makefile.PL so that File::Temp->tmpdir() is assigned to
-    Config.pm's $PDLA::Config{TEMPDIR}. (This is so that Windows PPM packages
+    Config.pm's $PDL::Config{TEMPDIR}. (This is so that Windows PPM packages
     will function correctly). Rev 1.67
 CHM 07-Oct-2008
     Basic/Core/Core.pm.PL: fixed alias creation to avoid compile warnings
@@ -220,7 +220,7 @@ CHM 14-Sep-2008
     history saved.  Updated docs and incremented VERSION to 1.34.
 CHM 10-Sep-2008
     t/pic_16bit.t - Added test for pnmtopng with corresponding skips to prevent
-    PDLA test failure due to NetPBM not being installed with a diagnostic to
+    PDL test failure due to NetPBM not being installed with a diagnostic to
     point out the possible problem.
 CHM 27-Jul-2008
     t/matrixops.t - Added tests for SF bug #2023711 as an active placeholder for
@@ -238,11 +238,11 @@ CHM 19-Jul-2008
     t/ufunc.t - added new test to verify the reported bug
 CHM 19-Jul-2008
     Fixed Basic/Pod/FAQ.pod: updated version to 0.8 and added an entry on
-    installing PDLA into non-standard locations.  Yes, it is just a standard
+    installing PDL into non-standard locations.  Yes, it is just a standard
     perl module in that respect but this should make it easier for first
     time perl users to configure.
 CHM 19-Jul-2008
-    Fixed VERSION in Basic/PDLA.pm to indicate cvs
+    Fixed VERSION in Basic/PDL.pm to indicate cvs
 CHM 18-Jul-2008
     Proj.pd, Lib/GIS/Proj/Proj.pd, fix undefined reference to _pj_list.
 SIS 18-Jul-2008
@@ -269,9 +269,9 @@ DAL 27-Jun-2008
     pdl.PL - use $Config{cc} to compile, output now goes to blib/bin
     Makefile.PL - modified @exe_files and $cleanup to account for new pdl binary executable build location (bug 1747307)
 DAL 17-Jun-2008
-    Lib/Slatec/slatec.pd - avoided namespace collision with PDLA::FFT.
+    Lib/Slatec/slatec.pd - avoided namespace collision with PDL::FFT.
     Basic/Matrix.pm - commented out buggy vcrossp & crossp functions. 
-	Built-in crossp works fine for PDLA::Matrix objects.
+	Built-in crossp works fine for PDL::Matrix objects.
     Basic/Core/Basic.pm, Basic/Pod/Impatient.pod - finally removed docs error which said '~' overloaded transpose.
     Basic/Ops/ops.pd - fixed documentation for spaceship operator
     t/minuit.t - output goes to temp (deleted) file instead of log.out
@@ -290,7 +290,7 @@ CED 15-Jun-2008
 CED 10-Jun-2008
     Minor fix to boundary conditions in transform.pd; stand by for more fixes to a bug Derek just discovered.
 DAL 12-Jun-2008
-    Prevent PDLA::IO::Storable from clobbering %PDLA::Config.
+    Prevent PDL::IO::Storable from clobbering %PDL::Config.
 DAL 09-Jun-2008
     Incorporated Doug Hunt's 02-Apr-2008 Perldl.pm patch (bug 1552208).
 SIS 09-Jun-2008
@@ -302,11 +302,11 @@ CED 19-Apr-2008
     Added basic table-inversion to t_lookup.  It's craptacularly slow but 
     it works.
 SIS 10-Apr-2008
-    In Basic/Core/Core.xs.PL, create $PDLA::SHARE multiply defined.
+    In Basic/Core/Core.xs.PL, create $PDL::SHARE multiply defined.
     Changed:
-    sv_setiv(Perl_get_sv("PDLA::SHARE",TRUE), PTR2IV(&PDLA));
+    sv_setiv(Perl_get_sv("PDL::SHARE",TRUE), PTR2IV(&PDL));
     to: 
-    sv_setiv(get_sv("PDLA::SHARE",TRUE|GV_ADDMULTI), PTR2IV(&PDLA));
+    sv_setiv(get_sv("PDL::SHARE",TRUE|GV_ADDMULTI), PTR2IV(&PDL));
     (rev 1.32)
 DAL 07-Apr-2008
     IO/FITS/FITS.pm: Fixed rfits so if NAXIS3!=0 && NAXIS==2 it
@@ -344,23 +344,23 @@ AJ 30-Nov-2007
 CED & DAL 29-Nov-2007
     Lib/FFT - fixed problem with floating-point ffts
 AJ  27-Nov-2007
-    Fixes to PDLA::Minuit
+    Fixes to PDL::Minuit
 DAL 12-Nov-2007
-    Inserted logic to suppress warnings from PDLA::Transform during 'make test'.
+    Inserted logic to suppress warnings from PDL::Transform during 'make test'.
     Updated the FAQ with new mailing list info.
 CED 6-Nov-2007
-    PDLA::AutoLoader - changed goto to a pass-through sub call, to avoid problems with 
+    PDL::AutoLoader - changed goto to a pass-through sub call, to avoid problems with 
 	    autoload files that leave stuff on the stack (e.g. subs with Inline or XS definitions).
 	    By not goto'ing, we avoid scrozzling the stack in such cases.
-    PDLA::NiceSlice - add some (masked-out) debug prints in perldlpp()
+    PDL::NiceSlice - add some (masked-out) debug prints in perldlpp()
     perldl - make the acquire/filter/execute loop $_-safe by using $lines instead of $_ 
 	    for all the central modifications.  Avoids problems with some AUTOLOAD 
 	    functions that leaked $_.
 CED 5-Nov-2007
-    PDLA::NiceSlice - fixed use/no problems, both in eval and non-eval cases (I think).
+    PDL::NiceSlice - fixed use/no problems, both in eval and non-eval cases (I think).
 HG  16-Oct-2007
     Lib/GSL/Makefile.PL: fix the gsl version check for minor versions bigger than 10
-	Lib/Fit/Gaussian/gaussian.pd: include "use PDLA;" in synopsis
+	Lib/Fit/Gaussian/gaussian.pd: include "use PDL;" in synopsis
 DAL 30-Aug-2007
     slices.pd: Fixed bug in range's negative size handling for ND piddles.
 CED 23-July-2007
@@ -370,8 +370,8 @@ CED 23-July-2007
 CED 13-Jun-2007
     Fixed sign error in t_fits (transform.pd) CROTA interpretation
 AJ  21-Jun-2007
-    Added PDLA::Minuit
-    Modified recovery mechanism in PDLA::GSL::INTEG
+    Added PDL::Minuit
+    Modified recovery mechanism in PDL::GSL::INTEG
 DAL 13-Apr-2007
     Fixed subtraction error (previously introduced by me) in t/primitive.t.
 CED 12-Apr-2007
@@ -385,7 +385,7 @@ DJB 18-Mar-2007
 DAL 14-Mar-2007
     Fixed previous (09-Mar) fix; t_identity was not the right solution.
 DAL 09-Mar-2007
-    PDLA::Transform::t_fits now returns t_identity if there is no good xform.
+    PDL::Transform::t_fits now returns t_identity if there is no good xform.
 DAL 06-Mar-2007
     Fixed bug in setops (Basic/Primitive/primitive.pd) which broke 'OR'. Added 
     support for sets with non-unique elements, which broke all set operations.
@@ -425,25 +425,25 @@ SIS 11-Sep-2006
     Also needed a slight tweak to Basic/Core/Dev.pm's pdlpp_stdargs_int (rev 1.32).   
 DJB 07-Sep-2006
     Continued work on Basic/Gen/PP.pm (revision 1.48). This deals with the old
-    subst_makecomp routine moving to PDLA::PP::Rule::MakeComp.
+    subst_makecomp routine moving to PDL::PP::Rule::MakeComp.
     Added an explicit test of assgn to t/bad.t
     Converted t/gsl_interp.t to use Test::More.
 DJB 06-Sep-2006
     Converted t/gsl_mroot.t to use Test::More and fixed a bug that
-    caused it to fail when PDLA::GSL::MROOT is not installed.
+    caused it to fail when PDL::GSL::MROOT is not installed.
 DJB 02-Sep-2006
     Continued work on Basic/Gen/PP.pm (revision 1.47)
 AJ  01-Sep-2006
-    Added PDLA::GSL::MROOT
+    Added PDL::GSL::MROOT
 SIS 1-Sep-2006
     Remove dmake clause from pdlpp_postamble() in Basic/Core/Dev.pm.    
     Revision 1.31.    
 DJB 31-Aug-2006
-    Re-worked Basic/Gen/PP.pm to use objects for the $PDLA::PP::deftbl
+    Re-worked Basic/Gen/PP.pm to use objects for the $PDL::PP::deftbl
     array rather than array references, since using objects just has
     to make things easier to read :-) There should be purely an internal
     change. This is revision 1.46.
-    Basic/Gen/PP/PDLACode.pm has also seen a few minor changes (again
+    Basic/Gen/PP/PDLCode.pm has also seen a few minor changes (again
     purely internal). This is revision 1.7
 CHM 24-Aug-2006
     Fix qsortvec function resolving bug #1544590 on sourceforge.
@@ -470,7 +470,7 @@ CHM 17-Aug-2006
     PM location.
 CHM 16-Aug-2006
     perldl.conf, IO/FITS/FITS.pm
-    - fixes for $PDLA::Config{FITS_LEGACY} to turn off all
+    - fixes for $PDL::Config{FITS_LEGACY} to turn off all
       the zillion Astro::FITS::Header warning messages
     Graphics/Makefile.PL
     - fix GLX test not to ignore user forced WITH_3D=>1
@@ -480,7 +480,7 @@ CHM 16-Aug-2006
     will be tagging these fixes as rel_2_4_3pre2
 CHM 14-Aug-2006
     Touch up top level documentation files and add some config
-    files to PDLA/cygwin/.  Files changed: BUGS, COPYING,
+    files to PDL/cygwin/.  Files changed: BUGS, COPYING,
     DEPENDENCIES, DEVELOPMENT, INSTALL, Known_problems, README,
     Release_Notes, cygwin/INSTALL, cygwin/README.
 CED 13-Aug-2006
@@ -495,8 +495,8 @@ CHM 11-Aug-2006
     - Added Astro::FITS::Header as a PREREQ_PM in main Makefile.PL
     - Added to DEPENDENCY file list
     - Put preliminary notes on how to migrate an externally
-      developed PDLA module into the source tree for distribution
-      with PDLA
+      developed PDL module into the source tree for distribution
+      with PDL
 CHM 11-Aug-2006
     Fix Graphics/Makefile.PL be more conservative in deciding to
     build OpenGL and TriD when WITH_3D => undef. Now choose not
@@ -522,7 +522,7 @@ CHM 09-Aug-2006
 CHM 08-Aug-2006
     Fixed t/proj_transform.t to skip_all if WITH_BADVAL not set so
     with Judd Taylor fixes from earlier today all PROJ4 modules
-    now build and test on PDLArc1.  Thanks all for testing a fixes!
+    now build and test on PDLrc1.  Thanks all for testing a fixes!
 DAL 01-Aug-2006
     Fixed typo in t_spherical of transform.pd (closes bug 1530666).
 CHM 30-Jul-2006
@@ -537,7 +537,7 @@ CHM 26-Jul-2006
 DJB 24-Jul-2006
     Fix for valgrind-detected error when WITH_BADVAL option selected.
     There was an invalid read due to $PRIV(bvalflag) being checked after
-    $PRIV() was invalidated (by a call to PDLA->make_trans_mutual).
+    $PRIV() was invalidated (by a call to PDL->make_trans_mutual).
     The code changes (e.g. see copybadstatus in PP.pm) indicate there is
     some future code cleanup/optimisations that could be made, but leave
     for post 2.4.3 work.
@@ -549,11 +549,11 @@ DJB 22-Jul-2006
     Fix to pdlcore.h.PL to avoid valgrind warning: rev1.26 put the
     setting of the debug_flag inside an ifdef but the variable is used
     to decide whether to print out a warning about pdl_setav_<type>
-    converting undef's to $PDLA::undefval. Easiest solution is to remove
+    converting undef's to $PDL::undefval. Easiest solution is to remove
     the ifdef (could have removed the use of debug_flag in the if statement
     instead).
 CED 18-Jul-2006
-	- PDLA.pm: added help cross-reference to pdl()
+	- PDL.pm: added help cross-reference to pdl()
 	- t/core.t: add three constructor tests
 	- pdlcore.c.PL: Fix a more obscure problem with constructor
 	- pdlcore.c.PL: Fix problem with constructor 
@@ -587,11 +587,11 @@ CHM 08-Jul-2006
     from the build/install.
 DJB 29-Jun-2006
     Updated $pdl_core_version in pdlcore.h.PL to 6 since the code for the
-    experimental BADVAL_PER_PDLA feature added fields to the Core struct
+    experimental BADVAL_PER_PDL feature added fields to the Core struct
     (see 'pdldoc Internals' for info on why the variable needs to be
     updated).
     *** Warning: this means that - once this change is built and
-    installed - any external module that uses the C interface of PDLA will
+    installed - any external module that uses the C interface of PDL will
     have to be re-built/installed (they'll complain and refuse to run until
     you do so).
 DAL (24-Jun-2006)
@@ -609,7 +609,7 @@ DJB 20-Jun-2006
         files (with attendant OS/system complexities) but let Perl
         worry about it all
 DJB 19-Jun-2006
-    The experimental BADVAL_PER_PDLA feature can not (currently) be
+    The experimental BADVAL_PER_PDL feature can not (currently) be
     combined with BADVAL_USENAN. The build now detects this conflict
     and turns off BADVAL_USENAN. The docs need updating to discuss
     this option!
@@ -622,12 +622,12 @@ CED (16-Jun-2006)
     so the (infinitesimal) CPU cost doesn't affect other platforms.
 CHM (12-Jun-2006)
     Fix to GD portion [only] re sourceforge bug #1493056:
-    - Replace pdlpp_postamble() call in PDLA/IO/GD/Makefile.PL with the
+    - Replace pdlpp_postamble() call in PDL/IO/GD/Makefile.PL with the
       same call to pdlpp_postamble_int().  Don't know the details but this
-      puts the right blib path includes for PDLA::IO::GD to build on clean
-      perl (no previous PDLA install).
-    - Removed "use PDLA;" from GD.pd which broke the GD build process
-      without a pre-existing PDLA install.
+      puts the right blib path includes for PDL::IO::GD to build on clean
+      perl (no previous PDL install).
+    - Removed "use PDL;" from GD.pd which broke the GD build process
+      without a pre-existing PDL install.
     - Removed cygwin workaround for WITH_GD setting in perldl.conf.
 CED (6-Jun-2006)
     (finally) fix TriD rotation bug.  What an evil crock that module is!
@@ -651,7 +651,7 @@ CHM (28-May-2006)
     Fix Graphics/PLplot/Makefile.PL to allow plplot to build on cygwin.
 Chris Marshall-a.k.a. CHM or marshallch (28-May-2006)
     Updated Changes file to reflect CVS submissions on 22-May-2006 to
-    incorporate accumulated patches to allow PDLA to build on cygwin
+    incorporate accumulated patches to allow PDL to build on cygwin
     unix environment.  The patches close bug 1093510 and affect the
     following files:
         - Makefile.PL (fixed to specify .exe extension for binary file installs)
@@ -663,15 +663,15 @@ Chris Marshall-a.k.a. CHM or marshallch (28-May-2006)
             non-functional "reminder" script---gzip was used instead)
         - perldl.conf (set cygwin default to skip new GD and Proj modules until a
             build issue can be investigated, a bug report has been submitted)
-    Base PDLA now builds with the default CVS code.  Work continues to fix issues
+    Base PDL now builds with the default CVS code.  Work continues to fix issues
     with TriD(OpenGL), PLplot, FFTW, and PGPLOT.
 JT  (12-Apr-2006)
-    Added the PDLA::IO::GD module, and tests.
+    Added the PDL::IO::GD module, and tests.
 JT  (5-Apr-2006)
-    Added the PDLA::GIS::Proj and PDLA::Transform::Proj4 modules and
+    Added the PDL::GIS::Proj and PDL::Transform::Proj4 modules and
     matching tests to t/ directory.
 DAL (5-Apr-2006)
-     FAQ update. Perl/PDLA versions, links, etc.  No new questions added. 
+     FAQ update. Perl/PDL versions, links, etc.  No new questions added. 
      Fixes bug 88964.
 SIS (2-Apr-2006)
      Fix bug that in Lib/Slatec/Makefile.PL that could prevent the
@@ -680,7 +680,7 @@ SIS (2-Apr-2006)
      (A call to pdlpp_postamble() was breaking dmake - but dmake has not yet
      needed such a postamble anyway.)
 JT (29-Mar-2006)
-    Added in the PDLA::IO::HDF module, version 2.0, which has been
+    Added in the PDL::IO::HDF module, version 2.0, which has been
     extensively reworked (see the Changes doc in that dir for more
     info on those changes). Added new entries to the perldl.conf file, 
     modified some of the Makefile.PL's to have that build, and added
@@ -688,23 +688,23 @@ JT (29-Mar-2006)
     This also fixes bugs 1432707 and 1432720.
 
 JLC (23-Mar-2006)
-     Fixed bug in PDLA::Complex::initialize that caused problems when
-     using PDLA->cat with PDLA::Complex objects. Added to the complex.t
+     Fixed bug in PDL::Complex::initialize that caused problems when
+     using PDL->cat with PDL::Complex objects. Added to the complex.t
      test case to check for this condition.
 SIS (21-Mar-2006)
       'use blib;' added to Demos/BAD_demo.pm.PL and Demos/BAD2_demo.pm.PL to work around
       EU::MM-6.30 bug.
 SIS (19-Mar-2006)
       Alteration to Basic/Core/Makefile.PL to enable proper inclusion
-      of badvalues on nmake-built PDLA (Win32 only).
+      of badvalues on nmake-built PDL (Win32 only).
 SIS (18-Mar-2006)
       Small change to Basic/Core/Core.xs.PL's at_bad_c function so
       it will compile with Microsoft compilers.
 CED (17-Mar-2006)
     Test & Incorporate patch 1093515 - Marshall's fits.t mod 
     Test & Incorporate patch 1095517 - Klein's badval support
-    Test & Incorporate patch 1099405 - Klein's per-PDLA badval support.
-        (per-PDLA badval support currently breaks the test suite and should be
+    Test & Incorporate patch 1099405 - Klein's per-PDL badval support.
+        (per-PDL badval support currently breaks the test suite and should be
         considered experimental only.)
     Remove debugging lines from 1151418 fix (yesterday)
 CED (16-Mar-2006)
@@ -721,7 +721,7 @@ DAL (14-Mar-2006)
       the input piddle has bad values.
 CED (10-Mar-2006)
     1338982 (obscure bug reading a FITS file)
-    1220830 (problems with $#$-type scalars in SvPDLAV)
+    1220830 (problems with $#$-type scalars in SvPDLV)
         - take 2
 CED (10-Mar-2006)
   Fixed bugs:
@@ -753,7 +753,7 @@ DAL (12-Jan-2006) Set correct x-y bounds for circle in PGPLOT/Window.pm.
     Fixed docs (usage and signature) bug in statsover to show correct number and order of returned quantities.
 SIS (8-SEP-2005) Enter Chris Marshall's patched version of t/limits_keyspecs.t.
     Fixes one of the #1221742 bugs. 
-CED (1-Aug-2005) update docs for PDLA.pm; re-fix recursion error message
+CED (1-Aug-2005) update docs for PDL.pm; re-fix recursion error message
 HG (2-June-2005) Fix PLplot's Makefile.PL to clean up temporary files
 HG (2-June-2005) add 'clean' and 'realclean' targets to the non-windows version
    of Basic/MatrixOps/ssl/Makefile
@@ -787,7 +787,7 @@ SIS (2-May-2005)
    Fix Slatec/Makefile.PL so that it doesn't break for Win32 users
    building with MS compilers and f2c.
 HG (1-May-2005)
-   Remove debian-patches which are already in PDLA cvs
+   Remove debian-patches which are already in PDL cvs
 HG (1-May-2005)
    Fix MANIFEST to include the current debian/* files
 HG (30-Apr-2005)
@@ -801,7 +801,7 @@ CED (7-Apr-2005)
    Added warning message to FITS module load, if Astro::FITS::Header is not
    available.
 AJ (01-Apr-2005)
-   Modified PDLA::GSL::INTEG to enable the calculation of nested integrals
+   Modified PDL::GSL::INTEG to enable the calculation of nested integrals
 DJB 9-Mar-2005
    Fixed dumn mistake in wfits docs I made; it is TTYPE<n> and not
    TFORM<n> that are used to specify the order of columns in FITS tables!
@@ -809,11 +809,11 @@ CED 9-Mar-2005
    pdl.h, pdlapi.c: Added guardrails to the dependency-loop
    detector.  (1) error message is now more explanatory. 
    (2) the detector now resets its counter when tripped, so that
-   you can continue to use PDLA once it has been activated.  (formerly,
+   you can continue to use PDL once it has been activated.  (formerly,
    every operation following a trip caused another error message).
 SIS 28-Feb-2005
    At last - a fix for the MakeMaker bug affecting dmake (Win32). No
-   longer any need for the ugly hack that enabled PDLA to be built with
+   longer any need for the ugly hack that enabled PDL to be built with
    dmake. Deleted one line of code from the top level Makefile.PL.
    Deleted several lines from Basic/Core/Makefile.PL and added a sub
    MY::processPL and a sub MY::postamble for dmake. Fix supplied
@@ -824,11 +824,11 @@ DJB 23-Feb-2005 (EST)
    Cleaned up t/pgplot.t (no new real functionality) other than above.
 CS 24-Feb-2005
    Remove 'use UNIVERSAL' for Core.pm.PL; shouldn't be needed anyway
-   and gave strange import problems when using PDLA with Net::SSH::Perl;
+   and gave strange import problems when using PDL with Net::SSH::Perl;
    also needed a change of isa to UNIVERSAL::isa in Dbg.pm
 SIS 23-FEB-2005
    Another small tweak to Basic/Core/Makefie.PL to improve the hack that
-   enables PDLA to be built using dmake (Win32).
+   enables PDL to be built using dmake (Win32).
    Amend Basic/Core/pdlcore.c.PL to cater for "finite" with Microsoft
    compilers. This correction pointed out by Vanuxem Gregory - thanks Greg.
 SIS 14-FEB-2005
@@ -852,7 +852,7 @@ SIS 5-FEB-2005
    Microsoft compilers. (Addresses failures in conv.t and matrixops.t
    tests.)
 SIS 4-FEB-2005
-   Enact some minor changes in the following files so that PDLA will
+   Enact some minor changes in the following files so that PDL will
    build on Win32:
    pdl.PL, Makefile.PL
    Basic/MatrixOps/matrixops.pd
@@ -871,7 +871,7 @@ CED 18-Jan-2005
 CED 16-Jan-2005
    - pdlcore.c.PL: Following Alexey Tourbin's awesome research,
    removed a segfault problem when foreign blessed objects are pdlified.
-   Now, SvPDLAV croaks if a foreign blessed object is detected
+   Now, SvPDLV croaks if a foreign blessed object is detected
    (avoiding a segfault); but stay tuned: there might be a better
    answer in this case.
 CED 13-Jan-2005
@@ -879,7 +879,7 @@ CED 13-Jan-2005
    (thanks, Henning!)
 CED 09-Jan-2005
    - Core.pm.PL: Restored original barf behavior: reports error where
-     it occured in user code, not within PDLA.
+     it occured in user code, not within PDL.
    - primitive.pd: Matrix multiplication now requires that the second
      argument's second dim equal the first argument's first dim 
      (as required for matrix multiplication; previous threading case
@@ -887,19 +887,19 @@ CED 09-Jan-2005
    - Core.pm.PL: restored barf() to its documented behavior (had been
      commented out and replaced with Carp::croak()...)
    - t/matmult.t, t/misc.t: added more matrix multiplication tests; 
-     fixed test in misc.t to accept error messages with "PDLA:" in front.
+     fixed test in misc.t to accept error messages with "PDL:" in front.
     
 CED 07-Jan-2005
-   - Updated PDLA version to '2.4.2cvs'
+   - Updated PDL version to '2.4.2cvs'
    - In a fit of insomnia, lifted code for non-symmetric eigenvalue
       problems from Kenneth Geisshirt.  (http://kenneth.geisshirt.dk).
       Resolves bug 1098245 and gets a long-standing annoyance off my back.
 DJB 06-Jan-2005
    - Fixed norm() to correctly handle bad values. Added test case to bad.t
      (and changed to use Test::More rather than Test module and
-      PDLA::Core::approx).
+      PDL::Core::approx).
 DJB 28-Dec-2004
-   - Clean up of t/fftw.t (use Test::More and PDLA::Core::approx()). Small
+   - Clean up of t/fftw.t (use Test::More and PDL::Core::approx()). Small
      increase in the tolerance used for checks (1.1e-4 to 1.2e-4) to avoid
      occasional test failures seen on Solaris.
 
@@ -914,7 +914,7 @@ DJB 23-Dec-2004
      problem gets fixed). I think the whole build process for the 3D stuff
      should be re-worked if anyone has enough tuit's.
 CED 17-Dec-2004
-   - PDLA 5.6 is now deprecated by the Makefile.PL
+   - PDL 5.6 is now deprecated by the Makefile.PL
    - Fix problems with test suite when Astro::FITS::Heder is not installed.
 CED 13-Dec-2004
    - uninitialized memory patch 1083663 (thanks, Miloslav!)
@@ -933,13 +933,13 @@ CED 4-Dec-2004
      and the user gets warned.)
 DJB 28-Oct-04
    - removed some header comments which caused problems with (presumably older)
-     versions of Astro::FITS::Header (for PDLA::IO::FITS::wfits)
+     versions of Astro::FITS::Header (for PDL::IO::FITS::wfits)
 DJB 27-Oct-04
    - fixed wfits() to write out ushort columns as Int4 (J) format
      (ideally we should write out as Int4 (I) and use TSCALE/ZERO).
      Added tests for this and other column types. Removed support for
-     writing out PDLA::Complex piddles for this release.
-   - cleaned up the limits* tests so that they are skipped if PDLA::Slatec
+     writing out PDL::Complex piddles for this release.
+   - cleaned up the limits* tests so that they are skipped if PDL::Slatec
      is not installed.
 DJB 21-Oct-04
    - clean up of code to fix remaining validation errors reported by fverify
@@ -947,7 +947,7 @@ DJB 21-Oct-04
      case to get correct format for each card). Not 100% convinced caught all
      cases.
 DJB 20-Oct-04
-   - PDLA::IO::FITS::wfits updates for table writing: BITPIX must be the second
+   - PDL::IO::FITS::wfits updates for table writing: BITPIX must be the second
      card (or else fverify from FTOOLS throws a wobbly); fixed writing a
      comment card (caused messages under use strict/-w); the data area is
      now filled with \0 rather than " " (both tables and images).
@@ -961,7 +961,7 @@ CED 15-Oct-04
 CS  07-Oct-04
    - fix warnings in some test scripts
 DJB 06-Oct-04
-   - PDLA::Graphics::PLplot doc. updates: include internal and external links;
+   - PDL::Graphics::PLplot doc. updates: include internal and external links;
      use of head3 elements for options; added blank lines between pod
      statements (if not included these statements are treated as text);
      addition of "extra" markup (C<> and F<> items).
@@ -991,16 +991,16 @@ DCH 29-Jul-04
      width specification (LINEWIDTH option).  Fixed test bug in
      limits_ulimits.t (floating point comparison error in array_eq)
 CED 29-Jul-04
-   - Fixed Makefile.PL for PLPlot, to pay attention to $PDLA::Config hash
-    (was checking $PDLA_CONFIG instead).  Ditto plplot.t
+   - Fixed Makefile.PL for PLPlot, to pay attention to $PDL::Config hash
+    (was checking $PDL_CONFIG instead).  Ditto plplot.t
 DJB 29-Jul-04
-   - added tests to t/core.t for $PDLA::undefval fix (bug#886263 fixed
+   - added tests to t/core.t for $PDL::undefval fix (bug#886263 fixed
      by Craig) and cleaned up the test to use Test::More (was Test).
 CED 28-Jul-04
    - updated constructor and conversion routines to handle 
-     $PDLA::undefval properly.  Since I don't like
+     $PDL::undefval properly.  Since I don't like
      action-at-a-distance, I also added tripwires to this activity
-     if $PDLA::debug is set -- hopefully that mitigates the horror 
+     if $PDL::debug is set -- hopefully that mitigates the horror 
      somewhat.
 CED 21-Jul-04
    - changes to perldl.PL to allow script handling.
@@ -1017,12 +1017,12 @@ CED 07-Jul-04
 DJB 01-Jul-04
    - pdlcore.c.PL/pdl_kludge_copy_<>() issues: changed \n to \\n in some error
      messages (would not compile otherwise) and a switch statement is now
-     auto-generated from %PDLA::Types::typehash rather than hard-coded
+     auto-generated from %PDL::Types::typehash rather than hard-coded
 CED 17-Jun-04
-   - pdlcore.c.PL: av_ndcheck and pdl_setav_$type now support PDLAs thrown
+   - pdlcore.c.PL: av_ndcheck and pdl_setav_$type now support PDLs thrown
     into the mix. 
 
-    I noticed that PDLA::undefval doesn't seem to function (see
+    I noticed that PDL::undefval doesn't seem to function (see
     "help pdl[2]") but  left it that way for philosophical reasons.
 CED 16-Jun-04
    - perldl.PL: comment lines are filtered out before passing through 
@@ -1114,30 +1114,30 @@ RL 4-Mar-04
      subroutine, where the first argument of c_plhist (the length of the
      data vector) is deduced from the piddle. 
 CED 4-Mar-04
-   Minor fixes to PDLA::Transform - slightly better handling of hanning and
+   Minor fixes to PDL::Transform - slightly better handling of hanning and
     gaussian cases; tweaks to documentation.
 RL (for DH) 2-Mar-04
-   - New version of Graphics/PLplot/Makefile.PL that allows build of PDLA
+   - New version of Graphics/PLplot/Makefile.PL that allows build of PDL
      on a totally fresh system.
 RL 1-Mar-04
    - Graphics/PLplot/plplot.pd, t/plplot.t: Define our own plpoin perl
      subroutine, where the first argument of c_plpoin (the length of the x
      and y vectors) is deduced from the piddle. 
 CED 1-Mar-04
-   Minor fixes to PDLA::IO::FITS
+   Minor fixes to PDL::IO::FITS
 CED 29-Feb-04
-   PDLA::IO::FITS
+   PDL::IO::FITS
      - Some more refinements to rfits (see docs).
      - wfits now allows write of binary tables.
    primitive.pd: fix to glue() makes it properly permissive with dims.
 CED 25-Feb-04
-   - Further changes to PDLA::IO::FITS:
+   - Further changes to PDL::IO::FITS:
     * More cleanup of header handling code
     * Split out image-reading code into its own XTENSION handler
         [part of transition to more modular FITS handling]
     * No test cases yet.
 DJB 24-Feb-04
-   - 'use strict' fix for PDLA::IO::FITS::rfits (when reading a binary table)
+   - 'use strict' fix for PDL::IO::FITS::rfits (when reading a binary table)
      (needs test cases added to t/fits.t)
    - FITS checks moved from t/misc.t into t/fits.t (new file)
    - t/misc.t and t/fits.t now use the Test module
@@ -1160,13 +1160,13 @@ DJB 14-01-04
    - moved FITS-header messages from IO/Misc/Makefile.PL to
      IO/FITS/Makefile.PL since rfits/wfits are no longer in IO/Misc
    - added WCS as an option to the fits_imag/fits_rgbi routines in
-     PDLA::Graphics::PGPLOT[::Window]. This allows you to use any alternate
+     PDL::Graphics::PGPLOT[::Window]. This allows you to use any alternate
      WCS mappig stored in the FITS header. Only tested using images from the
      Chandra X-ray satellite, so you can now say
        fits_imag($img,{j=>1,wcs=>'p'});
      to display the 'physical' coordinate system of the image
    - added docs for fits_cont() [essentially just copied fits_rgbi]
-   - added fits_cont and fits_vect to PDLA::Graphics::PGPLOT + internal updates
+   - added fits_cont and fits_vect to PDL::Graphics::PGPLOT + internal updates
      to reduce replicated code.
 DJB 13-01-04
    - t/dumper.t now passes on OS-X (10.3.2); needed to add '-s' option to
@@ -1176,10 +1176,10 @@ CS  13-01-04
      files named 'core' (problem on case insensitive platforms)
 DJB 12-01-04 [merge of config-variable-cleanup branch]
    - Clean up the use of config values in the build
-     process. We no longer use %PDLA_CONFIG but use %PDLA::Config in
+     process. We no longer use %PDL_CONFIG but use %PDL::Config in
      Makefile.PL's and *.pm's (it unifies the code since we do not need
      to check for one or the other). The config files (e.g. perldl.conf)
-     still use the PDLA_CONFIG variable.
+     still use the PDL_CONFIG variable.
    - added a TEMPDIR config entry which defines the location of the
      temporary directory to use during the build and testing phases;
      updated code to use this where spotted (may be other locations
@@ -1188,7 +1188,7 @@ DJB 12-01-04 [merge of config-variable-cleanup branch]
      Makefile.PL since the same bit of code was seen in several Makefile.PL's
 2.4.1 released
 CS  6-01-04
-   - PDLA.pm: version to 2.4.1
+   - PDL.pm: version to 2.4.1
 CED 12-31-03
    - Cleared out cruft from MatrixOps build process.
 CED 12-29-03
@@ -1196,7 +1196,7 @@ CED 12-29-03
    - Added crash test to t/plplot.t
    - 'yes'/'no' -> 1/0 conversion added to bottom of perldl.conf
 DJB 12-23-03
-   - fix small bug in PDLA::Graphics::PGPLOT::Window::initenv() revealed
+   - fix small bug in PDL::Graphics::PGPLOT::Window::initenv() revealed
      by perl 5.8.2 and test 11 of t/pgplot.t (Use of uninitialized value...)
 CS  12-19-03
    - small release notes change
@@ -1263,7 +1263,7 @@ CS  13-Nov-2003
      related to bug 806229 which might be caused by a version
     mismatch(?)
 CED 11-Nov-2003
-   - Added FITS BINTABLE reading to PDLA::IO::Misc.
+   - Added FITS BINTABLE reading to PDL::IO::Misc.
 CED 04-Nov-2003
    - Updated Matrix.pm 
    - Removed null tests from trans code in PP.pm - to enable better handling
@@ -1271,7 +1271,7 @@ CED 04-Nov-2003
 CED 16-Oct-2003
    - Added whatis() function to perldl
 CED 15-Oct-2003
-   - Added PDLA::IO::IDL.
+   - Added PDL::IO::IDL.
 CED 15-Sep-2003
    - Added easier access to local web documentation ("help www").
    - Help searches are case-insensitive.
@@ -1286,7 +1286,7 @@ CED 22-Aug-2003
    - Added qsortvec() to ufunc -- lexicographically sort a bunch of vectors.
 CED 8-Aug-2003
    - DiskCache now accepts a "bless" option that blesses the tied array
-    into the PDLA::DiskCache class for easier access to the "sync" and
+    into the PDL::DiskCache class for easier access to the "sync" and
     "purge" methods.
    - Some fixes to Transform.
 CED 5-Aug-2003
@@ -1302,7 +1302,7 @@ CED 24-Jul-2003
      in "? /tmp/foo")
 JC  22-Jul-2003
    - Fixed bug in polar to re-im conversion routine (Cp2r) in 
-     PDLA::Complex. Added test case in complex.t to check that
+     PDL::Complex. Added test case in complex.t to check that
      re-im to polar conversion followed by polar to re-im ends
      up with the same value we started with.
 CED 12-Jul-2003
@@ -1351,12 +1351,12 @@ CED 12-05-2003
    - Shrunk Cartography sample data
 CS 080503
    - Makefile.PL now absolutely requires Filter::Util::Call & 
-     Text::Balanced for PDLA::NiceSlice
+     Text::Balanced for PDL::NiceSlice
 DJB 060503
    - Makefile.PL now enforces Perl >= v5.6.0 (+ removal of old code)
 CS 060503
    - set OPTIMIZE via perldl.conf
-   - PDLA.pm: version @ 2.4.0
+   - PDL.pm: version @ 2.4.0
    - Inline::Pdlpp: new NOISY flag (show compilation output)
 CS 030503
    - is_inplace: allow testing and unsetting inplace flag in one statement
@@ -1364,11 +1364,11 @@ CS 030503
    - add 'reshape' to lvalue funcs
 CS 190403
    - export pdl_changed, pdl_children_changesoon and pdl_vaffinechanged
-     into PDLA::Core struct (for usage in external modules)
+     into PDL::Core struct (for usage in external modules)
      bumped up pdl_core_version to 5
    - use those funcs to fix inplace ffts in PFL::FFTW (fix bug #716449)
    - pdlapi.c, pdlthread.c, pdl.h.PL: changes to help debugging the
-     PDLA Core; all pointers are now dumped in hex in the pdl_dump_XX
+     PDL Core; all pointers are now dumped in hex in the pdl_dump_XX
      routines
    - pdlapi.c: delete one statement in pdl_changed that broke, for
     example, calling fft with certain kind of slices (see comments)
@@ -1391,19 +1391,19 @@ CED 9-Apr-2003
    - slice.pd : Added permissive ranging to, er, range(). Missing source dims 
     are treated as if they dummy dims of order 1.  
 DJB 09-Apr-2003
-   - Fixed PDLA::Graphics::PGPLOT::Window::legend to correctly handle
-     synonyms (confusion between PDLA::Option's synonyms()/add_synonym())
+   - Fixed PDL::Graphics::PGPLOT::Window::legend to correctly handle
+     synonyms (confusion between PDL::Option's synonyms()/add_synonym())
 CED 8-Apr-2003
    - Minor fix to Transform::map: if you supply a destination FITS header it
     replaces the original FITS header in the remapped output.
 CS  Dev.pm: apply Michael Schwern's fix for ExtUtils::LibList
     Makefile.PL, Types.pm.PL: fix race where Types.pm.PL tries to use
-        PDLA::Config before it is written
+        PDL::Config before it is written
     discovered bug in FFTW inplace code: breaks inplace routines with
         slices; added TODO test to fftw.t
 DJB 02-Apr-2003
    - moved code from Basic/Bad/bad.pd to Basic/Core/Types.pm.PL: should
-     never really have been adding to the PDLA::Type namespace from a
+     never really have been adding to the PDL::Type namespace from a
      different module! (no change to the user)
 CED 30-Mar-2003
    - range now allows using the empty piddle as an index; the resulting
@@ -1422,16 +1422,16 @@ CS 25/03/03
    - karma.pd: added 'kvis' command to start new kvis app
 CS 22/03/03
    - renamed det in slatec.pd to detsclatec; avoids name clash with
-     PDLA::MatrixOps::det; I tried to make the change backwards compatible
-   - PDLA::ImageND, PDLA::FFT, PDLA::FFTW: moved kernctr from PDLA::FFT into
-     PDLA::ImageND so it can be used by both PDLA::FFT and PDLA::FFTW; both
-     PDLA::FFT and PDLA::FFTW export it now by default
+     PDL::MatrixOps::det; I tried to make the change backwards compatible
+   - PDL::ImageND, PDL::FFT, PDL::FFTW: moved kernctr from PDL::FFT into
+     PDL::ImageND so it can be used by both PDL::FFT and PDL::FFTW; both
+     PDL::FFT and PDL::FFTW export it now by default
 CED 20-March-2003
-    - pdlhash.c: if PDLA::BIGPDLA is true, then ignore the 1-Gb limit on PDLAs.
+    - pdlhash.c: if PDL::BIGPDL is true, then ignore the 1-Gb limit on PDLs.
     - Window.pm: 
     - Fix labeling bug that affected some output devices (titles
        were doubled in ppm device due to a pgplot buffering bug).
-    - Fix handling of FITS headers in _fits_foo -- let PDLA dimensions
+    - Fix handling of FITS headers in _fits_foo -- let PDL dimensions
        override NAXIS<n>.
     - PP.pm:
     - hdrcpy bit is sticky, so that headers make their way down 
@@ -1452,7 +1452,7 @@ CS 17/03/03
     - Core.pm.PL: fix topdl method (closes bug #681015)
     - gsl_integ.pd: fix for compliance with gcc
 AJ  (17-March-2003)
-    - Added PDLA::GSL::INTEG
+    - Added PDL::GSL::INTEG
 CED (15-March-2003)
     - perldl: Added multi-line string processing (using Text::Balanced) 
     and EOF protection to the shell.
@@ -1460,12 +1460,12 @@ CED (14-March-2003)
     - Obscure bugfixes and improvements to Lib::Transform
     - t/pgplot.t Avoid a perl bug (setting an alarm from inside
     the alarm handler sometimes fails!).
-    - Primitive: uniq now always returns a PDLA.
+    - Primitive: uniq now always returns a PDL.
 AJ  (12-March-2003)
-    - Minor changes to PDLA::GSL::INTERP
+    - Minor changes to PDL::GSL::INTERP
 Doug Hunt (3-Mar-2003)
-    - Added PLplot interface to PDLA/Graphics area.  This
-      had been a separate CPAN module (PDLA-Graphics-PLplot)
+    - Added PLplot interface to PDL/Graphics area.  This
+      had been a separate CPAN module (PDL-Graphics-PLplot)
 CED (25-Feb-2003)
     - Added 'piddle' constructor synonym :-)
 CED (24-Feb-2003)
@@ -1495,7 +1495,7 @@ CED (30-Jan-2003)
     - Added FITS header support to transformations.
     - Added automagic RGB recognition to ->imag.
 AJ  (29-Jan-2003)
-    - Added PDLA::GSL::INTERP and PDLA::GSL::DIFF and corresponding 
+    - Added PDL::GSL::INTERP and PDL::GSL::DIFF and corresponding 
     tests t/gsl_interp.t and t/gsl_diff.t
 CED (28-Jan-2003)
     - Added fits_vect method to Window
@@ -1511,15 +1511,15 @@ CED (27-Jan-2003)
     (like ->range) that can extend out-of-bounds.
 CED (20-Jan-2003)
     - Added rgbi to Window.pm (requires newer pgplot & PGPLOT).
-    - Added earth_image() to PDLA::Transform::Cartography::Earth
+    - Added earth_image() to PDL::Transform::Cartography::Earth
     (this may not be the Right Way to do it)
 CED (17-Jan-2003)
-    - PDLA::IO::Dumper uses more standard uuencode/uudecode than before,
+    - PDL::IO::Dumper uses more standard uuencode/uudecode than before,
     and uses external uuencode/uudecode by preference (faster than
     Convert::UU)
 CED (16-Jan-2003)
     - Minor fixes to Transform.
-    - PDLA::IO::Pic is auto-used.
+    - PDL::IO::Pic is auto-used.
 CED (15-Jan-2003)
     - fix to Dumper -- uses Convert::UU (instead of uudecode) if available.
     - Transform::Cartography::Earth -- update dumped info
@@ -1573,7 +1573,7 @@ CED (06-Dec-2002)
     - Fixed bugs #633385, #634257
     - attempted to regularize justify option (in progress)
 CED (05-Dec-2002)
-    - Numerous fixes to PDLA::Transform
+    - Numerous fixes to PDL::Transform
     - Minor tweak to MatrixOps
     - Some cosmetic improvements to InterpND (better option control)
 CED (03-Dec-2002)
@@ -1584,13 +1584,13 @@ CED (02-Dec-2002)
     - indexND now uses range call instead of index call (works faster)
     - many mods to Transform
 CED (21-Nov-2002)
-    - PDLA::Math loads PDLA::MatrixOps by default for backwards compatibility.
+    - PDL::Math loads PDL::MatrixOps by default for backwards compatibility.
 CED (19-Nov-2002) 
-    - PDLA::Slices::identity -> s_identity; identity is now 
+    - PDL::Slices::identity -> s_identity; identity is now 
     exported from MatrixOps and constructs an identity matrix.
     - Ported MatrixOps to PP; moved to subdir of Basic; split the 
     matrix ops from math.pd and moved into matrixops.pd  MatrixOps
-    is now autoloaded by "use PDLA;".
+    is now autoloaded by "use PDL;".
     - Minor mods & cross-refs added to documentation in several modules
 CED (18-Nov-2002)
     - Transform: improvements to t_lookup
@@ -1607,19 +1607,19 @@ CED (15-Nov-2002)
     crazy.  One more iteration to make it usable!
 CED (14-Nov-2002)
     - interpND defaults to 'sample' if its input is an integer type
-    - Math::eigens is quiet about symmetrizing unless PDLA::debug is set
-    - photometric distortion (not correct yet but functional) in PDLA::Transform
+    - Math::eigens is quiet about symmetrizing unless PDL::debug is set
+    - photometric distortion (not correct yet but functional) in PDL::Transform
     - updates to MatrixOps.pm   
 DJB (14-Nov-2002)
-    - Added 'demo transform' to perldl to showcase PDLA::Transform
+    - Added 'demo transform' to perldl to showcase PDL::Transform
 CED (14-Nov-2002)
     - Math::eigens is now threadable.
 DJB (12-Nov-2002)
     - Added the TYPES_LONGLONG option to perldl.conf: by default it is set to 1
-      which means that PDLA will try and compile support for a 64 bit type. Set
-      to 0 if make fails (or fix the code to work with PDLA_LongLong types!)
+      which means that PDL will try and compile support for a 64 bit type. Set
+      to 0 if make fails (or fix the code to work with PDL_LongLong types!)
 CS  - NiceSlice doc additions
-    - PDLA::Core: squeeze as reshape(-1) alias
+    - PDL::Core: squeeze as reshape(-1) alias
 CED (11-Nov-2002)
     - Transform.pm updates - conformal radial expansion, better 
     documentation, better composition, several minor bug fixes
@@ -1645,7 +1645,7 @@ CED (25-10-2002)
     - Lib/Slatec/slatec.pd: added nonsquare-array check to matinv.
     Similar checks are probably needed throughout to keep FORTRAN
     from dying.
-CS  - PDLA::IO::FlexRaw now understands all types
+CS  - PDL::IO::FlexRaw now understands all types
     - uncommented type longlong -- let's see how many installations
       break ;)
     - added t/iotypes.t
@@ -1673,7 +1673,7 @@ DJB/CS (11-Sep-02)
       run (to make sure that we're testing the latest&greatest code)
 TJ (09-Sep-02)
     - Fix valgrind warning in pdlapi.c (use of uninitialised variable in dump)
-    - PDLA::IO::Storable now uses PTR2IV
+    - PDL::IO::Storable now uses PTR2IV
 TJ/CS (09-Sep-02)
     - Fix memory leak associated with magic
 CED (30-Aug-02)
@@ -1686,7 +1686,7 @@ CED (28-Aug-02)
     - minor fix to rangeb - physicalize index before checking its size
 CED (27-Aug-02)
     - range() is now an lvalue, as are indexND and indexNDb.
-    - pdl_malloc call is now via PDLA Core structure, avoiding
+    - pdl_malloc call is now via PDL Core structure, avoiding
     complete failure of the test suite :-)
     - extra debugging fprintf() calls deleted.
     - range() is a front-end to rangeb(), allowing omission of optional
@@ -1708,10 +1708,10 @@ Frederic Magnard (2002-09-20)
 TJ (2002-09-20) - wfits should now write SIMPLE as logical with
       Astro::FITS::Header
 TJ  - wfits now works correctly with Astro::FITS::Header
-TJ  - Paper over weirdness in PDLA::GSL build when Slatec is disabled. 
+TJ  - Paper over weirdness in PDL::GSL build when Slatec is disabled. 
 TJ  - func.t was failing if Slatec was not available. This was because
-      PDLA::Func was loaded before PDLA::Slatec in t/func.t. Now fixed
-      (and include an additional croak in PDLA::Func).
+      PDL::Func was loaded before PDL::Slatec in t/func.t. Now fixed
+      (and include an additional croak in PDL::Func).
 TJ  - Compatibility fixes for perl 5.005_03
         + updated ppport.h from perl 5.8.0
         + lvalue problems with slices.pd and primitive.pd
@@ -1721,7 +1721,7 @@ DJB - Backported "_Inline removal to Makefile.PL & t/inlinepdlpp.t"
 CS  - version to 2.3.4
 CS  - backported a number of patches from the main branch
       DB 9/11:  Lite.pm typo
-      TJ 9/02:  PDLA::IO::Storable now uses PTR2IV
+      TJ 9/02:  PDL::IO::Storable now uses PTR2IV
             Fix valgrind warning in pdlapi.c
             (use of uninitialised variable in dump)
             Fix memory leak associated with magic
@@ -1759,14 +1759,14 @@ CED (12-Aug-02)
     - Fix to spinlocks in Window.pm.
     - gethdr() can return undef again; new method hdr() is always defined.
 CED (9-Aug-02)
-    - Signal-deferral mechanism for PDLA::Graphics::PGPLOT::Window should
+    - Signal-deferral mechanism for PDL::Graphics::PGPLOT::Window should
     avoid many pgplot-related weirdnesses
 CED (8-Aug-02)
-    - Minor fixes to fits_imag, also in PDLA::Graphics::PGPLOT::Window
+    - Minor fixes to fits_imag, also in PDL::Graphics::PGPLOT::Window
     - Minor fix to IndexND, in slice.pd
     - now fits_imag doesn't attempt to reconcile different CTYPE units.
 DJB (8-Aug-02)
-    - changed behaviour of TextWidth option in PDLA::Graphics::PGPLOT::Window
+    - changed behaviour of TextWidth option in PDL::Graphics::PGPLOT::Window
       It is now only applied if specified (ie doesn't default to 1 and so
       clobber the LineWidth/HardLW settings). Added a little documentation
       but it needs to be improved.
@@ -1786,21 +1786,21 @@ CED (1-Aug-02)
         - Incorporate FITS into rpic/wpic interface (allow conversion code
       to recognize drop-in replacement functions for rpic/wpic)
     - Minor fix to FITS I/O version checking
-CS  - add PDLA::IO::Storable and PDLA::GSL::SF hierarchy
+CS  - add PDL::IO::Storable and PDL::GSL::SF hierarchy
     - fast pdl method! please test heavily
     - don't do opengl tests unless opengl is actually built!
-    - mute annoying warnings from PP::PDLAParObj
-CS  - explicitly load PDLA::Core in PP boot section
+    - mute annoying warnings from PP::PDLParObj
+CS  - explicitly load PDL::Core in PP boot section
     - examples: make modules with Inline::Pdlpp! 
 CED (26-Jun-02)
-    PDLA::Graphics::PGPLOT::Window::line() autoranging avoids infinity
+    PDL::Graphics::PGPLOT::Window::line() autoranging avoids infinity
 CED (25-Jun-02)
-    Changes to PDLA::Graphics::PGPLOT::Window:
+    Changes to PDL::Graphics::PGPLOT::Window:
     - Added pgwin() -- exported constructor (less typing)
     - Added =>Size option to constructor    (less typing)
     - Added =>Units option to constructor (PGPLOT units only at the moment)
     - Interactive windows appear at the size you ask for. (less annoyance)
-DJB - quoted "PDLA::Type" in byte/short/.. fns in Core.pm to fix
+DJB - quoted "PDL::Type" in byte/short/.. fns in Core.pm to fix
       problem seen with using 'use strict' with perl 5.6.0
 CS  - patch by Ken Williams to improve speed of 'pdl $perl_array_ref'
 CS  - check for Astro::FITS::Version >= 1.12
@@ -1836,11 +1836,11 @@ TJ (31 May 02)
       failure of DynaLoader in perl 5.8.0
 2.3.3
 JC (22 May 02)
-    - Changes to Release_Notes, PDLA.pm associated
+    - Changes to Release_Notes, PDL.pm associated
       with making release 2.3.3
 CS  - bump up NiceSlice version
     - gsl_random rng destructor!
-    - improve PDLA::Exporter doc (I never remember the darn syntax)
+    - improve PDL::Exporter doc (I never remember the darn syntax)
 CS  - reshape behaviour like idl when no dim args are given
     - niceslicing gets a new modifier: $a(;-) drops dims of size 1
 CED (16 May 02)
@@ -1850,11 +1850,11 @@ CS  - Makefile.PL: warning if mods for NiceSlice missing
     - IO/Misc: print warning at the end of the make output
     - Graphics/PGPLOT: small change to the (still undocumented) autolog func
 CED (15 May 02)
-    - Added Astro::FITS::Header recognition to PDLA::IO::Dumper.
+    - Added Astro::FITS::Header recognition to PDL::IO::Dumper.
 CED (14 May 02)
     - Removed NiceSlicing from RandVar and Dumper (they use slice only now)
 CED (from the distant past)
-    - Added PDLA::IO::Dumper, which provides deep data structure storage
+    - Added PDL::IO::Dumper, which provides deep data structure storage
     and retrieval in armored-ASCII format.  Requires Data::Dumper 
     (from CPAN), FITSIO (also from CPAN), and uuencode(1). 
 CED (13 May 02)
@@ -1869,7 +1869,7 @@ CED (10 May 02)
     on the presence of Astro::FITS::Header;
     whether Astro::FITS::Header is present; but ultimately everyone
     just uses Astro::FITS::Header and the problem goes away.
-CS  - folded PDLA-2_3-gimp-fix branch into main trunk
+CS  - folded PDL-2_3-gimp-fix branch into main trunk
     - typos
 DJB (09 May 02)
     - removed *.P files from Lib/Slatec/slatec/ (no longer needed)
@@ -1890,7 +1890,7 @@ CS  - perldl v1.32: changed preprocess interface -> pipeline
     - PP: make_now is really a noop with above family changes - removed
     - doc updates
 DJB (09 Apr 02)
-    - added 'use PDLA::Math' to PDLA.pm (but not Lite/LiteF versions)
+    - added 'use PDL::Math' to PDL.pm (but not Lite/LiteF versions)
     (22 Apr 02)
     - added Kaj Wiik's patch to use pgtbox in PGPLOT/Window.pm (#538831)
       -- this needs documentation!
@@ -1905,8 +1905,8 @@ CS  - doc updates
     - some more PGPLOT tline fixes
     - PGPLOT autolog stuff (as yet undocumented)
     - perldl -V  (version info)
-    - remove 'use PDLA::Core' from PdlParObj.pm (static linking)
-    - Makefile.PL: fix PDLA::Config formatting,
+    - remove 'use PDL::Core' from PdlParObj.pm (static linking)
+    - Makefile.PL: fix PDL::Config formatting,
         make solaris/usemymalloc/gcc message even more verbose
     - misc.pd: fix rasc bug (|| vs or)
     - add BUGS file
@@ -1917,7 +1917,7 @@ CS  - slice fix
     - perldl Ctrl-C handling (Ken Williams tip!)
     - polyfillv: make lvalue sub
 DJB
-    - PDLA::IO::NDF::rndf() now accepts NDF sections (01/08/02)
+    - PDL::IO::NDF::rndf() now accepts NDF sections (01/08/02)
     - added fft prototype to slatec.pd (from Jonathan Scott Duff, 01/17/02)
 CS  - INSTALL & DEPENDENCIES update (bug #488867)
     - FlexRaw: read/write from open file handles (by Dov Grobgeld)
@@ -1925,32 +1925,32 @@ CS  - INSTALL & DEPENDENCIES update (bug #488867)
                 add file handle awareness to rasc
     - slices.pd: improve 'index' error message
 CS  - remove the defunct t/quat.t
-    - fix PDLA::GSL to work with libgsl 1.X
+    - fix PDL::GSL to work with libgsl 1.X
 CS  - fix for #474736 (sym with points), needed that feature
     - applied symsize patch #474853
-CS  - fix for Dev.pm: load PDLA::Types only once
-    - stop PDLA::IO::Pic warning by default
+CS  - fix for Dev.pm: load PDL::Types only once
+    - stop PDL::IO::Pic warning by default
 2.3.2
 CS  - change pdlcore.h.PL so that gimp-perl compiles
       again
-    - Changes to Release_Notes, PDLA.pm associated
+    - Changes to Release_Notes, PDL.pm associated
       with making release 2.3.2
 2.3.1
 John Cerney (11/21/01)
-    - Changes to Release_Notes, PDLA.pm associated
+    - Changes to Release_Notes, PDL.pm associated
       with making release 2.3.1
 DJB - added WITH_IO_BROWSER to perldl.conf (default 0) to
-      control whether PDLA::IO::Browser is made. Will now compile
+      control whether PDL::IO::Browser is made. Will now compile
       on MacOS X 10.1.
 CS  - get rid of Perl_die etc dependencies and other barfisms
-    - make sure t/inlinepdlpp.t has a full search path to PDLA::Core
+    - make sure t/inlinepdlpp.t has a full search path to PDL::Core
     - Basic/Pod : podselect only when Pod::Select available
-CS  - fix Makefile/Dev.pm bugs (that break build on PDLA-free
+CS  - fix Makefile/Dev.pm bugs (that break build on PDL-free
       systems)
     - bump version to 2.3.1
 2.3
 John Cerney (11/13/01)
-    - Changes to Release_Notes, PDLA.pm, TODO associated
+    - Changes to Release_Notes, PDL.pm, TODO associated
       with making release 2.3
     - |= &= bug fix
 CS  - inline fixes
@@ -1965,8 +1965,8 @@ CS  - fix bug in Dev.pm that I introduced
     - macosx patch
 CS  - Tim's TERM patch
     - Stefan's Matrix patch
-    - added PDLA::API manpage
-    - PDLA::Core::Dev helper functions for work with
+    - added PDL::API manpage
+    - PDL::Core::Dev helper functions for work with
       Inline
     - pictests only for internal PNM format
 DJB (23/Oct/01)
@@ -1979,7 +1979,7 @@ DJB (15/Oct/01)
       imag (will correctly handle transforms for axes with "-ve" pixel 
       size, such as RA in Astronomy)
 CS  - Xrange, Yrange for PGPLOT, fix tline and tpoints
-CS  - niceslice docs, class methods for PDLA::Options,
+CS  - niceslice docs, class methods for PDL::Options,
       perldl: enable niceslicing at startup (if available)
       Lvalue: add sever method
 CS  - Inline::Pdlpp docs addittions, test script added
@@ -1987,15 +1987,15 @@ CS  - NiceSlice modifiers + bug fix
 CS  - Inline::Pdlpp !!!
 DJB (23/Aug/01)
     - you no longer need to surround options by {} for
-      PDLA::Graphics::PGPLOT::Window->new()
+      PDL::Graphics::PGPLOT::Window->new()
 JB  - Added a recording feature to the PGPLOT interface.
 CS  - NiceSlice doc update
 JB  (14/Aug/01)
     - Added a package wide store for options for env. This allows the
       next device to reuse the most recent set of env options.
 CS  - minmax: return scalars!
-    - PDLA::Options for PDLA::Graphics::Karma
-    - disable PDLA::PP SIG{__DIE__} overload by default
+    - PDL::Options for PDL::Graphics::Karma
+    - disable PDL::PP SIG{__DIE__} overload by default
 DJB (07/Aug/01)
     - added VertSpace to ...PGPLOT::Window's legend()
 CS  - make sure perldl works with NiceSlice
@@ -2003,7 +2003,7 @@ CS  - make sure perldl works with NiceSlice
     - new 'sclr' method
     - enhanced clump interface
     - pdlapi: backport pdl_get vaffine
-    - experimental 'autosever' for PDLA::NiceSlice
+    - experimental 'autosever' for PDL::NiceSlice
     - quieter 'mkhtmldocs'
     - fix OpenGL docs screwing up online help
 DJB (05/Aug/01)
@@ -2011,7 +2011,7 @@ DJB (05/Aug/01)
       ([ #443431 ] wfits outputs illegal FITS keywords)
     - added test for whist to t/hist.t from DIAB Jerius (patch #443438)
     - added 'demo ooplot' to demonstrate "new" interface to PGPLOT
-CS  - PDLACode.pm: fix bug #441586: PDLA::PP cant handle pars with numerals
+CS  - PDLCode.pm: fix bug #441586: PDL::PP cant handle pars with numerals
 CS  - primitive.pd: fix random funcs so that they work with Perl's srand
       * does it work on pre-5.6 perls? *
     - update Lvalue documentation
@@ -2019,7 +2019,7 @@ CS  - slices.pd: fix lags bug #436823
     - Fit/Polynomial.pm: normalization wasn't threaded (bug #438335)
     - PP.pm: make CoreSv linkage static (MacOSX)
     - Basic.pm: apply whist patch
-    - PDLA::SFilter renamed to PDLA::NiceSlice
+    - PDL::SFilter renamed to PDL::NiceSlice
 CS  - fix MANIFEST
     - fix 'reduce' docs
     - SFilter improvements
@@ -2036,10 +2036,10 @@ CS  - Makefile.PL: Filter::Simple, Text::Balanced dependencies
     - t/sfilter.t: script broke on platforms without prereqs
     - win32: general update for latest build; add slatec support
 DJB (20/Jun/01)
-    - make bad.pd compile with PDLA::Type changes and fix minor bug
+    - make bad.pd compile with PDL::Type changes and fix minor bug
 CS  - fix rvals bug (annoying one!)
-    - syntactical sugar: convenience operators for PDLA::Type
-CS  - Basic/SourceFilter (see also L<PDLA::SFilter>)
+    - syntactical sugar: convenience operators for PDL::Type
+CS  - Basic/SourceFilter (see also L<PDL::SFilter>)
     - generate PP templates with pptemplate
     - PP: pp_boundscheck (see PP.pm)
 CS  - PP.pm: remove first '$this' arg from pp_add_exported!
@@ -2052,37 +2052,37 @@ John Cerney (6/4/01)
     - Doco fix in complex.pd
 CS  - image2d.t skip fix
     - mslice update
-    - numeric for PDLA::Char
+    - numeric for PDL::Char
 DJB (24/May/01)
     - fixed bug in Image2D::centroid2d when (x+box/2) > m (ditto for the y 
       axis). Added bad-value support to centroid2d and max2d_ind
 DJB (8/May/01)
     - OpenBSD doesn't seem to have values.h, which causes Basic/Math to fail:
-      see http://testers.cpan.org/search?request=dist&dist=PDLA#2.2.1 
+      see http://testers.cpan.org/search?request=dist&dist=PDL#2.2.1 
       Now using limits.h in Basic/Math/mconf.h for GNU systems - only tested
       on solaris and i386-linux.
     - fixed typo in debian/rules
 John Cerney (5/3/01)
     - Simple change to primitive.pd so that interpol sub
-      makes it into the PDLA namespace, and not just the
-      PDLA::Primitive namespace. Also added a simple test
+      makes it into the PDL namespace, and not just the
+      PDL::Primitive namespace. Also added a simple test
       case for this routine.
 CS  - F77CONF variable for debian build (see INSTALL)
 2.2.1
 John Cerney (4/25/01)
-    - Changes to Release_Notes, PDLA.pm, TODO associated
+    - Changes to Release_Notes, PDL.pm, TODO associated
       with making release 2.2.1
-CS  - PDLA::Lvalue -- PDLA lvalue subs (added to loaders)
-    - PDLA::Matrix -- added docs
+CS  - PDL::Lvalue -- PDL lvalue subs (added to loaders)
+    - PDL::Matrix -- added docs
     - doc tidbits
     - don't test raster and SGI formats any more (pic(no)*rgb.t)
 John Cerney (4/11/01)
     - Modified t/opengl.t to turn-off the PERL_DL_NONLAZY env variable
       when running this test. Due to some inconsistencies in the opengl
       headers (gl.h, glu.h) and what functions are actually in the opengl
-      libs, PDLA's OpenGL.so sometimes (When using Mesa 3.3 for instance)
+      libs, PDL's OpenGL.so sometimes (When using Mesa 3.3 for instance)
       gets built with interfaces to functions that aren't there. Setting
-      PDLA_DL_NONLAZY=0 prevents the test case from failing in these
+      PDL_DL_NONLAZY=0 prevents the test case from failing in these
       cases.
 DJB (10/Apr/01)
     - hacked Core/Dev.pm to work with perl 5.6.1 (ExtUtils::Liblist has
@@ -2090,14 +2090,14 @@ DJB (10/Apr/01)
 CS  - applied Christopher Marshall's minimum_n_ind patch (bug #413184) + test
 CS  - fix mem leak patch so that core struct version croaking works
     * NOTE: recent patches will require recompilation of any external
-    *       modules that use PDLA::PP; PDLA will tell you when using such
+    *       modules that use PDL::PP; PDL will tell you when using such
     *       modules *
     - barf is now really only an alias for croak; this is a test if we
       can live with the original croak; we should be able to!
     - update COPYING for the 21st century ;)
 John Cerney (4/3/01)
     - Modified Makefile.PL in Graphics to add '-lm' to the libs.
-      This fixes a 'Can't locate auto/PDLA/Graphics/OpenGL/glpcOpenWin.al'
+      This fixes a 'Can't locate auto/PDL/Graphics/OpenGL/glpcOpenWin.al'
       error in make test during opengl.t for some platforms.
       Shouldn't hurt otherwise.
 CS
@@ -2110,17 +2110,17 @@ CS
       pdl_initthreadstruct (pdlthread.c)
     - slatec: document the 'det' function
 DJB (26/Mar/01)
-    - PDLA::Func now sets bc => 'simple' as the default for Hermite
+    - PDL::Func now sets bc => 'simple' as the default for Hermite
       interpolation.
 DJB (14/Mar/01)
     - PGPLOT::Window changes: addressed "undefined window size" part
       of bug #406858; added PosReference option + minor bug fix
       to transform()
     - renamed PosReference to RefPos. close() will print a message if
-      a hardcopy device and $PDLA::verbose is set, hack to fix bug 
+      a hardcopy device and $PDL::verbose is set, hack to fix bug 
       #408589 (draw_wedge() erasing plot) for simple cases (15/Mar/01)
 DJB (27/Feb/01)
-    - addressed PDLA::Func bugs/doc issues as reported by 
+    - addressed PDL::Func bugs/doc issues as reported by 
       HalldBBBBBBBBsr Olafsson and Vince McIntyre (bug #233484)
 CS  - fix bug in pow in math.pd (reported on perldl mailing list)
 CS  - fixed bug in writing pnms (bug #127696)
@@ -2153,7 +2153,7 @@ John Cerney (6/12/00)
       that best fits data. (Similar to Polynomial.pm)
 Marc Lehmann (5/!2/00)
     - Don't add artificial newlines in PdlParObj.pm, you never know what the
-      surrounding code might look like. Makes PDLA compile with perl-5.7 again.
+      surrounding code might look like. Makes PDL compile with perl-5.7 again.
 John Cerney (5/12/00)
     - Updated log10 in ops.pd to have consistent
       copy behavior for subclassed objects as discussed
@@ -2181,9 +2181,9 @@ Jarle Brinchmann (22/10/00)
       of Kaj Wiik).
     - Examples/tests for the PGPLOT interface added in Example/PGPLOT
 Jarle Brinchmann (21/10/00)
-    - Considerable re-write of PGPLOT. This now uses PDLA::Option to 
+    - Considerable re-write of PGPLOT. This now uses PDL::Option to 
       set options. There is also now a OO interface 
-      PDLA::Graphics::PGPLOT::Window which PDLA::Graphics::PGPLOT now uses.
+      PDL::Graphics::PGPLOT::Window which PDL::Graphics::PGPLOT now uses.
    
     - New functionality includes:
 
@@ -2193,23 +2193,23 @@ Jarle Brinchmann (21/10/00)
       - Circles, Rectangles, Ellipses
       - Multiple plot windows, oone can jump from panel to panel when
         the window is divided in several.
-      - More control over options - see PDLA::Graphics::PGPLOTOptions for
+      - More control over options - see PDL::Graphics::PGPLOTOptions for
         details.
     This is not tested under Windows - and possibly not all functions work
     as they used to..
 Doug Burke (18/10/00)
-    - added warp2d (+ supporting fns) to PDLA::Image2D. This allows
+    - added warp2d (+ supporting fns) to PDL::Image2D. This allows
       images to be resampled using 2D polynomials as basis functions.
     - (19/10/00) bug fixes & clean up of documentation for above
     - rfits() now sets hdrcpy flag of piddle (so that the FITS header is 
       copied to new piddles).
 Doug Burke
-    - moved PDLA::Type object from PDLA::Core to PDLA::Types. This shouldn't
+    - moved PDL::Type object from PDL::Core to PDL::Types. This shouldn't
       affect most people.
 CS
     - split primitive.pd into primitive.pd and ufunc stuff (ufunc.pd)
-    - changed loaders to reflect this split (PDLA.pm, Lite.pm, LiteF.pm)
-    - moved 'assgn' to PDLA::Ops (since it's primarily used for
+    - changed loaders to reflect this split (PDL.pm, Lite.pm, LiteF.pm)
+    - moved 'assgn' to PDL::Ops (since it's primarily used for
       overloading '.=')
     - added conv1d to primitive.pd -> this one was dropped
       from the dist at some stage but it makes sense to have it
@@ -2217,56 +2217,56 @@ CS
     - fixed a problem with TriD: APIENTRY not defined when
             processing glu.h (since include files are ignored)
     - added sever docs
-    - a reduce function for PDLA (Reduce.pm)
+    - a reduce function for PDL (Reduce.pm)
     - percentile projections patch applied to primitive.pd
     - fix some thread_define problems
 Doug Burke
     - improved support for bad values in r/wfits and r/wndf
-    - added setbadtonan() to PDLA::Bad.
+    - added setbadtonan() to PDL::Bad.
     - moved log10() entirely over to Basic/Ops/ops.pd (so it's no longer
-      defined in PDLA::Core. 
+      defined in PDL::Core. 
 CS
-    - moved trylink to Dev.pm (L<PDLA::Core::Dev>)
+    - moved trylink to Dev.pm (L<PDL::Core::Dev>)
     - modified Graphics/Makefile.PL accordingly
 Doug Burke
     - cleaned up endian support. Threw out my check_endian stuff since perl
       already knows - there's a isbigendian fn in Dev.pm (eg see 
       IO/Misc/misc.pd)
-    - added setvaltobad() and setnantobad() to PDLA::Bad, renamed replacebad()
+    - added setvaltobad() and setnantobad() to PDL::Bad, renamed replacebad()
       to setbadtoval() (perhaps should keep it as an alias?)
-      setnantobad doesn't work (yet) if $PDLA::Bad::UseNaN == 1
+      setnantobad doesn't work (yet) if $PDL::Bad::UseNaN == 1
 CS
     - added Matrix.pm (suggestion by Stephan Heuel)
     - Core.xs.PL: getdim, at and set now support the 'infinite dim'
       piddle behaviour discussed on pdl-porters
     - perldl: $bflag incorrect due to low 'and' precendence
-    - PDLA.pm: the version was still far behind ;-(
-    - Basic.pm: PDLA->null breaks inheritance
+    - PDL.pm: the version was still far behind ;-(
+    - Basic.pm: PDL->null breaks inheritance
     - Core.pm.PL: allow <2D piddles as arguments in creating functions
         (not yet reflected in the docs). Another step on the way
         to improve the balancing act between scalar and 1D piddles
         and normal perl scalars
-    - Core.xs.PL, pdlcore.h.PL: PDLA.malloc -> PDLA.smalloc renamed
+    - Core.xs.PL, pdlcore.h.PL: PDL.malloc -> PDL.smalloc renamed
     - Core/Makefile.PL: endian stuff only when WITH_BADVAL (reduce
       likelihood of build problems); don't assume that '.' is in the
       PATH (good distributions like DEBIAN avoid that ;)
     - Doc/Perldl.pm: new (undocumented) aproposover function -- do
         your own thing with returned matches
-    - karma.pd: PDLA->malloc -> PDLA->smalloc
+    - karma.pd: PDL->malloc -> PDL->smalloc
 
 Doug Burke (09/06/00-09/07/00)
     - Core and pdl_trans structure are now the same, whatever the choice of 
       WITH_BADVAL and BADVAL_USENAN. The version number of the core has been
       bumped to 2 (removing the need for Christian's recent patch) since this
-      is binary incompatible with PDLA 2.1.1
+      is binary incompatible with PDL 2.1.1
     - clean up of build process - both because of above change and also to
       stop problems when switching between WITH_BADVAL = 1 and 0.
-    - exported several routines in PDLA::Bad
+    - exported several routines in PDL::Bad
 Jim Edwards
     - improved OpenGL detection during 'perl Makefile.PL'
 Doug Burke (09/05/00)
     - minor clean-up to the build process. Now creates Basic/Core/badsupport.p
-      in top-level Makefile.PL for when PDLA::Config hasn't been created - fixes
+      in top-level Makefile.PL for when PDL::Config hasn't been created - fixes
       setting BADVAL options in ~/perldl.conf
 Doug Burke 
     - Bad value support integrated into the main branch. Set WITH_BADVAL to 1 in
@@ -2289,11 +2289,11 @@ Jim Edwards (08/25/00)
 Doug Burke (08/12/00-08/13/00; 08/17/00)
     - minor bugfix to Graphics/Karma/Makefile.PL
     - made qsort and qsort_ind C routines in primitive.pd available to all
-      modules via the PDLA Core structure (pdlcore.h is now created by pdlcore.h.PL)
+      modules via the PDL Core structure (pdlcore.h is now created by pdlcore.h.PL)
       and updated image2d.pd to use this (+ bug fix to patch2d)
     - added double precision versions of sum, sumover, cumusumover (same for prod)
       and average (eg dsum, daverage). Added prodover routine
-      Changed stats to use this (+ changed PDLA::Tests to avoid name clashes)
+      Changed stats to use this (+ changed PDL::Tests to avoid name clashes)
     - revamped Types.pm.PL
     - made Inplace option for pp_def a bit more sensible
     - marked several functions in math.pd as inplace (needs documenting)
@@ -2306,7 +2306,7 @@ Doug Burke (08/02/00)
     - minor improvement to PP output if $::PP_VERBOSE is set
 CS      - ops.pd: fix inplace problem (reported by Tim Conrow)
 Doug Burke (07/27/00)
-    - some minor changes to PP.pm & PDLACode.pm (no longer generates
+    - some minor changes to PP.pm & PDLCode.pm (no longer generates
       'THISISxxx' macros in xs code unless they're required.
 CS  - PP: don't use copy method when HASP2Child
     - Makefile.PL: no .3 manpages                                           
@@ -2328,11 +2328,11 @@ Doug Burke (7/02/00 - 7/9/00)
     - replaced Basic/Core/mkpdlconv.p by Basic/Core/pdlconv.c.PL, removed
       mention of pdlbasicops in Basic/Core/Makefile.PL
 Tim Jenness (6/30/00)
-    - PDLA::CallExt now works on WinNT with VC++
+    - PDL::CallExt now works on WinNT with VC++
 Doug Burke (6/29/00)
-    - added methods to PDLA::Type - enum, symbol, ctype, ppsym, realctype
-      and shortctype - which provide access to information in PDLA::Types 
-      eg print byte->ctype prints "PDLA_Byte". 
+    - added methods to PDL::Type - enum, symbol, ctype, ppsym, realctype
+      and shortctype - which provide access to information in PDL::Types 
+      eg print byte->ctype prints "PDL_Byte". 
       Changed info in Core and rcols in IO/Misc to use these methods.
       Currently un-documented.
 Tim Jenness (6/28/00)
@@ -2354,7 +2354,7 @@ Doug Burke (6/9/00)
       (eg see Index.pod or Index.html)
 Jim Edwards (5/19/2000) TriD (cvs brance trid_experimental) (merged 6/7/00)
         - several changes in TriD including a new Tk widget, 
-          see the file PDLA/Graphics/TriD/README  
+          see the file PDL/Graphics/TriD/README  
         - added TkTriD demo to perldl.PL
 2.1
 Marc Lehmann (6/7/00)
@@ -2364,7 +2364,7 @@ CS  - warn if 5.004 that next version will require 5.005
     - disable sincos optimization in complex.pd until glibc issues sorted
 John Cerney (6/2/00)
     - Updated FAQ to match the Jarle's version at
-      http://www-astro.physics.ox.ac.uk/~jarle/PDLAfaq/pdlfaq_new.html
+      http://www-astro.physics.ox.ac.uk/~jarle/PDLfaq/pdlfaq_new.html
 Doug Burke (5/31/00)
     - more minor doc patches
 John Cerney (5/26/00)
@@ -2372,9 +2372,9 @@ John Cerney (5/26/00)
       function) not being symmetric. Ref sourceforge Patches 100287,
       100359, and Bug 104614.
 Doug Burke (5/25/00)
-    - added 'pdldoc' shell command to provide access to PDLA documentation
+    - added 'pdldoc' shell command to provide access to PDL documentation
       without having to start up perldl
-    - cosmetic changes to output of usage + minor doc change to PDLA::Basic
+    - cosmetic changes to output of usage + minor doc change to PDL::Basic
 John Cerney (5/25/00)
     - Modified PP.pm to call $arg1->copy for subclassed
       objects in some simple cases, otherwise call
@@ -2384,11 +2384,11 @@ Doug Burke (5/23/00,5/24/00)
     - corrected faulty t/interp.t and t/interp_slatec.t scripts
     - minor doc changes to Indexing.pod, image2d.pd, fft.pd & NDF.pm
     - added FRAME option to iis (Graphics::IIS)
-CS      - hopefully the PDLA::Filter modules will work now
+CS      - hopefully the PDL::Filter modules will work now
                 a proper test should be added
 Doug Burke (5/22/00)
     - Graphics::IIS - now works with new PP code + minor doc changes
-    - Func - changed gradient() to work as described + added PDLA::Func::
+    - Func - changed gradient() to work as described + added PDL::Func::
       to method names in the documentation so they do not get picked up
       by perldl's help (eg 'help set')
     - \s to \\s in getfuncdocs() to avoid warning in Doc/Doc.pm
@@ -2397,7 +2397,7 @@ John Cerney (5/21/00)
       to get rid of some warning messages when run with the -w 
       switch
 Doug Burke (5/19/00)
-        - Amalgated Interpolate & Interpolate::Slatec into PDLA::Func (found
+        - Amalgated Interpolate & Interpolate::Slatec into PDL::Func (found
           in Lib/). I've left the old files in the distribution, although they're
           no longer made/installed, in case anyone wants to do a better job.
         - minor doc changes to Image2D
@@ -2409,15 +2409,15 @@ CS  - fix for sever mem-leak -> ultimate source seems to be
         piddle -- needs proper tracking down!!!!
     - more types for Otherpars (PP.pm)
 Doug Burke
-        - added PDLA::Interpolate and PDLA::Interpolate::Slatec which provide
+        - added PDL::Interpolate and PDL::Interpolate::Slatec which provide
           a (hopefully) simple, OO interface to interpolation methods
-CS  - correct PDLA::Ops docs
+CS  - correct PDL::Ops docs
     - fix problem in pdl_croak_param (pdlthread.c) due to changes
         in Perl_mess in perl 5.6
     - update TODO
 zowie   - Autoloader update (handles '+' for entire dir trees)
     - Graphics::PGPLOT::imag update (includes options for image scaling)
-    - perldl update (minor fix to avoid null code ref bug in PDLA::myeval)
+    - perldl update (minor fix to avoid null code ref bug in PDL::myeval)
 
 CS  - debian stuff
     - image rotation (rot2d)
@@ -2429,16 +2429,16 @@ CS  - quick (and semi-dirty) inplace fix for ops.pd
 Doug Burke (4/29/00)
         - fixed interpol failing to recognise extrapolation at 'high' x +
           added interpolate with slightly different error handling
-        - commented out 'use PDLA::Lib::LLSQRout' in PDLA/Lib/Gaussian.pm
+        - commented out 'use PDL::Lib::LLSQRout' in PDL/Lib/Gaussian.pm
 Tim Jenness (4/26/00)
         - Patch mconf.h so that it works on Alphas running Linux
 Doug Burke
         - fixed apropos command to work with perl 5.6.0
         - t/poly.t failed on solaris 2.7 with new PP code. Changed check
           from < 200 to < 210.
-        - added PDLA:getdim to Core.pm documentation
+        - added PDL:getdim to Core.pm documentation
 Doug Hunt (4/26/2000)
-        - Merged fast-xswrapper branch back to main PDLA tree.
+        - Merged fast-xswrapper branch back to main PDL tree.
         - Left Ops thus:
           All ops are are overloaded to call XS as directly as possible, but
           the direct call of ops such as : $a->plus($b, 0) requires the '0' argument
@@ -2452,7 +2452,7 @@ Doug Hunt (4/19/2000)
 
 Doug Burke
         - changes to pod to HTML conversion. Links between modules - eg 
-          L<PDLA::Graphics::PGPLOT|PDLA::Graphics::PGPLOT> - should now work.
+          L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT> - should now work.
           See Doc/mkhtmldoc.pl and Doc/scantree.pl
         - minor doc changes to a number of files
         - Improved output from apropos (aka ??) in the perldl shell:
@@ -2469,37 +2469,37 @@ CS
     - new polyfill function (image2d.pd)
     - some (unfinished) preparations for easier leak debugging, see perldl.conf
 Doug Burke
-        - Added PCHIP routines tp PDLA::Slatec (interpolation,
+        - Added PCHIP routines tp PDL::Slatec (interpolation,
           differentiation, and integration of functions).
           Also moved creation of SlatecProtos.h from Makefile.PL
           to slatec.pd
         - stop wfits() from complaining when reading in the header
           of FITS files from the DSS server at STScI
         - minor clean up of write_dummy_make() Basic/Core/Dev.pm
-        - minor doc updates for PDLA::Primitive and PDLA::Basic
+        - minor doc updates for PDL::Primitive and PDL::Basic
         - converted FFTW and GSL to use write_dummy_make() in Makefile.PL
 Tim Jenness
-    - Update PDLA::IO::NDF to v1.02, enhance reading of axis errors
+    - Update PDL::IO::NDF to v1.02, enhance reading of axis errors
       plus some bug fixes.
-    - Add test for PDLA::IO::NDF
-        - Added polynomial fitting routines to PDLA::Slatec (polfit, 
+    - Add test for PDL::IO::NDF
+        - Added polynomial fitting routines to PDL::Slatec (polfit, 
       pvalue and pcoef)
 
 John Cerney
-    - Added (psuedo)-support for variable-size strings in PDLA::Char
+    - Added (psuedo)-support for variable-size strings in PDL::Char
 
 2.005
 CS  - version to 2.005
     - finally try to fix 5.6.0 problem correctly
 Doug Burke (4/4/00)
-        - Changed to Basic/Makefile.PL to install man pages for PDLA,
-          PDLA::Lite, PDLA::LiteF, and PDLA::Options.
+        - Changed to Basic/Makefile.PL to install man pages for PDL,
+          PDL::Lite, PDL::LiteF, and PDL::Options.
         - Changed Makefile.PL to allow installation of documentation if
           INSTALLDIRS=perl (rather than site) is used
 CS  - applied Karl's 5.6 patch to pdlcore.c
     - typo in Doug's error message fixed
 Doug Hunt (3/23/00)
-        - Improved error messages in PDLA::Graphics::PGPLOT for the case when the
+        - Improved error messages in PDL::Graphics::PGPLOT for the case when the
           correct version of PGPLOT (v2.16 or later) is not installed.
 
 
@@ -2512,34 +2512,34 @@ John Cerney (3/15/00)
           with cleaned up docs and test cases.
     - Update Version to 2.004
 Doug Hunt (3/8/00)
-        - Added 'use PDLA::Graphics::PGPLOT' to Demos/PGPLOT_demo.pm.  Now it works.
+        - Added 'use PDL::Graphics::PGPLOT' to Demos/PGPLOT_demo.pm.  Now it works.
           This bug was introduced in my 3/2 and 3/3/00 changes.
 
 John Cerney (3/5/00)
     - Modified Basic/Complex/Complex.pd to not generate warning messages
-          when re-defining the PDLA overloaded operator subs.
+          when re-defining the PDL overloaded operator subs.
 Doug Burke
         - IO::Misc - default type for DEFTYPE (rcols option) is now definable 
-          using the $PDLA::IO::Misc::deftype variable.
+          using the $PDL::IO::Misc::deftype variable.
 
 Doug Hunt (3/3/00)
-        - Removed PDLA::Graphics::PGPLOT from PDLA.pm.  This had been causing
+        - Removed PDL::Graphics::PGPLOT from PDL.pm.  This had been causing
           troubles due to the previous change which took away autoloading
           in PGPLOT.  
 
 Doug Hunt (3/2/00)
         - Updated Graphics/IO/PGPLOT, adding a typemap and a PGPLOT.xs file.
-          This change added capability to PDLA::Graphics::PGPLOT::line, allowing
+          This change added capability to PDL::Graphics::PGPLOT::line, allowing
           one to use the 'MISSING' option.  When this option is specified, 'line'
           will draw many disconnected polylines (delimited by the value specified
           as 'MISSING') instead of just one.  This is useful in drawing maps with
           line.
 
 Marc Lehmann
-    - Patch to Basic/Core/Dev.pm fix Parallel build bug. (Ref PDLA-Porters Messages
+    - Patch to Basic/Core/Dev.pm fix Parallel build bug. (Ref PDL-Porters Messages
       dated 1/8/00 and 1/5/00.)
         - Small Patch to Graphics/Karma/karma.pd. Change 'na' to 'PL_na';
-          (PDLA-P msg 1/15/00)
+          (PDL-P msg 1/15/00)
 
 Robin Williams:
     - Patch to Graphics/TriD/OpenGL/generate.p to get 
@@ -2561,13 +2561,13 @@ John Cerney
     - Updated TriD Makefile to find openGL libs specified in the 
       perldl.conf file.
     - Updated Graphics/TriD/OpenGL/generate.p to include patch by
-      Diab Jerius (ref PDLA-Porters message dated 11/9/99). 
+      Diab Jerius (ref PDL-Porters message dated 11/9/99). 
       This fixes compilation problems with native openGL on solaris.
       Note: Patch to Graphics/TriD/TriD/GL.pm was not applied. (Risk
       of breaking GL on other platforms)
 
 CS
-    - added function 'det' to PDLA::Slatec -> calculate determinant
+    - added function 'det' to PDL::Slatec -> calculate determinant
 
 Doug Burke
         - Graphics::LUT - added several intensity ramps, instead of just
@@ -2585,51 +2585,51 @@ Marc Lehmann
     - small changes to complex.pd: remove bogus Cneg, streamline docs.
 
 Doug Burke
-        - added TYPES/DEFTYPE options to PDLA::IO::Misc::rcols()
+        - added TYPES/DEFTYPE options to PDL::IO::Misc::rcols()
           to specify the type of the piddles
           NOTE: (!!!)
             different from patch to 2.003 sent to perldl list 
             (http://www.xray.mpe.mpg.de/mailing-lists/perldl/2000-01/msg00037.html),
             as you now specify the types directly, rather than as strings.
-        - added HEADER option to PDLA::IO::Misc::wcols()
-        - added BORDER option to PDLA::Graphics::PGPLOT
+        - added HEADER option to PDL::IO::Misc::wcols()
+        - added BORDER option to PDL::Graphics::PGPLOT
         - added examples of new PGPLOT options to 'demo pgplot'
-        - added t/lut.t to test PDLA::Graphics::LUT, and
+        - added t/lut.t to test PDL::Graphics::LUT, and
           added tests of options in rcols() to t/misc.t
-        - minor doc update for PDLA::Primitive - example for whichND()
+        - minor doc update for PDL::Primitive - example for whichND()
           now works
 
 CS
     - introduced switch for automatic hdr copying, off by default
     - PP: added pp_addbegin, pp_beginwrap and pp_setversion
         pp_addxs now adds to the current module's namespace by default,
-        !not! to PDLA anymore (patch by Marc Lehmann)
+        !not! to PDL anymore (patch by Marc Lehmann)
         pp_addisa now really works as advertised (i.e. adds to
         @ISA and doesn't split on whitespace anymore)
     - misc.pd: bswap functions work always inplace, remove
       [o] from sigs
-    - added PDLA::Complex to the dist (first try of a derived class),
+    - added PDL::Complex to the dist (first try of a derived class),
       does remarkly many things already but needs some testing,
       donated by Marc Lehmann
 
 Doug Hunt
-        - added PDLA::Char, a subtype of PDLA which allows manipulation
-          of byte type PDLAs as N dimensional arrays of fixed length
+        - added PDL::Char, a subtype of PDL which allows manipulation
+          of byte type PDLs as N dimensional arrays of fixed length
           strings
 
 Doug Burke
-        - added AXIS option to PDLA::Graphics::PGPLOT + doc changes
-        - added PDLA::LUT module to provide colour tables - useful for
+        - added AXIS option to PDL::Graphics::PGPLOT + doc changes
+        - added PDL::LUT module to provide colour tables - useful for
           PGPLOT's ctab() function (note: plan, in near future, to
           change to a binary format to reduce size of this module)
 
 CS
     - Levenberg-Marquardt fitting module
     - added required additional slatec functions + some docs
-    - some handy bits for PDLA::Options function interface
+    - some handy bits for PDL::Options function interface
     - bool.t didn't make it into 2.002 (touch problem?)
     - fftw.t test shouldn't rely on another module
-    - PDLA::Doc: support input from more than one file
+    - PDL::Doc: support input from more than one file
     - Slatec/Makefile.PL: #include "g2c.h" seems unneccesary (and
         leeds to trouble on my debian 2.1 system)
     - PGPLOT patch from pdl-porters
@@ -2659,12 +2659,12 @@ Karl Glazebrook:
           centre=> when operating on pre-existing array.
 
 John Cerney:
-    - Put File::Spec in the PREREQ_PM list. (PDLA now 
-          requires File::Spec since PDLA2.002)
+    - Put File::Spec in the PREREQ_PM list. (PDL now 
+          requires File::Spec since PDL2.002)
     - Removed of ExtUtils::F77 from the distribution.
           Added ExtUtils::F77 to the PREREQ_PM list.
           (ExtUtils::F77 is already on CPAN separately.
-           Having it also distributed with PDLA causes
+           Having it also distributed with PDL causes
            confusion.)
         - Fixed cumuprodover docs to be similar to
           cumusumover.
@@ -2733,7 +2733,7 @@ Doug Burke:
         3) It now complains if you forget to surround
                 patterns by //
 
-         4) It will also warn you (if $PDLA::verbose is true)
+         4) It will also warn you (if $PDL::verbose is true)
                 if no data is read in from a file.
     - Patch to PP.pod docs to clearup PRIV/CODE usage.
 
@@ -2786,7 +2786,7 @@ Karl Glazebrook:
       compiling on sparc/solaris
     - Patch to Basic/Primitive/primitive.pd to make matmult
       thread properly and to make matmult an exported function.
-    - Patch to Makefile.PL that allows PDLA to be built and
+    - Patch to Makefile.PL that allows PDL to be built and
       installed conveniently away from it's final destination.
           This is useful for making RPMs.
 
@@ -2830,22 +2830,22 @@ John Cerney:
           to the README file.
         - Fixed improper comments (causing warning messages)
           for '#endif _pdlmagic_h' in pdlmagic.h
-        - Removed reference to PDLA being only at 'alpha release'
+        - Removed reference to PDL being only at 'alpha release'
           in Indexing.pod.
         - Updated Christian Soeller's email address in all files.
         - Clarified docs on the RMS element returned by the stats
           function.
-    - Changed how $PDLA::VERSION is set so CPAN will pick it
+    - Changed how $PDL::VERSION is set so CPAN will pick it
           up correctly:
-           * PDLA::VERSION is now set directly in PDLA.pm
-       * Makefile.PL reads $PDLA::VERSION from PDLA.pm and
+           * PDL::VERSION is now set directly in PDL.pm
+       * Makefile.PL reads $PDL::VERSION from PDL.pm and
          auto-generates Basic/Version.pm 
 
-Joshua Pritikin: Changes for compatibility with PDLA-Objstore.
+Joshua Pritikin: Changes for compatibility with PDL-Objstore.
     Includes all the fairly conservative changes. More radical
     changes to come.
     - Deals with portability between perl versions using Devel-PPPort.
-    - Adds a version number to the PDLA API.
+    - Adds a version number to the PDL API.
     - Optional bounds checking for PP.
     - Simplistic support for C++ comments in PP code.
     - Much improved searching for the Solaris math library.
@@ -2861,7 +2861,7 @@ Robin Williams:
 Karl Glazebrook:
     - Patch to where function in primitive.pd to fix 
        bug in ($i,$j,$k) = where($x,$y,$z, $x+5>0)
-        - Added PDLA::Fit-Gaussion Module
+        - Added PDL::Fit-Gaussion Module
     - Patch to Core.pm so you can say $a = float(3,4,5)
           just as you can say $a = pdl(3,4,5).
     - Patch to slices.pd to export the dice and dice_axis
@@ -2876,13 +2876,13 @@ Robert Schwebel
 Christian Soeller:
     - Commented out the close(STDERR) lines in pnd.pd to fix a 
       problem where the output from a 'die' is not seen for 
-      certain test cases after using rpic/wpic from PDLA::IO::Pic.
+      certain test cases after using rpic/wpic from PDL::IO::Pic.
     - Misc Patch:
         - negative positions for dummy
         - matmult now also supports promotion to sig dims
-        - PDLA::matmult naming corrected
-        - MathGraph: call PDLA::random
-        - Pic.pm: use PDLA::Options -> minimum matching now supported
+        - PDL::matmult naming corrected
+        - MathGraph: call PDL::random
+        - Pic.pm: use PDL::Options -> minimum matching now supported
                  removed 'close STDERR' calls
         - tifftopnm converter: added -nolut option
         - pnm.pd:  get rid of 'uninitialized...' warning
@@ -2892,7 +2892,7 @@ Christian Soeller:
 
     - Patch to
        - fix a bug when using pthreads and output argument creation
-       - new function PDLA::Core::pthreads_enabled
+       - new function PDL::Core::pthreads_enabled
            - updated pthread.t
         - Fixed a problem in pdlapi.c where some vaffine optimizations
           had been broken by in a previous version. (Karl also added
@@ -2906,8 +2906,8 @@ Harry Felder:
       environment variable.
 
 Doug Hunt:
-    - Patch to Core.pm to add '$PDLA::undefval' variable,
-      which controls how undefs are treaded when a PDLA
+    - Patch to Core.pm to add '$PDL::undefval' variable,
+      which controls how undefs are treaded when a PDL
       is created from a perl structure using
       pdl(), float(), double(), etc.
 
@@ -2918,14 +2918,14 @@ Tim Jenness:
 
 2.0 (1.99990 with very minor changes)
 John Cerney
-    - Fixed duplicate entry of PDLA::IO::NDF information in the DEPENDENCIES file.
+    - Fixed duplicate entry of PDL::IO::NDF information in the DEPENDENCIES file.
     - Added more items to Known_Problems file.
 1.99990
 John Cerney:
     - Renamed reorderDims method to reorder to slices.pd
 
 Christian Soeller:
-    - Dimension promotion of 0-d PDLAs patch.
+    - Dimension promotion of 0-d PDLs patch.
     - Patch to pnm.pd to fix bug reported to the list by Karl. 
 
 Tuomas Lukka:
@@ -2963,7 +2963,7 @@ Tuomas Lukka:
 
 Tim Jenness
     - Updated dependency file to reflect the addition
-          of PDLA::IO::NDF to the distribution.
+          of PDL::IO::NDF to the distribution.
 
 Anton Berezin
     - Modified Basic/Math/Makefile.PL to fix potential
@@ -3025,8 +3025,8 @@ Jarle Brinchmann:
 John Cerney:
     - Modified PP.pod to get rid of 'head3' errors from the pod2man 
           converters
-    - Modified PDLA.pm PDLA::Lite.pm , PDLA::LiteF.pm so that the $VERSION would
-      be picked up correctly. 'use PDLA 2.0' now correctly checks the version.
+    - Modified PDL.pm PDL::Lite.pm , PDL::LiteF.pm so that the $VERSION would
+      be picked up correctly. 'use PDL 2.0' now correctly checks the version.
     - Fixed dead links in pod documentation. 
     - Added dice and dice axis indexing functions in slice.pd 
        (Cerney and Glazeblook)
@@ -3035,7 +3035,7 @@ John Cerney:
 1.99987
 Karl Glazebrook:
     - Fix for minor array bounds bug in image2d.pd
-    - Addition of PDLA->create and PDLA->destroy to pdlcore
+    - Addition of PDL->create and PDL->destroy to pdlcore
       Core.xs
     - Change to perldl.conf to (a) Makes Karma find X better,
      (b) finds MesaGL as well as GL by default 
@@ -3051,7 +3051,7 @@ Jarle Brinchmann:
     - Minor Demos/PGPLOT_demo fix.
 
 Tim Jenness:
-    - Patch to Core to get PDLA->new() etc working.
+    - Patch to Core to get PDL->new() etc working.
         (pdlapi.c, pdlcore.h and Core.xs )
     - Patch to perldl.PL so that $string, $code
       and $coderef can be used by the user.
@@ -3086,9 +3086,9 @@ John Cerney
     - Updates to Doc/mkhtmldoc.pl to fix most problems with html documents
       not referencing each other correctly. In order to not change multiple
           .pod documents and documentation in .pm files, html docs will now be
-          installed in ..../site_perl/PDLA/htmldocs/PDLA instead of 
-      ..../site_perl/PDLA/htmldocs. (If installing over a previous version,
-      the html files in .../site_perl/PDLA/htmldocs should be deleted to
+          installed in ..../site_perl/PDL/htmldocs/PDL instead of 
+      ..../site_perl/PDL/htmldocs. (If installing over a previous version,
+      the html files in .../site_perl/PDL/htmldocs should be deleted to
       avoid confusion.
 
 Robin Williams:
@@ -3104,9 +3104,9 @@ Anton Berezin:
 Robin Williams:
     - Change behavior of overloaded bool operator
       to not stringify. This was causing a major
-      slowdown in cases where a PDLA object was
+      slowdown in cases where a PDL object was
       being tested in a boolean context. (e.g.
-      if($PDLA){ ...} )
+      if($PDL){ ...} )
 
 1.99985 (2.0 one half to go )
 Karl:
@@ -3153,7 +3153,7 @@ Tim Jenness:
       files
     - NDF writing/reading using the perl NDF module
     - MAIN__ into slatec.pd to avoid linkage errors
-    - PDLA::Options
+    - PDL::Options
     - minmax docpatch (modified by Tjl)
 Jarle:
     - PGPLOT update
@@ -3200,7 +3200,7 @@ Someone (lost the mail):
 Achim:
  - don't install pod2usage, pod2select in script dir
  - Lib/ImageRGB -> ImageRGB (!!!)
- - DEBUGGING => PDLA_DEBUGGING
+ - DEBUGGING => PDL_DEBUGGING
  - install patches for 5.005
 Tjl:
  - remove gotos from str2D to not tickle bug in 5.004_64,
@@ -3231,7 +3231,7 @@ Robin:
 
 1.9903 (2.0 try 1)
 Tjl:
- - PDLA::Lib::FFT -> PDLA::FFT (Robert Schwebel)
+ - PDL::Lib::FFT -> PDL::FFT (Robert Schwebel)
  - MathGraph stuff (same)
  - tiny TriD tweaks for VRML::Browser
  - strdup -> malloc(strlen+1)+strcpy
@@ -3252,7 +3252,7 @@ Tjl:
    wild constructions to come
  - twiddle with flexraw.t
  - PP cleanup: let 'SIZE' be used in RedoDimsCode. (needs to be cleaned
-   up from the other kind of access to this.. also need '$PDLA(a)')
+   up from the other kind of access to this.. also need '$PDL(a)')
  - null = just flag, so 0-dimensions are now allowed.
  - allow which to take other types for mask as well... - required
    cleaning PP to make RedoDimsCode be parsed just like Code, except
@@ -3265,11 +3265,11 @@ Tjl:
  - where to take multiple arguments before the mask,
    to map them all through the mask.
  - add 'isnull' to Core.xs
- - Basic/Gen/PP/PDLACode.pm to 'use strict', just in case...
+ - Basic/Gen/PP/PDLCode.pm to 'use strict', just in case...
  - add 'Config.pm' to help with tests
     - flexraw.t to use this
     - Makefile.PLs to set the results of the tests.
-    - Maybe add PDLA::Config_user later to store original
+    - Maybe add PDL::Config_user later to store original
       config hash values from user.
  - threadover to clear NOMYDIMS flag.
 Raphael:
@@ -3286,7 +3286,7 @@ Christian:
     'output ' with 'print' in the printouts; beginners might be confused
     by the 'output' abstraction)
   - new demo '3dgal' for the TriD Gallery
-  - install PDLA::Graphics::VRML::Protos in the correct place
+  - install PDL::Graphics::VRML::Protos in the correct place
   - fixed picrgb test to generate a warning when broken
     tiff converters are encountered (patched source now included)
         those who reported errors with this test please check again
@@ -3327,10 +3327,10 @@ Karl:
 
 Tjl:
  - add maptextfraw
- - allow even more flexible PDLA::Type::new: let it be a scalar piddle.
+ - allow even more flexible PDL::Type::new: let it be a scalar piddle.
  - made stringize use listref_c for additional speed & avoiding
    stack overflows and other nasty stuff.
- - add scope.t to finally test for export stuff working and fix PDLA.pm
+ - add scope.t to finally test for export stuff working and fix PDL.pm
    to use $pkg (from Karl).
  - undid the stupid glPolygonOffsetEXT fix, now it should finally work.
  - default.perldlrc: set verbose=0 to stop too much waffling!
@@ -3351,14 +3351,14 @@ Tjl:
  - document TriD::MathGraph briefly
  - fix TriD/Graph.pm to not barf when several graphs were removed
  - Fix mmapped piddle freeing for fastraw - now magickable.
- - Fix howbig, zeroes, Types stuff to accept PDLA::Type objects
+ - Fix howbig, zeroes, Types stuff to accept PDL::Type objects
    instead of numbers in more places, e.g. FastRaw. fastraw.t updated
  - Removed TriD/Vertices.pm Lib/DataPresenter.pm
  - removed some of the old crud in Core.pm
  - Made Pod scanner not look into Pod::Parser.
  - lots of doc fixes, moving docs into the new format.
  - mkhtmldoc.pl: emulate "mkdir -p" when installing
- - Doc/Doc/Perldl.pm: allow e.g. 'new' to get 'PDLA::new' to save typing.
+ - Doc/Doc/Perldl.pm: allow e.g. 'new' to get 'PDL::new' to save typing.
  - standardize "3-d", "3-D" and "3d" into "3D".
  - Die on errors in evals in Basic/*.pm!!! (e.g. dynaloader unresolved
    symbols are now brought to light).
@@ -3376,7 +3376,7 @@ Robin:
        via a molecular dynamics-type search
  - Christian's clipping patch
  - set -ve indice patch
- - added my wcols() to PDLA::IO::Misc
+ - added my wcols() to PDL::IO::Misc
  - Lite.pm bug (Shawn)
  - Robin's mconf.h patch and Kaj's erfi.t test inserted
  - Christians type() patch
@@ -3390,15 +3390,15 @@ Robin:
  - improved scantree.pl (portable cwd).
  - HTML docs!! - thanks to Christian's mkhtmldoc.pl (some changes)
    into the distribution. included a hacked Pod::Html (from perl
-   5.004) as PDLA::Pod::Html Still not great but gives us something
+   5.004) as PDL::Pod::Html Still not great but gives us something
    to work from. Some links still broken - patches welcome. See
-   file:/usr/local/lib/perl5/site_perl/PDLA/HtmlDocs
+   file:/usr/local/lib/perl5/site_perl/PDL/HtmlDocs
    for docs after 'make install'
  - TJL's average() patch and primitive.t patch
  - Docs now only built during 'make install' or 'make doctest'
    (which builds them under ./blib), this saves them being built
    unnecessarily during 'make'
- - PDLA::Slatec now works on any system with a f77 compiler.
+ - PDL::Slatec now works on any system with a f77 compiler.
    All unused slatec functions were got rid of which fortunately
    removed all the ones with COMPLEX arguments. Also changed
    prototype generation which removes warnings on build.
@@ -3416,7 +3416,7 @@ Robin:
    (b) the change should have been made to pdl.h.PL in any case.
  - fixed NAME in Indexing.pod
  - may have fixed executable install problem of 'perldl' shell
- - fixed PDLA.pm being lost from docs db
+ - fixed PDL.pm being lost from docs db
  - Robin's problems 'compiling pdl 1.54_06 Basic/Math' patch 17/12/97
 
    Rejected because of following error (Linux/gcc)
@@ -3461,13 +3461,13 @@ Robin:
     xsubpp (..fingers crossed..). Perhaps future xsubpp will allow
     an override of this.
 
-  - renamed PDLA::Io:: heirarchy PDLA::IO:: for consistency with Perl IO::
+  - renamed PDL::Io:: heirarchy PDL::IO:: for consistency with Perl IO::
 
 1.95_05
 
   KGB
 
-  - Renamed PDLA.pdl_make_physical PDLA.make_physical (woops!) - ditto
+  - Renamed PDL.pdl_make_physical PDL.make_physical (woops!) - ditto
     physdims().
 
   - Changed type config. Now Types.pm pdl.h pdlsimple.h are generated
@@ -3476,8 +3476,8 @@ Robin:
     from perl config information. Lots of potential for more flexibility.
     Hope this doesn't break Alpha stuff by mistake!
 
-  - Revised PDLA::CallExt. Now uses make_physical rather than PP and allows
-    unlimited args in the same way as PDLA-1.11. Ought to be more compiler
+  - Revised PDL::CallExt. Now uses make_physical rather than PP and allows
+    unlimited args in the same way as PDL-1.11. Ought to be more compiler
     friendly too! Put callext.t back.
 
   - Added 'dog' and 'cat'
@@ -3509,11 +3509,11 @@ Robin:
   - Various small changes to TriD/test*.pl scripts. Renamed as *.p
   - minor TriD changes to comply with new zeroes() etc.
   - moved tests all into one top level t/ directory.
-  - corrected PDLA::initialise and convert (Christian)
+  - corrected PDL::initialise and convert (Christian)
   - Robin's primitive.pd patch
   - callext.t temporarily disabled - I will rewrite the module.
   - Minor changes to 'Doc'.
-  - TriD renamed to PDLA::Graphics::TriD
+  - TriD renamed to PDL::Graphics::TriD
 
 1.95_02 [emergency bug fixing release]
 
@@ -3523,27 +3523,27 @@ Robin:
    someone please please give me some objective advice :-)
  - Added Robin's new FFT
  - 3 byte change to Pnm.pm for new zeroes()
- - added make_physical and make_physdims to PDLA struct
+ - added make_physical and make_physdims to PDL struct
 
 1.95_01
 
 KGB:
 
- - Added Cephes code to PDLA::Math as backup, changed signature of
+ - Added Cephes code to PDL::Math as backup, changed signature of
    jn, yn.
- - changed scalar convesion in pdlcore.c SvPDLAV() - '2.0' is now
+ - changed scalar convesion in pdlcore.c SvPDLV() - '2.0' is now
    double, '2' is now int. [Uses SvNOK SvIOK etc] - changed
    Basic/t/conv.t to comply.
- - Added magic {PDLA} = code ref hook. And put test/example in
+ - Added magic {PDL} = code ref hook. And put test/example in
    subclass.t
  - random() is now like zeroes() and both allow type/dim and
    $x template arguments. New arg proc. method to support this.
  - Added grandom().
- - Ressurected PDLA::Exporter (q.v.). Much simpler than bizarrity
-   in PDLA-1.11. Now 'use PDLA::Mod' defaults to loading ':Func'.
+ - Ressurected PDL::Exporter (q.v.). Much simpler than bizarrity
+   in PDL-1.11. Now 'use PDL::Mod' defaults to loading ':Func'.
    Provision for noimports. Less typing!!!! Modified docs too.
- - Renamed PDLA::Graphics::PG PDLA::Graphics::PGPLOT
- - Reverted to manpages named PDLA::FAQ.1, PDLA::Dataflow.1, etc.
+ - Renamed PDL::Graphics::PG PDL::Graphics::PGPLOT
+ - Reverted to manpages named PDL::FAQ.1, PDL::Dataflow.1, etc.
    This is simpler and maintains consistence between manpage
    and pod browsers. Fixed all the text links to comply.
  - small changes to Pod/ docs.
@@ -3557,13 +3557,13 @@ KGB:
 
 KGB: NOTE ONE MAJOR INCOMPATIBLE CHANGE [random]
 
- - removed PDLA_OPTIONS - PDLA_CONFIG for everything. I think this is
+ - removed PDL_OPTIONS - PDL_CONFIG for everything. I think this is
    better, e.g. if we want debugging we can add Debugging=>1 to
-   %PDLA_CONFIG.
- - changed use of PDLA_CONFIG - see INSTALL. I think this is simpler.
+   %PDL_CONFIG.
+ - changed use of PDL_CONFIG - see INSTALL. I think this is simpler.
  - made Karma conform with above - and simplified.
  - changed Callext arg limit to 10 to avoid compiler explosions.
- - integrated PDLA::Doc, created PDLA::Doc::Perldl.
+ - integrated PDL::Doc, created PDL::Doc::Perldl.
  - manifying is now back from the .pm file rather then the .pd
    (this is a better design now pod are semi-generated from PP)
  - Christian's patches of 25/11/97:
@@ -3674,7 +3674,7 @@ Tjl:
 1.93_06
 
 Kgb:
-  - PP: use PDLAOBJ for the stub subs.
+  - PP: use PDLOBJ for the stub subs.
   - Basic.pm: sec, ins fixes - use "int" to ensure type of coords.
   - PG.pm fixes
   - IIS fixes
@@ -3688,7 +3688,7 @@ Tjl:
     transformations by using magic.
   - Core.xs: setdims should now work with dataflow properly.
   - Core.xs, pdl.h, pdlapi.h, PP.pm: add support for
-    foofunctions and PDLA::Trans objects. These are a very basic way
+    foofunctions and PDL::Trans objects. These are a very basic way
     of accessing the internals of transformations so that
     in the future, as the mechanism is improved,
     you can e.g. change your slice from outside.
@@ -3780,7 +3780,7 @@ Tjl:
 1.93_02
 
 Tjl:
-  - Core/Basic.pm: use PDLA::Core qw/:Func/;
+  - Core/Basic.pm: use PDL::Core qw/:Func/;
   - Core/Core.xs, pdl.h, pdlapi.h: hdr stuff (untested)
   - Core/Core.xs: bugfix threadover_n to make_physical
   - Core/pdlapi.c: pdl_destroy will not destroy if an affine trans the
@@ -3791,7 +3791,7 @@ Tjl:
   - Gen/PP.pm: new '$a = inner($b,$c)' changes.
   - Slices/slices.pd: splitdim checks arguments
   - Basic/t/thread.t: semi-add new test
-  - Graphics/TriD/OpenGL: new PDLA::OpenGL module to enable virtualization
+  - Graphics/TriD/OpenGL: new PDL::OpenGL module to enable virtualization
   - Graphics/TriD/OpenGLQ: a test for TriD virtualization of OpenGL,
     this will later on expand a lot
   - Graphics/TriD/TriD.pm & TriD/*: new docs, small changes.
@@ -3800,7 +3800,7 @@ Tjl:
 
 KGB:
 
-  - Fixed multiple 'use PDLA' etc problem for loaders.
+  - Fixed multiple 'use PDL' etc problem for loaders.
   - "use 5.004"
 
 1.93_01 (Kgb) MAJOR CHANGES
@@ -3811,42 +3811,42 @@ KGB:
 
 - NEW IMPORT/EXPORT system
 
-  PDLA_OO.pm now deleted.
+  PDL_OO.pm now deleted.
 
-  PDLA::Exporter is DEAD and gone!! (hooray)
+  PDL::Exporter is DEAD and gone!! (hooray)
 
-  All modules now define their functions in package PDLA.
+  All modules now define their functions in package PDL.
 
-  The idea is a PDLA::Module now looks like this:
+  The idea is a PDL::Module now looks like this:
 
-    package PDLA::Module;
+    package PDL::Module;
 
     @EXPORT_OK  = qw( sub1 sub2 ...);
     %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 
     @ISA    = qw( Exporter ... );
 
-    *sub1 = \&PDLA::sub1;
-    sub PDLA::sub1 { ... def ...}
+    *sub1 = \&PDL::sub1;
+    sub PDL::sub1 { ... def ...}
 
     # If you wanted to do something special (e.g. a constructor) you can:
 
-    sub rfits(PDLA->rfits(@_)); # This gets exported
-    sub PDLA::rfits {
+    sub rfits(PDL->rfits(@_)); # This gets exported
+    sub PDL::rfits {
       my $class = shift;
       # etc...
     }
 
   i.e. the onus is entirely on the module writer.
 
-  Thus saying 'use PDLA::Module' will load (cheaply) PDLA methods.
-  If you want to (less cheaply) import functions say 'use PDLA::Module qw/:Func/'
+  Thus saying 'use PDL::Module' will load (cheaply) PDL methods.
+  If you want to (less cheaply) import functions say 'use PDL::Module qw/:Func/'
 
   PP has been modified to generate modules which follow this scheme. i.e. by
-  default it stuffs its functions in to the PDLA namespace, and writes stubs
-  '*sub1 = \&PDLA::sub1;' into the PM file. This can be changed at whim
+  default it stuffs its functions in to the PDL namespace, and writes stubs
+  '*sub1 = \&PDL::sub1;' into the PM file. This can be changed at whim
   however.  There is a new pp function - pp_bless('MyObj') which  will change the
-  default package from "PDLA" to 'MyObj' in anticipation of future
+  default package from "PDL" to 'MyObj' in anticipation of future
   Object-Oriented PP modules. (Up to the author how he writes his module).
   Also the pp_def(PMFunc=>'...') attribute can be used to generate special
   purpose PM code instead of the default.
@@ -3859,24 +3859,24 @@ KGB:
 
 - Module defaults
 
-  PDLA.pm now loads a set of standard packages (with :Func) - including graphics
-  and I/O for TPJ article and v1.11 compatibility. Thus a script with 'use PDLA'
+  PDL.pm now loads a set of standard packages (with :Func) - including graphics
+  and I/O for TPJ article and v1.11 compatibility. Thus a script with 'use PDL'
   is v1.11 compatible (modulo bug fixes!)
 
   Lite.pm loads only the truly fundametal core, with no imports, for method
-  speed freaks. Thus a lean script need only say 'use PDLA::Lite' plus whatever
+  speed freaks. Thus a lean script need only say 'use PDL::Lite' plus whatever
   else it needs.
 
-  I hope various other sets of meta-modules (PDLA::Astronomy, PDLA::Medical) etc
+  I hope various other sets of meta-modules (PDL::Astronomy, PDL::Medical) etc
   will follow this simple scheme. Basically there is nothing sacred about
-  'use PDLA' anymore - it is just one of many loaders.
+  'use PDL' anymore - it is just one of many loaders.
 
 - perldl shell
 
   The 'perldl' script sources C<~/.perldlrc> if present or falls back to
-  C<PDLA/default.perldlrc>. The latter just does the standard 'use PDLA'
+  C<PDL/default.perldlrc>. The latter just does the standard 'use PDL'
 
-  Thus by creating a C<~/.perldlrc> you are free to 'use PDLA::Lite' or
+  Thus by creating a C<~/.perldlrc> you are free to 'use PDL::Lite' or
   whatever set of modules you fancy without impinging on v1.11 compatibility.
 
   I think this is a rather elegant solution to all our aesthetic tastes
@@ -3894,7 +3894,7 @@ KGB:
 (KGB)
 
 - new wfits() with BITPIX support and clever BSCALE/BZERO - PLEASE TEST!!
-- added Robin's PDLA::Io::Browser
+- added Robin's PDL::Io::Browser
 - Robin's 'cutmask' function (need PP version!!!) - needs docs SOMEWHERE!!
 - string() no longer make_physical()
 - added mslice and test (slice.t)
@@ -3902,7 +3902,7 @@ KGB:
 - extra tests to flow.t which FAIL, currently disabled as
   'make test' then stops early.
 - added some tests of simple ops and functions
-- moved all the 2D routines (med2d etc) into PDLA::Image2D
+- moved all the 2D routines (med2d etc) into PDL::Image2D
 - Inserted new TriD 16/Jul  (untested)
 - tjl's 'IMPORTANT: Just let me eat my words once more today' patch
 - applied tjl's 'minorities' patch - ext modules now seem to work
@@ -3913,15 +3913,15 @@ KGB:
 
 - applied Tuomas' Simplex patch
 - applied Robin's patch: SlowRaw -> FlexRaw
-- added PDLA::Io::Pnm and PDLA::Io::Pic (+PDLA::Lib::Iutil) to
+- added PDL::Io::Pnm and PDL::Io::Pic (+PDL::Lib::Iutil) to
   support image I/O based on pbmplus/netpbm (+ wmpeg based on
   mpeg_encode)
-- PDLA::PP - $TBSULFD(B,S,U,L,F,D)_func now expands to
+- PDL::PP - $TBSULFD(B,S,U,L,F,D)_func now expands to
               B_func, S_func, etc *without* intervening whitespace
           - byte+ qualifier to make a pdl a "typeslave"
 - dispensed with Pthread.pm, thread_define now part of
-  PDLA::Core
-- new PDLA::Dbg
+  PDL::Core
+- new PDL::Dbg
 
 1.92_08:
 
@@ -3943,7 +3943,7 @@ Applied the 41(!) missing patches. See file KGB.1.92_06_TO_1.92_07
 - Karl's zeroes patch.
 - Matmult in primitive.pd.
 - history mechanism for perldl.
-- PDLA::PP : type+ qualifiers, int, float and double now supported
+- PDL::PP : type+ qualifiers, int, float and double now supported
         $GENERIC, $SIZE, fixed $P vaffine bug, [t] now does
         something, set named dimension from an 'OtherPars', i.e.
             OtherPars => 'int nsz => n'
@@ -3976,7 +3976,7 @@ assignment behaviour.
 
 Bug fixen
 
-New PDLA::PP
+New PDL::PP
 
 The perldl shell now aborts on <EOF>, q and Q.
 

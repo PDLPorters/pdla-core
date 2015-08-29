@@ -2,15 +2,15 @@ v2.013 2015-08-14 08:37:15-04:00
 
 General Notes:
 
- * This is PDLA-2.013.  It is PDLA-2.012 with some fixes
+ * This is PDL-2.013.  It is PDL-2.012 with some fixes
    for badvalue problems and Solaris make issues.
  
- * See PDLA 2.012 notes below.
+ * See PDL 2.012 notes below.
 
 
 Highlights:
 
- * Fix for sf.net bug #390: scalar PDLA with badvalue
+ * Fix for sf.net bug #390: scalar PDL with badvalue
    always compares BAD with perl scalars.  Now a warning
    is given if the badvalue could conflict with the
    results of a logical or comparision operation.
@@ -25,15 +25,15 @@ v2.012_01 2015-08-01 15:47401-0400
 
 General Notes:
 
- * This is PDLA-2.012_01.  It is PDLA-2.012 with some fixes
+ * This is PDL-2.012_01.  It is PDL-2.012 with some fixes
    for badvalue problems when the badvalue was 0 or 1.
  
- * See PDLA 2.012 notes below.
+ * See PDL 2.012 notes below.
 
 
 Highlights:
 
- * Candidate fix for sf.net bug #390: scalar PDLA with
+ * Candidate fix for sf.net bug #390: scalar PDL with
    badvalue always compares BAD with perl scalars
 
 
@@ -42,19 +42,19 @@ v2.012 2015-06-14 08:27:01-0400
 
 General Notes:
 
- * This is PDLA-2.012 it is essentially PDLA-2.011 with some
+ * This is PDL-2.012 it is essentially PDL-2.011 with some
    fixes for some minor issues that only came to light
    with a new official release.
  
- * See PDLA 2.011 notes below.
+ * See PDL 2.011 notes below.
 
 
 Highlights:
 
- * Add package statements so PDLA::Lite and PDLA::LiteF are
+ * Add package statements so PDL::Lite and PDL::LiteF are
    indexed correctly
  
- * Give PDLA::NiceSlice a non-developer release for indexing
+ * Give PDL::NiceSlice a non-developer release for indexing
 
  * Fix build regression that broke ActiveState perl
    builds for many perl versions and OS platforms.
@@ -65,32 +65,32 @@ v2.011 2015-06-02 17:01:22-0400
 
 General Notes:
 
- * This is PDLA-2.011 it is essentially PDLA-2.008 with some
+ * This is PDL-2.011 it is essentially PDL-2.008 with some
    fixes for some minor issues.
  
  * perl 5.10.x is now the minimum version of perl
-   supported by PDLA-2.008 and later.
+   supported by PDL-2.008 and later.
 
- * PDLA::FFTW is no longer part of the PDLA Core.
-   Please use PDLA::FFTW3 from CPAN (Dima Kogan)
+ * PDL::FFTW is no longer part of the PDL Core.
+   Please use PDL::FFTW3 from CPAN (Dima Kogan)
    with Alien::FFTW3 support (Craig DeForest)
 
- * PDLA::Graphics::PLplot is no longer included in
-   the PDLA core distribution.  Please install from
+ * PDL::Graphics::PLplot is no longer included in
+   the PDL core distribution.  Please install from
    CPAN directly.
 
- * 50 sf.net bug tickets closed/fixed since PDLA-2.007!
+ * 50 sf.net bug tickets closed/fixed since PDL-2.007!
 
  * Partial 64bit indexing support with some fixes
    to remaining issues.  Full 64bit support for perl
    modulus operater ('%') is in progress.
  
- * Major clean up and rework of the core PDLA
+ * Major clean up and rework of the core PDL
    computation code, the build process, test suites,
    and updating to reflect more of the best practices
    for perl module development.
  
- * The PDLA development has moved to github and now
+ * The PDL development has moved to github and now
    has added continuous commit testing via the
    Travis-CI framework.  The git workflow is now
    inline with current practices and it is expected
@@ -100,7 +100,7 @@ General Notes:
 
 Highlights:
 
- * See PDLA 2.008 Highlights below.
+ * See PDL 2.008 Highlights below.
 
 
 
@@ -118,7 +118,7 @@ General Notes:
 
 Highlights:
 
- * Removal of PDLA::Graphics::PLplot since exists as separate CPAN distro
+ * Removal of PDL::Graphics::PLplot since exists as separate CPAN distro
 
 
 
@@ -126,18 +126,18 @@ v2.009 2015-05-29 12:26:25-0400
 
 General Notes:
 
- * This is PDLA-2.009. It has tweaks to fix PAUSE/CPAN
+ * This is PDL-2.009. It has tweaks to fix PAUSE/CPAN
    indexing problems in 2.008.
  
  * Known_problems updated to reflect a seldom seen
    pdldoc installation problem for certain custom
    perl configurations on cygwin.  A workaround is
-   known.  Please contact the PDLA mailing list if you
+   known.  Please contact the PDL mailing list if you
    have this problem.  See the sf.net bug report at
    http://sourceforge.net/p/pdl/bugs/384/ for more
    information.
  
- * See Release Notes for PDLA 2.008 below for more.
+ * See Release Notes for PDL 2.008 below for more.
 
 
 
@@ -145,23 +145,23 @@ v2.008 2015-05-24 18:42:22-0400
 
 General Notes:
 
- * This is PDLA-2.008!  Yay!
+ * This is PDL-2.008!  Yay!
 
  * perl 5.10.x is now the minimum version of perl
-   supported by PDLA-2.008 and later.
+   supported by PDL-2.008 and later.
 
- * 50 sf.net bug tickets closed/fixed since PDLA-2.007!
+ * 50 sf.net bug tickets closed/fixed since PDL-2.007!
 
  * Partial 64bit indexing support with some fixes to
    remaining issues.  Full 64bit support for perl modulus
    operater ('%') is in progress.
  
- * Major clean up and rework of the core PDLA computation
+ * Major clean up and rework of the core PDL computation
    code, the build process, test suites, and updating to
    reflect more of the best practices for perl module
    development.
  
- * The PDLA development has moved to github and now has
+ * The PDL development has moved to github and now has
    added continuous commit testing via the Travis-CI
    framework.  The git workflow is now inline with
    current practices and it is expected that this will
@@ -169,33 +169,33 @@ General Notes:
 
 Highlights:
 
- * PDLA::FFTW is no longer part of the PDLA Core.
-   Please use PDLA::FFTW3 from CPAN (Dima Kogan)
+ * PDL::FFTW is no longer part of the PDL Core.
+   Please use PDL::FFTW3 from CPAN (Dima Kogan)
    with Alien::FFTW3 support (Craig DeForest)
 
  * New improved vsearch functionality, interfaces,
    and documentation (Diab Jerius)
  
- * PDLA::IO::Storable now robust against version, platform
-   endianness, and supports the new 64bit PDLA_Indx data
+ * PDL::IO::Storable now robust against version, platform
+   endianness, and supports the new 64bit PDL_Indx data
    type (Dima Kogan)
 
- * Clean up of PDLA/Basic/Core code to remove cruft and
+ * Clean up of PDL/Basic/Core code to remove cruft and
    to simplify the evolution to a coming improvements
    (Craig DeForest)
  
  * Major clean up, de-crufting, and streamlining of the
-   entire PDLA ExtUtils::MakeMaker build process (Ed J)
+   entire PDL ExtUtils::MakeMaker build process (Ed J)
  
- * Standardizing and updating the entire PDLA test suite
+ * Standardizing and updating the entire PDL test suite
    to a common basis (use Test::More) and coding to more
    consistent best practices.  E.g., use strict
    This is a huge (ongoing) effort but a comprehensive
    test suite is needed for regression tests to validate
-   compatibility of coming PDLA3 architecture changes.
+   compatibility of coming PDL3 architecture changes.
    (Zakariyya Mughal)
 
- * You can now call the PDLA::Graphics2D twiddle()
+ * You can now call the PDL::Graphics2D twiddle()
    routine with an argument of 0 or 1 (i.e., false
    or true) to set whether the twiddle loop is run.
 
@@ -203,30 +203,30 @@ Highlights:
    PROJ4 and GD.  A number of improvements in this for
    strawberry perl on windows (kmx)
  
- * The PDLA distribution process now generated the
+ * The PDL distribution process now generated the
    documentation for the modules using the automated
-   code generation process.  This makes all the PDLA
+   code generation process.  This makes all the PDL
    docs available on http://search.cpan.org and on
    http://metacpan.org for your web browser. (kmx)
 
  * Improved support to build XS/C extensions: (Ed J)
-   - You can now: "use Inline with => 'PDLA';", see PDLA::API
+   - You can now: "use Inline with => 'PDL';", see PDL::API
    - You can, in your module's Makefile.PL:
-     "$p = new ExtUtils::Depends 'MyMod', 'PDLA'"
+     "$p = new ExtUtils::Depends 'MyMod', 'PDL'"
 
  * MANY sf.net tickets closed:
 
-   377   PDLA::Transform::Proj4 not building under latest dev EUMM
+   377   PDL::Transform::Proj4 not building under latest dev EUMM
    375   Storable files incorrectly processed from older versions.
    374   CONFIGURE_REQUIRES => Devel::CheckLib
    373   2.007_11 MANIFEST
    372   2.007_11 fails on MS Windows 64bit
-   371   PDLA-2.4.11 medover failure in perl 5.20.1
-   370   PDLA-2.007 can fail to build Basic/#Core files
+   371   PDL-2.4.11 medover failure in perl 5.20.1
+   370   PDL-2.007 can fail to build Basic/#Core files
    369   slice fails with subclass index
-   368   PDLA::Slatec::polyfit ignores incorrect length of weight piddle...
+   368   PDL::Slatec::polyfit ignores incorrect length of weight piddle...
    367   BAD value parsing breakage
-   365   CPAN PDLA install broken due to breakage in Module::Compile 0.34
+   365   CPAN PDL install broken due to breakage in Module::Compile 0.34
    363   PP "OtherPars" namespace is not clean
    362   rcols COLIDS need chomp-ing
    361   vsearch bug w/# reversed list
@@ -238,34 +238,34 @@ Highlights:
    355   dog creates 0 dim piddle which squeezes to 1 dim.
    353   imag2d not 'use warnings' safe and no way to disable twiddle
    352   reorder() not an lvalue sub
-   351   PDLA_BOOT has wrong XS code
-   350   Modules using PDLA::Slatec will get installed even if Slatec is disabled
-   349   PDLA needs integrated support for PDLA::PP and CPAN indexer
-   348   PDLA->null->slice('')->nelem results in error
+   351   PDL_BOOT has wrong XS code
+   350   Modules using PDL::Slatec will get installed even if Slatec is disabled
+   349   PDL needs integrated support for PDL::PP and CPAN indexer
+   348   PDL->null->slice('')->nelem results in error
    345   documentation of WITH_PLPLOT in perldl.conf incorrect
    344   Current version numbering is broken
    342   BUGS file not indexable or discoverable
    337   rangeb() broken for 64bit index support on 32bit perl
    332   "isn't numeric in null operation" warning could be more helpful
    331   uniq does not always return proper object
-   329   t/#picrgb.t fails in PDLA build
+   329   t/#picrgb.t fails in PDL build
    321   Several core modules do not have man pages
-   319   PDLA::Index does not render on websites
+   319   PDL::Index does not render on websites
    316   plplot.t failure when building 2.4.11
    314   conv1d bad value broken
    313   clip() edge case not handled right
    312   Wrong results in corner empty-set cases
-   283   PDLA::IO::FITS::wfits corrupting FITS image
+   283   PDL::IO::FITS::wfits corrupting FITS image
    272   indexND of Empty pdls can segfault
    268   PLplot still unusable with X
    261   max() fails on nan
-   256   Threadable version of PDLA::MatrixOps::inv
+   256   Threadable version of PDL::MatrixOps::inv
    232   perl -d chokes on lvalue functions
-   227   PGPLOT module doesn't work in PDLA
+   227   PGPLOT module doesn't work in PDL
    224   Ctrl-C kills perldl in win32 console
-   207   Name "PDLA::SHARE" used only once.
+   207   Name "PDL::SHARE" used only once.
     63   Unable to get the 3d demos
-    51   justify option fails in imag (PDLA2.3.4)
+    51   justify option fails in imag (PDL2.3.4)
 
 
 
@@ -273,12 +273,12 @@ v2.007_17 2015-05-06 13:35:57-0400
 
 General Notes:
 
- * This is PDLA-2.008_rc4!
+ * This is PDL-2.008_rc4!
 
 Highlights:
 
  * Clean up of large number modulo tests and make TODO for
-   the PDLA-2.008 release.
+   the PDL-2.008 release.
  
  * Fix build/configure problems from CPAN Testers reports.
 
@@ -290,13 +290,13 @@ v2.007_16 2015-04-22 10:23:46-0400
 
 General Notes:
 
- * This is PDLA-2.008_rc3!
+ * This is PDL-2.008_rc3!
 
 Highlights:
 
  * Various clean up and doc fixes
 
- * Add more of the PDLA prerequisites explicitly to handle
+ * Add more of the PDL prerequisites explicitly to handle
    missing core functionality for CPAN Testers.
 
 
@@ -305,7 +305,7 @@ v2.007_15 2015-04-19 17:08:55-0400
 
 General Notes:
 
- * This is PDLA-2.008_rc2!
+ * This is PDL-2.008_rc2!
 
 Highlights:
 
@@ -321,7 +321,7 @@ v2.007_14 2015-04-11 14:28:07-0400
 
 General Notes:
 
- * This is PDLA-2.008_rc1!
+ * This is PDL-2.008_rc1!
 
 Highlights:
 
@@ -336,20 +336,20 @@ v2.007_13 2015-03-22 16:00:03-0400
 
 General Notes:
 
- * Counting down to a PDLA-2.008 release this April 2015
+ * Counting down to a PDL-2.008 release this April 2015
 
 Highlights:
 
  * Travis on Github now routinely tests on dev ExtUtils::MakeMaker, clang:
-   https://travis-ci.org/PDLAPorters/pdl
+   https://travis-ci.org/PDLPorters/pdl
 
  * Coveralls on Github now lists test coverage:
-   https://coveralls.io/r/PDLAPorters/pdl
+   https://coveralls.io/r/PDLPorters/pdl
 
  * Many tests updated to use Test::More, Test::Deep, Test::Exception
 
- * PDLA::FFTW is now removed from the PDLA core.  Use
-   PDLA::FFTW3 instead.
+ * PDL::FFTW is now removed from the PDL core.  Use
+   PDL::FFTW3 instead.
 
  * Prototype use of Alien::Proj4 to encapsulate install/build info
 
@@ -357,9 +357,9 @@ Highlights:
 
  * Addition of "core" and "coretest" targets for quicker build and dev cycle
 
- * Make Filter::Util::Call the default engine for PDLA::NiceSlice
+ * Make Filter::Util::Call the default engine for PDL::NiceSlice
 
- * Make PDLA_Anyval type, for 64-bit purposes
+ * Make PDL_Anyval type, for 64-bit purposes
 
  * Clean up and better-comment pdl*.h
 
@@ -369,10 +369,10 @@ v2.007_12 2015-03-06 09:18:04-05:00
 
 General Notes:
 
- * Counting down to a PDLA-2.008 release this February 2015
+ * Counting down to a PDL-2.008 release this February 2015
 
  * This release marks the completion of almost all the
-   priority issues needed for PDLA-2.008.  Expect feature
+   priority issues needed for PDL-2.008.  Expect feature
    freeze, final shakedown, and release to come!
 
 
@@ -384,12 +384,12 @@ Highlights:
 
  * Fix quote/whitespace build problems
 
- * Fix threading problem discovered in PDLA::MatrixOps::inv()
+ * Fix threading problem discovered in PDL::MatrixOps::inv()
 
  * Build improvements and support for automated commit testing
    via the travis-ci infrastructure
 
- * Fixed sf.net bug #368 PDLA::Slatec::polyfit ignores
+ * Fixed sf.net bug #368 PDL::Slatec::polyfit ignores
    incorrect length of weight piddle
  
  * Fixed sf.net bug #374 CONFIGURE_REQUIRES => Devel::CheckLib 
@@ -403,16 +403,16 @@ v2.007_11 2015-02-24 16:08:36-05:00
 
 General Notes:
 
- * Counting down to a PDLA-2.008 release this February 2015
+ * Counting down to a PDL-2.008 release this February 2015
 Highlights:
 
- * The new Filter::Simple engine for PDLA::NiceSlice is now
-   the default.  This fixes problems where PDLA::NiceSlice
+ * The new Filter::Simple engine for PDL::NiceSlice is now
+   the default.  This fixes problems where PDL::NiceSlice
    was applying the sourcefilter to the content of comments
    and strings.  Still to do: implement for command line use
    in perldl/pdl2 shells.
 
- * Added ability to call PDLA::Graphics2D twiddle() routine with
+ * Added ability to call PDL::Graphics2D twiddle() routine with
    an argument of 0 or 1 (technically false or true) to set
    whether the twiddle loop is run.  Also fixed a minor warning
    generated with 'use warnings'.  This closes bug #353.
@@ -425,7 +425,7 @@ v2.007_10 2015-02-02 10:59:22-05:00
 
 General Notes:
 
- * Counting down to a PDLA-2.008 release this February 2015
+ * Counting down to a PDL-2.008 release this February 2015
 
 Highlights:
 
@@ -437,7 +437,7 @@ v2.007_09 2015-01-29 11:01:24-05:00
 
 General Notes:
 
- * Counting down to a PDLA-2.008 release this February 2015
+ * Counting down to a PDL-2.008 release this February 2015
 
 Highlights:
 
@@ -452,11 +452,11 @@ v2.007_08 2015-01-20 18:24:01-05:00
 
 General Notes:
 
- * Counting down to a PDLA-2.008 release this January 2015
+ * Counting down to a PDL-2.008 release this January 2015
 
 Highlights:
 
- * Some ExtUtils::MakeMaker fixes and clean up for the PDLA build
+ * Some ExtUtils::MakeMaker fixes and clean up for the PDL build
    process.
 
  * Fix non-portable usage bug in t/vsearch.t which prevented the
@@ -468,7 +468,7 @@ v2.007_07 2015-01-06 17:44:08+11:00
 
 General Notes:
 
- * Counting down to a PDLA-2.008 release this January 2015
+ * Counting down to a PDL-2.008 release this January 2015
 
 Highlights:
 
@@ -477,7 +477,7 @@ Highlights:
    search.cpan.org.
  
  * Bug fix in t/vsearch.t to support perl 5.12 and earlier.
-   PDLA currently supports perl 5.8.x and later.
+   PDL currently supports perl 5.8.x and later.
 
 
 
@@ -485,7 +485,7 @@ v2.007_06 2015-01-05 13:31:13-05:00
 
 General Notes:
 
- * Counting down to a PDLA-2.008 release this January 2015
+ * Counting down to a PDL-2.008 release this January 2015
 
 Highlights:
 
@@ -505,10 +505,10 @@ General Notes:
 
 Highlights:
 
- * You can now: "use Inline with => 'PDLA';" - see PDLA::API
+ * You can now: "use Inline with => 'PDL';" - see PDL::API
 
  * You can, in your module's Makefile.PL: "$p = new ExtUtils::Depends
-   'MyMod', 'PDLA'"
+   'MyMod', 'PDL'"
 
  * Various bugs fixed
 
@@ -522,10 +522,10 @@ General Notes:
 
 Highlights:
 
- * You can now: "use Inline with => 'PDLA';" - see PDLA::API
+ * You can now: "use Inline with => 'PDL';" - see PDL::API
 
  * You can, in your module's Makefile.PL: "$p = new ExtUtils::Depends
-   'MyMod', 'PDLA'"
+   'MyMod', 'PDL'"
 
 
 v2.007_03 2014-07-01 16:54:59-04:00
@@ -538,7 +538,7 @@ Highlights:
 
  * Fixes for library detection on MS Windows
 
- * Fix incompatibility of PDLA::IO::Storable with perl versions < 5.10.x
+ * Fix incompatibility of PDL::IO::Storable with perl versions < 5.10.x
 
 
 
@@ -548,10 +548,10 @@ General Notes:
 
 Highlights:
 
- * This release should be a working PDLA::IO::Storable that
+ * This release should be a working PDL::IO::Storable that
    is compatable with the new 64bit index support.
  
- * PDLA::IO::Storable now requires perl 5.10.x or greater
+ * PDL::IO::Storable now requires perl 5.10.x or greater
    although the overall distribution requirements are not
    planned to update to 5.10.x until the completion of
    fixes for the longlong hidden double precision conversion
@@ -565,19 +565,19 @@ General Notes:
 
 Highlights:
 
- * Added FAQ entry on PDLA version numbering change and how
-   to specify required PDLA versions.
+ * Added FAQ entry on PDL version numbering change and how
+   to specify required PDL versions.
 
  * Corrected perldl.conf docs for WITH_PLPLOT in the comments
 
- * Update PDLA::IO::Storable to work with the new PDLA_Indx
+ * Update PDL::IO::Storable to work with the new PDL_Indx
    data type.  Also made the code backwards compatible to
-   read files written by older PDLA releases.
+   read files written by older PDL releases.
  
  * Fixed NaN handling for min/max and cleaned up handling
    of empty sets.
 
- * Various enhancements to PDLA::Transform
+ * Various enhancements to PDL::Transform
 
 
 
@@ -585,7 +585,7 @@ v2.007 2013-10-12 12:56:52-04:00
 
 General Notes:
 
- * PDLA computations now use 64bit indexing/addressing if
+ * PDL computations now use 64bit indexing/addressing if
    your platform supports it (i.e., your perl configuration
    has $Config{ivsize} == 8).
    
@@ -593,16 +593,16 @@ General Notes:
 
    - Memory mapped file IO supports up to 8TB files which
      allows much simpler processing of large data files.
-     (See mapflex in PDLA::IO::FlexRaw for details)
+     (See mapflex in PDL::IO::FlexRaw for details)
 
- * PDLA-2.007 has a new, unified slicing engine and syntax
+ * PDL-2.007 has a new, unified slicing engine and syntax
    that consolidates the multiple slicing variants into
    a backward compatible but now 64bit aware slice.  See
-   the PDLA::Slices for the new syntax that is enabled.
+   the PDL::Slices for the new syntax that is enabled.
 
- * PDLA::FFTW has moved to its own distribution on CPAN
-   and is no longer in the PDLA core distribution.  Look
-   for PDLA::FFTW3 coming to CPAN soon.
+ * PDL::FFTW has moved to its own distribution on CPAN
+   and is no longer in the PDL core distribution.  Look
+   for PDL::FFTW3 coming to CPAN soon.
 
  * Some required dependencies have been update to more
    recent versions:
@@ -611,7 +611,7 @@ General Notes:
      higher, the minimum version with CONFIGURE_REQUIRES
      support.
 
-   - Perl OpenGL 0.6702 is now required for PDLA::Graphics::TriD
+   - Perl OpenGL 0.6702 is now required for PDL::Graphics::TriD
      to build.  This fixes a number of critical bugs and should
      be a seamless upgrade.
 
@@ -623,26 +623,26 @@ General Notes:
 
  * Incompatible Changes:
 
-   - PDLA::FFT now uses the same sign convention as FFTW and
+   - PDL::FFT now uses the same sign convention as FFTW and
      the rest of the world, -1/+1 for forward and reverse
      FFT respectively.
 
-   - C/XS API of PDLA-2.007 is incompatible with previous
-     PDLA releases.  If you upgrade to PDLA-2.007, you *will*
+   - C/XS API of PDL-2.007 is incompatible with previous
+     PDL releases.  If you upgrade to PDL-2.007, you *will*
      need to re-install or upgrade *all* dependent XS or PP
      based modules.
 
-   - PDLA now auto-promotes array refs in many places that
+   - PDL now auto-promotes array refs in many places that
      previously required a piddle (so you can say, e.g.,
      "$a->index([2,3])" instead of "$a->index(pdl(2,3))").
 
    - String syntax for slice() specifications now ignore
      white space.
 
- * The clean up of the PDLA core distribution continues and
-   PDLA-2.007 is no exception.  Many bug fixes, documentation
+ * The clean up of the PDL core distribution continues and
+   PDL-2.007 is no exception.  Many bug fixes, documentation
    updates, code and implementation improvements make this
-   the best testing PDLA release to date.
+   the best testing PDL release to date.
 
 
 Highlights:
@@ -654,24 +654,24 @@ Highlights:
 
    - New multiple extension writing support for wfits.
 
- * Added pp_deprecate_module() to PDLA::PP
+ * Added pp_deprecate_module() to PDL::PP
 
- * New mode/modeover functions in PDLA::Ufunc
+ * New mode/modeover functions in PDL::Ufunc
 
  * Made exception handling in slices more robust.
 
- * PDLA::CLONE_SKIP added for improved ithread support.
+ * PDL::CLONE_SKIP added for improved ithread support.
 
- * Updated graticule() in PDLA::Transform::Cartography to
+ * Updated graticule() in PDL::Transform::Cartography to
    support NaN-delimited output.
 
  * Bugs fixes:
 
-   - Fix %hash randomization bugs in PDLA tests
+   - Fix %hash randomization bugs in PDL tests
 
    - Fix OpenBSD pthread build problem for non-threaded perls
 
-   - Fix PDLA::shape to return vector for 1-D piddles
+   - Fix PDL::shape to return vector for 1-D piddles
 
    - Fix badvalue-on-truncate support for map and for interpND
 
@@ -682,15 +682,15 @@ Highlights:
 
    - Fix rare "Bizarre copy of HASH in scalar assignment"
 
-   - Fix rcols with colsep and $PDLA::undefval
+   - Fix rcols with colsep and $PDL::undefval
 
    - Fix sf.net bug #331 "uniq does not always return proper object"
 
-   - Fix sf.net bug #338 PDLA::FFT uses backwards sign convention from FFTW
+   - Fix sf.net bug #338 PDL::FFT uses backwards sign convention from FFTW
 
-   - Make PDLA::NiceSlice preserve line numbering (sf.net feature #75)
+   - Make PDL::NiceSlice preserve line numbering (sf.net feature #75)
 
-   - PDLA::IO::GD->new() is now less picky about it args, and no longer crashes
+   - PDL::IO::GD->new() is now less picky about it args, and no longer crashes
 
    - Two bug fixes to transform.pd, and an augmentation
 
@@ -700,11 +700,11 @@ v2.006 2013-03-23 10:02:31-04:00
 
 General Notes:
 
- * Change to the version number scheme used for PDLA
+ * Change to the version number scheme used for PDL
    from the dotted-integers format back to plain old
    decimal numbers.
 
-   Unfortunately, PDLA has used both alternatives before
+   Unfortunately, PDL has used both alternatives before
    and in an inconsistent, out-of-order way.  With this
    release, the current version will also be the most
    recent version with respect to both numbering schemes.
@@ -716,42 +716,42 @@ General Notes:
      http://mailman.jach.hawaii.edu/pipermail//pdl-porters/2013-February/005343.html
  
 
- * PDLA-2.006 also showcases the demos of two new PDLA graphics
+ * PDL-2.006 also showcases the demos of two new PDL graphics
    modules in the perldl/pdl2 shells:
    
-    - PDLA::Graphics::Gnuplot
-      http://search.cpan.org/~zowie/PDLA-Graphics-Gnuplot-1.4/
+    - PDL::Graphics::Gnuplot
+      http://search.cpan.org/~zowie/PDL-Graphics-Gnuplot-1.4/
 
-    - PDLA::Graphics::Prima
-      http://search.cpan.org/~dcmertens/PDLA-Graphics-Prima-0.13/
+    - PDL::Graphics::Prima
+      http://search.cpan.org/~dcmertens/PDL-Graphics-Prima-0.13/
 
-   Both modules install on all supported PDLA platforms.  A
-   recent addition is PDLA::Graphics::Simple which provides
-   a uniform presentation to the variety off available PDLA
+   Both modules install on all supported PDL platforms.  A
+   recent addition is PDL::Graphics::Simple which provides
+   a uniform presentation to the variety off available PDL
    plot/view/print options.
    
-    - PDLA::Graphics::Simple
-      http://search.cpan.org/~zowie/PDLA-Graphics-Simple-1.004/README.pod
+    - PDL::Graphics::Simple
+      http://search.cpan.org/~zowie/PDL-Graphics-Simple-1.004/README.pod
       
    Let us know how they work for you.  As they are 
    relatively "young" contributions your feedback and
    questions are always welcome.
 
 
- * PDLA Distribution related updates:
+ * PDL Distribution related updates:
 
-    - Fixes a build issue for PDLA at ASPerl
+    - Fixes a build issue for PDL at ASPerl
     
     - Many fixes for debian distributions.
     
-    - PDLA::IO::NDF has been moved to its own
+    - PDL::IO::NDF has been moved to its own
       distribution on CPAN.  This could affect
-      upgrades from older PDLA installs.
+      upgrades from older PDL installs.
  
 
 Highlights:
 
- * New support for reading IDL format files via PDLA::IO::IDL.
+ * New support for reading IDL format files via PDL::IO::IDL.
 
  * Added an unpdl method which is (roughly) the inverse
    operation of pdl (Joel Berger).
@@ -763,22 +763,22 @@ Highlights:
  * Added Boundary=>'Replicate' option to conv2d and med2d (chm).
 
  * Support for new additional random number generators to
-   PDLA::GSL (John Lapeyre).
+   PDL::GSL (John Lapeyre).
 
  * Add lgamma support for MinGW-built perls with tests
    to match (sisyphus).
 
  * Many improvments to docs and their generation from
-   PDLA sources.  Specific new functionality support:
+   PDL sources.  Specific new functionality support:
 
     - Newly refactored docs engine using core perl
-      modules rather than PDLA-only ones (Joel Berger)
+      modules rather than PDL-only ones (Joel Berger)
 
-    - New FullDoc key added to PDLA::PP makes writing CPAN
+    - New FullDoc key added to PDL::PP makes writing CPAN
       friendly .pd files much, much easier (David Mertens).
 
-    - New PDLA::Doc::add_module() routine to add an external
-      module's POD (with PDLA::Doc conventions) to the PDLA
+    - New PDL::Doc::add_module() routine to add an external
+      module's POD (with PDL::Doc conventions) to the PDL
       docs on-line database (Craig DeForest).
 
  * Many bugs fixed, some even before a ticket could be opened!
@@ -804,7 +804,7 @@ Highlights:
     - Sf.net bug #3518190: Potential fix for t/gd_oo_tests.t
       test crashes.
 
-    - Sf.net bug #3515759: Work around for PDLA::GIS::Proj
+    - Sf.net bug #3515759: Work around for PDL::GIS::Proj
       build failures with proj-4.8.0.
 
     - Sf.net bug #3479009: Fixed dummy() to generate a
@@ -824,19 +824,19 @@ Highlights:
     - Fixed a problem with multiple windows and imag2d
       and imag2d_update.
 
- * The PDLA shells keep getting better:
+ * The PDL shells keep getting better:
 
     - New feature in perldl and pdl2 where a pattern matching
-      the PDLA shell prompt (in $PERLDL::PREFIX_RE) will get
+      the PDL shell prompt (in $PERLDL::PREFIX_RE) will get
       stripped off of input lines before eval.  This makes it
-      easier to cut-and-paste example text from PDLA shell
-      sessions or from the PDLA Book into an active session.
+      easier to cut-and-paste example text from PDL shell
+      sessions or from the PDL Book into an active session.
 
-    -  Added a demo for PDLA::Graphics::Prima to the PDLA shells.
+    -  Added a demo for PDL::Graphics::Prima to the PDL shells.
 
-    -  Added a demo for gnuplot to the PDLA shells.
+    -  Added a demo for gnuplot to the PDL shells.
 
-    -  The p shortcut to display output in the PDLA shells has
+    -  The p shortcut to display output in the PDL shells has
        been reverted to its previous 2.4.10 behavior.  If you
        wish it to be an exact alias for print just override
        in your .perldlrc or local.perldlrc file.
@@ -847,7 +847,7 @@ v2.4.11 2012-05-20 13:32:17-04:00
 
 General Notes:
 
- * This is a point release of PDLA to support the coming perl
+ * This is a point release of PDL to support the coming perl
    5.16.0 release.
 
 Highlights:
@@ -861,7 +861,7 @@ Highlights:
    will need this dependency installed.
    
     NOTE: For systems having POSIX mmap, a manual build of
-    PDLA will automatically use the legacy implementation.
+    PDL will automatically use the legacy implementation.
 
  * Various cleanup to existing code to fix warnings generated
    by perl versions 5.15.x and higher.
@@ -871,10 +871,10 @@ Highlights:
 
  * Sf.net bugs fixed:
 
-    3518253  Make PDLA::flat work under perl 5.16 (thanks sprout!)
+    3518253  Make PDL::flat work under perl 5.16 (thanks sprout!)
     3516600  pdl_from_string.t fails w/ BADVAL_USENAN=1
-    3487569  PDLA::IO::Misc : rcols problem (thanks bperret!)
-    3476648  PDLA build of HTML docs fails on recent bleed Perl
+    3487569  PDL::IO::Misc : rcols problem (thanks bperret!)
+    3476648  PDL build of HTML docs fails on recent bleed Perl
     
  * Other bugs fixed:
 
@@ -889,12 +889,12 @@ Highlights:
     #3524081 to track their issues).
 
  * New support for multi-line comments in PP code.  See docs for
-   PDLA::PP for details (e.g., pdldoc PP).
+   PDL::PP for details (e.g., pdldoc PP).
     
  * Various enhancements to barf/croak output and messages to make
    error reports and stack traces more useful and readable.
 
- * There is a new changes (or Changes) target for the PDLA Makefile
+ * There is a new changes (or Changes) target for the PDL Makefile
    which is a convenience target that allows one to regenerate the
    Changes file from git.
 
@@ -904,10 +904,10 @@ General Notes:
 
  New Stuff:
 
-  * PDLA::Constants module provides E, PI, I (or J) and more.
+  * PDL::Constants module provides E, PI, I (or J) and more.
 
-  * PDLA::NiceSlice has a new engine based on Filter::Simple
-    which is more selective about where the PDLA::NiceSlice
+  * PDL::NiceSlice has a new engine based on Filter::Simple
+    which is more selective about where the PDL::NiceSlice
     sourcefilter is applied.
 
   * pdl() constructor now accepts a string argument which
@@ -915,10 +915,10 @@ General Notes:
     inf values, and nan values.  This makes it much easier
     to specify pdl values in programs and scripts.
 
-  * PDLA now supports pthreads on all platforms as well
-    as a new, auto-parallelization capability for PDLA
+  * PDL now supports pthreads on all platforms as well
+    as a new, auto-parallelization capability for PDL
     threadloops across multiple processors using the
-    PDLA::ParallelCPU module.
+    PDL::ParallelCPU module.
 
   * Many(!) bug fixes.
 
@@ -927,7 +927,7 @@ General Notes:
 
   * List output from whichND is now deprecated.
 
-  * The default.perldlrc uses PDLA::Constants to
+  * The default.perldlrc uses PDL::Constants to
     provide E and PI.
 
   * perldl.conf has new fields so be sure to update
@@ -956,7 +956,7 @@ Highlights:
    a piddle of coordinates in all cases with a warning when a list
    context is detected.  See the docs for work-arounds to your code.
  
- * PDLA::IO::Misc now has better support for handles that are not
+ * PDL::IO::Misc now has better support for handles that are not
    files (e.g., pipes or standard input) for rgrep(), rcols(),...
  
  * Added bad value support to pctover() and oddpctover().
@@ -980,38 +980,38 @@ Highlights:
      3307613  indexND of Empty pdls can segfault
      3368883  t/opengl.t fails if display type not available
      3375837  _read_flexhdr state machine fails
-     3388862  tiny bug in PDLA-2.4.3. May apply to 2.4.9
+     3388862  tiny bug in PDL-2.4.3. May apply to 2.4.9
      3391645  bad printf formats in pdlapi.c and others
-     3394327  PDLA::IO::FITS::wfits corrupting FITS image
-     3396738  PDLA::Core::convert default return type
-     3410905  t/pgplot.t hangs test harness for PDLA
+     3394327  PDL::IO::FITS::wfits corrupting FITS image
+     3396738  PDL::Core::convert default return type
+     3410905  t/pgplot.t hangs test harness for PDL
      3415115  whereND fails to handle all zero mask case
-     3428356  PDLA::Transform::map output FITS header is slightly wrong
+     3428356  PDL::Transform::map output FITS header is slightly wrong
      3434842  Error in definition of gsl_sf_laguerre_n function
  
- * PDLA::Constants now provides: E, PI, I and J and is loaded by the
-   default.perldlrc.  It is not yet part of 'use PDLA' so you'll need
-   to 'use PDLA::Constants ...' by hand for now.
+ * PDL::Constants now provides: E, PI, I and J and is loaded by the
+   default.perldlrc.  It is not yet part of 'use PDL' so you'll need
+   to 'use PDL::Constants ...' by hand for now.
  
- * default.perldlrc sets $PDLA::IO::FlexRaw::writeflexhdr=1 by
+ * default.perldlrc sets $PDL::IO::FlexRaw::writeflexhdr=1 by
    default so that writeflex() to a filename automatically writes
    the header file.  This is different from the previous behavior
    but it seems to "do what you mean".  Feedback welcome!
  
- * PDLA::NiceSlice now has a new engine based on Filter::Simple which
+ * PDL::NiceSlice now has a new engine based on Filter::Simple which
    is smarter about only applying the slicing source filter to syntax
    occurring outside of POD, comments, and quotelike strings.  The
    new implementation is available for *files* by setting the
-   PDLA_NICESLICE_ENGINE environment variable to 'Filter::Simple'.
+   PDL_NICESLICE_ENGINE environment variable to 'Filter::Simple'.
  
    Work is underway to port the new niceslice filter implementation
    to perldl/pdl2.  Once this task is completed, the new engine will
-   become the default source filter and the PDLA_NICESLICE_ENGINE
+   become the default source filter and the PDL_NICESLICE_ENGINE
    environment variable will be removed.
  
- * There is experimental support for PDLA::NiceSlice syntax in the
+ * There is experimental support for PDL::NiceSlice syntax in the
    perl debugger (i.e., perl -d).  Just set the PERL5DB environment
-   variable to 'BEGIN { require "PDLAdb.pl" }' to use niceslice
+   variable to 'BEGIN { require "PDLdb.pl" }' to use niceslice
    from the debugger command line.  If PERL5DB is already set,
    you'll need to adjust the above recipe accordingly.
  
@@ -1021,30 +1021,30 @@ Highlights:
  * perldl.conf has some new fields added:
     - POSIX_THREADS_INC and POSIX_THREADS_LIBS to specify
           locations of your pthread header file and library
-    - PDLA_CONFIG_VERSION to track the perldl.conf VERSION
-    - PDLADOC_IGNORE_AUTOLOADER to control pdldoc behavior
-    - PDLA_BUILD_DIR provides the build directory path
-    - PDLA_BUILD_VERSION provides the PDLA build version
-          (to help with ambiguity from multiple PDLA installs)
+    - PDL_CONFIG_VERSION to track the perldl.conf VERSION
+    - PDLDOC_IGNORE_AUTOLOADER to control pdldoc behavior
+    - PDL_BUILD_DIR provides the build directory path
+    - PDL_BUILD_VERSION provides the PDL build version
+          (to help with ambiguity from multiple PDL installs)
  
    NOTE: If you are using a private or customized perldl.conf
    file, please be sure to update with these additional fields
    as the perl Makefile.PL doesn't yet detect version skew
    automatically.
   
- * PDLA::IO::Browser now builds in many cases (but not all).
+ * PDL::IO::Browser now builds in many cases (but not all).
    If you try it, please let us know how it goes.  Just edit
    the value of WITH_IO_BROWSER in your perldl.conf before
    configuring the build (i.e., perl Makefile.PL).
  
- * PDLA::PP has seen some significant improvements including
+ * PDL::PP has seen some significant improvements including
    code cleanup, improved documentation, and code refactoring
-   for comprehension.  There is a new PDLA::PP::pp_line_numbers()
+   for comprehension.  There is a new PDL::PP::pp_line_numbers()
    routine which enables line # traceback for errors and warnings
    from PP code.
  
  * Improved error output from the pdl2 shell via the new
-   CleanErrors plugin which filters out the non-PDLA part
+   CleanErrors plugin which filters out the non-PDL part
    of the error output leading to *much* more concise and
    helpful reports.
  
@@ -1065,25 +1065,25 @@ Highlights:
    This is new functionality so feedback and problem reports
    are welcome.
  
- * PDLA::Image2D has new routines: pnpoly() to determine the points
+ * PDL::Image2D has new routines: pnpoly() to determine the points
    in a polygon from the sequence of vertex coordinates, and
    cc4compt() for 4-component labeling of a binary image.
  
- * PDLA now supports pdls larger than 2GiB.  The element count
+ * PDL now supports pdls larger than 2GiB.  The element count
    is still an int type internally so the total number of elements
    per-piddle must be less than 2**31.
  
  * POSIX threads (pthreads) are supported for win32 and cygwin
-   platforms.  Pthreads are now available for all PDLA platforms.
+   platforms.  Pthreads are now available for all PDL platforms.
  
- * New PDLA::ParallelCPU module provides automatic distribution
+ * New PDL::ParallelCPU module provides automatic distribution
    of implicit thread loops across a number of processors.  Now
-   you can watch your PDLA computations maximize the load on
+   you can watch your PDL computations maximize the load on
    *all* your processors.  See the docs for how to configure this
    feature and how to adjust your calculations to best take
    advantage of this feature.
  
- * PDLA::Graphics::PLplot now works with the latest release of the
+ * PDL::Graphics::PLplot now works with the latest release of the
    PLplot library and has improved configuration and build
    handling.  Feedback welcome.
  
@@ -1095,14 +1095,14 @@ Highlights:
  * The ADEV calculation in statsover has been corrected along
    with the documentation.
  
- * PDLA::Graphics::TriD changes:
-    - PDLA::Graphics::TriD now builds using the perl OpenGL
+ * PDL::Graphics::TriD changes:
+    - PDL::Graphics::TriD now builds using the perl OpenGL
           module (POGL) when configured on cygwin with the
           interface=W32API option.  By default, POGL used
           interface=GLX on cygwin which does software rendering
           via Mesa/X11 (slower!).  If you reinstall POGL with
-          the W32API setting, you will need to rebuild PDLA and
-          PDLA::Graphics::TriD to pick up the new configuration.
+          the W32API setting, you will need to rebuild PDL and
+          PDL::Graphics::TriD to pick up the new configuration.
     - A new 4-line graphics demo contributed by Mark Baker has
           been added to 'demo 3dgal'.  Take a look.
  
@@ -1119,41 +1119,41 @@ Highlights:
  
  * Update ExtUtils::MakeMaker required version to 6.31 to support
    the new standard of INSTALL_BASE to configure for a local
-   perl/PDLA module installation.
+   perl/PDL module installation.
  
  * Update Text::Balanced required version to 1.89.  This is the
-   version present in perl 5.8.0 (the minimum required for PDLA)
+   version present in perl 5.8.0 (the minimum required for PDL)
    so this change in requirement is not expected to affect any
-   PDLA users.
+   PDL users.
  
- * pdldoc now searches your PDLALIB path for PDLA::AutoLoader docs
+ * pdldoc now searches your PDLLIB path for PDL::AutoLoader docs
    in addition to the pre-extracted documentation database.  This
    makes pdldoc give the same output as the help command in the
-   PDLA shells.
+   PDL shells.
  
- * Many updates and additions to the PDLA documentation.
+ * Many updates and additions to the PDL documentation.
  
  * Devel::CheckLib is being used in more places during the
-   PDLA configuration stage.  We plan to make this the standard
+   PDL configuration stage.  We plan to make this the standard
    baseline for dependency library detection going forwards.
    The included copy of Devel::CheckLib has been updated to 0.95.
  
- * A new unified implementation of barf()/warn() for PDLA removes
-   code duplication.  barf() is now defined in both PDLA::Core and
-   the PDLA packages.  PDLA::cluck is added as an analog of Carp::cluck
-   (as PDLA::barf is an analog of Carp::confess).  barf() now
+ * A new unified implementation of barf()/warn() for PDL removes
+   code duplication.  barf() is now defined in both PDL::Core and
+   the PDL packages.  PDL::cluck is added as an analog of Carp::cluck
+   (as PDL::barf is an analog of Carp::confess).  barf() now
    generates its stack trace by hooking into Carp::confess on
    both the Perl and C sides.
  
- * Various fixes for PDLA::Transform
+ * Various fixes for PDL::Transform
    - fix inverse in perspective()
    - fix t_cubic() parameter parsing
    - fix handling of multiple PCi_j systems in the piddle header
  
- * Added SIGPIPE handlers to cases where PDLA uses pipes to/from
+ * Added SIGPIPE handlers to cases where PDL uses pipes to/from
    external processes (such as ffmpeg or some NetPBM image
-   converter programs).  This should make PDLA "SIGPIPE safe" by not
-   exiting when a PDLA piped IO output process quits (e.g., as when
+   converter programs).  This should make PDL "SIGPIPE safe" by not
+   exiting when a PDL piped IO output process quits (e.g., as when
    called from within the perldl/pdl2 shell).
 
 
@@ -1163,16 +1163,16 @@ v2.4.9 2011-04-09 10:05:43-04:00
 General Notes:
 
  * Fixes a couple of surprise bugs that were discovered
-   immediately with the PDLA-2.4.8 release.
+   immediately with the PDL-2.4.8 release.
 
- * See Also: the Release Notes for PDLA-2.4.8 below
+ * See Also: the Release Notes for PDL-2.4.8 below
 
 
 Highlights:
 
  * Fix sf.net bug #3267408 "t/slice.t crashes in tests 68-70 for BSD"
  
- * Fix sf.net bug #3190227 "PDLA build fails with parallel GNU make -j3 -j3"
+ * Fix sf.net bug #3190227 "PDL build fails with parallel GNU make -j3 -j3"
 
  * Fixed various tempfile name generation problems by switching
    to File::Temp instead of hand rolled solutions.  This is the
@@ -1188,32 +1188,32 @@ v2.4.8 2011-03-29 17:12:41-04:00
 General Notes:
 
  * The deprecated Karma imaging library support code
-   has been removed from the PDLA distribution.
+   has been removed from the PDL distribution.
  
  * Perl OpenGL (POGL) is now the only build option for
-   3-D graphics support in PDLA.  The POGL build has
+   3-D graphics support in PDL.  The POGL build has
    proven to be portable and reliable.  This prepares
    TriD graphics development for the next stage of
    re-factoring for support and new features.
  
- * Many improvements to the PDLA configuration, build
-   and test process make this the most robust PDLA yet.
+ * Many improvements to the PDL configuration, build
+   and test process make this the most robust PDL yet.
  
- * PDLA::IO::FlexRaw now supports automatic header file
+ * PDL::IO::FlexRaw now supports automatic header file
    creation when writeflex() is given a filename argument
    for writing.  readflex/writeflex/mapflex now support
    reading and writing piddles with bad values in them.
  
- * New PDLA::Constants module provides PI and E.
+ * New PDL::Constants module provides PI and E.
 
- * PDLA::Complex now supports in-place operations.
+ * PDL::Complex now supports in-place operations.
 
- * Added $PDLA::toolongtoprint to set the maximum piddle
+ * Added $PDL::toolongtoprint to set the maximum piddle
    size allowed to print as a string.  This was added
    to the default.perldlrc to make it easier to discover
    by users.
 
- * wmpeg() from PDLA::IO::Pic uses the new ffmpeg back-end
+ * wmpeg() from PDL::IO::Pic uses the new ffmpeg back-end
    and can create many additional file formats beyond MPEG
    alone, including MP4 and animated GIF.  See the
    documentation for details.
@@ -1225,25 +1225,25 @@ Highlights:
 
  Build and Test Enhancements:
 
- * Karma support code has been *removed* from the PDLA
-   distribution The last stable PDLA distribution with
-   Karma code was be PDLA-2.4.7.
+ * Karma support code has been *removed* from the PDL
+   distribution The last stable PDL distribution with
+   Karma code was be PDL-2.4.7.
    
  * You must use the Perl OpenGL module to build the
-   PDLA 3-D graphics module, PDLA::Graphics::TriD.
+   PDL 3-D graphics module, PDL::Graphics::TriD.
    OPENGL_LIBS, OPENGL_INC and OPENGL_DEFINE are no
    longer used by perldl.conf for the configuration
    process.
    
  * Added a check for mis-installed PROJ4 libraries.  If
    the library does not initialize (even if present) then
-   PDLA will not build the PROJ4 modules.  This is sf.net
+   PDL will not build the PROJ4 modules.  This is sf.net
    feature #3045456.
    
  * GD, HDF, PROJ4, OpenGL, and GSL tests will not be run
    unless the corresponding module was configured to be
    built.  This addresses the possibly mysterious test
-   failures caused by previous PDLA installations in the
+   failures caused by previous PDL installations in the
    perl path at build time.
    
  * Use of the Test::More TODO {} blocks allows tests for
@@ -1253,13 +1253,13 @@ Highlights:
    test first development and debugging.
    
  * utils/perldlpp.pl is a new script for off-line source
-   filtering to pre-filter PDLA source files with NiceSlice
-   constructs.  This allows PDLA to use NiceSlice constructs
-   in the core functionality while still allowing PDLA to
+   filtering to pre-filter PDL source files with NiceSlice
+   constructs.  This allows PDL to use NiceSlice constructs
+   in the core functionality while still allowing PDL to
    work in environments where source filters are not supported.
    
- * The 'perl Makefile.PL' response to detecting another PDLA
-   in the build path has changed.  If such a pre-existing PDLA
+ * The 'perl Makefile.PL' response to detecting another PDL
+   in the build path has changed.  If such a pre-existing PDL
    installation is detected, the user is warned *but*
    configuration and build will proceed nonetheless.
    
@@ -1268,7 +1268,7 @@ Highlights:
 
  Documentation:
 
- * Added INTERNATIONALIZATION file with i18n notes.  PDLA
+ * Added INTERNATIONALIZATION file with i18n notes.  PDL
    does yet not have internationalization support beyond
    that provided  by perl itself.
    
@@ -1283,15 +1283,15 @@ Highlights:
 
  * New example code refresh.pdl in Example/PLplot to
    provide for PLplot, some of the same functionality
-   as in PDLA::Graphics::PGPLOT.
+   as in PDL::Graphics::PGPLOT.
    
  * Other documentation updates for clarity and correctness.
 
  New Features or Functionality:
 
- * New PDLA::Constants module providing PI and E (so far)
+ * New PDL::Constants module providing PI and E (so far)
    
- * Inplace support added for PDLA::Complex operations
+ * Inplace support added for PDL::Complex operations
    
  * pdldoc and the pdl2/perldl help commands now print all
    matches by default when multiple matches are found.
@@ -1306,7 +1306,7 @@ Highlights:
    
  * writeflex now supports automatically calling the
    writeflexhdr() routine if you have set the variable
-   $PDLA::FlexRaw::writeflexhdr to a true value and are
+   $PDL::FlexRaw::writeflexhdr to a true value and are
    writing to a file given by filename as argument.
    
  * Updated the error handling for GSL::INTERP to match other
@@ -1314,7 +1314,7 @@ Highlights:
    
  * Applied sf.net patch #3209075 IO::HDF square sds
    
- * New binary blob support in PDLA::IO::GD::OO
+ * New binary blob support in PDL::IO::GD::OO
 
  Bugs Fixed:
 
@@ -1327,7 +1327,7 @@ Highlights:
    documentation for lu_decomp, lu_deomp2, and lu_backsub.
    
  * Fixed sf.net bug #3171702 "missing podselect command
-   breaks PDLA build"
+   breaks PDL build"
    
  * Fixed sf.net bug #3185864 (bad adev in statsover)
    
@@ -1346,7 +1346,7 @@ Highlights:
    
  * Fixed SF bug #3042201: t/dumper.t fails mysteriously
    
- * Fixed SF bug #3031068: PDLA::IO::FlexRaw mapflex memory
+ * Fixed SF bug #3031068: PDL::IO::FlexRaw mapflex memory
    mapping fails
    
  * Fixed SF bug #3011879, "pdl() constructor crashes perl for
@@ -1361,7 +1361,7 @@ Highlights:
  * Fixed bug in FlexRaw.pm support for headers with Type
    passed  as string.
    
- * Fixed imag2d() in PDLA::Graphics2D.  It no longer calls
+ * Fixed imag2d() in PDL::Graphics2D.  It no longer calls
    exit on ESC if run within the pdl2/perldl shell.  Also
    did some clean up of key controls and module mechanics.
    
@@ -1380,19 +1380,19 @@ General Notes:
    - perl version 5.8.x and higher
    - Convert::UU
  
- * PDLA::Graphics::TriD now requires OpenGL-0.63
+ * PDL::Graphics::TriD now requires OpenGL-0.63
  
  * New 2-D image display routine: imag2d()
 
- * pdl() constructor, a.k.a. PDLA->new(), now
+ * pdl() constructor, a.k.a. PDL->new(), now
    takes string arguments with either MATLAB type
-   concatenation syntax or PDLA print output (for
-   easier cut-and-paste from PDLA shell sessions).
+   concatenation syntax or PDL print output (for
+   easier cut-and-paste from PDL shell sessions).
 
  * Improved text and comma separated value file
    input via rcols(): faster and more flexible.
  
- * A new PDLA shell based on Devel::REPL (i.e.,
+ * A new PDL shell based on Devel::REPL (i.e.,
    Moose technology).  The new shell supports
    more perl syntax (lexical variables and
    packages), is more extensible (via a system
@@ -1412,9 +1412,9 @@ Highlights:
 
  * General
 
-   OpenGL-0.63 is required for PDLA::Graphics::TriD.
+   OpenGL-0.63 is required for PDL::Graphics::TriD.
 
-   Convert::UU is required for PDLA.
+   Convert::UU is required for PDL.
 
    Karma is DEPRECATED and NOT SUPPORTED.  Set
    USE_KARMA=>1 in perldl.conf to force a build.
@@ -1422,7 +1422,7 @@ Highlights:
    
  * New 2D Image Display Feature: imag2d()
 
-   See PDLA::Graphics2D for documentation.
+   See PDL::Graphics2D for documentation.
 
    Add image pixel value display on mouse
    click in imag2d window
@@ -1454,7 +1454,7 @@ Highlights:
    Improved format support for CSV file input
    
    
- * Enhanced PDLA Shell (Version 2)
+ * Enhanced PDL Shell (Version 2)
 
    Based on Devel::REPL which must be installed
    along with either Term::ReadLine::Perl or
@@ -1462,10 +1462,10 @@ Highlights:
 
    Supports Term::ReadLine::Perl and Term::ReadLine::Gnu.
 
-   Upward compatable with the original PDLA shell, perldl.
+   Upward compatable with the original PDL shell, perldl.
 
    Adds completion and command line editing support
-   across all PDLA platforms.
+   across all PDL platforms.
 
    Adds support for current package and lexical variables.
 
@@ -1490,17 +1490,17 @@ Highlights:
    Faster matrix multiply
 
    Preliminary support for ENVI file format data
-   in PDLA/IO/ENVI/readenvi.pdl
+   in PDL/IO/ENVI/readenvi.pdl
    
    
  * Build Improvements:
 
-   PDLA build process now detects multiple PDLA installs
+   PDL build process now detects multiple PDL installs
    and warns of possible conflicts.
 
-   'use PDLA' now loads PDLA::Config by default.
+   'use PDL' now loads PDL::Config by default.
 
-   PDLA "as built" configuration is now saved to %PDLA::Config
+   PDL "as built" configuration is now saved to %PDL::Config
 
    Changes file is automatically updated each release
 
@@ -1519,37 +1519,37 @@ Highlights:
    Reduced number of fortran dependencies
 
    Improved support for win32 platforms
-   - PDLA::GIS::Proj builds for win32
-   - PDLA::Transform::Proj4 builds for win32
-   - PDLA::Graphics::PLplot builds for win32
-   - PDLA::IO::Dumper builds for win32
+   - PDL::GIS::Proj builds for win32
+   - PDL::Transform::Proj4 builds for win32
+   - PDL::Graphics::PLplot builds for win32
+   - PDL::IO::Dumper builds for win32
    
    
  * 3-D Graphics
 
-   Improved PDLA::Graphics::TriD demos and examples
+   Improved PDL::Graphics::TriD demos and examples
 
    Fixed problems with VRML support for many platforms.
 
-   Better dependency searches for OpenGL during PDLA build
+   Better dependency searches for OpenGL during PDL build
 
    Removed warnings "noise" when used with perl -w
 
-   New spheres3d routine added to PDLA::Graphics::TriD
+   New spheres3d routine added to PDL::Graphics::TriD
    
    
  * Bugs Fixed
 
-   Fix PDLA::AutoLoader to handle win32 PDLALIB path
+   Fix PDL::AutoLoader to handle win32 PDLLIB path
    syntax with ; as separator. 
 
-   Fix PDLA::Complex::string and sum and sumover
+   Fix PDL::Complex::string and sum and sumover
    (sf.net bug #1176614)
 
-   Fix PDLA::Config does not match actual build
+   Fix PDL::Config does not match actual build
    configuration (sf.net bug #3030998).
 
-   Fix dimension numbering in PDLA::Transform::t_fits
+   Fix dimension numbering in PDL::Transform::t_fits
 
    Fix jpegtopnm problem in proj_transform.t
 
@@ -1573,10 +1573,10 @@ Highlights:
    Fix uniqvec bug where it did not return a 2-D result
    (sf.net bug #2978576)
 
-   Fix uuencode/uudecode detection logic in PDLA::IO::Dumper
+   Fix uuencode/uudecode detection logic in PDL::IO::Dumper
    to include Convert::UU check
 
-   Make PDLA prompt/warn if space in build path
+   Make PDL prompt/warn if space in build path
    (sf.net bug #2924854).
 
    Fix up code to not crash on non-lazy linking systems.
@@ -1592,8 +1592,8 @@ Highlights:
    
  * Many Documentation Improvements
 
-   Completely reworked PDLA web site
-   - Clearer and more helpful to new PDLA users.
+   Completely reworked PDL web site
+   - Clearer and more helpful to new PDL users.
    - See http://pdl.perl.org for the latest!
       
    New documentation:
@@ -1603,24 +1603,24 @@ Highlights:
 
    Major reorganization of documentation to better
    help new users
-   - A guide to PDLA's tutorial documentation.
-   - A guide to PDLA's module reference documentation.
-   - A study course through all of PDLA's documentation.
-   - Removed PDLA::Intro
+   - A guide to PDL's tutorial documentation.
+   - A guide to PDL's module reference documentation.
+   - A study course through all of PDL's documentation.
+   - Removed PDL::Intro
 
-   POD cleanup across many PDLA modules and functions.
+   POD cleanup across many PDL modules and functions.
 
-   Update to copyright statements throughout PDLA
+   Update to copyright statements throughout PDL
    to clarify licenses.
 
    Improved on-line help and apropos features in
-   the PDLA shell
+   the PDL shell
 
    Updated FAQ
 
    Improved POD to HTML translation
 
-   DEPENDENCIES for PDLA updated and checked
+   DEPENDENCIES for PDL updated and checked
    for applicability.
 
    INSTALL guides improved in the distribution
@@ -1643,9 +1643,9 @@ Highlights:
 
   * Many fixes for Debian package release
 
-  * Several little bugs fixed since PDLA-2.4.5
+  * Several little bugs fixed since PDL-2.4.5
 
-  * Fixed some issues with PDLA convolution routines
+  * Fixed some issues with PDL convolution routines
 
   * Improved documentation and release notes and files
 
@@ -1657,7 +1657,7 @@ Summary of Changes:
   * Improved 3D graphics and OpenGL functionality
 
     Perl OpenGL 0.62 is the minimum required version
-    for PDLA::Graphics::TriD to build.
+    for PDL::Graphics::TriD to build.
 
     TriD now builds correctly for Mac OS X systems
     without X11 installed.
@@ -1666,7 +1666,7 @@ Summary of Changes:
     of the Perl OpenGL library has been implemented.
     The default perldl.conf setting is to check.
 
-    Improved multi-window support for PDLA::Graphics::TriD
+    Improved multi-window support for PDL::Graphics::TriD
     display windows: the GLUT window ID is now part of
     the default window title for convenience, and redraws
     with multiple open TriD windows are handled correctly.
@@ -1678,15 +1678,15 @@ Summary of Changes:
     IMPORTANT: Legacy X11 TriD is *not* supported!
 
     It is implemented in the imag2d.pdl file for autoloading
-    via PDLA::AutoLoader.  To use, copy the imag2d.pdl file
-    to somewhere in your PDLALIB path or add the location to
-    your PDLALIB environment variable.
+    via PDL::AutoLoader.  To use, copy the imag2d.pdl file
+    to somewhere in your PDLLIB path or add the location to
+    your PDLLIB environment variable.
 
     It works with multiple, simultaneous, image windows
     and appears to work side-by-side with TriD graphics
     windows.
     
-    After you have imag2d.pdl in your @PDLALIB list,
+    After you have imag2d.pdl in your @PDLLIB list,
     you can use 'help imag2d' to get usage instructions
     and documentation.
     
@@ -1695,11 +1695,11 @@ Summary of Changes:
 
   * Many fixes for Debian package release
 
-    This should allow PDLA-2.4.6 to be more readily released
+    This should allow PDL-2.4.6 to be more readily released
     as a Debian packages.  The general clean up involved
-    improves PDLA portability and robustness generally.
+    improves PDL portability and robustness generally.
 
-  * Several little bugs fixed since PDLA-2.4.5
+  * Several little bugs fixed since PDL-2.4.5
 
     The number of history lines when you use Term::ReadLine::Perl
     with perldl are now set correctly to $PERLDL::HISTFILESIZE.
@@ -1717,7 +1717,7 @@ Summary of Changes:
     being generated which caused problems with rigorous compiler
     settings.  This was SF bug #2524068.
 
-  * Fixed a number of issues with PDLA convolution routines
+  * Fixed a number of issues with PDL convolution routines
 
     conv1d() algorithm adjusted to match conv2D() and convolutionND().
     Documentation on the exact computation being performed in conv1d()
@@ -1729,19 +1729,19 @@ Summary of Changes:
 
   * Improved documentation and release notes and files
 
-    Updated PDLA::FAQ.
+    Updated PDL::FAQ.
 
     Lots of little changes to bring documentation in line
-    with current PDLA functionality.  Volunteer editors and
+    with current PDL functionality.  Volunteer editors and
     contributors always welcome!
 
   * Padre and enhanced perldl shell integration begun
 
-    There is a new PDLA-2.4.6/Padre/ subdirectory in the PDLA
+    There is a new PDL-2.4.6/Padre/ subdirectory in the PDL
     source tree which contains work towards Padre integration
-    and a 2nd generation, enhanced perldl shell for PDLA.
+    and a 2nd generation, enhanced perldl shell for PDL.
 
-    E.g. an *experimental* plug-in giving PDLA::NiceSlice support
+    E.g. an *experimental* plug-in giving PDL::NiceSlice support
     to the Devel::REPL shell is included.  See the Padre/README
     file for instructions to get you started.
 
@@ -1758,21 +1758,21 @@ Highlights:
   * Release documentation and FAQ have been updated
     to be more useful (and more accurate).
 
-  * PDLA build, test, and run time diagnostic messages
+  * PDL build, test, and run time diagnostic messages
     have been make clearer and more helpful.
 
-  * Many bugs have been fixed since PDLA-2.4.4 so this
-    is the most reliable PDLA ever.
+  * Many bugs have been fixed since PDL-2.4.4 so this
+    is the most reliable PDL ever.
 
-  * PDLA now requires perl 5.6.2 or greater and has
+  * PDL now requires perl 5.6.2 or greater and has
     updated DEPENDENCIES information and code.  This
-    should improve the buildability of PDLA
+    should improve the buildability of PDL
 
 
 General Notes:
 
-  This is the first PDLA release supporting the new build
-  strategy for the PDLA::Graphics::TriD modules.  The result
+  This is the first PDL release supporting the new build
+  strategy for the PDL::Graphics::TriD modules.  The result
   is it now builds on more platforms than ever.  You'll
   need to install the OpenGL module and have FreeGLUT or
   GLUT (for Mac OS X) on your system.
@@ -1789,7 +1789,7 @@ General Notes:
   deprecated soon (almost immediately) and removed after that.
   (N.B. It has been effectively unsupported for some time)
 
-  If you are new to PDLA, we recommend joining the perldl
+  If you are new to PDL, we recommend joining the perldl
   mailing list for discussion and questions.  See
 
     http://pdl.perl.org/?page=mailing-lists
@@ -1815,17 +1815,17 @@ Summary of Changes:
     POGL_WINDOW_TYPE:
      'glut' -- use a GLUT GUI for window creation
       'x11' -- use GLX and X11 for the GUI (this is a "compatibility
-               mode" to support PDLA::Graphics::TriD::Tk widgets)
+               mode" to support PDL::Graphics::TriD::Tk widgets)
 
   NOTE: Set WITH_3D => 0 in perldl.conf to disable the
   TriD build completely.  Just setting USE_POGL => 0 is
   not enough.
   
   The OpenGL tests in t/opengl.t now respects the interactive
-  setting from the PDLA_INT environment variable.
+  setting from the PDL_INT environment variable.
 
   Two TriD check programs, 3dtest.pl and line3d.pl, are added to the
-  main PDLA build directory.  They can be run as quick checks of the
+  main PDL build directory.  They can be run as quick checks of the
   new functionality and are short enough run under the perl debugger
   if needed. e.g.
 
@@ -1847,12 +1847,12 @@ Summary of Changes:
   Fix t/autoload.t tilde expansion bugs and test failures.
   tilde expansion seems to work consistently with bash now
 
-  Partial fix implemented for PDLA::IO::Browser.  The code has
+  Partial fix implemented for PDL::IO::Browser.  The code has
   only been tested with cygwin but it should work on systems
   with ncurses in the "right place".  This is **not tested**
   but set WITH_IO_BROWSER => 1 if you wish to try.
 
-  If the perldl shell is unable to load PDLA for some reason
+  If the perldl shell is unable to load PDL for some reason
   and defaults to basic perl support, the prompt now changes
   to perl> reflecting that fact.
 
@@ -1871,7 +1871,7 @@ v2.4.4 2008-11-12 19:16:53-10:00
 General Notes:
 
      - Bad value support is now enabled by default for
-       PDLA builds.  This feature allows simpler handling
+       PDL builds.  This feature allows simpler handling
        of missing or invalid data during processing.
 
        For example, missing pixels could be interpolated
@@ -1885,13 +1885,13 @@ General Notes:
        in portability, enhancements in functionality,
        and *many* bugs fixed.
 
-     - PDLA::Graphics::TriD modules for 3-D and image
+     - PDL::Graphics::TriD modules for 3-D and image
        visualization are being refactored for improved
        portability and performance.  Preliminary hooks
-       are in PDLA-2.4.4 to support the new functionality.
+       are in PDL-2.4.4 to support the new functionality.
        
        Announcements to the perldl mailing list will be
-       made when the PDLA::Graphics::OpenGL::Perl and
+       made when the PDL::Graphics::OpenGL::Perl and
        Term::ReadLine::FreeGLUT suport is on CPAN.
 
      - Builds out-of-the-box on cygwin and win32
@@ -1908,33 +1908,33 @@ Summary of Changes:
        to prevent stripping of the leading slash in pathnames
        including: darwin, netbsd, openbsd, freebsd, and dragonfly.
       
-     - Updated more PDLA tests to use the recommended Test::More
+     - Updated more PDL tests to use the recommended Test::More
       
-     - Updated PDLA::Graphics::PLplot build support for more 5.9.0
+     - Updated PDL::Graphics::PLplot build support for more 5.9.0
        specific features
       
      - AutoLoader ~ expansion has been updated to conform more
        closely to the ~ expansion in the bash shell
       
      - Better checks for a valid PROJ4 build environment are now
-       performed before attempting to compile PDLA modules using it
+       performed before attempting to compile PDL modules using it
       
-     - PDLA now builds and runs on perl-5.10.x
+     - PDL now builds and runs on perl-5.10.x
       
      - The perldl shell has added support for using FreeGLUT for
        display in analogy with the existing Tk event loop support.
        This enables refactoring of the TriD modules to use the
        Perl OpenGL module (a.k.a. POGL) instead of the internal,
-       and deprecated, PDLA::Graphics::OpenGL et. al.
+       and deprecated, PDL::Graphics::OpenGL et. al.
       
      - The perldl acquire/filter/execute loop is now $_-safe by
        using $lines instead of $_ for all the central modifications.
        Avoids problems with some AUTOLOAD functions that leaked $_.
       
      - Removed ExtUtils::F77 from the required prerequisites for
-       PDLA to improve the buildability on platforms without an
+       PDL to improve the buildability on platforms without an
        available fortran compiler.  If you have a fortran compiler
-       and EU::F77 installed, PDLA::Slatec will be built.
+       and EU::F77 installed, PDL::Slatec will be built.
       
      - zeros function added as an alias for the zeroes function
          
@@ -1942,23 +1942,23 @@ Summary of Changes:
        been quieted, especially many pointer to int conversion messages
       
      - Added $PERLDL::HISTFILESIZE to allow configuration of the number
-       of lines of history to be saved by the interactive PDLA shell.
+       of lines of history to be saved by the interactive PDL shell.
       
      - Fixed implementation of the pctover() function to address bug
        #2019651 on sf.net.  Added explicit documentation in the code
        on the algorithm being used.
       
-     - Various updates to the PDLA FAQ
+     - Various updates to the PDL FAQ
       
-     - Implemented a PDLA interface to the Minuit minimization library
+     - Implemented a PDL interface to the Minuit minimization library
        from CERN
       
-     - Removed circular dependency in PDLA Makefile.PL Makefile generation
+     - Removed circular dependency in PDL Makefile.PL Makefile generation
        process which caused builds with some versions of make to fail
       
      - Multiple fixes to enhance configuration and build for win32
      
-     - Added basic table-inversion to t_lookup for PDLA::Transform
+     - Added basic table-inversion to t_lookup for PDL::Transform
       
      - Fixed problem in uniqvec() where it failed to generate a correct
        result if all the input vectors were the same, fixed bug #1869760
@@ -1986,68 +1986,68 @@ General Notes:
 
 Summary of Changes:
 
-     - PDLA now builds under cygwin on windows PC including
+     - PDL now builds under cygwin on windows PC including
        TriD(OpenGL) 3D graphics and PGPLOT and PLplot 2D graphics
-       support. See PDLA/cygwin/ and files README and INSTALL for
+       support. See PDL/cygwin/ and files README and INSTALL for
        details and how to build/install external dependencies.
      
-     - The win32 build has been improved.  See PDLA/win32/INSTALL
+     - The win32 build has been improved.  See PDL/win32/INSTALL
        for details.
      
      - Many fixes from the Debian build patches have been
-       incorporated.  See PDLA/debian for specifics.
+       incorporated.  See PDL/debian for specifics.
      
      - 64bit platform build has been improved.
      
      - New functionality, functions and modules:
          
-         * Bad value support has been extended to per-PDLA bad
+         * Bad value support has been extended to per-PDL bad
            values as an experimental feature. To use, configure
-           WITH_BADVAL => 1 and BADVAL_PER_PDLA => 1 in perldl.conf
+           WITH_BADVAL => 1 and BADVAL_PER_PDL => 1 in perldl.conf
            before building.
 
-         * PDLA::GSL::INTEG now supports the calculation of
+         * PDL::GSL::INTEG now supports the calculation of
            nested integrals
 
          * New function tcircle (threaded circle) added to 
-           PDLA::Graphics::PGPLOT This draws multiple circles in
+           PDL::Graphics::PGPLOT This draws multiple circles in
            one go (see also tpoints and tline)
 
          * Added set operation routines for pdls treated as sets
            (help setops).
 
-         * PDLA::IO::GD module interface to the GD runtime image
+         * PDL::IO::GD module interface to the GD runtime image
            libaray (http://www.boutell.com/gd/) has been integrated.
 
-         * The PDLA::GIS::Proj and PDLA::Transform::Proj4 modules
+         * The PDL::GIS::Proj and PDL::Transform::Proj4 modules
            to interface to the PROJ4 Cartographic Projections
            Library (http://proj.maptools.org/) have been added.
 
-         * PDLA::IO::HDF provides an interface to the HDF4
+         * PDL::IO::HDF provides an interface to the HDF4
            library (http://hdf.ncsa.uiuc.edu/).
      
      
-     - The PDLA test suite (i.e. tests in in PDLA/t) has been
+     - The PDL test suite (i.e. tests in in PDL/t) has been
        enhanced. Coverage has improved and output diagnostic
        messages are more useful. Test::More is becoming the
        preferred test module. The vanilla Test and Test::Simple
        may be deprecated in the future.
 
-     - PDLA core code has been fixed to address valgrind-detected
+     - PDL core code has been fixed to address valgrind-detected
        errors and to enable better bad value support including the
-       new experimental per-PDLA bad values. These changes will
+       new experimental per-PDL bad values. These changes will
        require a re-build/install of any external modules using
-       the C interface of PDLA. See perldl.conf to configure the
+       the C interface of PDL. See perldl.conf to configure the
        new bad value support.
 
      - Several TriD graphics build problems have been resolved.
        The TriD rotation bug has been fixed.
 
      - Many other bug fixes too numerous to mention. See the
-       PDLA/Changes file for details.
+       PDL/Changes file for details.
 
-     - Multiple fixes and additions to PDLA documentation as well
-       as the PDLA::FAQ.
+     - Multiple fixes and additions to PDL documentation as well
+       as the PDL::FAQ.
 
 
 
@@ -2073,11 +2073,11 @@ Summary of Changes:
  - New Graphics::Limits package determines display range for multiple 
    concurrent data sets
 
- - Better PDLA::reduce function
+ - Better PDL::reduce function
 
- - Improvements to PDLA::Transform
+ - Improvements to PDL::Transform
 
- - pdl() constructor is more permissive -- you can feed it PDLAs and 
+ - pdl() constructor is more permissive -- you can feed it PDLs and 
   it does the Right Thing most of the time.
 
  - Cleaner handling of config files
@@ -2089,7 +2089,7 @@ Summary of Changes:
 
  - Several fixes for Microsoft Windows operation
 
- - PDLA::undefval works properly, also has warning tripwires
+ - PDL::undefval works properly, also has warning tripwires
 
  - statsover finally seems to produce meaningful, consistent RMS values
 
@@ -2134,10 +2134,10 @@ General Notes:
      - Perl 5.6.0 or later is now required, along with the modules
        Filter and Text::Balanced.
 
-     - After installing PDLA 2.4.0 external PDLA modules will need to re-built.
+     - After installing PDL 2.4.0 external PDL modules will need to re-built.
        (any such modules will refuse to load until they have been re-built)
        
-     - New demos of the PDLA::Transform and PDLA::Transform::Cartography
+     - New demos of the PDL::Transform and PDL::Transform::Cartography
         modules have been added to perldl.
        Type 'demo transform' or 'demo cartography' in the perldl shell. 
         ( Note that PGPLOT is required to run )
@@ -2146,7 +2146,7 @@ Summary of Changes:
 
      - The NiceSlice syntax comes of age
        (Nice slicing has been around a while, but really needs to be 
-        acknowledged as the main way of slicing PDLAs...)
+        acknowledged as the main way of slicing PDLs...)
 
      - New GSL functionality: greatly improved access to the Gnu Scientific
        Library, including interpolation, finite-difference, random
@@ -2159,10 +2159,10 @@ Summary of Changes:
 
      - Powerful syntax for coordinate transformation and arbitrary image
        resampling and coordinate transformations -- including high powered
-       spatially-variable filtering (PDLA::Transform module)
+       spatially-variable filtering (PDL::Transform module)
 
      - Support for major cartographic transformations
-       (PDLA::Transform::Cartography module)
+       (PDL::Transform::Cartography module)
 
      - New PLPlot graphics interface ( cleaner and faster than PGPLOT )
 
@@ -2193,17 +2193,17 @@ Summary of Changes:
     - Several new utility routines, including glue(), zcheck(), and ndcoords().
 
     - Better matrix operation support: matrix operations are now in 
-        PDLA::MatrixOps, and are all threadable.  Singular value decomposition,
+        PDL::MatrixOps, and are all threadable.  Singular value decomposition,
         determinant, linear equation solving, matrix inversion, 
         eigenvalue decomposition, and LU-decomposition.
 
 v2.3.4 2002-09-23 15:50:06-10:00
 
      - Now should compile using perl 5.8.0
-     - Improved speed for generating PDLA's from a perl array ref
-     - Added PDLA::IO::Storable, which enables PDLA storage/retrieval
+     - Improved speed for generating PDL's from a perl array ref
+     - Added PDL::IO::Storable, which enables PDL storage/retrieval
        using the Storable package.
-     - Added  PDLA::GSL::SF (Gnu Scientific Library, Special Functions) hierarchy
+     - Added  PDL::GSL::SF (Gnu Scientific Library, Special Functions) hierarchy
      - New % operator follows (mathematically correct) perl % operator behavior
      - Numerous Bug Fixes
         
@@ -2212,8 +2212,8 @@ v2.3.4 2002-09-23 15:50:06-10:00
 v2.3.3 2002-05-22 03:16:29-10:00
   
   Mainly a bugfix release with some nice little additions:
-     - PDLA::IO::Dumper: Cleanly save and restore complex
-        data structures including PDLAs.  
+     - PDL::IO::Dumper: Cleanly save and restore complex
+        data structures including PDLs.  
      - Support for the new Astro::FITS::Header module
        (availiable on CPAN).
         
@@ -2233,17 +2233,17 @@ v2.3.1 2001-11-21 14:38:32-10:00
 v2.3 2001-11-16 05:12:41-10:00
  
  Summary of Changes
-   - A nicer slicing syntax for PDLA added via the new 
-     PDLA::NiceSlice module.
+   - A nicer slicing syntax for PDL added via the new 
+     PDL::NiceSlice module.
    - Inline::Pdlpp module added, which enables in-line
-     PDLA::PP definitions. (i.e. no Makefiles, building
+     PDL::PP definitions. (i.e. no Makefiles, building
       hassles for creating PP code)
    - A Multitude of bug fixes, doc updates, and other
      changes.
      
   Note:Support for perl version 5.005 and previous is 
   limited in this release. Perl 5.6.0 or greater is
-  recommended for full PDLA functionality.
+  recommended for full PDL functionality.
         
   See the Changes file for a detailed list of changes.
   
@@ -2270,9 +2270,9 @@ v2.2 2000-12-21 03:25:36-10:00
 Major Changes:
 
   - 'Bad' Value Support added. With this option compiled-in, certain
-     values in a PDLA can be designated as 'Bad' (i.e. missing, empty, 
-     etc). With this designation, most PDLA functions will properly 
-     ignore the 'Bad' values. See PDLA::BadValues for details.
+     values in a PDL can be designated as 'Bad' (i.e. missing, empty, 
+     etc). With this designation, most PDL functions will properly 
+     ignore the 'Bad' values. See PDL::BadValues for details.
      
   - PGPLOT interface rewritten. New Features:
       - Interactive cursors (cursor)
@@ -2281,21 +2281,21 @@ Major Changes:
       - Circles, Rectangles, Ellipses
       - Multiple plot windows, one can jump from panel to panel when
         the window is divided in several.
-      - More control over options - see PDLA::Graphics::PGPLOTOptions for
+      - More control over options - see PDL::Graphics::PGPLOTOptions for
         details.
       - New Examples in Example/PGPLOT.
 
    - Major updates to the Tri-D Code. Now requires perl 5.6 for TriD.
     
    - 'Reduce' function added. This provides a consistent interface to the
-     projection routines (sumover, average, etc). See PDLA::Reduce.
+     projection routines (sumover, average, etc). See PDL::Reduce.
      
    - Improved OpenGL detection during 'perl Makefile.PL
 
-   - pdldoc command added. This allows you to look up PDLA 
+   - pdldoc command added. This allows you to look up PDL 
      documentation similar to the perldoc command. 
      
-   - Perl 5.6 is now recommended for PDLA 2.2. It will still work 
+   - Perl 5.6 is now recommended for PDL 2.2. It will still work 
      with perl 5.005, but some of the extra libs won't be compiled
      ( like Graphics/TriD).
   
@@ -2304,13 +2304,13 @@ Many other changes. See the Changes file for a detailed list of changes.
 v2.1 2000-06-07 22:23:47+00:00
 
 Major Changes:
-  - Speed Increase. Most PDLA functions are now done totally
+  - Speed Increase. Most PDL functions are now done totally
     in C-code, without any perl wrapper functions as was done
     with previous versions. The speedup will be most noticeable
-    for operations on many small PDLA arrays.
+    for operations on many small PDL arrays.
   - Mem Leaks Fixed.
   - Added a consistent, Object-Oriented interface to the 
-    various interpolate functions in PDLA. (PDLA::Func, 
+    various interpolate functions in PDL. (PDL::Func, 
     See Lib/Func.pm).
     
 See the Changes file for a detailed list of changes.
@@ -2324,13 +2324,13 @@ Major Changes:
      and perl 5.6.0.
    - The following notes from 2.004 still apply:
      - *IMPORTANT NOTE*: Due to changes to the PGPLOT module, 'use
-       PDLA::Graphics::PGPLOT' has been removed from PDLA.pm (i.e. in scripts
+       PDL::Graphics::PGPLOT' has been removed from PDL.pm (i.e. in scripts
        and within perldl you now need to explicitly say 'use
-       PDLA::Graphics::PGPLOT'). Additionally, it needs Karl's new 2.16
+       PDL::Graphics::PGPLOT'). Additionally, it needs Karl's new 2.16
        release of the PGPLOT module (available from CPAN).
      - Notable additions are a module for operations on complex piddles
-       (PDLA::Complex), a subtype of PDLA which allows manipulation of byte
-       type PDLAs as N dimensional arrays of fixed length strings (PDLA::Char)
-       and a Levenberg-Marquardt fitting module (PDLA::Fit::LM).
+       (PDL::Complex), a subtype of PDL which allows manipulation of byte
+       type PDLs as N dimensional arrays of fixed length strings (PDL::Char)
+       and a Levenberg-Marquardt fitting module (PDL::Fit::LM).
    - Bug reports and patches to the relevant places on sourceforge, please.
 
