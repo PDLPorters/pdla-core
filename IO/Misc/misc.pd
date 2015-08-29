@@ -1,17 +1,17 @@
 
 # check for bad value support
-use PDL::Config;
-my $bvalflag = $PDL::Config{WITH_BADVAL} || 0;
+use PDLA::Config;
+my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
 
 # and endian-ness of machine
-require PDL::Core::Dev;
-my $isbigendian = PDL::Core::Dev::isbigendian();
+require PDLA::Core::Dev;
+my $isbigendian = PDLA::Core::Dev::isbigendian();
 
 pp_addpm({At=>'Top'},<<'EOD');
 
 =head1 NAME
 
-PDL::IO::Misc - misc IO routines for PDL
+PDLA::IO::Misc - misc IO routines for PDLA
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ Some basic I/O functionality: FITS, tables, byte-swapping
 
 =head1 SYNOPSIS
 
- use PDL::IO::Misc;
+ use PDLA::IO::Misc;
 
 =cut
 
@@ -33,8 +33,8 @@ Copyright (C) Karl Glazebrook 1997, Craig DeForest 2001,
 2003, and Chris Marshall 2010. All rights reserved. There is
 no warranty. You are allowed to redistribute this software
 / documentation under certain conditions. For details, see
-the file COPYING in the PDL distribution. If this file is
-separated from the PDL distribution, the copyright notice
+the file COPYING in the PDLA distribution. If this file is
+separated from the PDLA distribution, the copyright notice
 should be included in the file.
 
 =cut
@@ -47,10 +47,10 @@ pp_add_exported('',"rcols wcols swcols rgrep rdsa");
 
 pp_addpm(<<'!NO!SUBS!');
 
-use PDL::Primitive;
-use PDL::Types;
-use PDL::Options;
-use PDL::Bad;
+use PDLA::Primitive;
+use PDLA::Types;
+use PDLA::Options;
+use PDLA::Bad;
 use Carp;
 use Symbol qw/ gensym /;
 use List::Util;
@@ -64,15 +64,15 @@ defpdl(
         '',
         '
       int i;
-      PDL_Short *aa; PDL_Short bb;
-      PDL_Byte *a,*b;
+      PDLA_Short *aa; PDLA_Short bb;
+      PDLA_Byte *a,*b;
 
-      int n = sizeof($x()) / sizeof(PDL_Short);
-      aa = (PDL_Short*) &$x();
+      int n = sizeof($x()) / sizeof(PDLA_Short);
+      aa = (PDLA_Short*) &$x();
 
       for(i=0;i<n; i++) {
-         bb = aa[i]; a = (PDL_Byte*) (void*) (aa+i);
-         b = (PDL_Byte*) &bb;
+         bb = aa[i]; a = (PDLA_Byte*) (void*) (aa+i);
+         b = (PDLA_Byte*) &bb;
          *a = *(b+1);  *(a+1) = *b;
      }',
      "Swaps pairs of bytes in argument x()"
@@ -85,15 +85,15 @@ defpdl(
         '',
         '
       int i;
-      PDL_Long *aa; PDL_Long bb;
-      PDL_Byte *a,*b;
+      PDLA_Long *aa; PDLA_Long bb;
+      PDLA_Byte *a,*b;
 
-      int n = sizeof($x()) / sizeof(PDL_Long);
-      aa = (PDL_Long*) &$x();
+      int n = sizeof($x()) / sizeof(PDLA_Long);
+      aa = (PDLA_Long*) &$x();
 
       for(i=0;i<n; i++) {
-         bb = aa[i]; a = (PDL_Byte*) (void*) (aa+i);
-         b = (PDL_Byte*) &bb;
+         bb = aa[i]; a = (PDLA_Byte*) (void*) (aa+i);
+         b = (PDLA_Byte*) &bb;
          *a = *(b+3);  *(a+1) = *(b+2);  *(a+2) = *(b+1); *(a+3) = *b;
      }',
      "Swaps quads of bytes in argument x()"
@@ -106,15 +106,15 @@ defpdl(
         '',
         '
       int i;
-      PDL_Double *aa; PDL_Double bb;
-      PDL_Byte *a,*b;
+      PDLA_Double *aa; PDLA_Double bb;
+      PDLA_Byte *a,*b;
 
-      int n = sizeof($x()) / sizeof(PDL_Double);
-      aa = (PDL_Double*) &$x();
+      int n = sizeof($x()) / sizeof(PDLA_Double);
+      aa = (PDLA_Double*) &$x();
 
       for(i=0;i<n; i++) {
-         bb = aa[i]; a = (PDL_Byte*) (void*) (aa+i);
-         b = (PDL_Byte*) &bb;
+         bb = aa[i]; a = (PDLA_Byte*) (void*) (aa+i);
+         b = (PDLA_Byte*) &bb;
          *a     = *(b+7);  *(a+1) = *(b+6);  *(a+2) = *(b+5); *(a+3) = *(b+4);
          *(a+4) = *(b+3);  *(a+5) = *(b+2);  *(a+6) = *(b+1); *(a+7) = *b;
      }',
@@ -126,7 +126,7 @@ pp_addpm(<<'!NO!SUBS!');
 
 
 
-# Internal routine to extend PDL array by size $n along last dimension
+# Internal routine to extend PDLA array by size $n along last dimension
 # - Would be nice to have a proper extend function rather than hack
 # - Is a NO-OP when handed a perl ARRAY ref rather than a piddle arg
 sub _ext_lastD {                           # Called by rcols and rgrep
@@ -143,7 +143,7 @@ sub _ext_lastD {                           # Called by rcols and rgrep
    1;
 }
 
-# Implements PDL->at() for either 1D PDL or ARRAY arguments
+# Implements PDLA->at() for either 1D PDLA or ARRAY arguments
 # TODO: Need to add support for multidim piddles parallel to rcols
 sub _at_1D ($$) {                           # Called by wcols and swcols
     my $data = $_[0];
@@ -185,8 +185,8 @@ sub _handle_types ($$$) {
     my $deftype = shift;
     my $types = shift;
 
-    barf "Unknown PDL type given for DEFTYPE.\n"
-        unless ref($deftype) eq "PDL::Type";
+    barf "Unknown PDLA type given for DEFTYPE.\n"
+        unless ref($deftype) eq "PDLA::Type";
 
     my @cols = ref($types) eq "ARRAY" ? @$types : ();
         
@@ -197,7 +197,7 @@ sub _handle_types ($$$) {
         # check input values are sensible
         for ( 0 .. $#cols ) {
             barf "Unknown value '$cols[$_]' in TYPES array.\n" 
-                unless ref($cols[$_]) eq "PDL::Type";
+                unless ref($cols[$_]) eq "PDLA::Type";
         }
     }
 
@@ -234,7 +234,7 @@ arrays (also see L</rgrep>).
     ($x,$y,...) = rcols( *HANDLE|"filename", $col1, $col2, ..., { EXCLUDE => '/^!/' } )
     ($x,$y,...) = rcols( *HANDLE|"filename", "/foo/", $col1, $col2, ... )
 
-For each column number specified, a 1D output PDL will be
+For each column number specified, a 1D output PDLA will be
 generated.  Anonymous arrays of column numbers generate
 2D output piddles with dim0 for the column data and dim1
 equal to the number of colums in the anonymous array(s).
@@ -257,7 +257,7 @@ created piddles.
 
 Can take file name or *HANDLE, and if no explicit column
 numbers are specified, all are assumed. For the allowed types,
-see L<PDL::Core/Datatype_conversions>.
+see L<PDLA::Core/Datatype_conversions>.
 
 Options (case insensitive):
 
@@ -274,7 +274,7 @@ Options (case insensitive):
   
   DEFTYPE
   - default data type for stored data (if not specified, use the type 
-  stored in C<$PDL::IO::Misc::deftype>, which starts off as B<double>).
+  stored in C<$PDLA::IO::Misc::deftype>, which starts off as B<double>).
   
   TYPES
   - reference to an array of data types, one element for each column 
@@ -282,7 +282,7 @@ Options (case insensitive):
   
   COLSEP
   - splits on this string/pattern/qr{} between colums of data. Defaults to
-  $PDL::IO::Misc::defcolsep.
+  $PDLA::IO::Misc::defcolsep.
   
   PERLCOLS
   - an array of column numbers which are to be read into perl arrays
@@ -303,14 +303,14 @@ Options (case insensitive):
   At the end, effectively pdl(@column_data) produces any result piddles.
 
   VERBOSE
-  - be verbose about IO processing (default C<$PDL::vebose>)
+  - be verbose about IO processing (default C<$PDLA::vebose>)
 
 =for example
 
 For example:
 
-  $x      = PDL->rcols 'file1';	        # file1 has only one column of data
-  $x      = PDL->rcols 'file2', [];	# file2 can have multiple columns, still 1 piddle output
+  $x      = PDLA->rcols 'file1';	        # file1 has only one column of data
+  $x      = PDLA->rcols 'file2', [];	# file2 can have multiple columns, still 1 piddle output
                                         # (empty array ref spec means all possible data fields)
 
   ($x,$y) = rcols 'table.csv', { COLSEP => ',' };  # read CSV data file
@@ -345,10 +345,10 @@ For example:
   
   2. Columns are separated by whitespace by default, use the COLSEP option
      separator to specify an alternate split pattern or string or specify an
-     alternate default separator by setting C<$PDL::IO::Misc::defcolsep> .
+     alternate default separator by setting C<$PDLA::IO::Misc::defcolsep> .
   
-  3. Legacy support is present to use C<$PDL::IO::Misc::colsep> to set the
-     column separator but C<$PDL::IO::Misc::colsep> is not defined by default.
+  3. Legacy support is present to use C<$PDLA::IO::Misc::colsep> to set the
+     column separator but C<$PDLA::IO::Misc::colsep> is not defined by default.
      If you set the variable to a defined value it will get picked up.
   
   4. LINES => '-1:0:3' may not work as you expect, since lines are skipped
@@ -377,9 +377,9 @@ my $usecolsep;          # This is the colsep value that is actually used
 # perhaps should just simplify the LINES option - ie remove
 # support for reversed arrays?
 
-sub rcols{ PDL->rcols(@_) }
+sub rcols{ PDLA->rcols(@_) }
 
-sub PDL::rcols {
+sub PDLA::rcols {
    my $class = shift;
    barf 'Usage ($x,$y,...) = rcols( *HANDLE|"filename", ["/pattern/" or \%options], $col1, $col2, ..., [ \%options] )' 
    if $#_<0;
@@ -390,7 +390,7 @@ sub PDL::rcols {
    shift;
 
    # set up default options
-   my $opt = new PDL::Options( {
+   my $opt = new PDLA::Options( {
        CHUNKSIZE => undef,
        COLIDS => undef,
        COLSEP => undef,
@@ -400,7 +400,7 @@ sub PDL::rcols {
        LINES => '',
        PERLCOLS => undef,
        TYPES   => [],
-       VERBOSE=> $PDL::verbose,
+       VERBOSE=> $PDLA::verbose,
        } );
    $opt->synonyms( { IGNORE => 'EXCLUDE', KEEP => 'INCLUDE' } );
 
@@ -530,7 +530,7 @@ RCOLS_IO: {
 
       # the order of these checks is important, particularly whether we
       # check for line_ctr before or after the pattern matching
-      # Prior to PDL 2.003 the line checks were done BEFORE the
+      # Prior to PDLA 2.003 the line checks were done BEFORE the
       # pattern matching
       #
       # need this first check, even with it almost repeated at end of loop,
@@ -612,7 +612,7 @@ RCOLS_IO: {
          $k = 0;
          for (@explicit_cols) {
             # Using mixed list+piddle data structure for performance tradeoff
-            # between memory usage (perl list) and speed of IO (PDL operations)
+            # between memory usage (perl list) and speed of IO (PDLA operations)
             if (ref($_) eq "ARRAY") {
                # use multicolumn piddle here
                push @ret, [ $class->zeroes($types[$k++],scalar(@{$_}),1), [] ];
@@ -626,7 +626,7 @@ RCOLS_IO: {
          $line_store = [ $class->zeroes(long,1), [] ]; # only need to store integers
       }
 
-      # if necessary, extend PDL in buffered manner
+      # if necessary, extend PDLA in buffered manner
       $k = 0;
       if ( $pdlsize < $index ) {
          for (@ret, $line_store) { _ext_lastD( $_->[0], $extend ); }
@@ -673,7 +673,7 @@ if ( $index == -1 ) {
    if ( wantarray ) {
       foreach ( 0 .. $#explicit_cols ) {
          if ( $is_perl_col[$_] ) {
-            $ret[$_] = PDL->null;
+            $ret[$_] = PDLA->null;
          } else {
             $ret[$_] = [];
          }
@@ -681,7 +681,7 @@ if ( $index == -1 ) {
       for ( @end_perl_cols ) { push @ret, []; }
       return ( @ret );
    } else { 
-      return PDL->null;
+      return PDLA->null;
    }
 }
 
@@ -792,7 +792,7 @@ Can take file name or *HANDLE, and if no file/filehandle is given defaults to ST
              is not terminated by a newline, one is added. (default B<''>).
   
     COLSEP - prints this string between colums of data. Defaults to
-             $PDL::IO::Misc::defcolsep.
+             $PDLA::IO::Misc::defcolsep.
 
     FORMAT - A printf-style format string that is cycled through
              column output for user controlled formatting.
@@ -835,11 +835,11 @@ e.g.,
   NOTES:
   
   1. Columns are separated by whitespace by default, use
-     C<$PDL::IO::Misc::defcolsep> to modify the default value or
+     C<$PDLA::IO::Misc::defcolsep> to modify the default value or
      the COLSEP option
   
-  2. Support for the C<$PDL::IO::Misc::colsep> global value
-     of PDL-2.4.6 and earlier is maintained but the initial value
+  2. Support for the C<$PDLA::IO::Misc::colsep> global value
+     of PDLA-2.4.6 and earlier is maintained but the initial value
      of the global is undef until you set it.  The value will be
      then be picked up and used as if defcolsep were specified.
 
@@ -849,9 +849,9 @@ e.g.,
 
 =cut
 
-*wcols = \&PDL::wcols;
+*wcols = \&PDLA::wcols;
 
-sub PDL::wcols {
+sub PDLA::wcols {
    barf 'Usage: wcols($optional_format_string, 1_or_2D_pdls, *HANDLE|"filename", [\%options])' if @_<1;
 
    # handle legacy colsep variable
@@ -878,7 +878,7 @@ sub PDL::wcols {
    }
    my $file = $_[-1];
    my $file_opened;
-   my $is_handle = !UNIVERSAL::isa($file,'PDL') &&
+   my $is_handle = !UNIVERSAL::isa($file,'PDLA') &&
                    !UNIVERSAL::isa($file,'ARRAY') &&
                    _is_io_handle $file;
    if ($is_handle) {  # file handle passed directly
@@ -981,9 +981,9 @@ default print format.
 
 =cut
 
-*swcols = \&PDL::swcols;
+*swcols = \&PDLA::swcols;
 
-sub PDL::swcols{
+sub PDLA::swcols{
   my ($format_string,$step);
 
   my @outlist;
@@ -1051,10 +1051,10 @@ sub PDL::swcols{
   values. For instance when reading a comma-separated file of the type 
   C<1,2,,4> where the C<,,> indicates a missing value. 
   
-  The default value is to assign C<$PDL::undefval> to undefined values,
+  The default value is to assign C<$PDLA::undefval> to undefined values,
   but if C<UNDEFINED> is set this is used instead. This would normally 
-  be set to a number, but if it is set to C<Bad> and PDL is compiled
-  with Badvalue support (see L<PDL::Bad/>) then undefined values are set to
+  be set to a number, but if it is set to C<Bad> and PDLA is compiled
+  with Badvalue support (see L<PDLA::Bad/>) then undefined values are set to
   the appropriate badvalue and the column is marked as bad.
   
   DEFTYPE: Sets the default type of the columns - see the documentation for
@@ -1088,7 +1088,7 @@ of C<$1>, C<$2> etc.
      barf 'Usage ($x,$y,...) = rgrep(sub, *HANDLE|"filename", [{OPTIONS}])'
          if $#_ > 2;
 
-     my (@ret,@v,$nret); my ($m,$n)=(-1,0); # Count/PDL size
+     my (@ret,@v,$nret); my ($m,$n)=(-1,0); # Count/PDLA size
      my $pattern = shift;
 
      my $is_handle = _is_io_handle $_[0];
@@ -1101,10 +1101,10 @@ of C<$1>, C<$2> etc.
 
 	
      # set up default options
-     my $opt = new PDL::Options( {
+     my $opt = new PDLA::Options( {
          DEFTYPE => $deftype,
          TYPES => [],
-         UNDEFINED => $PDL::undefval,
+         UNDEFINED => $PDLA::undefval,
 	 BUFFERSIZE => 10000
          } );
      # Check if the user specified options
@@ -1116,12 +1116,12 @@ of C<$1>, C<$2> etc.
      # If UNDEFINED is set to .*bad.* then undefined are set to
      # bad - unless we have a Perl that is not compiled with Bad support
      my $undef_is_bad = ($$options{UNDEFINED} =~ /bad/i);
-     if ($undef_is_bad && !$PDL::Bad::Status) {
-	carp "UNDEFINED cannot be set to Badvalue when PDL hasn't been compiled with Bad value support - \$PDL::undefval used instead\n";
+     if ($undef_is_bad && !$PDLA::Bad::Status) {
+	carp "UNDEFINED cannot be set to Badvalue when PDLA hasn't been compiled with Bad value support - \$PDLA::undefval used instead\n";
         $undef_is_bad = 0;
      }        
-     barf "Unknown PDL type given for DEFTYPE.\n"
-        unless ref($$options{DEFTYPE}) eq "PDL::Type";
+     barf "Unknown PDLA type given for DEFTYPE.\n"
+        unless ref($$options{DEFTYPE}) eq "PDLA::Type";
 
 
      while(<$fh>) {
@@ -1135,14 +1135,14 @@ of C<$1>, C<$2> etc.
            my @types = _handle_types( $nret, $$options{DEFTYPE}, $$options{TYPES} );	
            for (0..$nret) {
                 # Modified 18/04/05 to use specified precision.
-	 	$ret[$_] = [ PDL->zeroes($types[$_], 1), [] ];
+	 	$ret[$_] = [ PDLA->zeroes($types[$_], 1), [] ];
            }
        } else { # perhaps should only carp once...
            carp "Non-rectangular rgrep" if $nret != $#v;
        }
        if ($n<$m) {
            for (0..$nret) {
-               _ext_lastD( $ret[$_]->[0], $$options{BUFFERSIZE} ); # Extend PDL in buffered manner
+               _ext_lastD( $ret[$_]->[0], $$options{BUFFERSIZE} ); # Extend PDLA in buffered manner
            }
            $n += $$options{BUFFERSIZE};
       }
@@ -1177,7 +1177,7 @@ of C<$1>, C<$2> etc.
 
   Read a FIGARO/NDF format file.
 
-  Requires non-PDL DSA module. Contact Frossie (frossie@jach.hawaii.edu)
+  Requires non-PDLA DSA module. Contact Frossie (frossie@jach.hawaii.edu)
 
 Usage:
 
@@ -1189,14 +1189,14 @@ Usage:
 
  $a = rdsa 'file.sdf'
 
-Not yet tested with PDL-1.9X versions
+Not yet tested with PDLA-1.9X versions
 
 =cut
 
-sub rdsa{PDL->rdsa(@_)}
+sub rdsa{PDLA->rdsa(@_)}
 
 use vars qw/ $dsa_loaded /;
-sub PDL::rdsa {
+sub PDLA::rdsa {
     my $class = shift;
     barf 'Usage: ([$xaxis],$data) = rdsa($file)' if $#_!=0;
     my $file = shift; my $pdl = $class->new; my $xpdl;
@@ -1219,8 +1219,8 @@ sub PDL::rdsa {
                  $status);
 
     @data_dims = @data_dims[0..$data_ndims-1];
-    print "Dims of $file = @data_dims\n" if $PDL::verbose;
-    $pdl->set_datatype($PDL_F);
+    print "Dims of $file = @data_dims\n" if $PDLA::verbose;
+    $pdl->set_datatype($PDLA_F);
     $pdl->setdims([@data_dims]);
     my $dref = $pdl->get_dataref;
     mem2string($data_address,4*$data_elements,$$dref);
@@ -1234,7 +1234,7 @@ sub PDL::rdsa {
                     my $axis_slot,$status);
       @axis_dims = @axis_dims[0..$axis_ndims-1];
       $xpdl = $class->new;
-      $xpdl->set_datatype($PDL_F);
+      $xpdl->set_datatype($PDLA_F);
       $xpdl->setdims([@axis_dims]);
       my $xref = $xpdl->get_dataref;
       mem2string($axis_address,4*$axis_elements,$$xref);
@@ -1259,7 +1259,7 @@ sub PDL::rdsa {
 !NO!SUBS!
 
 # $isbigendian is set up at top of file
-pp_addpm( "sub PDL::isbigendian { return $isbigendian; };\n*isbigendian = \\&PDL::isbigendian;\n");
+pp_addpm( "sub PDLA::isbigendian { return $isbigendian; };\n*isbigendian = \\&PDLA::isbigendian;\n");
 pp_add_exported("", "isbigendian");
 
 ################################ XS CODE ######################################
@@ -1281,15 +1281,15 @@ pp_addhdr(<<'EOH');
 #define    TRAILING_WHITESPACE_CHECK(s) \
    if (s!=' ' && s!='\t' && s!='\r' && s!='\n' && s!=',')  return -1
 
-int getfloat(PerlIO *fp, PDL_Float *fz)
+int getfloat(PerlIO *fp, PDLA_Float *fz)
 {
-  PDL_Float f = 0;
+  PDLA_Float f = 0;
   int nread = 0;
   int i, s = PerlIO_getc(fp);
   int afterp = 0, aftere=0;
   int expo = 0;
-  PDL_Float sig = 1.0, esig = 1.0;
-  PDL_Float div = 1.0;
+  PDLA_Float sig = 1.0, esig = 1.0;
+  PDLA_Float div = 1.0;
 
   if (s == EOF) return 0;
   while (1) {
@@ -1361,15 +1361,15 @@ endread:
   return nread;
 }
 
-int getdouble(PerlIO *fp, PDL_Double *fz)
+int getdouble(PerlIO *fp, PDLA_Double *fz)
 {
-  PDL_Double f = 0;
+  PDLA_Double f = 0;
   int nread = 0;
   int i, s = PerlIO_getc(fp);
   int afterp = 0, aftere=0;
   int expo = 0;
-  PDL_Double sig = 1.0, esig = 1.0;
-  PDL_Double div = 1.0;
+  PDLA_Double sig = 1.0, esig = 1.0;
+  PDLA_Double div = 1.0;
 
   if (s == EOF) return 0;
   while (1) {
@@ -1467,7 +1467,7 @@ pp_addpm(<<'EOPM');
 =for example
 
   #  (test.num is an ascii file with 20 numbers. One number per line.)
-  $in = PDL->null;
+  $in = PDLA->null;
   $num = 20;
   $in->rasc('test.num',20);
   $imm = zeroes(float,20,2);
@@ -1475,8 +1475,8 @@ pp_addpm(<<'EOPM');
 
 =cut
 
-sub rasc {PDL->rasc(@_)}
-sub PDL::rasc {
+sub rasc {PDLA->rasc(@_)}
+sub PDLA::rasc {
   use IO::File;
   my ($pdl, $file, $num) = @_;
   $num = -1 unless defined $num;
@@ -1530,11 +1530,11 @@ sub rcube {
     my $nz = scalar(@_);
 
     for my $file (@_) {
-       print "Slice ($k) - reading file $file...\n" if $PDL::verbose;
+       print "Slice ($k) - reading file $file...\n" if $PDLA::verbose;
        $im = &$reader($file);
        ($nx, $ny) = dims $im;
        if ($k == 0) {
-          print "Creating $nx x $ny x $nz cube...\n" if $PDL::verbose;
+          print "Creating $nx x $ny x $nz cube...\n" if $PDLA::verbose;
           $cube = $im->zeroes($im->type,$nx,$ny,$nz);
         }
         else {

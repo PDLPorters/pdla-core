@@ -5,18 +5,18 @@
 
 open PP, "PP.pm" or die "can't open PP.pm";
 $str = join '',<PP>;
-$str =~ m|\@PDL::PP::EXPORT\s*=\s*qw/([^/]*)/|s;
+$str =~ m|\@PDLA::PP::EXPORT\s*=\s*qw/([^/]*)/|s;
 $str = $1; # Get the contents of the qw//
 
 
 $pm = '
 =head1 NAME
 
-PDL::PP::Dump -- dump pp_xxx calls to stdout
+PDLA::PP::Dump -- dump pp_xxx calls to stdout
 
 =head1 SYNOPSIS
 
-   perl -MPDL::PP::Dump Basic/Ops/ops.pd
+   perl -MPDLA::PP::Dump Basic/Ops/ops.pd
 
 =head1 DESCRIPTION
 
@@ -28,7 +28,7 @@ Christian Soeller <c.soeller@auckland.ac.nz> .
 
 =cut
 
-package PDL::PP::Dump;
+package PDLA::PP::Dump;
 
 use Exporter;
 @ISA = Exporter;
@@ -61,7 +61,7 @@ for (@EXPORT) {
 
 sub pp_def {
    my($name,%hash) = @_;
-   use PDL::Types ':All';
+   use PDLA::Types ':All';
 
    if ($typecheck) {
     my @alltypes = ppdefs; my $jointypes = join '',@alltypes;

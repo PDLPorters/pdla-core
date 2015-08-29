@@ -1,5 +1,5 @@
 use Test::More tests => 5;
-use PDL::LiteF;
+use PDLA::LiteF;
 
 sub tapprox {
 	my($a,$b) = @_;
@@ -10,7 +10,7 @@ sub tapprox {
 }
 
 $debug = $debug = 0;
-$PDL::debug = 1;
+$PDLA::debug = 1;
 
 $a = sequence(3,4);
 $b = yvals(zeroes(4,3)) + sequence(4);
@@ -35,7 +35,7 @@ thread_define 'tprint(a(n);b(n)), NOtherPars => 1', over {
 	${$_[2]} .= "$_[1]";
 };
 
-PDL::Core::set_debugging(1) if $debug;
+PDLA::Core::set_debugging(1) if $debug;
 tline($c,$b);
 
 note $a;

@@ -34,7 +34,7 @@ FATAL BUG IN YOUR PERL SETUP DETECTED. BUILD TERMINATED.
 
 On this platform the combination of gcc and the Perl malloc
 are buggy. The optimizations lead to random coredumps
-and make PDL essentially unusable.
+and make PDLA essentially unusable.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 WORKAROUND: YOU MUST RECOMPILE PERL WITH 'usemymalloc=n' !!!
@@ -46,7 +46,7 @@ You may override and force the build by including the
   perl Makefile.PL FORCE
 
 However, you will most likely end up with an unusable
-PDL build unless *all* optimizations are disabled!
+PDLA build unless *all* optimizations are disabled!
 YOU HAVE BEEN WARNED!!
 
 EOM
@@ -71,57 +71,57 @@ In particular, adding a module Foo::Bar::Baz can cause trouble
 if Baz exists in the top level elsewhere, and if you run from the
 Foo/Bar directory.
 
-This happens with the PDL::Config and some other modules.  You may
-not be able to build PDL with this \@INC setup.
+This happens with the PDLA::Config and some other modules.  You may
+not be able to build PDLA with this \@INC setup.
 
 If you strike trouble, you may need to fix your \@INC.
 **********************************************************************
 
 
 EOM
-unless $ENV{PDL_INC_OK};
+unless $ENV{PDLA_INC_OK};
 }
 
 }
 
-# The user specifies configuration options using the PDL_CONFIG
-# array in perldl.conf - or ~/.perldl.conf or via the PDLCONF command-line
+# The user specifies configuration options using the PDLA_CONFIG
+# array in perldl.conf - or ~/.perldl.conf or via the PDLACONF command-line
 # argument.
 #
 # We need to use this information during the 'perl Makefile.PL' process,
-# and historically this has been done by directly accessing %PDL_CONFIG
-# (or %::PDL_CONFIG) variable. However, there are times that this information
+# and historically this has been done by directly accessing %PDLA_CONFIG
+# (or %::PDLA_CONFIG) variable. However, there are times that this information
 # is also needed during the actual build (ie 'make' cycle), at which point
 # the variable is not available. However Basic/Core/Config.pm is available,
-# but this uses the %PDL::Config variable to access the data.
+# but this uses the %PDLA::Config variable to access the data.
 #
-# So, we try to avoid this dichotomy by creating a %PDL::Config during
-# the 'perl Makefile.PL' stage and then making sure that PDL_CONFIG
+# So, we try to avoid this dichotomy by creating a %PDLA::Config during
+# the 'perl Makefile.PL' stage and then making sure that PDLA_CONFIG
 # is destroyed (so it can't be used by accident).
 #
-# Do we need to worry about Makefile.PL's hacking PDL_CONFIG?
+# Do we need to worry about Makefile.PL's hacking PDLA_CONFIG?
 # Probably...
 #
-%PDL::Config = ();
+%PDLA::Config = ();
 
 sub getpdl_config {
   my ($pdl_conf_file) = @_;
 
   # First read in distribution config file
   #
-  our %PDL_CONFIG;
+  our %PDLA_CONFIG;
   require './perldl.conf';
 
   # Add BAD_VAL tests if CPAN testers
   #
   if ($ENV{AUTOMATED_TESTING}) {
      # warn "Makefile.PL: Automated testing environment: enabling USE_POGL config option\n";
-     # $PDL_CONFIG{USE_POGL} = 1;
+     # $PDLA_CONFIG{USE_POGL} = 1;
   }
 
   # Save standard values
   #
-  my %PDL_CONFIG_DIST = %PDL_CONFIG;
+  my %PDLA_CONFIG_DIST = %PDLA_CONFIG;
 
   # Now read in the users config file if specified
   # and convert y/n to 1/0
@@ -133,8 +133,8 @@ sub getpdl_config {
 
   # Sanity checking of user supplied keys (look for ones not defined in dist)
 
-  for(keys %PDL_CONFIG) {
-    if(!exists($PDL_CONFIG_DIST{$_})) {
+  for(keys %PDLA_CONFIG) {
+    if(!exists($PDLA_CONFIG_DIST{$_})) {
       die << "EOD";
 Invalid key $_ found in user supplied $pdl_conf_file
   - this key appears to be no longer in use.
@@ -146,72 +146,72 @@ EOD
 
   # Merge in default options where not supplied in users file
   #
-  for(keys %PDL_CONFIG_DIST) {
-    $PDL_CONFIG{$_} = $PDL_CONFIG_DIST{$_} unless exists $PDL_CONFIG{$_};
+  for(keys %PDLA_CONFIG_DIST) {
+    $PDLA_CONFIG{$_} = $PDLA_CONFIG_DIST{$_} unless exists $PDLA_CONFIG{$_};
   }
 
   # Set up the default TEMPDIR if it has not been set by the user
   #
   # set up the default directory we use for temporary files throughout
-  # PDL. These are mainly for files created during the build of PDL itself,
+  # PDLA. These are mainly for files created during the build of PDLA itself,
   # but it can also invovle files created whilst building an external
-  # module that uses PDL (e.g. the trylink() function of PDL::Dev needs
+  # module that uses PDLA (e.g. the trylink() function of PDLA::Dev needs
   # a temporary file) or when a module is actually being used (e.g.
-  # PDL::IO::Dumper may need a temporary file).
+  # PDLA::IO::Dumper may need a temporary file).
   #
   # We have no policy about what directory to use - the following is
-  # an amalgam of the different choices that have been used within PDL
+  # an amalgam of the different choices that have been used within PDLA
   # up to (and including) v2.4.1
   #
 
-  $PDL_CONFIG{PDL_BUILD_DIR} = File::Spec->rel2abs(File::Spec->curdir());
+  $PDLA_CONFIG{PDLA_BUILD_DIR} = File::Spec->rel2abs(File::Spec->curdir());
 
-  $PDL_CONFIG{TEMPDIR} = $^O =~ /MSWin32/i ? 'File::Spec->tmpdir()' : File::Spec->tmpdir()
-    unless exists $PDL_CONFIG{TEMPDIR} and defined $PDL_CONFIG{TEMPDIR};
+  $PDLA_CONFIG{TEMPDIR} = $^O =~ /MSWin32/i ? 'File::Spec->tmpdir()' : File::Spec->tmpdir()
+    unless exists $PDLA_CONFIG{TEMPDIR} and defined $PDLA_CONFIG{TEMPDIR};
 
   # set up the default MALLOCDBG information (if not specified by the user)
   #
-  if ( exists $PDL_CONFIG{MALLOCDBG} and defined $PDL_CONFIG{MALLOCDBG} ) {
-      my $val = $PDL_CONFIG{MALLOCDBG};
+  if ( exists $PDLA_CONFIG{MALLOCDBG} and defined $PDLA_CONFIG{MALLOCDBG} ) {
+      my $val = $PDLA_CONFIG{MALLOCDBG};
       my $rval = ref($val);
       die "ERROR: MALLOCDBG must be set to an associative array, not to a " .
 	( $rval ? $rval : "SCALAR" ) unless $rval eq "HASH";
   } else {
-      $PDL_CONFIG{MALLOCDBG} = undef; # exists but undef
+      $PDLA_CONFIG{MALLOCDBG} = undef; # exists but undef
   }
   foreach my $item ( qw( libs include ) ) {
-      $PDL_CONFIG{MALLOCDBG}->{$item} = ""
-	unless exists $PDL_CONFIG{MALLOCDBG}->{$item};
+      $PDLA_CONFIG{MALLOCDBG}->{$item} = ""
+	unless exists $PDLA_CONFIG{MALLOCDBG}->{$item};
   }
 
   # filter out incompatible options for the 'bad' code.
   # At present we can not have the experimental per-piddle
-  # code turned on (the BADVAL_PER_PDL option) and use
+  # code turned on (the BADVAL_PER_PDLA option) and use
   # NaN's for floating-point bad values (the BADVAL_USENAN
   # option).
   #
-  my $flag_bad     = $PDL_CONFIG{WITH_BADVAL} || 0;
-  my $flag_per_pdl = $PDL_CONFIG{BADVAL_PER_PDL} || 0;
-  my $flag_use_nan = $PDL_CONFIG{BADVAL_USENAN} || 0;
+  my $flag_bad     = $PDLA_CONFIG{WITH_BADVAL} || 0;
+  my $flag_per_pdl = $PDLA_CONFIG{BADVAL_PER_PDLA} || 0;
+  my $flag_use_nan = $PDLA_CONFIG{BADVAL_USENAN} || 0;
   if ( $flag_bad and $flag_per_pdl and $flag_use_nan ) {
-      print "WARNING: Setting BADVAL_USENAN=0 as BADVAL_PER_PDL option is set!\n\n";
-      $PDL_CONFIG{BADVAL_USENAN} = 0;
+      print "WARNING: Setting BADVAL_USENAN=0 as BADVAL_PER_PDLA option is set!\n\n";
+      $PDLA_CONFIG{BADVAL_USENAN} = 0;
   }
 
-  # create a PDL::Config variable matching the PDL_CONFIG structure
+  # create a PDLA::Config variable matching the PDLA_CONFIG structure
   # and convert yes/no answers to 1/0
   #
-  for my $key ( keys %PDL_CONFIG ) {
-      my $val = $PDL_CONFIG{$key};
+  for my $key ( keys %PDLA_CONFIG ) {
+      my $val = $PDLA_CONFIG{$key};
       $val =~ s/^y.*/1/i if defined $val;
       $val =~ s/^n.*/0/i if defined $val;
-      $PDL::Config{$key} = $val;
+      $PDLA::Config{$key} = $val;
   }
 
-  # destroy PDL_CONFIG/PDL_CONFIG_DIST so that we can catch any accesses
+  # destroy PDLA_CONFIG/PDLA_CONFIG_DIST so that we can catch any accesses
   # to them in other Makefile.PL's
   #
-  %PDL_CONFIG = ();
+  %PDLA_CONFIG = ();
 }
 
 sub check_f77conf {
@@ -220,25 +220,25 @@ sub check_f77conf {
 
   my $pdl_f77conf = File::Spec->rel2abs($pdl_f77conf)
     unless File::Spec->file_name_is_absolute($pdl_f77conf);
-  $PDL::Config{F77CONF} = $pdl_f77conf;
+  $PDLA::Config{F77CONF} = $pdl_f77conf;
   return 1;
 }
 
 sub make_Version_pm {
-  # Get Version from Basic/PDL.pm and generated Basic/Core/Version.pm from it
-  require 'Basic/PDL.pm';
-  # keep version info in $PDL::Config
-  $PDL::Config{PDL_BUILD_VERSION} = "$PDL::VERSION";
+  # Get Version from Basic/PDLA.pm and generated Basic/Core/Version.pm from it
+  require 'Basic/PDLA.pm';
+  # keep version info in $PDLA::Config
+  $PDLA::Config{PDLA_BUILD_VERSION} = "$PDLA::VERSION";
 
   my $versionFile = 'Basic/Core/Version.pm';
   open my $fh, ">", $versionFile or
     die("Can't Open '$versionFile' for Writing!\n");
   print $fh <<"EOVF";
-package PDL::Version;
+package PDLA::Version;
 #  This File was autogenerated by MakeFile.PL from the version
-#  number in PDL.pm. It is used by PDL::Lite and others as
-#  a single, consistent place to get the current PDL version.
-our \$VERSION='$PDL::VERSION';
+#  number in PDLA.pm. It is used by PDLA::Lite and others as
+#  a single, consistent place to get the current PDLA version.
+our \$VERSION='$PDLA::VERSION';
 \$VERSION = eval \$VERSION;
 1;
 EOVF
@@ -249,7 +249,7 @@ sub make_Types_pm {
   # make sure we have Types.pm ready for prime time
   die "Types.pm.PL not found in Basic/Core"
     unless -f 'Basic/Core/Types.pm.PL';
-  my $usebvals = $PDL::Config{WITH_BADVAL} ? "BADVALS=1" : "";
+  my $usebvals = $PDLA::Config{WITH_BADVAL} ? "BADVALS=1" : "";
   system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', $usebvals);
   unless ( -f 'Basic/Core/Types.pm' ) {
      warn "system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', $usebvals) was run...\n";
@@ -258,7 +258,7 @@ sub make_Types_pm {
 }
 
 # very simple formatter, assumes structures are *not* nested
-# used by make_PDL_Config_pm
+# used by make_PDLA_Config_pm
 sub myformat {
   my $entry = shift;
   if (ref $entry eq 'ARRAY') {
@@ -270,28 +270,28 @@ sub myformat {
     $list = "\n$list\n\t\t" unless $list =~ /^\s*$/;
     return "{$list}";
   } else {
-     return join '', '"',quotemeta($PDL::Config{$_}),'"';
+     return join '', '"',quotemeta($PDLA::Config{$_}),'"';
   }
 }
 
-sub make_PDL_Config_pm {
+sub make_PDLA_Config_pm {
   print "Writing Basic/Core/Config.pm\n";
 
   my $versionFile = "Basic/Core/Config.pm";
   open my $fh, ">", $versionFile
     or die "Couldn't open $versionFile for writing";
   print $fh "
-# AUTOMATICALLY GENERATED BY THE PDL TOPLEVEL Makefile.PL.
+# AUTOMATICALLY GENERATED BY THE PDLA TOPLEVEL Makefile.PL.
 # DO NOT HAND-EDIT - CHANGES WILL BE LOST UPON YOUR NEXT
 #  'perl Makefile.PL'!!!
-package PDL;
+package PDLA;
 use File::Spec;
-\%PDL::Config = (\n";
-  for (sort keys %PDL::Config) {
+\%PDLA::Config = (\n";
+  for (sort keys %PDLA::Config) {
     $fh->print( "\t$_\t=>\t" );
-    if(defined $PDL::Config{$_}) {
-      if($PDL::Config{$_} eq 'File::Spec->tmpdir()') {$fh->print( $PDL::Config{$_} )}
-      else {$fh->print( myformat($PDL::Config{$_}) )}
+    if(defined $PDLA::Config{$_}) {
+      if($PDLA::Config{$_} eq 'File::Spec->tmpdir()') {$fh->print( $PDLA::Config{$_} )}
+      else {$fh->print( myformat($PDLA::Config{$_}) )}
     } else {
       $fh->print( "undef" );
     }
@@ -317,7 +317,7 @@ for my $mod (@test) {
 
 # Scan ARGV for config file argument
 @ARGV = map {
-	if(/^PDLCONF=(.*)$/) {
+	if(/^PDLACONF=(.*)$/) {
 		$seen_pdlconf=1;
 		$pdl_conf_file = $1; ();
 	} elsif (/^F77CONF=(.*)$/) {
@@ -345,53 +345,53 @@ getpdl_config($pdl_conf_file);
 $seen_f77conf = check_f77conf($seen_f77conf);
 
 # Check environment for SKIP_KNOWN_PROBLEMS
-if (!defined($PDL::Config{SKIP_KNOWN_PROBLEMS}) and defined($ENV{SKIP_KNOWN_PROBLEMS})) {
-   $PDL::Config{SKIP_KNOWN_PROBLEMS} = $ENV{SKIP_KNOWN_PROBLEMS};
+if (!defined($PDLA::Config{SKIP_KNOWN_PROBLEMS}) and defined($ENV{SKIP_KNOWN_PROBLEMS})) {
+   $PDLA::Config{SKIP_KNOWN_PROBLEMS} = $ENV{SKIP_KNOWN_PROBLEMS};
    warn "Makefile.PL: setting SKIP_KNOWN_PROBLEMS Config from environment value: $ENV{SKIP_KNOWN_PROBLEMS}";
 }
 # Add check for POGL if USE_POGL is enabled
-if (!defined($PDL::Config{USE_POGL}) or +$PDL::Config{USE_POGL}) {
-   eval "use OpenGL $PDL::Config{POGL_VERSION} qw();";
+if (!defined($PDLA::Config{USE_POGL}) or +$PDLA::Config{USE_POGL}) {
+   eval "use OpenGL $PDLA::Config{POGL_VERSION} qw();";
    if ($@) {
-      if (defined($PDL::Config{USE_POGL})) {
-         warn "Makefile.PL: DEPENDENCY ERROR: USE_POGL requires at least OpenGL version $PDL::Config{POGL_VERSION}!\n";
+      if (defined($PDLA::Config{USE_POGL})) {
+         warn "Makefile.PL: DEPENDENCY ERROR: USE_POGL requires at least OpenGL version $PDLA::Config{POGL_VERSION}!\n";
          exit 0;
       } else {
-         warn "Makefile.PL: OpenGL-$PDL::Config{POGL_VERSION} not found, setting \$PDL::Config{USE_POGL} => 0\n";
-         $PDL::Config{USE_POGL} = 0;
+         warn "Makefile.PL: OpenGL-$PDLA::Config{POGL_VERSION} not found, setting \$PDLA::Config{USE_POGL} => 0\n";
+         $PDLA::Config{USE_POGL} = 0;
       }
    } else {
       # Have OpenGL so set USE_POGL option if needed
-      warn "Makefile.PL: Found required OpenGL version, setting USE_POGL => 1\n" unless defined($PDL::Config{USE_POGL});
-      $PDL::Config{USE_POGL} ||= 1;
+      warn "Makefile.PL: Found required OpenGL version, setting USE_POGL => 1\n" unless defined($PDLA::Config{USE_POGL});
+      $PDLA::Config{USE_POGL} ||= 1;
    }
 } else {
-   warn "Makefile.PL: Have \$PDL::Config{USE_POGL} => 0 so skipping TriD build with POGL\n";
+   warn "Makefile.PL: Have \$PDLA::Config{USE_POGL} => 0 so skipping TriD build with POGL\n";
 }
 
 make_Version_pm();
 
 make_Types_pm();
 
-# this will make PDL::Core::Dev's functions available
+# this will make PDLA::Core::Dev's functions available
 # in Makefile.PL files in all subdirectories
 # IMPORTANT: it has to be after make_Types_pm()
-require "Basic/Core/Dev.pm"; PDL::Core::Dev->import();
+require "Basic/Core/Dev.pm"; PDLA::Core::Dev->import();
 
 # only perform one test if required modules are missing
 # the test will print an informational message and fail
 my %notestsifmodulesmissing = @hasnt ? # are any required modules missing ?
   (test => {TESTS => 't/requiredmods.t'}) : ();
 
-my @podpms = map { $_.".pod", '$(INST_LIBDIR)/PDL/' . $_ .".pod"}
+my @podpms = map { $_.".pod", '$(INST_LIBDIR)/PDLA/' . $_ .".pod"}
   qw/Bugs perldl pdldoc/;
 
 my @prereq = (
 	   'Astro::FITS::Header' => 0,
            'Carp'                => 0,         # Need to run
            'Config'              => 0,         # 
-           'Convert::UU'         => 0,         # for PDL::IO::Dumper
-           'Data::Dumper'        => 2.121,     # for PDL::IO::Dumper
+           'Convert::UU'         => 0,         # for PDLA::IO::Dumper
+           'Data::Dumper'        => 2.121,     # for PDLA::IO::Dumper
            'English'             => 0,
            'ExtUtils::MakeMaker' => 6.56,      # for CONFIGURE_REQUIRES support
            'ExtUtils::Manifest'  => 0,
@@ -402,20 +402,20 @@ my @prereq = (
            'File::Path'          => 0,
 	   'File::Spec'          => 0.6,
 	   'File::Temp'          => 0,
-	   'Filter::Util::Call'  => 0,         # for PDL::NiceSlice
-	   'Filter::Simple'      => 0.88,      # for new PDL::NiceSlice
+	   'Filter::Util::Call'  => 0,         # for PDLA::NiceSlice
+	   'Filter::Simple'      => 0.88,      # for new PDLA::NiceSlice
 	   'Inline'              => 0.68,
 	   'Inline::C'           => 0.62,
-	   'Module::Compile'     => 0.23,      # for new PDL::NiceSlice
-	   'Pod::Parser'         => 0,         # version TBD for PDL::Doc
-	   'Pod::Select'         => 0,         # version TBD for PDL::Doc
+	   'Module::Compile'     => 0.23,      # for new PDLA::NiceSlice
+	   'Pod::Parser'         => 0,         # version TBD for PDLA::Doc
+	   'Pod::Select'         => 0,         # version TBD for PDLA::Doc
            'Scalar::Util'        => 0,
-           'Storable'            => 1.03,      # for PDL::IO::Storable
-	   'Text::Balanced'      => 1.89,      # for PDL::NiceSlice
+           'Storable'            => 1.03,      # for PDLA::IO::Storable
+	   'Text::Balanced'      => 1.89,      # for PDLA::NiceSlice
 	  );
 
 # add OpenGL version dependency for CPAN to follow
-push @prereq, ('OpenGL' => $PDL::Config{POGL_VERSION}) if $PDL::Config{USE_POGL};
+push @prereq, ('OpenGL' => $PDLA::Config{POGL_VERSION}) if $PDLA::Config{USE_POGL};
 
 # push @prereq, ('ExtUtils::F77' => 1.10) unless $seen_f77conf;
 
@@ -436,7 +436,7 @@ if($Config{archname}=~m/x86_64/) {
 }
 
 # create GENERATED subdir with *.pm files during 'make dist' (to make metacpan.org happy)
-my $preop = '$(PERL) -I$(INST_ARCHLIB) -I$(INST_LIB) -MPDL::Core::Dev -e pdlpp_mkgen $(DISTVNAME)';
+my $preop = '$(PERL) -I$(INST_ARCHLIB) -I$(INST_LIB) -MPDLA::Core::Dev -e pdlpp_mkgen $(DISTVNAME)';
 
 my %makefile_hash = (
 	      'PREREQ_PM' => { @prereq },
@@ -458,7 +458,7 @@ my %makefile_hash = (
                 'File::Path'          => 0,
               },
               'MIN_PERL_VERSION' => '5.010',
-	      'NAME' => 'PDL',
+	      'NAME' => 'PDLA',
 	      'VERSION_FROM' => 'Basic/Core/Version.pm',
 	      'EXE_FILES' => \@exe_files,
 	      'PM' => { @podpms }, #so that the script docs are picked up
@@ -473,11 +473,11 @@ my %makefile_hash = (
                     },
                  },
               },
-              'MAN1PODS' => { 'Bugs.pod' => '$(INST_MAN1DIR)/PDL::Bugs.$(MAN1EXT)',
+              'MAN1PODS' => { 'Bugs.pod' => '$(INST_MAN1DIR)/PDLA::Bugs.$(MAN1EXT)',
                               'perldl' => '$(INST_MAN1DIR)/perldl.$(MAN1EXT)',
                               'pdldoc' => '$(INST_MAN1DIR)/pdldoc.$(MAN1EXT)' },
 	      'MAN3PODS' => {}, # don't pick up the script pods again
-	      'OPTIMIZE'  => $PDL::Config{OPTIMIZE} || $Config{optimize},
+	      'OPTIMIZE'  => $PDLA::Config{OPTIMIZE} || $Config{optimize},
 	      'CCFLAGS' => $ccflags,
 	      'dist'     => { COMPRESS => 'gzip',
                               SUFFIX   => 'gz',
@@ -492,7 +492,7 @@ my %makefile_hash = (
 	      'realclean' => {'FILES' => 'Basic/Core/Config.pm'},
               'AUTHOR' => 'PerlDL Developers (pdl-general@lists.sourceforge.net)',
               'ABSTRACT' => 'Perl Data Language',
-              'BINARY_LOCATION' => 'PDL.tar.gz',
+              'BINARY_LOCATION' => 'PDLA.tar.gz',
 
 	      %notestsifmodulesmissing,
     );
@@ -527,7 +527,7 @@ WriteMakefile(%makefile_hash);
 
 # do *after* WriteMakefile since some options
 # are set by the recursively called Makefile.PLs
-make_PDL_Config_pm(); # write out config to PDL::Config
+make_PDLA_Config_pm(); # write out config to PDLA::Config
 
 # Extra build target to build the doc database
 sub MY::postamble {
@@ -536,31 +536,31 @@ sub MY::postamble {
   my  $text =
 '
 doctest ::
-	$(NOECHO) $(ECHO) "doctest: Building PDL documentation database in blib ..."
+	$(NOECHO) $(ECHO) "doctest: Building PDLA documentation database in blib ..."
 	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl
-%HTML%	$(NOECHO) $(ECHO) "doctest: Building PDL documentation web pages in blib ..."
+%HTML%	$(NOECHO) $(ECHO) "doctest: Building PDLA documentation web pages in blib ..."
 %HTML%	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)mkhtmldoc.pl
 
 doc_site_install ::
-	$(NOECHO) $(ECHO) "doc_site_install: Building PDL documentation database ..."
+	$(NOECHO) $(ECHO) "doc_site_install: Building PDLA documentation database ..."
 	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(INSTALLSITEARCH)"
-%HTML%	$(NOECHO) $(ECHO) "doc_site_install: Building PDL documentation web pages ..."
-%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLSITEARCH)$(DFSEP)PDL"
+%HTML%	$(NOECHO) $(ECHO) "doc_site_install: Building PDLA documentation web pages ..."
+%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLSITEARCH)$(DFSEP)PDLA"
 
 doc_vendor_install ::
-	$(NOECHO) $(ECHO) "doc_vendor_install: Building PDL documentation database ..."
+	$(NOECHO) $(ECHO) "doc_vendor_install: Building PDLA documentation database ..."
 	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(INSTALLVENDORARCH)"
-%HTML%	$(NOECHO) $(ECHO) "doc_vendor_install: Building PDL documentation web pages ..."
-%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLVENDORARCH)$(DFSEP)PDL"
+%HTML%	$(NOECHO) $(ECHO) "doc_vendor_install: Building PDLA documentation web pages ..."
+%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLVENDORARCH)$(DFSEP)PDLA"
 
 doc_perl_install ::
-	$(NOECHO) $(ECHO) "doc_perl_install: Building PDL documentation database ..."
+	$(NOECHO) $(ECHO) "doc_perl_install: Building PDLA documentation database ..."
 	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(INSTALLARCHLIB)"
-%HTML%	$(NOECHO) $(ECHO) "doc_perl_install: Building PDL documentation web pages ..."
-%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLARCHLIB)$(DFSEP)PDL"
+%HTML%	$(NOECHO) $(ECHO) "doc_perl_install: Building PDLA documentation web pages ..."
+%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLARCHLIB)$(DFSEP)PDLA"
 ';
 
-  if(defined $PDL::Config{HTML_DOCS} && !$PDL::Config{HTML_DOCS}){
+  if(defined $PDLA::Config{HTML_DOCS} && !$PDLA::Config{HTML_DOCS}){
     $text=~ s/\%HTML\%[^\n]*\n//og; # Remove %HTML% lines
   } else {
     $text=~ s/\%HTML\%//og; # Remove just %HTML% markers
@@ -588,18 +588,18 @@ $text .= << 'EOT' if $^O =~ /MSWin/;
 DISTWIN32NAME=$(DISTVNAME)-win32
 
 ppm : doctest ppd
-	$(MV) blib$(DFSEP)lib$(DFSEP)PDL$(DFSEP)HtmlDocs$(DFSEP)PDL blib$(DFSEP)html$(DFSEP)lib$(DFSEP)PDL
+	$(MV) blib$(DFSEP)lib$(DFSEP)PDLA$(DFSEP)HtmlDocs$(DFSEP)PDLA blib$(DFSEP)html$(DFSEP)lib$(DFSEP)PDLA
 	$(COMPRESS) -dc win32$(DFSEP)pbmwin32.tar.gz | $(TAR) xf -
 	$(MKPATH) $(DISTWIN32NAME)
 	$(CP) win32$(DFSEP)Readme $(DISTWIN32NAME)
 	$(CP) win32$(DFSEP)install.ppm .
-	$(PERL) -pe "s|<\x{2f}IMPLEMENTATION>|<INSTALL EXEC=\"perl\">install.ppm<\x{2f}INSTALL><\x{2f}IMPLEMENTATION>|" PDL.ppd > PDL.ppd.new
-	$(RM) PDL.ppd
-	$(MV) PDL.ppd.new PDL.ppd
-	$(CP) PDL.ppd $(DISTWIN32NAME)
-	$(TAR) cf $(DISTWIN32NAME)$(DFSEP)PDL.tar blib install.ppm
+	$(PERL) -pe "s|<\x{2f}IMPLEMENTATION>|<INSTALL EXEC=\"perl\">install.ppm<\x{2f}INSTALL><\x{2f}IMPLEMENTATION>|" PDLA.ppd > PDLA.ppd.new
+	$(RM) PDLA.ppd
+	$(MV) PDLA.ppd.new PDLA.ppd
+	$(CP) PDLA.ppd $(DISTWIN32NAME)
+	$(TAR) cf $(DISTWIN32NAME)$(DFSEP)PDLA.tar blib install.ppm
 	cd $(DISTWIN32NAME)
-	$(COMPRESS) PDL.tar
+	$(COMPRESS) PDLA.tar
 	$(ZIP) $(DISTWIN32NAME).zip *
 	$(MV) $(DISTWIN32NAME).zip ..
 	cd ..
@@ -608,13 +608,13 @@ EOT
 
 my $basic_pmblib = $self->cd('Basic', "\$(MAKE) pm_to_blib");
 my $niceslice_pmblib = $self->cd(File::Spec->catdir(qw(Basic SourceFilter)), "\$(MAKE) pm_to_blib");
-# the modules in PDL::LiteF, used in t/core.t
+# the modules in PDLA::LiteF, used in t/core.t
 my @buildchunks = $self->cd(File::Spec->catdir(qw(Basic Gen)), "\$(MAKE)");
 # this contortion is due to an intermittent failure of "cd;make" to
 # actually build the SO in blib with gmake -j4, which doesn't happen if
 # give actual path. E.g. in Core it often doesn't build pdlcore.o and
 # sometimes not Core.o, then just stops and indicates success
-my $up_blib = File::Spec->catdir((File::Spec->updir) x 2, qw(blib arch auto PDL));
+my $up_blib = File::Spec->catdir((File::Spec->updir) x 2, qw(blib arch auto PDLA));
 push @buildchunks,
   map $self->cd(
     File::Spec->catdir(qw(Basic), $_),
@@ -696,7 +696,7 @@ EOP
     print << 'EOP';
 *                                                      *
 * Please install the missing module(s) and start the   *
-* PDL build process again (perl Makefile.PL; ....)     *
+* PDLA build process again (perl Makefile.PL; ....)     *
 *                                                      *
 ********************************************************
 

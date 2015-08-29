@@ -5,22 +5,22 @@
 
 # Also Go players will not find this to look too much like a real go board.
 
-package PDL::Graphics::TriD::GoBoard;
+package PDLA::Graphics::TriD::GoBoard;
 
-use base qw/PDL::Graphics::TriD::Object/;
+use base qw/PDLA::Graphics::TriD::Object/;
 use fields qw /Data InLays BG/;
 
 BEGIN {
-   use PDL::Config;
-   if ( $PDL::Config{USE_POGL} ) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw(:all)";
-      eval 'use PDL::Graphics::OpenGL::Perl::OpenGL';
+   use PDLA::Config;
+   if ( $PDLA::Config{USE_POGL} ) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw(:all)";
+      eval 'use PDLA::Graphics::OpenGL::Perl::OpenGL';
    } else {
-      eval 'use PDL::Graphics::OpenGL';
+      eval 'use PDLA::Graphics::OpenGL';
    }
 }
 
-use PDL::Lite;
+use PDLA::Lite;
 
 
 sub new {
@@ -31,13 +31,13 @@ sub new {
 	my $d = $opts->{Data};
 	my $eo = ($d->slice("(3)")+0.000005) /
 		($d->slice("(2)") + $d->slice("(3)") + 0.00001);
-	$this->{BG} = new PDL::Graphics::TriD::Image([$eo*0, $eo, 0*$eo]);
+	$this->{BG} = new PDLA::Graphics::TriD::Image([$eo*0, $eo, 0*$eo]);
 	return $this;
 }
 
 sub add_inlay {
 	my($this,$data,$x,$y,$z) = @_;
-	push @{$this->{InLays}},[$z,(new PDL::Graphics::TriD::GoBoard({Data => $data})),
+	push @{$this->{InLays}},[$z,(new PDLA::Graphics::TriD::GoBoard({Data => $data})),
 		$x,$y, $data->dims];
 }
 
@@ -46,7 +46,7 @@ sub togl {
 #	my $z = 0.5;
 #	my $z = 0.001;
 	my $z = 0.01;
-	print "BOARD2GL\n" if $PDL::Graphics::TriD::verbose;
+	print "BOARD2GL\n" if $PDLA::Graphics::TriD::verbose;
 # 0 = white, 1 = black, 2 = outside, 3 = empty.
 	my $d = $this->{Data};
 	$this->{BG}->togl();

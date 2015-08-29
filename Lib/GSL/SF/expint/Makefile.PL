@@ -3,7 +3,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 our ($GSL_includes, $GSL_libs); 
-my @pack = (['gsl_sf_expint.pd', qw(EXPINT PDL::GSLSF::EXPINT)]);
+my @pack = (['gsl_sf_expint.pd', qw(EXPINT PDLA::GSLSF::EXPINT)]);
 my %hash = pdlpp_stdargs_int(@pack);
 $hash{INC} .= ' '.$GSL_includes;
 push @{$hash{LIBS}},$GSL_libs;

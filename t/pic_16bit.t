@@ -11,13 +11,13 @@ use Test::More;
 use File::Temp qw(tempdir);
 use File::Spec;
 
-use PDL;
-use PDL::NiceSlice;
+use PDLA;
+use PDLA::NiceSlice;
 
 my ($test_pnmtopng);
 
 BEGIN {
-   eval "use PDL::IO::Pic;";
+   eval "use PDLA::IO::Pic;";
    if ( !$@ ) {
       $test_pnmtopng = 1;
       plan tests => 5;
@@ -28,12 +28,12 @@ BEGIN {
          $test_pnmtopng = 0;
       } 
    } else {
-      plan skip_all => 'PDL::IO::Pic not available'
+      plan skip_all => 'PDLA::IO::Pic not available'
    }
-   use_ok('PDL::IO::Pic');
+   use_ok('PDLA::IO::Pic');
 }
 
-$PDL::IO::Pic::debug=20;
+$PDLA::IO::Pic::debug=20;
 
 # test save/restore of 8-bit image
 my $a = sequence(16, 16);

@@ -5,7 +5,7 @@ use Test;
 
 plan tests => 4;
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 

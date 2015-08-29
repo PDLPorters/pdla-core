@@ -1,4 +1,4 @@
-package PDL::Perldl2::Plugin::PrintControl;
+package PDLA::Perldl2::Plugin::PrintControl;
 
 use Devel::REPL::Plugin;
 
@@ -32,13 +32,13 @@ __END__
 
 =head1 NAME
 
-PDL::Perldl2::Plugin::PrintControl - disable default print output
+PDLA::Perldl2::Plugin::PrintControl - disable default print output
 
 =head1 SYNOPSIS
 
   pdl> $a = 3;
   3
-  pdl> $_REPL->load_plugin('PDL::Perldl2::Plugin::PrintControl');
+  pdl> $_REPL->load_plugin('PDLA::Perldl2::Plugin::PrintControl');
 
   pdl> $a;
 
@@ -51,7 +51,7 @@ PDL::Perldl2::Plugin::PrintControl - disable default print output
 
 By default the Devel::REPL always prints the results of its
 evaluation.  This is fine for small objects but for things
-like large data objects (e.g. a 100x100 matrix in PDL) the
+like large data objects (e.g. a 100x100 matrix in PDLA) the
 result can be hundreds of lines of output for each command.
 
 This plugin disables the default print output and adds an

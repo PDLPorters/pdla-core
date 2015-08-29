@@ -30,7 +30,7 @@
 
 static int colwid, dcols, drows;
 
-/* enum pdl_datatypes { PDL_B, PDL_S, PDL_US,   PDL_L,   PDL_LL,    PDL_F,   PDL_D  }; */
+/* enum pdl_datatypes { PDLA_B, PDLA_S, PDLA_US,   PDLA_L,   PDLA_LL,    PDLA_F,   PDLA_D  }; */
 char *format[] =      { "%3d", "%6d", "%6hd", "%11ld", "%11lld", "%10.4g", "%11.4g" };
 int    width[] =      {     4,     7,      7,      12,       12,       11,      12  };
 
@@ -38,25 +38,25 @@ char *str_value(int x, int y,
 		int type, int nx, void *data, char *str)
 {
   switch (type) {
-  case PDL_B:
+  case PDLA_B:
     sprintf(str,format[type],*(((char *)data)+y*nx+x));
     break;
-  case PDL_S:
+  case PDLA_S:
     sprintf(str,format[type],*(((short *)data)+y*nx+x));
     break;
-  case PDL_US:
+  case PDLA_US:
     sprintf(str,format[type],*(((unsigned short *)data)+y*nx+x));
     break;
-  case PDL_L:
+  case PDLA_L:
     sprintf(str,format[type],*(((int *)data)+y*nx+x));
     break;
-  case PDL_LL:
+  case PDLA_LL:
     sprintf(str,format[type],*(((long long *)data)+y*nx+x));
     break;
-  case PDL_F:
+  case PDLA_F:
     sprintf(str,format[type],*(((float *)data)+y*nx+x));
     break;
-  case PDL_D:
+  case PDLA_D:
     sprintf(str,format[type],*(((double *)data)+y*nx+x));
     break;
   default:
@@ -70,26 +70,26 @@ void set_value(int x, int y,
 		int type, int nx, void *data, char *str)
 {
   switch (type) {
-  case PDL_B:
-    *(((PDL_Byte *)data)+y*nx+x) = atol(str);
+  case PDLA_B:
+    *(((PDLA_Byte *)data)+y*nx+x) = atol(str);
     break;
-  case PDL_S:
-    *(((PDL_Short *)data)+y*nx+x) = atol(str);
+  case PDLA_S:
+    *(((PDLA_Short *)data)+y*nx+x) = atol(str);
     break;
-  case PDL_US:
-    *(((PDL_Ushort *)data)+y*nx+x) = atol(str);
+  case PDLA_US:
+    *(((PDLA_Ushort *)data)+y*nx+x) = atol(str);
     break;
-  case PDL_L:
-    *(((PDL_Long *)data)+y*nx+x) = atol(str);
+  case PDLA_L:
+    *(((PDLA_Long *)data)+y*nx+x) = atol(str);
     break;
-  case PDL_LL:
-    *(((PDL_LongLong *)data)+y*nx+x) = atol(str);
+  case PDLA_LL:
+    *(((PDLA_LongLong *)data)+y*nx+x) = atol(str);
     break;
-  case PDL_F:
-    *(((PDL_Float *)data)+y*nx+x) = atof(str);
+  case PDLA_F:
+    *(((PDLA_Float *)data)+y*nx+x) = atof(str);
     break;
-  case PDL_D:
-    *(((PDL_Double *)data)+y*nx+x) = atof(str);
+  case PDLA_D:
+    *(((PDLA_Double *)data)+y*nx+x) = atof(str);
     break;
   default:
     Perl_croak("type (val=%d) not implemented",type);
@@ -403,6 +403,6 @@ main ()
         b[i] = j++;
     }
 
-    browse(PDL_D, 27, 15, &b);
+    browse(PDLA_D, 27, 15, &b);
 }
 #endif

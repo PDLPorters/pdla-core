@@ -2,7 +2,7 @@
 # nasty test cases,
 
 use Test::More skip_all => 'Disabled';
-use PDL::LiteF;
+use PDLA::LiteF;
 
 sub tapprox {
 	my($a,$b) = @_;

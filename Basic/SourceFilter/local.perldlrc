@@ -1,5 +1,5 @@
 # some useful functions to experiment with
-# the new PDL source filter within the perldl shell
+# the new PDLA source filter within the perldl shell
 
 # report switches translation reporting on/off
 # trans and notrans switch source filtering on/off
@@ -16,9 +16,9 @@ sub report {
   return $ret;
 }
 
-use PDL::NiceSlice;
+use PDLA::NiceSlice;
 my $preproc = sub { my ($txt) = @_;
-	my $new = PDL::NiceSlice::perldlpp $txt;
+	my $new = PDLA::NiceSlice::perldlpp $txt;
 	print STDERR "processed $new\n" if report && $new ne $txt;
 	return $new;
 };

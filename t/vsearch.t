@@ -5,9 +5,9 @@ use warnings;
 
 use Test::More;
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
-use PDL::Primitive;
+use PDLA::Primitive;
 
 
 # Some of these tests are based upon those in Chapter 5 of Programming
@@ -518,7 +518,7 @@ for my $mode (
     # implicit output piddle
     my $indx0 = vsearch( $vals, $xs );
 
-    my $ret = vsearch( $vals, $xs, my $indx1 = PDL->null() );
+    my $ret = vsearch( $vals, $xs, my $indx1 = PDLA->null() );
 
     is( $ret, undef, "no return from explicit output piddle" );
 

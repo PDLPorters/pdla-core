@@ -1,19 +1,19 @@
 =head1 NAME
 
-PDL::Reduce -- a C<reduce> function for PDL
+PDLA::Reduce -- a C<reduce> function for PDLA
 
 =head1 DESCRIPTION
 
 Many languages have a C<reduce> function used to reduce
 the rank of an N-D array by one. It works by applying a selected
 operation along a specified dimension. This module implements
-such a function for PDL by providing a simplified interface
+such a function for PDLA by providing a simplified interface
 to the existing projection functions (e.g. C<sumover>,
 C<maximum>, C<average>, etc).
 
 =head1 SYNOPSIS
 
- use PDL::Reduce;
+ use PDLA::Reduce;
  $a = sequence 5,5;
  # reduce by adding all
  # elements along 2nd dimension
@@ -34,16 +34,16 @@ C<maximum>, C<average>, etc).
 # - other binary ops?
 # - allow general subs?
 
-package PDL::Reduce;
-use PDL::Core ''; # barf
-use PDL::Exporter;
+package PDLA::Reduce;
+use PDLA::Core ''; # barf
+use PDLA::Exporter;
 use strict;
 
-@PDL::Reduce::ISA = qw/PDL::Exporter/;
-@PDL::Reduce::EXPORT_OK = qw/reduce canreduce/;
-%PDL::Reduce::EXPORT_TAGS = (Func=>[@PDL::Reduce::EXPORT_OK]);
+@PDLA::Reduce::ISA = qw/PDLA::Exporter/;
+@PDLA::Reduce::EXPORT_OK = qw/reduce canreduce/;
+%PDLA::Reduce::EXPORT_TAGS = (Func=>[@PDLA::Reduce::EXPORT_OK]);
 
-# maps operations onto underlying PDL primitives
+# maps operations onto underlying PDLA primitives
 my %reduce = (
 	      add  => 'sumover',
 	      '+'    => 'sumover',
@@ -91,7 +91,7 @@ this is actually the same as
 
 NOTE: You should quote the name of the operation (1st arg) that
 you want C<reduce> to perform. This is important since some of the
-names are identical to the names of the actual PDL functions
+names are identical to the names of the actual PDLA functions
 which might be imported into your namespace. And you definitely
 want a string as argument, not a function invocation! For example,
 this will probably fail:
@@ -125,13 +125,13 @@ reference as operation to reduce with.
   $result = $pdl->reduce(\&sumover, 0, 2);
 
 It is your responsibility to ensure that this is indeed a
-PDL projection operation that turns vectors into scalars!
+PDLA projection operation that turns vectors into scalars!
 You have been warned.
 
 =cut
 
-*reduce = \&PDL::reduce;
-sub PDL::reduce ($$;$) {
+*reduce = \&PDLA::reduce;
+sub PDLA::reduce ($$;$) {
   my ($pdl, $op, @dims) = @_;
   barf "trying to reduce using unknown operation"
     unless exists $reduce{$op} || ref $op eq 'CODE';
@@ -170,15 +170,15 @@ all sum the elements along the chosen dimension.
 
 =for example
 
-  @ops = PDL->canreduce;
+  @ops = PDLA->canreduce;
 
 This list is useful if you want to make sure which
 operations can be used with C<reduce>.
 
 =cut
 
-*canreduce = \&PDL::canreduce;
-sub PDL::canreduce {
+*canreduce = \&PDLA::canreduce;
+sub PDLA::canreduce {
   my ($this) = @_;
   return keys %reduce;
 }
@@ -188,8 +188,8 @@ sub PDL::canreduce {
 Copyright (C) 2000 Christian Soeller (c.soeller@auckland.ac.nz). All
 rights reserved. There is no warranty. You are allowed to redistribute
 this software / documentation under certain conditions. For details,
-see the file COPYING in the PDL distribution. If this file is
-separated from the PDL distribution, the copyright notice should be
+see the file COPYING in the PDLA distribution. If this file is
+separated from the PDLA distribution, the copyright notice should be
 included in the file.
 
 =cut

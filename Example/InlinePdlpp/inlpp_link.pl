@@ -1,5 +1,5 @@
 use blib; # when using inside the dist tree
-use PDL;  # this must be called before (!) 'use Inline Pdlpp' calls
+use PDLA;  # this must be called before (!) 'use Inline Pdlpp' calls
 
 # for this example you need the numerical recipes library
 # edit the INC and LIBS info below to point

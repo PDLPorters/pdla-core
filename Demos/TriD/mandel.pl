@@ -1,10 +1,10 @@
 $|=1;
-use PDL;
-use PDL::Graphics::TriD;
+use PDLA;
+use PDLA::Graphics::TriD;
 use Time::HiRes qw(sleep);
-# use PDL::Dbg;
+# use PDLA::Dbg;
 
-# PDL::Core::set_debugging(1);
+# PDLA::Core::set_debugging(1);
 
 $size = 100;
 

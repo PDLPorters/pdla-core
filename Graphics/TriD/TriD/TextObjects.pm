@@ -1,9 +1,9 @@
 # These objects contain textual descriptions of the graph.
 # Placed suitably in relation to origin to be used with a graph.
 
-package PDL::Graphics::TriD::Description;
+package PDLA::Graphics::TriD::Description;
 
-@ISA=qw/PDL::Graphics::TriD::Object/;
+@ISA=qw/PDLA::Graphics::TriD::Object/;
 
 sub new {
 	my($type,$text) = @_;

@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::IO::Pic -- image I/O for PDL
+PDLA::IO::Pic -- image I/O for PDLA
 
 =head1 DESCRIPTION
 
-=head2 Image I/O for PDL based on the netpbm package.
+=head2 Image I/O for PDLA based on the netpbm package.
 
 This package implements I/O for a number of popular image formats
 by exploiting the xxxtopnm and pnmtoxxx converters from the netpbm package
@@ -23,25 +23,25 @@ the necessary conversions. In accordance with netpbm parlance PNM stands
 here for 'portable any map' meaning any of the PBM/PGM/PPM formats.
 
 As it appeared to be a reasonable place this package also contains the
-routine wmpeg to write mpeg movies from PDLs representing image
+routine wmpeg to write mpeg movies from PDLAs representing image
 stacks (the image stack is first written as a sequence of PPM images into some
 temporary directory). For this to work you need the program ffmpeg also.
 
 =cut
 
-package PDL::IO::Pic;
+package PDLA::IO::Pic;
 
 
 @EXPORT_OK = qw( wmpeg rim wim rpic wpic rpiccan wpiccan );
 
 %EXPORT_TAGS = (Func => [@EXPORT_OK]);
-use PDL::Core;
-use PDL::Exporter;
-use PDL::Types;
-use PDL::ImageRGB;
-use PDL::IO::Pnm;
-use PDL::Options;
-use PDL::Config;
+use PDLA::Core;
+use PDLA::Exporter;
+use PDLA::Types;
+use PDLA::ImageRGB;
+use PDLA::IO::Pnm;
+use PDLA::Options;
+use PDLA::Config;
 use File::Basename;
 use SelfLoader;
 use File::Spec;
@@ -49,7 +49,7 @@ use File::Spec;
 use strict;
 use vars qw( $Dflags @ISA %converter );
 
-@ISA    = qw( PDL::Exporter );
+@ISA    = qw( PDLA::Exporter );
 
 
 =head2 Configuration
@@ -76,11 +76,11 @@ the filter when trying to open the pipe. [']
 #
 #
 # The "referral" field, if present, contains a within-perl referral
-# to other methods for reading/writing the PDL as that type of file.  The
+# to other methods for reading/writing the PDLA as that type of file.  The
 # methods must have the same syntax as wpic/rpic (e.g. wfits/rfits).
 #
 
-$PDL::IO::Pic::debug = $PDL::IO::Pic::debug || 0;
+$PDLA::IO::Pic::debug = $PDLA::IO::Pic::debug || 0;
 &init_converter_table();
 
 # setup functions
@@ -128,7 +128,7 @@ sub init_converter_table {
 			   get => $_->[2]}
   }
 
-  $converter{'FITS'}={ 'referral' => {'put' => \&PDL::wfits, 'get' => \&PDL::rfits} };
+  $converter{'FITS'}={ 'referral' => {'put' => \&PDLA::wfits, 'get' => \&PDLA::rfits} };
 
   # these converters do not understand pbmplus flags:
   $converter{'JPEG'}->{FLAGS} = '';
@@ -150,12 +150,12 @@ sub init_converter_table {
     }
   }
 
-  $PDL::IO::Pic::biggrays = &hasbiggrays();
-  print "using big grays\n" if $PDL::IO::Pic::debug &&
-    $PDL::IO::Pic::biggrays;
+  $PDLA::IO::Pic::biggrays = &hasbiggrays();
+  print "using big grays\n" if $PDLA::IO::Pic::debug &&
+    $PDLA::IO::Pic::biggrays;
 
   for (keys %converter) {
-    $converter{$_}->{ushortok} = $PDL::IO::Pic::biggrays ?
+    $converter{$_}->{ushortok} = $PDLA::IO::Pic::biggrays ?
       (m/GIF/ ? 0 : 1) : (m/GIF|RAST|IFF/ ? 0 : 1);
   }
 }
@@ -174,8 +174,8 @@ sub hasbiggrays {
   require IO::File;
   for (&rpiccan()) { next if /^PNM$/; $form = $_; $checked=1; last }
   unless ($checked) {
-    warn "PDL::IO::Pic - couldn't find any pbm converter"
-      if $PDL::IO::Pic::debug;
+    warn "PDLA::IO::Pic - couldn't find any pbm converter"
+      if $PDLA::IO::Pic::debug;
     return 0;
   }
   *SAVEERR = *SAVEERR;  # stupid fix to shut up -w (AKA pain-in-the-...-flag)
@@ -188,7 +188,7 @@ sub hasbiggrays {
     open(STDERR,">&IN") or barf "couldn't redirect stdder";
 
     system("$converter{$form}->{get} -version");
-    open(STDERR, ">&PDL::IO::Pic::SAVEERR");
+    open(STDERR, ">&PDLA::IO::Pic::SAVEERR");
     $tmp->setpos($pos);  # rewind
     $txt = join '',<IN>;
     close IN; undef $tmp;
@@ -206,10 +206,10 @@ Test which image formats can be read/written
 
 =for example
 
-   $im = PDL->rpic('PDL.jpg') if PDL->rpiccan('JPEG');
-   @wformats = PDL->wpiccan();
+   $im = PDLA->rpic('PDLA.jpg') if PDLA->rpiccan('JPEG');
+   @wformats = PDLA->wpiccan();
 
-finds out if PDL::IO::Pic can read/write certain image formats.
+finds out if PDLA::IO::Pic can read/write certain image formats.
 When called without arguments returns a list of supported
 formats. When called with an argument returns true if format
 is supported on your computer (requires appropriate filters in
@@ -217,12 +217,12 @@ your path), false otherwise.
 
 =cut
 
-sub rpiccan {return PDL->rpiccan(@_)}
-sub wpiccan {return PDL->wpiccan(@_)}
-sub PDL::rpiccan {splice @_,1,0,'R';
-		  return PDL::IO::Pic::piccan(@_)}
-sub PDL::wpiccan {splice @_,1,0,'W';
-		  return PDL::IO::Pic::piccan(@_)}
+sub rpiccan {return PDLA->rpiccan(@_)}
+sub wpiccan {return PDLA->wpiccan(@_)}
+sub PDLA::rpiccan {splice @_,1,0,'R';
+		  return PDLA::IO::Pic::piccan(@_)}
+sub PDLA::wpiccan {splice @_,1,0,'W';
+		  return PDLA::IO::Pic::piccan(@_)}
 
 
 =head2 rpic
@@ -234,7 +234,7 @@ Read images in many formats with automatic format detection.
 =for example
 
     $im = rpic $file;
-    $im = PDL->rpic 'PDL.jpg' if PDL->rpiccan('JPEG');
+    $im = PDLA->rpic 'PDLA.jpg' if PDLA->rpiccan('JPEG');
 
 I<Options>
 
@@ -253,7 +253,7 @@ This is especially useful if the particular format isn't identified by
 a magic number and doesn't have the 'typical' extension or you want to
 avoid the check of the magic number if your data comes in from a pipe.
 The function returns a pdl of the appropriate type upon completion.
-Option parsing uses the L<PDL::Options|PDL::Options> module and
+Option parsing uses the L<PDLA::Options|PDLA::Options> module and
 therefore supports minimal options matching.
 
 You can also read directly into an existing pdl that has to have the
@@ -261,7 +261,7 @@ right size(!). This can come in handy when you want to read a sequence
 of images into a datacube, e.g.
 
   $stack = zeroes(byte,3,500,300,4);
-  rpic $stack->slice(':,:,:,(0)'),"PDL.jpg";
+  rpic $stack->slice(':,:,:,(0)'),"PDLA.jpg";
 
 reads an rgb image (that had better be of size (500,300)) into the
 first plane of a 3D RGB datacube (=4D pdl datacube). You can also do
@@ -274,10 +274,10 @@ my $rpicopts = {
                XTRAFLAGS => undef,
               };
 
-sub rpic {PDL->rpic(@_)}
+sub rpic {PDLA->rpic(@_)}
 
-sub PDL::rpic {
-    barf 'Usage: $im = rpic($file[,hints]) or $im = PDL->rpic($file[,hints])'
+sub PDLA::rpic {
+    barf 'Usage: $im = rpic($file[,hints]) or $im = PDLA->rpic($file[,hints])'
        if $#_<0;
     my ($class,$file,$hints,$maybe) = @_;
     my ($type, $pdl);
@@ -302,7 +302,7 @@ sub PDL::rpic {
 	barf "can't figure out file type, specify explicitly"
 	    if $type =~ /UNKNOWN/; }
 
-    my($converter) = $PDL::IO::Pic::converter;
+    my($converter) = $PDLA::IO::Pic::converter;
     if (defined($converter{$type}->{referral})) {
       if(ref ($converter{$type}->{referral}->{'get'}) eq 'CODE') {
 	return &{$converter{$type}->{referral}->{'get'}}(@_);
@@ -317,7 +317,7 @@ sub PDL::rpic {
     my $cmd = "$converter{$type}->{get} $flags $file |";
     $cmd = $file if $converter{$type}->{'get'} =~ /^NONE/;
 
-    print("conversion by '$cmd'\n") if $PDL::IO::Pic::debug > 10;
+    print("conversion by '$cmd'\n") if $PDLA::IO::Pic::debug > 10;
 
     return rpnm($pdl,$cmd);
 }
@@ -364,7 +364,7 @@ the image format that is being written. Valid options are (key
    COLOR      => 'bw',         # specify color conversion
    LUT        => $lut,         # use color table information
 
-Option parsing uses the L<PDL::Options|PDL::Options> module and
+Option parsing uses the L<PDLA::Options|PDLA::Options> module and
 therefore supports minimal options matching. A detailed explanation of
 supported options follows.
 
@@ -455,9 +455,9 @@ my %wpicopts = map {($_ => undef)}
                XTRAFLAGS COLOR LUT/;
 my $wpicopts = \%wpicopts;
 
-*wpic = \&PDL::wpic;
+*wpic = \&PDLA::wpic;
 
-sub PDL::wpic {
+sub PDLA::wpic {
     barf 'Usage: wpic($pdl,$filename[,$hints]) ' .
 	   'or $pdl->wpic($filename,[,$hints])' if $#_<1;
 
@@ -477,7 +477,7 @@ sub PDL::wpic {
     }
 
     print "Using the command $conv with the flags $flags\n"
-       if $PDL::IO::Pic::debug>10;
+       if $PDLA::IO::Pic::debug>10;
 
     if (defined($$hints{IFORM})) {
 	$iform = $$hints{IFORM}; }
@@ -488,11 +488,11 @@ sub PDL::wpic {
 	$iform = 'PNM' if $conv =~ /^\s*(pnm)|(NONE)/; }
     # get final values for $iform and $pdl (check conversions, consistency,etc)
     ($pdl,$iform) = chkpdl($pdl,$iform,$hints,$format);
-    print "using intermediate format $iform\n" if $PDL::IO::Pic::debug>10;
+    print "using intermediate format $iform\n" if $PDLA::IO::Pic::debug>10;
 
     $cmd = "|"  . "$conv $flags >$file";
     $cmd = ">" . $file if $conv =~ /^NONE/;
-    print "built the command $cmd to write image\n" if $PDL::IO::Pic::debug>10;
+    print "built the command $cmd to write image\n" if $PDLA::IO::Pic::debug>10;
 
     $iraw = 1 if (defined($$hints{IFORM}) && $$hints{IFORM} =~ /RAW/);
     $iraw = 0 if (defined($$hints{IFORM}) && $$hints{IFORM} =~ /ASCII/);
@@ -513,9 +513,9 @@ sub PDL::wpic {
 
 Read images in most formats, with improved RGB handling.
 
-You specify a filename and get back a PDL with the image data in it.
+You specify a filename and get back a PDLA with the image data in it.
 Any PNM handled format or FITS will work. In the second form, $a is an
-existing PDL that gets loaded with the image data.
+existing PDLA that gets loaded with the image data.
 
 If the image is in one of the standard RGB formats, then you get back
 data in (<X>,<Y>,<RGB-index>) format -- that is to say, the third dim
@@ -559,17 +559,17 @@ prevents use of a lookup table in JPEG images.
 
 =cut
 
-use PDL::IO::Pic;
+use PDLA::IO::Pic;
 
 sub rim {
   my(@args) = @_;
 
   my $out;
 
-  ## Handle dest-PDL-first case
-  if(@args >= 2 and (UNIVERSAL::isa($args[0],'PDL'))) {
+  ## Handle dest-PDLA-first case
+  if(@args >= 2 and (UNIVERSAL::isa($args[0],'PDLA'))) {
       my $dest = shift @args;
-      my $rpa = PDL->null;
+      my $rpa = PDLA->null;
       $out = rpic(@args);
 
       if($out->ndims == 3 && $out->dim(0) == 3 &&
@@ -582,7 +582,7 @@ sub rim {
       return $out;
   }
 
-  # Handle no-first-PDL case
+  # Handle no-first-PDLA case
   $out = rpic(@args);
 
   if($out->ndims == 3 && $out->dim(0) == 3 &&
@@ -625,7 +625,7 @@ L<"compress"|compress>, respectively.
 OPTIONS
 
 You can pass in a hash ref whose keys are options.  The code uses the
-PDL::Options module so unique abbreviations are accepted.  Accepted
+PDLA::Options module so unique abbreviations are accepted.  Accepted
 keys are the same as for L<wpic|wpic>, which is used as an engine:
 
 =over 3
@@ -667,9 +667,9 @@ Use color-table information
 
 =cut
 
-*wim = \&PDL::wim;
+*wim = \&PDLA::wim;
 
-sub PDL::wim {
+sub PDLA::wim {
   my(@args) = @_;
 
   my($im) = $args[0];
@@ -740,7 +740,7 @@ invoke ffmpeg on the picture stack (which will
 only be held on disk). This should get around the
 problem of having to hold a huge amount of data
 in memory to be passed into wmpeg (when you are,
-e.g. writing a large animation from PDL3D rendered
+e.g. writing a large animation from PDLA3D rendered
 fly-throughs).
 
 Having said that, the actual storage requirements
@@ -753,9 +753,9 @@ mean...
 
 =cut
 
-*wmpeg = \&PDL::wmpeg;
+*wmpeg = \&PDLA::wmpeg;
 
-sub PDL::wmpeg {
+sub PDLA::wmpeg {
    barf 'Usage: wmpeg($pdl,$filename) ' .
    'or $pdl->wmpeg($filename)' if $#_ != 1;
 
@@ -771,12 +771,12 @@ sub PDL::wmpeg {
    # too strict in general but alright for the moment
    # especially restriction to byte will have to be relaxed
    barf "input must be byte (3,x,y,z)" if (@Dims != 4) || ($Dims[0] != 3)
-   || ($pdl->get_datatype != $PDL_B);
+   || ($pdl->get_datatype != $PDLA_B);
    my $nims = $Dims[3];
    my $tmp = gettmpdir();
 
    # get tmpdir for parameter file
-   # see PDL-2.4.6 version for original code
+   # see PDLA-2.4.6 version for original code
 
    # check the pdl for correct dimensionality
 
@@ -797,11 +797,11 @@ sub PDL::wmpeg {
    # select ((select (MPEG), $| = 1)[0]);  # may need for win32
    my (@slices) = $pdl->dog;
    for ($i=0; $i<$nims; $i++) {
-      local $PDL::debug = 1;
+      local $PDLA::debug = 1;
       print STDERR "Writing frame $i, " . $frame->slice(':,:,-1:0')->clump(2)->info . "\n";
       $inset .= $slices[$i];
       print MPEG "P6\n$MDims[1] $MDims[2]\n255\n";
-      pnmout($frame->slice(':,:,-1:0')->clump(2), 1, 0, 'PDL::IO::Pic::MPEG');
+      pnmout($frame->slice(':,:,-1:0')->clump(2), 1, 0, 'PDLA::IO::Pic::MPEG');
    }
    # clean up
    close MPEG;
@@ -958,10 +958,10 @@ sub getconv {
 sub chkpdl {
     my ($pdl, $iform, $hints, $format) = @_;
 
-    if ($pdl->get_datatype >= $PDL_L ||
-	$pdl->get_datatype == $PDL_S ||
-	(!$converter{$format}->{ushortok} && $pdl->get_datatype == $PDL_US)) {
-	print "scaling data to type byte...\n" if $PDL::IO::Pic::debug;
+    if ($pdl->get_datatype >= $PDLA_L ||
+	$pdl->get_datatype == $PDLA_S ||
+	(!$converter{$format}->{ushortok} && $pdl->get_datatype == $PDLA_US)) {
+	print "scaling data to type byte...\n" if $PDLA::IO::Pic::debug;
 	$pdl = bytescl($pdl,-255);
     }
 
@@ -984,10 +984,10 @@ sub chkpdl {
     }
     if (defined $$hints{LUT}) {  # make LUT images into RGB
 	barf "luts only with non RGB data" if $isrgb;
-       print "starting palette->RGB conversion...\n" if $PDL::IO::Pic::debug;
+       print "starting palette->RGB conversion...\n" if $PDLA::IO::Pic::debug;
 	$pdl = interlrgb($pdl,$$hints{LUT});
 	$iform = 'PPM';  # and tell everyone we are now RGB
-       print "finished conversion\n" if $PDL::IO::Pic::debug;
+       print "finished conversion\n" if $PDLA::IO::Pic::debug;
 	}
     return ($pdl, $iform);
 }
@@ -997,8 +997,8 @@ sub chkpdl {
 #  easily controlled by the user).
 #
 sub gettmpdir {
-    my $tmpdir = $PDL::Config{TEMPDIR} ||
-      die "TEMPDIR not found in %PDL::Config";
+    my $tmpdir = $PDLA::Config{TEMPDIR} ||
+      die "TEMPDIR not found in %PDLA::Config";
     barf "can't locate a temp dir called $tmpdir" unless -d $tmpdir;
     return $tmpdir;
 }
@@ -1016,8 +1016,8 @@ the author.
 Copyright (C) 1996,1997 Christian Soeller <c.soeller@auckland.ac.nz>
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 

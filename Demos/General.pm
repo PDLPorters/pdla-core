@@ -1,11 +1,11 @@
 # Copyright (C) 1998 Tuomas J. Lukka.
 # All rights reserved, except redistribution
-# with PDL under the PDL License permitted.
+# with PDLA under the PDLA License permitted.
 
-package PDL::Demos::General;
-use PDL;
+package PDLA::Demos::General;
+use PDLA;
 
-PDL::Demos::Routines->import();
+PDLA::Demos::Routines->import();
 sub comment($);
 sub act($);
 sub output;
@@ -13,20 +13,20 @@ sub output;
 sub run {
 
 comment q|
-	Welcome to a short tour of PDL's capabilities.
+	Welcome to a short tour of PDLA's capabilities.
 
 	This tour shows some of the main selling points
-	of PDL. However, because we want this script to
+	of PDLA. However, because we want this script to
 	run everywhere, some modules which require external
 	modules for use are explicitly excluded, namely
-	 - PDL::Graphics::TriD (3D Graphics) [*]
-	 - PDL::Graphics::PGPLOT (PGPLOT graphics)
-	 - PDL::IO::FlexRaw (flexible raw input/output)
+	 - PDLA::Graphics::TriD (3D Graphics) [*]
+	 - PDLA::Graphics::PGPLOT (PGPLOT graphics)
+	 - PDLA::IO::FlexRaw (flexible raw input/output)
  	[*]: this module has its separate demos in a subdirectory.
 
 	Note that your own scripts must start with
 
-		use PDL;
+		use PDLA;
 
 	to work properly, so that you can simply say
 
@@ -114,8 +114,8 @@ act q|
 |;
 
 act q|
-	# There are lots of useful functions in e.g. PDL::Primitive
-	# and PDL::Slices - we can't show you all but here are some
+	# There are lots of useful functions in e.g. PDLA::Primitive
+	# and PDLA::Slices - we can't show you all but here are some
 	# examples:
 
 	output $b;
@@ -151,12 +151,12 @@ act q|
 
 comment q|
 	We hope you enjoyed these demos illustrating some
-	of the basic capabilities of PDL.
+	of the basic capabilities of PDLA.
 
 	We encourage you to play with these commands in
         the perldl or pdl2 shell and use its online help support
 	to find out more about these and other commands and
-	features of PDL.
+	features of PDLA.
 
         Just type 'help' to get started.
 

@@ -1,21 +1,21 @@
 
-# Test routine for PDL::IO::FITS module
+# Test routine for PDLA::IO::FITS module
 
 use strict;
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
-use PDL::Core ':Internal'; # For howbig()
-use PDL::Config;
+use PDLA::Core ':Internal'; # For howbig()
+use PDLA::Config;
 
-##use PDL::Complex;  # currently not supported
+##use PDLA::Complex;  # currently not supported
 
 kill 'INT',$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 use Test::More tests => 90;
 
 BEGIN {
-      use_ok( "PDL::IO::FITS" ); #1
+      use_ok( "PDLA::IO::FITS" ); #1
 }
 
 require File::Spec;
@@ -23,8 +23,8 @@ my $fs = 'File::Spec';
 sub cdir { return $fs->catdir(@_)}
 sub cfile { return $fs->catfile(@_)}
 
-my $tempd = $PDL::Config{TEMPDIR} or
-  die "TEMPDIR not found in %PDL::Config";
+my $tempd = $PDLA::Config{TEMPDIR} or
+  die "TEMPDIR not found in %PDLA::Config";
 my $file = cfile $tempd, "iotest$$";
 
 END {
@@ -74,7 +74,7 @@ sub compare_piddles ($$$) {
     my $label = shift;
 
     TODO: {
-       local $TODO = "Need to fix alias between PDL_IND and PDL_L or PDL_LL";
+       local $TODO = "Need to fix alias between PDLA_IND and PDLA_L or PDLA_LL";
 
        is( $new->type->symbol, $orig->type->symbol, "$label has the correct type" );
     }
@@ -90,7 +90,7 @@ sub compare_piddles ($$$) {
     ok( $flag, "  and all the values agree" );
 }
 
-unless($PDL::Astro_FITS_Header) {
+unless($PDLA::Astro_FITS_Header) {
  # Astro::FITS::Header is not present, ignore table tests
  for(1..59){ok(1,"Test skipped (no binary table support without Astro::FITS::Header)");}
 } else { # Astro::FITS::Header exists
@@ -187,7 +187,7 @@ unless($PDL::Astro_FITS_Header) {
 	  is( $$table2{hdr}{"TTYPE$i"}, $$colinfo[0], "column $i is $$colinfo[0]" ); #37,43,49,55,58
 	  is( $$table2{hdr}{"TFORM$i"}, $$colinfo[1], "  and is stored as $$colinfo[1]" ); #38,44,50,56,59
 	  my $col = $$table2{$$colinfo[0]};
-	  if ( UNIVERSAL::isa($col,"PDL") ) {
+	  if ( UNIVERSAL::isa($col,"PDLA") ) {
 	    compare_piddles $col, $$colinfo[2], $$colinfo[0]; #39-42,45-48,51-54,60-63
 	  } else {
 	    # Need to somehow handle the arrays since the data read in from the
@@ -211,7 +211,7 @@ unless($PDL::Astro_FITS_Header) {
         for my $a ($a1,$a2) {
             $p = &$cref($a);
             $p->wfits('x.fits');
-            $q = PDL->rfits('x.fits');
+            $q = PDLA->rfits('x.fits');
 	    my $flag = 1;
             if ( ${$p->get_dataref} ne ${$q->get_dataref} ) {
 	        $flag = 0;
@@ -236,7 +236,7 @@ unless($PDL::Astro_FITS_Header) {
     for my $i (8,16,32,-32,-64) {
     for my $p ($p2, $p1) {
         $p->wfits('x.fits',$i);
-        $q = PDL->rfits('x.fits');
+        $q = PDLA->rfits('x.fits');
         @s = $q->stats;
 	my $flag;
 	print "s=@s\n";
@@ -260,13 +260,13 @@ unless($PDL::Astro_FITS_Header) {
 }; # end of SKIP block
 
 #### Check that discontinuous data (e.g. from fftnd) get written correctly.
-#### (Sourceforge bug 3299611) it is possible to store data in a PDL non-contiguously
+#### (Sourceforge bug 3299611) it is possible to store data in a PDLA non-contiguously
 #### through the C API, by manipulating dimincs; fft uses this technique, which
 #### used to hose up fits output.  
 
 SKIP:{
-    eval "use PDL::FFT";
-    skip "PDL::FFT not installed", 79 if $@;
+    eval "use PDLA::FFT";
+    skip "PDLA::FFT not installed", 79 if $@;
 
     my $a = sequence(10,10,10);
     my $ai = zeroes($a);

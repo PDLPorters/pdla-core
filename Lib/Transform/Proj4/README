@@ -1,10 +1,10 @@
 NAME
 
-    PDL::Transform::Proj
+    PDLA::Transform::Proj
 
 DESCRIPTION
 
-    This is a port of the Proj library to PDL.
+    This is a port of the Proj library to PDLA.
 
 COPYRIGHT NOTICE
 
@@ -20,7 +20,7 @@ PREREQUISITES
 
     Proj4 C library (tested with 4.4.5)
     Perl            (tested with 5.8.0)
-    PDL             (tested with 2.3.4 with BadVals)
+    PDLA             (tested with 2.3.4 with BadVals)
 
 BUILD INSTRUCTIONS
 

@@ -2,21 +2,21 @@ use strict;
 use warnings;
 
 ############################################################################
-                         package PDL::Demos::Prima;
+                         package PDLA::Demos::Prima;
 ############################################################################
 
-use PDL;
+use PDLA;
 
 =head1 NAME
 
-PDL::Demos::Prima - PDL demo for PDL::Graphics::Prima
+PDLA::Demos::Prima - PDLA demo for PDLA::Graphics::Prima
 
 =head1 SYNOPSIS
 
 You can enjoy this demo in any number of ways. First, you can invoke the
 demo from the command line by saying
 
- perl -MPDL::Demos::Prima
+ perl -MPDLA::Demos::Prima
 
 Second, you can invoke the demo from with the pdl shell by saying
 
@@ -25,13 +25,13 @@ Second, you can invoke the demo from with the pdl shell by saying
 Finally, all of the content is in the pod documentation, so you can simply
 read this, though it won't be quite so interactive. :-)
 
- perldoc PDL::Demos::Prima
- podview PDL::Demos::Prima
+ perldoc PDLA::Demos::Prima
+ podview PDLA::Demos::Prima
 
 =head1 DESCRIPTION
 
 The documentation in this module is meant to give a short, hands-on
-introduction to L<PDL::Graphics::Prima|PDL::Graphics::Prima/>, a plotting
+introduction to L<PDLA::Graphics::Prima|PDLA::Graphics::Prima/>, a plotting
 library written on top of the L<Prima|Prima/> GUI toolkit.
 
 =cut
@@ -42,10 +42,10 @@ library written on top of the L<Prima|Prima/> GUI toolkit.
 
 my $min_version = 0.13;
 my $loaded_prima = eval {
-	require PDL::Graphics::Prima;
-	return 0 if $PDL::Graphics::Prima::VERSION < $min_version;
-	require PDL::Graphics::Prima::Simple;
-	PDL::Graphics::Prima::Simple->import();
+	require PDLA::Graphics::Prima;
+	return 0 if $PDLA::Graphics::Prima::VERSION < $min_version;
+	require PDLA::Graphics::Prima::Simple;
+	PDLA::Graphics::Prima::Simple->import();
 	require Prima::Application;
 	Prima::Application->import();
 	1;
@@ -95,12 +95,12 @@ while(my $line = <DATA>) {
 # Add some extra content for Prima viewing only
 if ($loaded_prima) {
 	unshift @demo, 'Introduction',
-'This is the demo for L<PDL::Graphics::Prima|PDL::Graphics::Prima/>. Explanatory
+'This is the demo for L<PDLA::Graphics::Prima|PDLA::Graphics::Prima/>. Explanatory
 text will appear here; code samples will appear below. Tip: you can modify and 
 re-run the code samples. When you are done, simply close the window.',
 '### HEY, EDIT ME! ###
 use Prima::MsgBox;
-Prima::MsgBox::message( "Hello, this is the PDL::Graphics::Prima demo.", mb::Ok);'
+Prima::MsgBox::message( "Hello, this is the PDLA::Graphics::Prima demo.", mb::Ok);'
 }
 
 ##################################
@@ -118,15 +118,15 @@ sub run {
 "I couldn't load the library, either because it's not installed on your
 machine or it's broken.";
 		$reason = 
-"your version of PDL::Graphics::Prima (v$PDL::Graphics::Prima::VERSION) is out of date. This demo
+"your version of PDLA::Graphics::Prima (v$PDLA::Graphics::Prima::VERSION) is out of date. This demo
 requires at least v$min_version." if defined $loaded_prima;
 		print <<SORRY;
 
-Thanks for trying to learn more about PDL::Graphics::Prima. Unfortunately,
+Thanks for trying to learn more about PDLA::Graphics::Prima. Unfortunately,
 $reason
 
 If you really want to get this working, the fastest way to get help is to
-join the live chat on the PDL irc channel. If you have an IRC client, check
+join the live chat on the PDLA irc channel. If you have an IRC client, check
 out
 
   irc.perl.org#pdl
@@ -139,9 +139,9 @@ If you would rather, you can send an email to the mailing list:
 
   http://pdl.perl.org/?page=mailing-lists
 
-For more information about PDL::Graphics::Prima, check out
+For more information about PDLA::Graphics::Prima, check out
 
-  http://p3rl.org/PDL::Graphics::Prima.
+  http://p3rl.org/PDLA::Graphics::Prima.
 
 
 Thanks, and keep trying! I promise it's worth it.
@@ -169,7 +169,7 @@ SORRY
 		},
 		sizeMax => [600, 800],
 		sizeMin => [600, 800],
-		text => 'PDL::Graphics::Prima Demo',
+		text => 'PDLA::Graphics::Prima Demo',
 		onDestroy => sub {
 			require Prima::Utils;
 			# Throw an exception after destruction is complete so that we
@@ -386,7 +386,7 @@ sub setup_slide {
 	$run_button->notify('Click');
 }
 
-# This way, it can be invoked as "perl -MPDL::Demos::Prima" or as
+# This way, it can be invoked as "perl -MPDLA::Demos::Prima" or as
 # "perl path/to/Prima.pm"
 if ($0 eq '-' or $0 eq __FILE__) {
 	run;
@@ -397,17 +397,17 @@ if ($0 eq '-' or $0 eq __FILE__) {
 
 __DATA__
 
-=head2 use PDL::Graphics::Prima::Simple
+=head2 use PDLA::Graphics::Prima::Simple
 
 To get started, you will want to use
-L<PDL::Graphics::Prima::Simple|PDL::Graphics::Prima::Simple/>. This
+L<PDLA::Graphics::Prima::Simple|PDLA::Graphics::Prima::Simple/>. This
 module provides a set of friendly wrappers for simple, first-cut data
-visualization. L<PDL::Graphics::Prima|PDL::Graphics::Prima/>, the underlying
+visualization. L<PDLA::Graphics::Prima|PDLA::Graphics::Prima/>, the underlying
 library, is a general-purpose 2D plotting library built as a widget in the
 L<Prima GUI toolkit|Prima/>, but we don't need the full functionality for
 the purposes of this demo.
 
- use PDL::Graphics::Prima::Simple;
+ use PDLA::Graphics::Prima::Simple;
  my $x = sequence(100)/10;
  line_plot($x, $x->sin);
 
@@ -416,7 +416,7 @@ the purposes of this demo.
 In addition to numerous ways to plot x/y data, you can also plot
 distributions and images. The best run-down of the simple plotting routines
 can be found in
-L<the Synopsis for PDL::Graphics::Prima::Simple|PDL::Graphics::Prima::Simple/SYNOPSIS>.
+L<the Synopsis for PDLA::Graphics::Prima::Simple|PDLA::Graphics::Prima::Simple/SYNOPSIS>.
 
  $distribution = grandom(100);
  hist_plot($distribution);
@@ -430,7 +430,7 @@ L<the Synopsis for PDL::Graphics::Prima::Simple|PDL::Graphics::Prima::Simple/SYN
 =head2 Mouse Interaction
 
 Plots allow for
-L<mouse interaction|PDL::Graphics::Prima::Simple/"Interactive Features">,
+L<mouse interaction|PDLA::Graphics::Prima::Simple/"Interactive Features">,
 herein referred to as twiddling. You can resize the window, zoom with the
 scroll wheel, or click and drag the canvas around. There is also a
 right-click zoom-rectangle, and a right-click context menu.
@@ -439,12 +439,12 @@ right-click zoom-rectangle, and a right-click context menu.
  
  # Run this, then try using your mouse
 
-In your Perl scripts, and in the PDL shell for some operating systems and
+In your Perl scripts, and in the PDLA shell for some operating systems and
 some versions of L<Term::ReadLine>, twiddling will cause your script to pause
 when you create a new plot. To resume your script or return execution to the
 shell, either close the window or press 'q'.
 
- # If your PDL shell supports simultaneous
+ # If your PDLA shell supports simultaneous
  # input and plot interaction, running this
  # should display both plots simultaneously:
  
@@ -473,14 +473,14 @@ Once turned off, autotwiddling will remain off until you turn it back on.
 =head2 Adding a title and axis labels
 
 Functions like 
-L<hist_plot|PDL::Graphics::Prima::Simple/hist_plot>,
-L<cross_plot|PDL::Graphics::Prima::Simple/cross_plot>, and
-L<matrix_plot|PDL::Graphics::Prima::Simple/matrix_plot> actually create and
+L<hist_plot|PDLA::Graphics::Prima::Simple/hist_plot>,
+L<cross_plot|PDLA::Graphics::Prima::Simple/cross_plot>, and
+L<matrix_plot|PDLA::Graphics::Prima::Simple/matrix_plot> actually create and
 return plot objects which you can subsequently modify. For example,
 adding a title and axis labels are pretty easy. For titles, you call the
-L<title method on the plot object|PDL::Graphics::Prima/title>. For axis
+L<title method on the plot object|PDLA::Graphics::Prima/title>. For axis
 labels, you call the
-L<label method on the axis objects|PDL::Graphics::Prima::Axis/label>.
+L<label method on the axis objects|PDLA::Graphics::Prima::Axis/label>.
 
  # Make sure autotwiddling is off in your script
  auto_twiddle(0);
@@ -499,9 +499,9 @@ L<label method on the axis objects|PDL::Graphics::Prima::Axis/label>.
 
 =head2 Saving to a file
 
-L<PDL::Graphics::Prima::Simple> excels at user interaction, but you can save
-your plots to a file using L<save_to_file|PDL::Graphics::Prima/save_to_file>
-or L<save_to_postscript|PDL::Graphics::Prima/save_to_postscript> methods, or
+L<PDLA::Graphics::Prima::Simple> excels at user interaction, but you can save
+your plots to a file using L<save_to_file|PDLA::Graphics::Prima/save_to_file>
+or L<save_to_postscript|PDLA::Graphics::Prima/save_to_postscript> methods, or
 by right-clicking and selecting the appropriate menu option.
 
  auto_twiddle(0);
@@ -516,32 +516,32 @@ by right-clicking and selecting the appropriate menu option.
 =head2 Adding additional data to the plot
 
 Once you have created a plot, you can
-L<add additional data to it|PDL::Graphics::Prima/dataSets>. You
+L<add additional data to it|PDLA::Graphics::Prima/dataSets>. You
 achieve this by adding a new
-L<DataSet|PDL::Graphics::Prima::DataSet> with the data you want displayed.
+L<DataSet|PDLA::Graphics::Prima::DataSet> with the data you want displayed.
 
  auto_twiddle(0);
  my $plot = hist_plot(grandom(100));
  
  # Add a Gaussian curve that "fits" the data
- use PDL::Constants qw(PI);
+ use PDLA::Constants qw(PI);
  my $fit_xs = zeroes(100)->xlinvals(-2, 2);
  my $fit_ys = exp(-$fit_xs**2 / 2) / sqrt(2*PI);
  $plot->dataSets->{fit_curve} = ds::Pair($fit_xs, $fit_ys);
  
  twiddle();
 
-The default L<plot type|PDL::Graphics::Prima::PlotType/> for
-L<pairwise data|PDL::Graphics::Prima::DataSet/Pair> is
-L<Diamonds|PDL::Graphics::Prima::PlotType/ppair::Diamonds>. You can choose a
-L<different pairwise plot type|PDL::Graphics::Prima::PlotType/Pairs>, or
-even mix and match L<multiple pairwise plot types|PDL::Graphics::Prima::PlotType/SYNOPSIS>.
+The default L<plot type|PDLA::Graphics::Prima::PlotType/> for
+L<pairwise data|PDLA::Graphics::Prima::DataSet/Pair> is
+L<Diamonds|PDLA::Graphics::Prima::PlotType/ppair::Diamonds>. You can choose a
+L<different pairwise plot type|PDLA::Graphics::Prima::PlotType/Pairs>, or
+even mix and match L<multiple pairwise plot types|PDLA::Graphics::Prima::PlotType/SYNOPSIS>.
 
  auto_twiddle(0);
  my $plot = hist_plot(grandom(100));
  
  # Add a Gaussian curve that "fits" the data
- use PDL::Constants qw(PI);
+ use PDLA::Constants qw(PI);
  my $fit_xs = zeroes(200)->xlinvals(-5, 5);
  my $fit_ys = exp(-$fit_xs**2 / 2) / sqrt(2*PI);
  $plot->dataSets->{fit_curve} = ds::Pair($fit_xs, $fit_ys,
@@ -579,7 +579,7 @@ x and y axis options.
              ppair::ErrorBars(y_err => $y_err),
          ],
      ),
-     -fit  => ds::Func(\&PDL::sin,
+     -fit  => ds::Func(\&PDLA::sin,
          lineWidth => 3,
          color => cl::LightRed,
      ),
@@ -597,10 +597,10 @@ x and y axis options.
      y => { label => 'Measurement [Amp]' },
  );
 
-=head2 Enjoy PDL::Graphics::Prima!
+=head2 Enjoy PDLA::Graphics::Prima!
 
 I hope you've enjoyed the tour, and I hope you find
-L<PDL::Graphics::Prima|PDL::Graphics::Prima/> to be a useful plotting tool!
+L<PDLA::Graphics::Prima|PDLA::Graphics::Prima/> to be a useful plotting tool!
 
  # Thanks!
 

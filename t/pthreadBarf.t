@@ -1,13 +1,13 @@
 
 # These tests check for proper deferred handling of barf and warn messages when pthreading.
 #   
-use PDL::LiteF;
-use PDL::Image2D;
+use PDLA::LiteF;
+use PDLA::Image2D;
 use Test::More;
 
 use strict;
 
-if (PDL::Core::pthreads_enabled) {
+if (PDLA::Core::pthreads_enabled) {
    plan tests => 2;
 } else {
    plan tests => 2;

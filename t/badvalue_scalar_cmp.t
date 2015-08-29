@@ -3,20 +3,20 @@ use Test::More;
 use strict;
 use warnings;
 
-use PDL::Config;
+use PDLA::Config;
 use Test::Warn;
 
-plan skip_all => "Bad values disabled" unless $PDL::Config{WITH_BADVAL};
-plan skip_all => "Skip if badvalue support only supports NaN badvalues" if $PDL::Config{BADVAL_USENAN};
+plan skip_all => "Bad values disabled" unless $PDLA::Config{WITH_BADVAL};
+plan skip_all => "Skip if badvalue support only supports NaN badvalues" if $PDLA::Config{BADVAL_USENAN};
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
 ## Issue information
 ##
-## Name: scalar PDL with badvalue always compares BAD with perl scalars
+## Name: scalar PDLA with badvalue always compares BAD with perl scalars
 ##
 ## <http://sourceforge.net/p/pdl/bugs/390/>
-## <https://github.com/PDLPorters/pdl/issues/124>
+## <https://github.com/PDLAPorters/pdl/issues/124>
 
 plan tests => 5;
 
@@ -26,7 +26,7 @@ subtest "Issue example code" => sub {
 	$x->badvalue(0);
 	# bad value for $x is now set to 0
 
-	is( "$x", "[1 2 3 BAD]", "PDL with bad-value stringifies correctly" );
+	is( "$x", "[1 2 3 BAD]", "PDLA with bad-value stringifies correctly" );
 
 	my ($m, $s) = stats($x);
 
@@ -38,7 +38,7 @@ subtest "Issue example code" => sub {
 	is( "".($s == 0), "0", "is 1 == 0? -> false");
 };
 
-subtest "Badvalue set on 0-dim PDL + comparision operators" => sub {
+subtest "Badvalue set on 0-dim PDLA + comparision operators" => sub {
 	my $val = 2;
 	my $badval_sclr = 5;
 	my $p_val = pdl($val);
@@ -51,9 +51,9 @@ subtest "Badvalue set on 0-dim PDL + comparision operators" => sub {
 	is( "$p_val", "$val", "Sanity test" );
 
 	my @values_to_compare = ( $badval_sclr, $badval_sclr + 1, $badval_sclr - 1  );
-	subtest "Comparing a 0-dim PDL w/ a scalar should be the same as comparing a scalar w/ a scalar" => sub {
+	subtest "Comparing a 0-dim PDLA w/ a scalar should be the same as comparing a scalar w/ a scalar" => sub {
 		for my $cmpval_sclr (@values_to_compare) {
-			subtest "Bad value for PDL $p_val is $badval_sclr and we are comparing with a scalar of value $cmpval_sclr" => sub {
+			subtest "Bad value for PDLA $p_val is $badval_sclr and we are comparing with a scalar of value $cmpval_sclr" => sub {
 				is
 					"".($p_val <  $cmpval_sclr),
 					(0+(  $val <  $cmpval_sclr)),
@@ -72,9 +72,9 @@ subtest "Badvalue set on 0-dim PDL + comparision operators" => sub {
 		}
 	};
 
-	subtest "Comparing a 0-dim PDL w/ bad value with a 0-dim PDL without bad value set should not set BAD" => sub {
+	subtest "Comparing a 0-dim PDLA w/ bad value with a 0-dim PDLA without bad value set should not set BAD" => sub {
 		for my $not_bad_sclr (@values_to_compare) {
-			subtest "Bad value for PDL $p_val is $badval_sclr and we are comparing with a PDL of value $not_bad_sclr, but with no badflag" => sub {
+			subtest "Bad value for PDLA $p_val is $badval_sclr and we are comparing with a PDLA of value $not_bad_sclr, but with no badflag" => sub {
 				my $p_not_bad = pdl($not_bad_sclr);
 				$p_not_bad->badflag(0); # should not have bad flag
 
@@ -188,18 +188,18 @@ subtest "Comparison between a vector and scalar" => sub {
 	$p->badvalue(2);
 
 	note "\$p = $p";
-	is( "$p", "[1 BAD 3 4]", "PDL vector (with bv = 2)");
+	is( "$p", "[1 BAD 3 4]", "PDLA vector (with bv = 2)");
 
-	is( "" . ( $p > 1 ), '[0 BAD 1 1]', "compare PDL against (scalar = 1)");
-	is( "" . ( $p > 2 ), '[0 BAD 1 1]', "compare PDL against (scalar = 2)" );
-	is( "" . ( $p > 3 ), '[0 BAD 0 1]', "compare PDL against (scalar = 3)");
-	is( "" . ( $p > 4 ), '[0 BAD 0 0]', "compare PDL against (scalar = 4)");
+	is( "" . ( $p > 1 ), '[0 BAD 1 1]', "compare PDLA against (scalar = 1)");
+	is( "" . ( $p > 2 ), '[0 BAD 1 1]', "compare PDLA against (scalar = 2)" );
+	is( "" . ( $p > 3 ), '[0 BAD 0 1]', "compare PDLA against (scalar = 3)");
+	is( "" . ( $p > 4 ), '[0 BAD 0 0]', "compare PDLA against (scalar = 4)");
 };
 
 subtest "Throw a warning when badvalue is set to 0 or 1 and a comparison operator is used" => sub {
 	my $warn_msg_re = qr/Badvalue is set to 0 or 1/;
 
-	# We do not need to change the contents of this PDL.
+	# We do not need to change the contents of this PDLA.
 	# Only the value of badvalue changes.
 	my $p = pdl([0, 1, 2]);
 	$p->badflag(1);

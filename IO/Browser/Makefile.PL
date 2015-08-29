@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 use File::Spec;
 use Devel::CheckLib;
 
-my @pack = (["browser.pd", qw(Browser PDL::IO::Browser)]);
+my @pack = (["browser.pd", qw(Browser PDLA::IO::Browser)]);
 
 my %hash = pdlpp_stdargs_int(@pack);
 
@@ -47,5 +47,5 @@ undef &MY::postamble; # suppress warning
 if (defined($incstring) && defined($libstring)) {
    WriteMakefile(%hash);
 } else {
-   write_dummy_make("Curses capable library not found, not building PDL::IO::Browser");
+   write_dummy_make("Curses capable library not found, not building PDLA::IO::Browser");
 }

@@ -5,8 +5,8 @@
  * see http://www.eso.org/eclipse for further details
  */
 
-#ifndef _PDL_RESAMPLE_H_
-#define _PDL_RESAMPLE_H_
+#ifndef _PDLA_RESAMPLE_H_
+#define _PDLA_RESAMPLE_H_
 
 #include <stdlib.h>
 #include <math.h>

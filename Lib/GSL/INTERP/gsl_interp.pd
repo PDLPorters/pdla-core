@@ -1,9 +1,9 @@
-pp_bless('PDL::GSL::INTERP');  # make the functions generated go into our namespace     
+pp_bless('PDLA::GSL::INTERP');  # make the functions generated go into our namespace     
 
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::GSL::INTERP - PDL interface to Interpolation routines in GSL
+PDLA::GSL::INTERP - PDLA interface to Interpolation routines in GSL
 
 =head1 DESCRIPTION
 
@@ -12,13 +12,13 @@ GNU Scientific Library.
 
 =head1 SYNOPSIS
 
-   use PDL;
-   use PDL::GSL::INTERP;
+   use PDLA;
+   use PDLA::GSL::INTERP;
 
    my $x = sequence(10);
    my $y = exp($x);
 
-   my $spl = PDL::GSL::INTERP->init('cspline',$x,$y);
+   my $spl = PDLA::GSL::INTERP->init('cspline',$x,$y);
 
    my $res = $spl->eval(4.35);
    $res = $spl->deriv(4.35);
@@ -62,7 +62,7 @@ Please check the GSL documentation for more information.
 
 Usage:
 
-    $blessed_ref = PDL::GSL::INTERP->init($interp_method,$x,$y,$opt);
+    $blessed_ref = PDLA::GSL::INTERP->init($interp_method,$x,$y,$opt);
 
 =for example
 
@@ -71,11 +71,11 @@ Example:
     $x = sequence(10);
     $y = exp($x);
 
-    $spl = PDL::GSL::INTERP->init('cspline',$x,$y)
-    $spl = PDL::GSL::INTERP->init('cspline',$x,$y,{Sort => 1}) #same as above
+    $spl = PDLA::GSL::INTERP->init('cspline',$x,$y)
+    $spl = PDLA::GSL::INTERP->init('cspline',$x,$y,{Sort => 1}) #same as above
 
     # no sorting done on x, user is certain that x is monotonically increasing
-    $spl = PDL::GSL::INTERP->init('cspline',$x,$y,{Sort => 0});
+    $spl = PDLA::GSL::INTERP->init('cspline',$x,$y,{Sort => 0});
 
 =head2 eval()
 
@@ -186,7 +186,7 @@ Feedback is welcome.
 
 =head1 SEE ALSO
 
-L<PDL>
+L<PDLA>
 
 The GSL documentation is online at
 
@@ -197,8 +197,8 @@ The GSL documentation is online at
 This file copyright (C) 2003 Andres Jordan <andresj@physics.rutgers.edu>
 All rights reserved. There is no warranty. You are allowed to redistribute this 
 software/documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 The GSL interpolation module was written by Gerard Jungman.
 
@@ -225,11 +225,11 @@ sub init{
   if (ref($_[$#_]) eq \'HASH\'){ $opt = pop @_; }
   else{ $opt = {Sort => 1}; }
   my ($class,$type,$x,$y) = @_;
-  if( (ref($x) ne \'PDL\') || (ref($y) ne \'PDL\') ){
+  if( (ref($x) ne \'PDLA\') || (ref($y) ne \'PDLA\') ){
     barf("Have to pass piddles as arguments to init method\n");
   }
   if($$opt{Sort} != 0){
-    my $idx = PDL::Ufunc::qsorti($x);
+    my $idx = PDLA::Ufunc::qsorti($x);
     $x = $x->index($idx);
     $y = $y->index($idx);
   }
@@ -395,7 +395,7 @@ $out() = gsl_spline_eval_integ( INT2PTR(gsl_spline *, $COMP(spl)), $a(), $b(), I
 # XS functions for the INTERP objects
 
 pp_addxs('','
-MODULE = PDL::GSL::INTERP PACKAGE = PDL::GSL::INTERP
+MODULE = PDLA::GSL::INTERP PACKAGE = PDLA::GSL::INTERP
 
 #define DEF_INTERP(X) if (!strcmp(TYPE,#X)) spline=gsl_spline_alloc( gsl_interp_ ## X , ene); strcat(ula,#X ", ");
 
@@ -433,7 +433,7 @@ new_accel ()
  OUTPUT:
   RETVAL
  
-MODULE = PDL::GSL::INTERP PACKAGE = GslSplinePtr PREFIX = spl_
+MODULE = PDLA::GSL::INTERP PACKAGE = GslSplinePtr PREFIX = spl_
 
 void
 spl_DESTROY(spline)
@@ -441,7 +441,7 @@ spl_DESTROY(spline)
  CODE:
   gsl_spline_free(spline);
 
-MODULE = PDL::GSL::INTERP PACKAGE = GslAccelPtr PREFIX = acc_
+MODULE = PDLA::GSL::INTERP PACKAGE = GslAccelPtr PREFIX = acc_
 
 void
 acc_DESTROY(accel)

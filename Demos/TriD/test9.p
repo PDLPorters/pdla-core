@@ -3,13 +3,13 @@ use Carp;
 
 # $SIG{__DIE__} = sub {die Carp::longmess(@_);};
 
-use PDL;
-use PDL::Graphics::TriD;
-use PDL::IO::Pic;
-use PDL::Graphics::TriD::Polygonize;
+use PDLA;
+use PDLA::Graphics::TriD;
+use PDLA::IO::Pic;
+use PDLA::Graphics::TriD::Polygonize;
 
 
-$orig = PDL->pdl(0,0,0)->float;
+$orig = PDLA->pdl(0,0,0)->float;
 
 sub func1 {
 	my($x,$y,$z) = map {$_[0]->slice("($_)")} 0..2;
@@ -19,7 +19,7 @@ sub func1 {
 	return $res;
 }
 
-$a = PDL::Graphics::TriD::StupidPolygonize::stupidpolygonize($orig,
+$a = PDLA::Graphics::TriD::StupidPolygonize::stupidpolygonize($orig,
 	5, 50, 10,\&func1)  ;
 
 # print $a;

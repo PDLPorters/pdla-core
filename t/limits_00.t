@@ -2,15 +2,15 @@
 use Test::More;
 
 BEGIN {
-  eval "use PDL::Slatec;";
+  eval "use PDLA::Slatec;";
   if ( !$@ ) {
-    eval "use PDL::Graphics::Limits;";
+    eval "use PDLA::Graphics::Limits;";
     plan tests => 1;
   } else {
      print "$@\n";
-    plan skip_all => 'PDL::Slatec not available';
+    plan skip_all => 'PDLA::Slatec not available';
   }
-  use_ok('PDL::Graphics::Limits');
+  use_ok('PDLA::Graphics::Limits');
 };
 
 # end

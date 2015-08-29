@@ -9,18 +9,18 @@ sub tapprox {
 }
 
 sub vars_ipv {
-  PDL::Dbg::vars if $PDL::debug;
+  PDLA::Dbg::vars if $PDLA::debug;
 }
 
 sub p {
-  print @_ if $PDL::debug;
+  print @_ if $PDLA::debug;
 }
 
-use PDL::LiteF;
-use PDL::ImageRGB;
-use PDL::Dbg;
+use PDLA::LiteF;
+use PDLA::ImageRGB;
+use PDLA::Dbg;
 
-$PDL::debug = 0;
+$PDLA::debug = 0;
 
 $im = float [1,2,3,4,5];
 
@@ -28,7 +28,7 @@ vars_ipv;
 
 $out = bytescl($im,100);
 ok(tapprox($im,bytescl($im,100)));
-ok($out->get_datatype == $PDL::Types::PDL_B);
+ok($out->get_datatype == $PDLA::Types::PDLA_B);
 $out = bytescl($im,-100);
 ok(tapprox(pdl([0,25,50,75,100]),$out));
 
@@ -37,7 +37,7 @@ p "$out\n";
 $rgb = double [[1,1,1],[1,0.5,0.7],[0.1,0.2,0.1]];
 $out = rgbtogr($rgb);
 ok(tapprox($out,pdl([1,0.67,0.16])));
-ok($out->get_datatype == $PDL::Types::PDL_D);
+ok($out->get_datatype == $PDLA::Types::PDLA_D);
 
 vars_ipv;
 p $out;

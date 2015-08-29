@@ -1,8 +1,8 @@
 #use blib;
-use PDL;
-use PDL::Primitive;
-use PDL::Graphics::PGPLOT;
-use PDL::Opt::Simplex;
+use PDLA;
+use PDLA::Primitive;
+use PDLA::Graphics::PGPLOT;
+use PDLA::Opt::Simplex;
 
 use Carp;
 

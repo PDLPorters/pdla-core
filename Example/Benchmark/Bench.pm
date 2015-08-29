@@ -3,7 +3,7 @@
 
 # For 512,30iter:
 
-package PDL::Bench;
+package PDLA::Bench;
 
 use vars qw(@ISA @EXPORT $AUTOLOAD);
 
@@ -18,14 +18,14 @@ require DynaLoader;
 	do_benchmark
 );
 
-bootstrap PDL::Bench;
+bootstrap PDLA::Bench;
 
 use Benchmark;
 
 sub do_benchmark {
 	$size = 512;
 	$niter = 80;
-	$piddle = (PDL->zeroes($size,$size));
+	$piddle = (PDLA->zeroes($size,$size));
 	$dref = ${$piddle->get_dataref()};
 	timethese($niter, {
 #		'With double piddle' => 'for($i=0; $i<100; $i++) {$piddle++}',

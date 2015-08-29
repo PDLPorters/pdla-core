@@ -1,18 +1,18 @@
 
-use PDL::LiteF;
-# PDL::Core::set_debugging(1);
+use PDLA::LiteF;
+# PDLA::Core::set_debugging(1);
 kill INT,$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 use strict;
 use warnings;
 
-# Load the testing harness and PDL
+# Load the testing harness and PDLA
 use Test::More tests => 10;
-use PDL;
+use PDLA;
 
 # Get a temporary directory and file name, which obviously we'll need for testing
 # saving and reading of data.
-use PDL::Config;
+use PDLA::Config;
 use File::Temp qw(tempdir);
 
 my $tmpdir = tempdir( CLEANUP=>1 );
@@ -28,7 +28,7 @@ sub tapprox {
 }
 
 # **TEST 1** make sure FastRaw loads
-BEGIN { use_ok( 'PDL::IO::FastRaw' ); }
+BEGIN { use_ok( 'PDLA::IO::FastRaw' ); }
 
 # Set up the working filename and make sure we're working with a clean slate:
 
@@ -76,7 +76,7 @@ SKIP:
 	undef $a;
 	# Load it back up and see if the values are what we expect
 	$b = readfraw($name);
-	ok(tapprox($b, PDL->pdl([[0,1,2],[0.1,1.1,2.1]])),
+	ok(tapprox($b, PDLA->pdl([[0,1,2],[0.1,1.1,2.1]])),
 		"mapfraw should be able to create new piddles");
 	
 	# **TEST 7** test the created type

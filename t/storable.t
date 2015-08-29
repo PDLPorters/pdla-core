@@ -14,9 +14,9 @@ BEGIN {
 }
 
 BEGIN { 
-   use PDL::LiteF;
-   use PDL::Dbg;
-   use_ok('PDL::IO::Storable');
+   use PDLA::LiteF;
+   use PDLA::Dbg;
+   use_ok('PDLA::IO::Storable');
 }
 
 my ($data,$dfreeze,$dthaw,$olda,$pfreeze,$phash,$phthaw,$seq1,$seq1_tf,$seq2,$seq2_dc,$serialized);
@@ -29,13 +29,13 @@ $serialized = freeze $a;
 $olda = thaw $serialized;
 # $olda->dump;
 
-ok(sum(abs($a-$olda))==0, 'PDL freeze/thaw');
+ok(sum(abs($a-$olda))==0, 'PDLA freeze/thaw');
 
 # $oldb = thaw $serialized;
 # $oldc = thaw $serialized;
 # 
-# $PDL::Dbg::Infostr = "%T %D %S %A";
-# PDL->px;
+# $PDLA::Dbg::Infostr = "%T %D %S %A";
+# PDLA->px;
 # 
 # undef $oldb;
 # print $oldc;
@@ -53,16 +53,16 @@ $dthaw = thaw $dfreeze;
 
 isa_ok($dthaw, 'HASH'); # we got a HASH back
 
-ok(all($data->{key2} == $dthaw->{key2}), 'PDL in structure');
+ok(all($data->{key2} == $dthaw->{key2}), 'PDLA in structure');
 
-$phash = bless {PDL => sequence 3}, 'PDL';
+$phash = bless {PDLA => sequence 3}, 'PDLA';
 can_ok($phash, 'freeze');
 
 $pfreeze = $phash->freeze;
 $phthaw = thaw $pfreeze;
 
-ok(all($phthaw == $phash), 'PDL has-a works with freeze/thaw');
-ok(UNIVERSAL::isa($phthaw,'HASH'), 'PDL is a hash');
+ok(all($phthaw == $phash), 'PDLA has-a works with freeze/thaw');
+ok(UNIVERSAL::isa($phthaw,'HASH'), 'PDLA is a hash');
 
 # Test that freeze + thaw results in new object
 $seq1 = sequence(3);
@@ -89,8 +89,8 @@ testLoad($_) foreach( qw(t/storable_new_amd64.dat t/storable_old_amd64.dat) );
 # tests loading some files made on different architectures. All these files were
 # made with this:
 #
-#   use PDL;
-#   use PDL::IO::Storable;
+#   use PDLA;
+#   use PDLA::IO::Storable;
 #   use Storable qw(nstore);
 #   my $x = sequence(3,3)->byte * sequence(3)->byte;
 #   my $y = 50 + sequence(7)->double;
@@ -118,8 +118,8 @@ SKIP:
     ok( defined $x, "Reading from file '$filename'" );
     ok( @$x == 3, "Reading an array-ref of size 3 from file '$filename'" );
     ok( $x->[1] eq 'abcd', "Reading a correct string from file '$filename'" );
-    isa_ok( $x->[0], 'PDL', "Reading a piddle from file '$filename'" );
-    isa_ok( $x->[2], 'PDL', "Reading another piddle from file '$filename'" );
+    isa_ok( $x->[0], 'PDLA', "Reading a piddle from file '$filename'" );
+    isa_ok( $x->[2], 'PDLA', "Reading another piddle from file '$filename'" );
 
     my $diff0 = $x->[0] - pdl[[0,1,4],
                               [0,4,10],

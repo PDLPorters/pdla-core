@@ -2,8 +2,8 @@ pdl for Debian
 --------------
 
   pdl or perlDL
-  pdl is the perl data language.  Try "man PDL", or , for more man pages,
-  "man -k PDL". Html documents are found in /usr/share/doc/pdl/html/.
+  pdl is the perl data language.  Try "man PDLA", or , for more man pages,
+  "man -k PDLA". Html documents are found in /usr/share/doc/pdl/html/.
   
   More information can be found at:
   http://pdl.perl.org/

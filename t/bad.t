@@ -1,8 +1,8 @@
 # -*-perl-*-
 #
-# test bad value handling in PDL
+# test bad value handling in PDLA
 # - as it's a compile-time option we
-#   skip unless $PDL::Config{WITH_BADVAL}
+#   skip unless $PDLA::Config{WITH_BADVAL}
 #
 
 use strict;
@@ -24,11 +24,11 @@ END {
     unlink $fname if -e $fname;
 }
 
-use PDL::LiteF;
+use PDLA::LiteF;
 $| = 1;
 
-use PDL::Config;
-if ( $PDL::Config{WITH_BADVAL} ) {
+use PDLA::Config;
+if ( $PDLA::Config{WITH_BADVAL} ) {
     plan tests => 82;
 } else {
     # reduced testing
@@ -63,8 +63,8 @@ if ( $PDL::Config{WITH_BADVAL} ) {
     exit;
 }
 
-my $usenan = $PDL::Config{BADVAL_USENAN} || 0;
-my $perpdl = $PDL::Config{BADVAL_PER_PDL} || 0;
+my $usenan = $PDLA::Config{BADVAL_USENAN} || 0;
+my $perpdl = $PDLA::Config{BADVAL_PER_PDLA} || 0;
 
 # check default behaviour (ie no bad data)
 # - probably overkill
@@ -123,16 +123,16 @@ byte->badvalue( byte->orig_badvalue );
 # check setbadat()
 $a = pdl(1,2,3,4,5);
 $a->setbadat(2);
-is( PDL::Core::string($a), "[1 2 BAD 4 5]", "setbadat worked" );
+is( PDLA::Core::string($a), "[1 2 BAD 4 5]", "setbadat worked" );
 
 # now check that badvalue() changes the piddle
 # (only for integer types)
 $a = convert($a,ushort);
 my $badval = $a->badvalue;
 $a->badvalue(44);
-is( PDL::Core::string($a), "[1 2 BAD 4 5]", "changed badvalue" );
+is( PDLA::Core::string($a), "[1 2 BAD 4 5]", "changed badvalue" );
 $a->badflag(0);
-is( PDL::Core::string($a), "[1 2 44 4 5]", "can remove the bad value setting" );
+is( PDLA::Core::string($a), "[1 2 44 4 5]", "can remove the bad value setting" );
 
 # restore the bad value
 $a->badvalue($badval);
@@ -145,7 +145,7 @@ $b->badflag(1);
 # does string work?
 # (this has implicitly been tested just above)
 #
-is( PDL::Core::string($b), "[1 BAD 3]", "can convert bad values to a string" );
+is( PDLA::Core::string($b), "[1 BAD 3]", "can convert bad values to a string" );
 
 # does addition work
 $c = $a + $b;
@@ -154,14 +154,14 @@ is( sum($c), 8, "addition propagates the bad value" );
 # does conversion of bad types work
 $c = float($b);
 ok( $c->badflag, "type conversion retains bad flag" );
-is( PDL::Core::string($c), "[1 BAD 3]", "  and the value" );
+is( PDLA::Core::string($c), "[1 BAD 3]", "  and the value" );
 is( sum($c), 4, "  and the sum" );
 
 $a = byte(1,2,byte->badvalue,byte->badvalue,5,6,byte->badvalue,8,9);
 $a->badflag(1);
 
-is( PDL::Core::string($a->isbad),  "[0 0 1 1 0 0 1 0 0]", "isbad() works" );
-is( PDL::Core::string($a->isgood), "[1 1 0 0 1 1 0 1 1]", "isgood() works" );
+is( PDLA::Core::string($a->isbad),  "[0 0 1 1 0 0 1 0 0]", "isbad() works" );
+is( PDLA::Core::string($a->isgood), "[1 1 0 0 1 1 0 1 1]", "isgood() works" );
 
 is( $a->nbad, 3, "nbad() works" );
 is( $a->ngood, 6, "ngood() works" );
@@ -169,8 +169,8 @@ is( $a->ngood, 6, "ngood() works" );
 $a = byte( [255,255], [0,255], [0,0] );
 $a->badflag(1);
 
-is( PDL::Core::string($a->nbadover),  "[2 1 0]", "nbadover() works" );
-is( PDL::Core::string($a->ngoodover), "[0 1 2]", "ngoodover() works" );
+is( PDLA::Core::string($a->nbadover),  "[2 1 0]", "nbadover() works" );
+is( PDLA::Core::string($a->ngoodover), "[0 1 2]", "ngoodover() works" );
 
 # check dataflow (or vaffine or whatever it's called)
 $a = byte( [1,2,byte->badvalue,4,5], [byte->badvalue,0,1,2,byte->badvalue] );
@@ -178,7 +178,7 @@ $a->badflag(1);
 $b = $a->slice(',(1)');
 is( sum($b), 3, "sum of slice works" );
 $b++;
-is( PDL::Core::string($a),
+is( PDLA::Core::string($a),
     "\n[\n [  1   2 BAD   4   5]\n [BAD   1   2   3 BAD]\n]\n",
     "inplace addition of slice flows back to parent"
   );
@@ -186,10 +186,10 @@ is( PDL::Core::string($a),
 $a = byte->badvalue * ones(byte,3,2);
 is( $a->get_datatype, 0, "datatype remains a byte" );
 $a->badflag(1);
-is( PDL::Core::string( PDL::zcover($a) ), "[BAD BAD]", "zcover() okay" );
+is( PDLA::Core::string( PDLA::zcover($a) ), "[BAD BAD]", "zcover() okay" );
 $a->set(1,1,1);
 $a->set(2,1,1);
-is( PDL::Core::string( PDL::zcover($a) ), "[BAD 0]", "  and still okay" );
+is( PDLA::Core::string( PDLA::zcover($a) ), "[BAD 0]", "  and still okay" );
 
 # 255 is the default bad value for a byte array
 #
@@ -236,14 +236,14 @@ ok( all($a == 0), "   and inplace" );
 $a = pdl( qw(42 47 98 13 22 96 74 41 79 76 96 3 32 76 25 59 5 96 32 6) );
 $b = $a->setbadif( $a < 20 ); 
 $c = copybad( $a, $b );
-is( PDL::Core::string( $c->isbad ), 
+is( PDLA::Core::string( $c->isbad ), 
     "[0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0 1]",
   "isbad() worked" );
 
 $a = pdl( qw(42 47 98 13 22 96 74 41 79 76 96 3 32 76 25 59 5 96 32 6) );
 $b = $a->setbadif( $a < 20 ); 
 $a->inplace->copybad( $b );
-is( PDL::Core::string( $a->isbad ), 
+is( PDLA::Core::string( $a->isbad ), 
     "[0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 1 0 0 1]",
   "  and inplace" );
 
@@ -254,7 +254,7 @@ is( PDL::Core::string( $a->isbad ),
 ##$a = sequence(3,3);
 ##$a->inplace->setbadif( $a % 2 );
 ###$a = $a->setbadif( $a % 2 );              # for when not bothered about inplace
-##ok( PDL::Core::string( $a->clump(-1) ), 
+##ok( PDLA::Core::string( $a->clump(-1) ), 
 ##    "[0 BAD 2 BAD 4 BAD 6 BAD 8]" );   #
 
 ## look at propagation of bad flag using inplace routines...
@@ -278,7 +278,7 @@ is( $b->badflag, 1, "badflag propagated using inplace copybad()" );
 $a = pdl( qw(42 47 98 13 22 96 74 41 79 76 96 3 32 76 25 59 5 96 32 6) );
 $b = $a->setbadif( $a < 20 ); 
 my $ix = qsorti( $b );
-is( PDL::Core::string( $b->index($ix) ), 
+is( PDLA::Core::string( $b->index($ix) ), 
     "[22 25 32 32 41 42 47 59 74 76 76 79 96 96 96 98 BAD BAD BAD BAD]",
     "qsorti() okay"
     );                                   # 
@@ -288,11 +288,11 @@ is( PDL::Core::string( $b->index($ix) ),
 $a = pdl( 2, 4, double->badvalue );
 $a->badflag(1);
 $b = abs( $a - pdl(2.001,3.9999,234e23) ) > 0.01;
-is( PDL::Core::string( $b ), "[0 0 BAD]", "abs() and >" );
+is( PDLA::Core::string( $b ), "[0 0 BAD]", "abs() and >" );
 
 $b = byte(1,2,byte->badvalue,4);
 $b->badflag(1);
-is( PDL::Core::string( $b << 2 ), "[4 8 BAD 16]", "<<" );
+is( PDLA::Core::string( $b << 2 ), "[4 8 BAD 16]", "<<" );
 
 $a = pdl([1,2,3]);
 $a->badflag(1);
@@ -306,23 +306,23 @@ TODO: {
    $a = pdl q[BAD];
    local $TODO = 'check that at and sclr return correct values and the same';
 
-   is( PDL::Core::string($a), 'BAD', 'can convert PDL to string' );
+   is( PDLA::Core::string($a), 'BAD', 'can convert PDLA to string' );
    is( $a->at, 'BAD', 'at() returns BAD for a bad value' );
    is( $a->sclr, 'BAD', 'sclr() returns BAD for a bad value' );
 }
 
 # quick look at math.pd
-use PDL::Math;
+use PDLA::Math;
 
 $a = pdl(0.5,double->badvalue,0);
 $a->badflag(1);
 $b = bessj0($a);
-is( PDL::Core::string( isbad($b) ), "[0 1 0]", "bessj0()" );
+is( PDLA::Core::string( isbad($b) ), "[0 1 0]", "bessj0()" );
 
 $a = pdl(double->badvalue,0.8);
 $a->badflag(1);
 $b = bessjn($a,3);  # thread over n()
-is( PDL::Core::string( isbad($b) ), "[1 0]", "thread over bessjn()" );
+is( PDLA::Core::string( isbad($b) ), "[1 0]", "thread over bessjn()" );
 ok( abs($b->at(1)-0.010) < 0.001 );
 
 $a = pdl( 0.01, 0.0 );
@@ -332,7 +332,7 @@ ok( all( abs(erfi($a)-pdl(0.00886,0)) < 0.001 ), "erfi()" );
 # I haven't changed rotate, but it should work anyway
 $a = byte( 0, 1, 2, 4, 5 );
 $a->setbadat(2);
-is( PDL::Core::string( $a->rotate(2) ), "[4 5 0 1 BAD]", "rotate()" );
+is( PDLA::Core::string( $a->rotate(2) ), "[4 5 0 1 BAD]", "rotate()" );
 
 # check norm
 $a = float( 2, 0, 2, 2 )->setvaltobad(0.0);
@@ -352,7 +352,7 @@ $a->setbadat(2,1);
 
 $b = pdl [1,2],[2,1];
 
-use PDL::Image2D;
+use PDLA::Image2D;
 $c = conv2d($a, $b);
 
 is( int(at(sum($c-$ans))), 0, "conv2d()" ); 
@@ -376,7 +376,7 @@ $b = $a->setbadif( $a % 2 );
 $a->inplace->plus($b,0);
 print $a;
 print "$c\n";
-is( PDL::Core::string($c), "[BAD 8 BAD]", "inplace biop - plus()" );
+is( PDLA::Core::string($c), "[BAD 8 BAD]", "inplace biop - plus()" );
 
 # test bifunc fns
 $a = sequence(3,3);
@@ -385,7 +385,7 @@ $b = $a->setbadif( $a % 3 != 0 );
 $a->inplace->power($b,0);
 print $a;
 print "$c\n";
-is( PDL::Core::string($c), "[27 BAD BAD]", "inplace bifunc - power()" );
+is( PDLA::Core::string($c), "[27 BAD BAD]", "inplace bifunc - power()" );
 
 # test histogram (using hist)
 $a = pdl( qw/1 2 3 4 5 4 3 2 2 1/ );
@@ -393,14 +393,14 @@ $a->setbadat(1);
 $b = hist $a, 0, 6, 1;
 print "values:    $a\n";
 print "histogram: $b\n";
-is( PDL::Core::string($b), "[0 2 2 2 2 1]", "hist()" );
+is( PDLA::Core::string($b), "[0 2 2 2 2 1]", "hist()" );
 
 #$b = $a->isfinite;
 #print "isfinite(A): datatype = [",$b->get_datatype,"]\n";
 
 $a->inplace->isfinite;
 #print "A: datatype = [",$a->get_datatype,"]\n";
-is( PDL::Core::string($a), "[1 0 1 1 1 1 1 1 1 1]", "isfinite()" );
+is( PDLA::Core::string($a), "[1 0 1 1 1 1 1 1 1 1]", "isfinite()" );
 #print "A: datatype = [",$a->get_datatype,"]\n";
 
 # histogram2d
@@ -409,7 +409,7 @@ $b = long(2,1,1,1,1);
 $b->setbadat(0);
 my @c = ( 1,0,3 );
 $c = histogram2d($a,$b,@c,@c);
-is( PDL::Core::string($c->clump(-1)), 
+is( PDLA::Core::string($c->clump(-1)), 
     "[0 0 0 0 2 2 0 0 0]",
   "histogram2d()" );
 
@@ -427,12 +427,12 @@ is( PDL::Core::string($c->clump(-1)),
 $a = sequence(5);
 $a->setbadat(2);
 $a->inplace->badmask(0);
-is( PDL::Core::string($a), "[0 1 0 3 4]", "inplace badmask()" );
+is( PDLA::Core::string($a), "[0 1 0 3 4]", "inplace badmask()" );
 
 # setvaltobad
 $a = sequence(10) % 4;
 $a->inplace->setvaltobad( 1 );
-like( PDL::Core::string( $a->clump(-1) ), 
+like( PDLA::Core::string( $a->clump(-1) ), 
     qr{^\[-?0 BAD 2 3 -?0 BAD 2 3 -?0 BAD]$}, "inplace setvaltobad()" );
 
 # check setvaltobad for non-double piddles
@@ -445,11 +445,11 @@ ok( all($fa->setvaltobad(2/3)->isbad == $da->setvaltobad(2/3)->isbad), "setvalto
 #   NaN's and then a simple version of rfits
 #   (can't use rfits as does conversion!)
 $a->inplace->setnantobad;
-like( PDL::Core::string( $a->clump(-1) ), 
+like( PDLA::Core::string( $a->clump(-1) ), 
     qr{^\[-?0 BAD 2 3 -?0 BAD 2 3 -?0 BAD]$}, "inplace setnantobad()" );
 
 # test r/wfits
-use PDL::IO::FITS;
+use PDLA::IO::FITS;
 
 $a = sequence(10)->setbadat(0);
 print "Writing to fits: $a  type = (", $a->get_datatype, ")\n";

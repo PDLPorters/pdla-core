@@ -1,22 +1,22 @@
 Installing on Win32
 ===================
 
-For instructions relating to the installation of PDL
+For instructions relating to the installation of PDLA
 binaries (PPM packages) see the wiki:
-http://sourceforge.net/apps/mediawiki/pdl/index.php?title=Installing_PDL_on_Windows
+http://sourceforge.net/apps/mediawiki/pdl/index.php?title=Installing_PDLA_on_Windows
 
 ########################################################################
 ########################################################################
 
-If you would like, instead, to build PDL from source,
+If you would like, instead, to build PDLA from source,
 that's (generally) fairly straight forward.
 
-Certain parts of PDL (eg PDL::Slatec and PDL::Minuit)
+Certain parts of PDLA (eg PDLA::Slatec and PDLA::Minuit)
 can't be built without a fortran compiler. In the docs
 that follow I call these parts (somewhat loosely) "the
 fortran stuff".
 The absence of a fortran compiler does not prevent one
-from building PDL - it simply means that the PDL that
+from building PDLA - it simply means that the PDLA that
 gets built does not include "the fortran stuff".
 
 
@@ -68,7 +68,7 @@ To Build from Source
                             # compiler. If using a Microsoft compiler see
                             # "Other Options" below.
                             # Note that failure here does not prevent you from
-                            # from building PDL. It just means that the PDL
+                            # from building PDLA. It just means that the PDLA
                             # you build will be missing "the fortran stuff".
 
    cpan -i PGPLOT           # Optional - for PGPLOT graphics support.
@@ -78,13 +78,13 @@ To Build from Source
 			          # found---simpler to install using ppm
 			          # (see above).
 
-   cpan -i OpenGL           # Optional, but recommended - this is for PDL's
+   cpan -i OpenGL           # Optional, but recommended - this is for PDLA's
                             # TriD support.
                             # Also available via ppm (see above) if there
                             # is any problem building.
 
-   cpan -i PDL              # Will first install any missing pre-requisites.
-                            # This should succeed, but the PDL that's built
+   cpan -i PDLA              # Will first install any missing pre-requisites.
+                            # This should succeed, but the PDLA that's built
                             # will be missing some features if any of the
                             # above 'cpan -i ..' commands failed.
 
@@ -92,7 +92,7 @@ If it's a developer release that you're trying to install
 then you'll need to specify the full distribution path info,
 e.g.:
 
-   cpan -i CHM/PDL-2.004_997.tar.gz
+   cpan -i CHM/PDLA-2.004_997.tar.gz
 
 
 
@@ -103,7 +103,7 @@ Other Options
    The capability of building "the fortran stuff" with an MS
    compiler, f2c, and associated libraries libi77.lib and
    libf77.lib probably still exists (but none of the current
-   PDL developers have any knowledge or experience with this option).
+   PDLA developers have any knowledge or experience with this option).
 
    According to mythology, if you want to use f2c you need
    to edit win32/win32f77.pl to reflect the location of f2c,
@@ -118,10 +118,10 @@ Other Options
     perl Makefile.PL
 
 
-2) Building a "non-default" (custom) PDL
+2) Building a "non-default" (custom) PDLA
 
    If you don't want to accept a (basic) "default" build
-   of PDL, download the source from CPAN, extract it
+   of PDLA, download the source from CPAN, extract it
    to some location, cd to that location and edit (the
    self-documenting) perldl.conf accordingly.
 
@@ -132,7 +132,7 @@ Other Options
       dmake install
 
    This enables building of such extras as:
-    a) PDL::IO::GD (needs the gd C library);
-    b) PDL::GSL::* modules (needs the gsl C library);
-    c) PDL::GIS::Proj & PDL::Transform::Proj4 (needs the proj4 C library);
+    a) PDLA::IO::GD (needs the gd C library);
+    b) PDLA::GSL::* modules (needs the gsl C library);
+    c) PDLA::GIS::Proj & PDLA::Transform::Proj4 (needs the proj4 C library);
 

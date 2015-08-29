@@ -4,7 +4,7 @@
 # Last saved: Mon 28 Nov 2011 01:35:30 PM 
 #
 # This file is the first step of an ENVI file IO module
-# to be named PDL::IO::ENVI.  We read the header file
+# to be named PDLA::IO::ENVI.  We read the header file
 # corresponding to the input file, parse the keywords
 # values structures, and return a hash ref of the file.
 #
@@ -23,9 +23,9 @@
 
 use strict;
 
-use PDL;
-use PDL::NiceSlice;
-use PDL::IO::FlexRaw;
+use PDLA;
+use PDLA::NiceSlice;
+use PDLA::IO::FlexRaw;
 use FileHandle;
 use Config;
 

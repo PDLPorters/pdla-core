@@ -1,12 +1,12 @@
 
 =head1 NAME
 
-PDL::Graphics::LUT - provides access to a number of look-up tables
+PDLA::Graphics::LUT - provides access to a number of look-up tables
 
 =head1 SYNOPSIS
 
- use PDL::Graphics::PGPLOT;
- use PDL::Graphics::LUT;
+ use PDLA::Graphics::PGPLOT;
+ use PDLA::Graphics::LUT;
 
  # what tables are available
  my @tables = lut_names();
@@ -20,14 +20,14 @@ PDL::Graphics::LUT - provides access to a number of look-up tables
 
 =head1 DESCRIPTION
 
-PDL::Graphics::LUT contains a number of colour look-up tables
+PDLA::Graphics::LUT contains a number of colour look-up tables
 (in rgb format) and intensity ramps, and provides routines to 
 access this data.
 The format of the data is suitable for use by
-L<ctab|PDL::Graphics::PGPLOT::Window/ctab>.
+L<ctab|PDLA::Graphics::PGPLOT::Window/ctab>.
 
 Unlike the initial release of the package, the data tables are
-now stored within the PDL distribution as FITS files
+now stored within the PDLA distribution as FITS files
 (see L<$tabledir|/$tabledir> and L<$rampdir|/$rampdir>),
 rather than in the module itself.
 Changes to these directories will be picked up on the next call
@@ -113,13 +113,13 @@ and Christian Soeller and Karl Glazebrook for their help.
 
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =cut
 
-package PDL::Graphics::LUT;
+package PDLA::Graphics::LUT;
 
 # Just a plain function exporting package
 use Exporter;
@@ -130,12 +130,12 @@ use File::Basename;
 
 use autodie;
 
-use PDL::Core qw/:Func :Internal/;    # Grab the Core names
-use PDL::Basic;
-use PDL::Types;
-use PDL::Slices;
-use PDL::IO::Misc;
-use PDL::IO::FITS;
+use PDLA::Core qw/:Func :Internal/;    # Grab the Core names
+use PDLA::Basic;
+use PDLA::Types;
+use PDLA::Slices;
+use PDLA::IO::Misc;
+use PDLA::IO::FITS;
 
 # should be careful that $suffix is a valid length on non-Unix systems
 $suffix = ".fits";
@@ -152,7 +152,7 @@ use strict;
 
 # can we find the data?
 BEGIN {
-    my $d = File::Spec->catdir( "PDL", "Graphics", "LUT" );
+    my $d = File::Spec->catdir( "PDLA", "Graphics", "LUT" );
     my $lutdir = undef;
     foreach my $path ( @INC ) {
 	my $check = File::Spec->catdir( $path, $d );
@@ -193,7 +193,7 @@ sub lut_data ($;$$) {
     my $lfile = File::Spec->catfile( $tabledir, "${table}${suffix}" );
     my $rfile = File::Spec->catfile( $rampdir, "${ramp}${suffix}" );
     print "Reading colour table and intensity ramp from:\n $lfile\n $rfile\n"
-	if $PDL::verbose;
+	if $PDLA::verbose;
 
     # unknown table?
     unless ( -e $lfile ) {
@@ -217,14 +217,14 @@ EOD
 
     # read in rgb data
     my $rgb = rfits $lfile;
-    $rgb = float($rgb) if $rgb->get_datatype != $PDL_F;
+    $rgb = float($rgb) if $rgb->get_datatype != $PDLA_F;
     my ( @ldims ) = $rgb->dims;
     barf "LUT file $lfile is not the correct format (ie n by 3)\n"
 	unless $#ldims == 1 and $ldims[1] == 3;
 
     # read in intensity data
     my $l = rfits $rfile;
-    $l = float($l) if $l->get_datatype != $PDL_F;
+    $l = float($l) if $l->get_datatype != $PDLA_F;
     barf "Ramp file $rfile does not match the colour table size.\n"
 	unless $l->nelem == $ldims[0];
 

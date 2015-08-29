@@ -1,20 +1,20 @@
 =head1 NAME
 
-PDL::IO::FastRaw -- A simple, fast and convenient io format for PerlDL.
+PDLA::IO::FastRaw -- A simple, fast and convenient io format for PerlDL.
 
 =head1 VERSION
 
-This documentation refers to PDL::IO::FastRaw version 0.0.2, I guess.
+This documentation refers to PDLA::IO::FastRaw version 0.0.2, I guess.
 
 =head1 SYNOPSIS
 
- use PDL;
- use PDL::IO::FastRaw;
+ use PDLA;
+ use PDLA::IO::FastRaw;
 
  writefraw($pdl,"fname");         # write a raw file
 
  $pdl2 = readfraw("fname");       # read a raw file
- $pdl2 = PDL->readfraw("fname");
+ $pdl2 = PDLA->readfraw("fname");
 
  $pdl3 = mapfraw("fname2",{ReadOnly => 1}); # mmap a file, don't read yet
 
@@ -83,9 +83,9 @@ a script that converts all the data files to raw files:
  # or
  #  >./convert_to_raw.pl *.dat
  
- use PDL;
- use PDL::IO::FastRaw;	# for saving raw files
- use PDL::IO::Misc;		# for reading ASCII files with rcols
+ use PDLA;
+ use PDLA::IO::FastRaw;	# for saving raw files
+ use PDLA::IO::Misc;		# for reading ASCII files with rcols
  while(shift) {			# run through the entire supplied list of file names
 	 ($newName = $_) =~ s/\.(asc|dat)/.bdat/;
 	 print "Saving contents of $_ to $newName\n";
@@ -108,8 +108,8 @@ much faster now:
  # or
  #  >./plot_script.pl *.bdat
  
- use PDL;
- use PDL::IO::FastRaw;
+ use PDLA;
+ use PDLA::IO::FastRaw;
  while(shift) {			# run through the entire supplied list of file names
 	 $data = readfraw($_);
 	 my_plot_func($data);
@@ -129,9 +129,9 @@ C<writefraw> command.  A modified script would look like this:
  # call with
  #  >./convert_to_raw.pl [-hHeaderFile] <fileglob> [-hHeaderFile] <fileglob> ...
  
- use PDL;
- use PDL::IO::FastRaw;	# for saving raw files
- use PDL::IO::Misc;		# for reading ASCII files with rcols
+ use PDLA;
+ use PDLA::IO::FastRaw;	# for saving raw files
+ use PDLA::IO::Misc;		# for reading ASCII files with rcols
  my $header_file = undef;
  CL_OPTION: while($_ = shift @ARGV) {	# run through the entire list of command-line options
  	 if(/-h(.*)/) {
@@ -185,7 +185,7 @@ Read a raw format binary file
 =for usage
 
  $pdl2 = readfraw("fname");
- $pdl2 = PDL->readfraw("fname");
+ $pdl2 = PDLA->readfraw("fname");
  $pdl2 = readfraw("fname", {Header => 'headerfname'});
 
 =for options
@@ -303,14 +303,14 @@ also have options (the author nowadays only uses C<mapfraw> ;)
 Copyright (C) Tuomas J. Lukka 1997.
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 
 =cut
 
-package PDL::IO::FastRaw;
+package PDLA::IO::FastRaw;
 
 ## use version; our $VERSION = qv('0.0.3');
 our $VERSION = '0.000003';
@@ -324,21 +324,21 @@ BEGIN {
 }
 
 require Exporter;
-use PDL::Core '';
-use PDL::Exporter;
+use PDLA::Core '';
+use PDLA::Exporter;
 use FileHandle;
 
-@PDL::IO::FastRaw::ISA = qw/PDL::Exporter/;
+@PDLA::IO::FastRaw::ISA = qw/PDLA::Exporter/;
 
 @EXPORT_OK = qw/writefraw readfraw mapfraw maptextfraw/;
 %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 
 # Exported functions
 
-*writefraw = \&PDL::writefraw;
-sub readfraw {PDL->readfraw(@_)}
-sub mapfraw  {PDL->mapfraw(@_)}
-sub maptextfraw  {PDL->maptextfraw(@_)}
+*writefraw = \&PDLA::writefraw;
+sub readfraw {PDLA->readfraw(@_)}
+sub mapfraw  {PDLA->mapfraw(@_)}
+sub maptextfraw  {PDLA->maptextfraw(@_)}
 
 sub _read_frawhdr {
 	my($name,$opts) = @_;
@@ -368,7 +368,7 @@ sub _writefrawhdr {
 		$pdl->getndims, (join ' ',$pdl->dims));
 }
 
-sub PDL::writefraw {
+sub PDLA::writefraw {
 	my($pdl,$name,$opts) = @_;
 	_writefrawhdr($pdl,$name,$opts);
 	my $d = new FileHandle ">$name"
@@ -377,14 +377,14 @@ sub PDL::writefraw {
 	print $d ${$pdl->get_dataref};
 }
 
-sub PDL::readfraw {
+sub PDLA::readfraw {
         my $class = shift;
 	my($name,$opts) = @_;
 	my $d = new FileHandle "$name"
 	 or barf "Couldn't open '$name' for reading";
 	binmode $d;
 	my $hdr = _read_frawhdr($name,$opts);
-	my $pdl = $class->zeroes ((new PDL::Type($hdr->{Type})), @{$hdr->{Dims}});
+	my $pdl = $class->zeroes ((new PDLA::Type($hdr->{Type})), @{$hdr->{Dims}});
 	my $len = length ${$pdl->get_dataref};
 # wrong.
 #       $d->sysread(${$pdl->get_dataref},$len) == $len
@@ -401,27 +401,27 @@ sub PDL::readfraw {
 	return $pdl;
 }
 
-sub PDL::mapfraw {
+sub PDLA::mapfraw {
         my $class = shift;
 	my($name,$opts) = @_;
 	my $hdr;
 	if($opts->{Dims}) {
 		my $datatype = $opts->{Datatype};
-		if(!defined $datatype) {$datatype = $PDL_D;}
+		if(!defined $datatype) {$datatype = $PDLA_D;}
 		$hdr->{Type} = $datatype;
 		$hdr->{Dims} = $opts->{Dims};
 		$hdr->{NDims} = scalar(@{$opts->{Dims}});
 	} else {
 		$hdr = _read_frawhdr($name,$opts);
 	}
-	$s = PDL::Core::howbig($hdr->{Type});
+	$s = PDLA::Core::howbig($hdr->{Type});
 	for(@{$hdr->{Dims}}) {
 		$s *= $_;
 	}
-	my $pdl = $class->zeroes(new PDL::Type($hdr->{Type}));
+	my $pdl = $class->zeroes(new PDLA::Type($hdr->{Type}));
 	$pdl->setdims($hdr->{Dims});
 
-        if ($have_file_map and not defined($PDL::force_use_mmap_code) ) {
+        if ($have_file_map and not defined($PDLA::force_use_mmap_code) ) {
            $pdl->set_data_by_file_map(
               $name,
               $s,
@@ -450,13 +450,13 @@ sub PDL::mapfraw {
 	return $pdl;
 }
 
-sub PDL::maptextfraw {
+sub PDLA::maptextfraw {
 	my($class, $name, $opts) = @_;
 	$opts = {%$opts}; # Copy just in case
 	my @s = stat $name;
 	$opts->{Dims} = [$s[7]];
-	$opts->{Datatype} = &PDL::byte;
-	return PDL::mapfraw($class, $name, $opts);
+	$opts->{Datatype} = &PDLA::byte;
+	return PDLA::mapfraw($class, $name, $opts);
 }
 
 1;

@@ -2,14 +2,14 @@ use strict;
 use Test;
 
 
-# check if PDL::NiceSlice clobbers the DATA filehandle
-use PDL::LiteF;
+# check if PDLA::NiceSlice clobbers the DATA filehandle
+use PDLA::LiteF;
 
 plan tests => 1;
 
 $| = 1;
 
-use PDL::NiceSlice;
+use PDLA::NiceSlice;
 
 my $data = join '', <DATA>;
 ok $data =~ "we've got data";

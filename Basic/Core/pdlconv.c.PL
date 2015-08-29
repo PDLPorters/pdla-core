@@ -7,8 +7,8 @@ use strict;
 use Config;
 use File::Basename qw(&basename &dirname);
  
-require 'Dev.pm'; PDL::Core::Dev->import;
-use vars qw( %PDL_DATATYPES );
+require 'Dev.pm'; PDLA::Core::Dev->import;
+use vars qw( %PDLA_DATATYPES );
 
 # This forces PL files to create target in same directory as PL file.
 # This is so that make depend always knows where to find PL derivatives.
@@ -40,7 +40,7 @@ print OUT <<"!WITH!SUBS!";
  
 print OUT <<'!NO!SUBS!';
 
-#define PDL_CORE      /* For certain ifdefs */
+#define PDLA_CORE      /* For certain ifdefs */
 #include "pdl.h"      /* Data structure declarations */
 #include "pdlcore.h"  /* Core declarations */
 
@@ -63,18 +63,18 @@ print OUT <<"!WITH!SUBS!";
 void pdl_${name}(pdl *a) {
 	int i,j;
 	int intype = a->datatype;
-	if(!PDL_VAFFOK(a)) {
+	if(!PDLA_VAFFOK(a)) {
 		die("pdl_$name without vaffine");
 	}
-	PDL_ENSURE_ALLOCATED(a);
+	PDLA_ENSURE_ALLOCATED(a);
 	switch ( intype ) {
 !WITH!SUBS!
 
 ##### Generate code for each data type #####
 
-for my $in ( keys %PDL_DATATYPES ) {
+for my $in ( keys %PDLA_DATATYPES ) {
 
-    my $intype = $PDL_DATATYPES{$in};
+    my $intype = $PDLA_DATATYPES{$in};
     print OUT <<"!WITH!SUBS!";
     case ${in}:
       {
@@ -147,7 +147,7 @@ void pdl_converttype( pdl** aa, int targtype, Logical changePerl ) {
     dXSARGS;
 #endif
 
-    PDLDEBUG_f(printf("pdl_converttype %p, %d, %d, %d\n", (void*)a, a->datatype,
+    PDLADEBUG_f(printf("pdl_converttype %p, %d, %d, %d\n", (void*)a, a->datatype,
     	targtype, changePerl);)
 
     intype = a->datatype;
@@ -160,7 +160,7 @@ void pdl_converttype( pdl** aa, int targtype, Logical changePerl ) {
 
     if (changePerl) {   /* Grow data */
 
-      if(a->state & PDL_DONTTOUCHDATA) {
+      if(a->state & PDLA_DONTTOUCHDATA) {
 	croak("Trying to convert of magical (mmaped?) pdl");
       }
 
@@ -190,9 +190,9 @@ void pdl_converttype( pdl** aa, int targtype, Logical changePerl ) {
 
 ##### Generate code for each pair of data types #####
 
-for my $in ( keys %PDL_DATATYPES ) { 
+for my $in ( keys %PDLA_DATATYPES ) { 
 
-    my $intype = $PDL_DATATYPES{$in}; 
+    my $intype = $PDLA_DATATYPES{$in}; 
 
     print OUT <<"!WITH!SUBS!";
       case ${in}:
@@ -203,10 +203,10 @@ for my $in ( keys %PDL_DATATYPES ) {
          switch ( targtype ) {
 !WITH!SUBS!
 
-    for my $targ ( keys %PDL_DATATYPES ) {
+    for my $targ ( keys %PDLA_DATATYPES ) {
 
 	next if $in eq $targ; # Skip duplicates
-	my $targtype = $PDL_DATATYPES{$targ};
+	my $targtype = $PDLA_DATATYPES{$targ};
 
 	print OUT <<"!WITH!SUBS!";
 	   case ${targ}:
@@ -294,14 +294,14 @@ void pdl_coercetypes( pdl** aa, pdl** bb, Logical changePerl ) {
         else { /* Scalar more complex than vector- special rules to avoid
                   overzealous promotion of vector  */
 
-           if (vector->datatype == PDL_F)  /* FxD is OK as F */
+           if (vector->datatype == PDLA_F)  /* FxD is OK as F */
               targtype = vector->datatype;
 
-           else if (vector->datatype <= PDL_L && scalar->datatype <= PDL_L)
+           else if (vector->datatype <= PDLA_L && scalar->datatype <= PDLA_L)
               targtype = vector->datatype; /* two ints is OK as input int */
 
-           else if (vector->datatype <= PDL_F && scalar->datatype==PDL_D)
-              targtype = PDL_F; /* Only promote FOOxD as far as F */
+           else if (vector->datatype <= PDLA_F && scalar->datatype==PDLA_D)
+              targtype = PDLA_F; /* Only promote FOOxD as far as F */
 
            else
               targtype = scalar->datatype;
@@ -323,11 +323,11 @@ void pdl_coercetypes( pdl** aa, pdl** bb, Logical changePerl ) {
      pdl_converttype(bb, targtype, changePerl);
 }
 
-/* Given PDL return an allocated **ptr to 2D data thus allowing a[j][i] syntax */
+/* Given PDLA return an allocated **ptr to 2D data thus allowing a[j][i] syntax */
 
 void ** pdl_twod( pdl* x ) {
 
-   PDL_Indx i,nx,ny;
+   PDLA_Indx i,nx,ny;
    int size;
    void **p;
    char *xx;

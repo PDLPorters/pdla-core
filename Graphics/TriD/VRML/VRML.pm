@@ -5,9 +5,9 @@
 #
 # VRMLProto
 
-package PDL::Graphics::VRMLProto;
+package PDLA::Graphics::VRMLProto;
 use Exporter;
-use PDL::Core '';
+use PDLA::Core '';
 
 @ISA = qw/ Exporter /;
 @EXPORT = qw/ vrp fv3f fmstr /;
@@ -23,7 +23,7 @@ sub new {
 }
 
 sub vrp {
-  return PDL::Graphics::VRMLProto->new(@_);
+  return PDLA::Graphics::VRMLProto->new(@_);
 }
 
 sub fv3f {
@@ -51,7 +51,7 @@ sub to_text {
 #
 # VRMLNode
 
-package PDL::Graphics::VRMLNode;
+package PDLA::Graphics::VRMLNode;
 use Exporter;
 
 @ISA = qw/ Exporter /;
@@ -59,7 +59,7 @@ use Exporter;
 @EXPORT_OK = qw/ tabs postfix prefix /;
 
 sub vrn {
-  return PDL::Graphics::VRMLNode->new(@_);
+  return PDLA::Graphics::VRMLNode->new(@_);
 }
 
 sub new {
@@ -135,12 +135,12 @@ sub vrml3v {
 #
 # VRMLPdlNode
 
-package PDL::Graphics::VRMLPdlNode;
-@ISA = qw/ PDL::Graphics::VRMLNode /;
-use PDL::Lite;
-use PDL::Core qw(barf);
-use PDL::Dbg;
-PDL::Graphics::VRMLNode->import(qw/tabs vrml3v postfix prefix/);
+package PDLA::Graphics::VRMLPdlNode;
+@ISA = qw/ PDLA::Graphics::VRMLNode /;
+use PDLA::Lite;
+use PDLA::Core qw(barf);
+use PDLA::Dbg;
+PDLA::Graphics::VRMLNode->import(qw/tabs vrml3v postfix prefix/);
 
 sub new {
   my ($type,$points,$colors,$options) = @_;
@@ -190,9 +190,9 @@ sub to_text {
     my @dims = $this->{Points}->dims;
     shift @dims;
     my $cols = $this->{Colors};
-    my $seq = PDL->sequence(@dims);
-    require PDL::Dbg;
-    local $PDL::debug = 0;
+    my $seq = PDLA->sequence(@dims);
+    require PDLA::Dbg;
+    local $PDLA::debug = 0;
     $cols = pdl(0,0,0)->dummy(1)->dummy(2)->px
       if $this->{IsLattice} && $this->{Surface} && $this->{Lines};
     lines($this->{Points},$cols,$seq,
@@ -211,7 +211,7 @@ sub to_text {
 		"0:-2,1:-1",
 		"1:-1,0:-2"
 	       );
-    my $seq = PDL->sequence(@dims);
+    my $seq = PDLA->sequence(@dims);
     coords($this->{Points},$this->{Colors},\$vtxt,\$ctxt,tabs($level+2));
     triangles((map {$seq->slice($_)} @sls1),\$vidx,tabs($level+1));
     triangles((map {$seq->slice($_)} @sls2),\$vidx,tabs($level+1));
@@ -243,28 +243,28 @@ sub vpostfix {
   return tabs($level)."]\n";
 }
 
-PDL::thread_define 'coords(vertices(n=3); colors(n)) NOtherPars => 3',
-  PDL::over {
+PDLA::thread_define 'coords(vertices(n=3); colors(n)) NOtherPars => 3',
+  PDLA::over {
     ${$_[2]} .= $_[4] . sprintf("%.3f %.3f %.3f,\n",$_[0]->list);
     ${$_[3]} .= $_[4] . sprintf("%.3f %.3f %.3f,\n",$_[1]->list);
 };
 
-PDL::thread_define 'v3array(vecs(n=3)) NOtherPars => 2',
-  PDL::over {
+PDLA::thread_define 'v3array(vecs(n=3)) NOtherPars => 2',
+  PDLA::over {
     ${$_[1]} .= $_[2] . sprintf("%.3f %.3f %.3f,\n",$_[0]->list);
 };
 
-PDL::thread_define 'lines(vertices(n=3,m); colors(n,m); index(m))'.
+PDLA::thread_define 'lines(vertices(n=3,m); colors(n,m); index(m))'.
   'NOtherPars => 4',
-  PDL::over {
+  PDLA::over {
     my ($lines,$cols,$index,$vt,$ct,$it,$sp) = @_;
     v3array($lines,$vt,$sp."\t") if defined $vt;
     v3array($cols,$ct,$sp."\t") if defined $ct;
     $$it .= $sp.join(',',$index->list).",-1,\n" if defined $it;
 };
 
-PDL::thread_define 'triangles(inda();indb();indc()), NOtherPars => 2',
-  PDL::over {
+PDLA::thread_define 'triangles(inda();indb();indc()), NOtherPars => 2',
+  PDLA::over {
     ${$_[3]} .= $_[4].join(',',map {$_->at} @_[0..2]).",-1,\n";
 };
 
@@ -272,19 +272,19 @@ PDL::thread_define 'triangles(inda();indb();indc()), NOtherPars => 2',
 #
 # VRML
 
-package PDL::Graphics::VRML;
-use PDL::Core '';
+package PDLA::Graphics::VRML;
+use PDLA::Core '';
 
-%PDL::Graphics::VRML::Protos = ();
+%PDLA::Graphics::VRML::Protos = ();
 
 sub new {
   my ($type,$title,$info) = @_;
   my $this = bless {},$type;
   $this->{Header} = '#VRML V2.0 utf8';
-  $this->{Info} = new PDL::Graphics::VRMLNode('WorldInfo',
+  $this->{Info} = new PDLA::Graphics::VRMLNode('WorldInfo',
 				    'title' => $title,
 				    'info' => $info);
-  $this->{NaviInfo} = new PDL::Graphics::VRMLNode('NavigationInfo',
+  $this->{NaviInfo} = new PDLA::Graphics::VRMLNode('NavigationInfo',
 			'type' => '["EXAMINE", "ANY"]');
   $this->{Protos} = {};
   $this->{Uses} = {};
@@ -296,8 +296,8 @@ sub register_proto {
   my ($this,@protos) = @_;
   for (@protos) {
     barf "proto already registered"
-      if defined $PDL::Graphics::VRML::Protos{$_->{Name}};
-    $PDL::Graphics::VRML::Protos{$_->{Name}} = $_;
+      if defined $PDLA::Graphics::VRML::Protos{$_->{Name}};
+    $PDLA::Graphics::VRML::Protos{$_->{Name}} = $_;
   }
 }
 
@@ -314,9 +314,9 @@ sub uses {
 sub ensure_protos {
   my $this = shift;
   for (keys %{$this->{Uses}}) {
-    barf "unknown Prototype $_" unless defined $PDL::Graphics::VRML::Protos{$_};
+    barf "unknown Prototype $_" unless defined $PDLA::Graphics::VRML::Protos{$_};
     delete $this->{Uses}->{$_};
-    $this->add_proto($PDL::Graphics::VRML::Protos{$_});
+    $this->add_proto($PDLA::Graphics::VRML::Protos{$_});
   }
 }
 

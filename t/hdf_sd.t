@@ -8,19 +8,19 @@
 # 29 March 2006
 #
 use strict;
-use PDL;
+use PDLA;
 use Test::More;
 use File::Temp qw(tempdir);
 
 BEGIN
 {
-    use PDL::Config;
-    if ( $PDL::Config{WITH_HDF} ) 
+    use PDLA::Config;
+    if ( $PDLA::Config{WITH_HDF} ) 
     {
-        eval( " use PDL::IO::HDF; " );
+        eval( " use PDLA::IO::HDF; " );
         if( $@ )
         {
-            plan skip_all => "PDL::IO::HDF module compiled, but not available.";
+            plan skip_all => "PDLA::IO::HDF module compiled, but not available.";
         }  
         else
         {
@@ -29,7 +29,7 @@ BEGIN
     }
     else
     {
-        plan skip_all => "PDL::IO::HDF module not compiled.";
+        plan skip_all => "PDLA::IO::HDF module not compiled.";
     }
 }
 
@@ -44,17 +44,17 @@ sub tapprox
     return all($d < 1.0e-5);
 }
 
-use PDL::Config;
+use PDLA::Config;
 my $tmpdir = tempdir( CLEANUP => 1 );
 
 my $testfile = "$tmpdir/sdtest.hdf";
 
-use PDL::IO::HDF::SD;
+use PDLA::IO::HDF::SD;
 
 ### Creating and writing to a HDF file
     
 #Create an HDF file
-my $SDobj = PDL::IO::HDF::SD->new( "-$testfile" );
+my $SDobj = PDLA::IO::HDF::SD->new( "-$testfile" );
         
 #Define some data
 my $data = sequence(short, 500, 5);
@@ -88,11 +88,11 @@ ok( $SDobj->SDsettextattr('This is a local text testl!!', "myLText", "myData" ),
 
 # TEST 7:
 #Set a global value attribut (you can put all values you want)
-ok( $SDobj->SDsetvalueattr( PDL::short( 20 ), "myGValue"), 'SDSetvalueattr() (global)' );
+ok( $SDobj->SDsetvalueattr( PDLA::short( 20 ), "myGValue"), 'SDSetvalueattr() (global)' );
 
 # TEST 8:
 #Set a local value attribut (you can put all values you want)
-ok( $SDobj->SDsetvalueattr( PDL::long( [20, 15, 36] ), "myLValues", "myData" ), 'SDSetvalueattr() (local)' );
+ok( $SDobj->SDsetvalueattr( PDLA::long( [20, 15, 36] ), "myLValues", "myData" ), 'SDSetvalueattr() (local)' );
 
 # TEST 9:
 #Put square_data in file as 'mySquareData' dataset
@@ -104,12 +104,12 @@ $SDobj->close;
 
 # TEST 10:
 # Test Hishdf:
-ok( PDL::IO::HDF::SD::Hishdf( $testfile ), 'Hishdf()' );
+ok( PDLA::IO::HDF::SD::Hishdf( $testfile ), 'Hishdf()' );
     
 ### Reading from a HDF file
 
 #Open an HDF file in read only mode
-my $SDobj2 = PDL::IO::HDF::SD->new( $testfile );
+my $SDobj2 = PDLA::IO::HDF::SD->new( $testfile );
 
 # TEST 11:
 #Get a list of all datasets
@@ -190,7 +190,7 @@ $SDobj2->close;
 # These are from the old sdcompress.t test file:
 #
 undef($data);
-my $HDFobj = PDL::IO::HDF::SD->new("-$testfile");
+my $HDFobj = PDLA::IO::HDF::SD->new("-$testfile");
 
 # TEST 24:
 #Define some data
@@ -209,7 +209,7 @@ $HDFobj->close();
 #
 # These tests are from the old 11sdchunk.t test file:
 #
-my $hdf = PDL::IO::HDF::SD->new( "-$testfile" );
+my $hdf = PDLA::IO::HDF::SD->new( "-$testfile" );
 
 # TEST 26:
 # Make sure chunking is on by default:
@@ -235,7 +235,7 @@ undef($hdf);
 
 # TEST 29 & 30:
 # Make sure we can read it properly:
-$hdf = PDL::IO::HDF::SD->new( $testfile );
+$hdf = PDLA::IO::HDF::SD->new( $testfile );
 
 my $dataset_test = $hdf->SDget( "NO_CHUNK" );
 my $good = ($dataset_test->nelem() > 0) ? 1 : 0;
@@ -251,7 +251,7 @@ undef($hdf);
 unlink( $testfile );
 
 # Reopen to write out the chunked portion:
-$hdf = PDL::IO::HDF::SD->new( "-$testfile" );
+$hdf = PDLA::IO::HDF::SD->new( "-$testfile" );
 
 my $dataset2d = sequence( long, 200, 200 );
 
@@ -270,7 +270,7 @@ $hdf->close();
 undef($hdf);
 
 # Verify the datasets we just wrote:
-$hdf = PDL::IO::HDF::SD->new( $testfile );
+$hdf = PDLA::IO::HDF::SD->new( $testfile );
 
 # TEST 33 & 34:
 my $dataset2d_test = $hdf->SDget( "CHUNK_2D" );
@@ -298,7 +298,7 @@ undef($hdf);
 #
 # These tests are from the old 07hdfdump.t test file:
 #
-my $H = PDL::IO::HDF->new( $testfile );
+my $H = PDLA::IO::HDF->new( $testfile );
 
 print ">>Global attributes :\n";
 foreach my $attr ( $$H{SD}->SDgetattributenames() )

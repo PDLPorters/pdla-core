@@ -1,11 +1,11 @@
-# Test the error reporting for malformed PDL::PP code.
+# Test the error reporting for malformed PDLA::PP code.
 use Test::More tests => 3;
 
-# Load up PDL::PP
-use PDL::PP qw(foo::bar foo::bar foobar);
+# Load up PDLA::PP
+use PDLA::PP qw(foo::bar foo::bar foobar);
 
 # Prevent file generation (does not prevent calling of functions)
-$PDL::PP::done = 1;
+$PDLA::PP::done = 1;
 
 # Check the loop malformed call:
 eval {
@@ -26,6 +26,6 @@ like($@, qr/Expected.*loop.*%\{/, 'loop without dim name should explain the erro
 
 TODO: {
 	local $TODO = 'Have not figured out why @CARP_NOT is not working';
-	unlike($@, qr/PP\.pm/, 'Should not report error as coming from PDL::PP');
+	unlike($@, qr/PP\.pm/, 'Should not report error as coming from PDLA::PP');
 };
 

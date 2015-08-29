@@ -1,17 +1,17 @@
 =head1 NAME
 
-PDL::Threading - Tutorial for PDL's Threading feature
+PDLA::Threading - Tutorial for PDLA's Threading feature
 
 =head1 INTRODUCTION
 
-One of the most powerful features of PDL is B<threading>, which can
-produce very compact and very fast PDL code by avoiding multiple nested
+One of the most powerful features of PDLA is B<threading>, which can
+produce very compact and very fast PDLA code by avoiding multiple nested
 for loops that C and BASIC users may be familiar with. The trouble is
 that it can take some getting used to, and new users may not appreciate
 the benefits of threading.
 
 Other vector based languages, such as MATLAB, use a subset of threading
-techniques, but PDL shines by completely generalizing them for all sorts
+techniques, but PDLA shines by completely generalizing them for all sorts
 of vector-based applications.
 
 =head1 TERMINOLOGY: PIDDLE
@@ -19,7 +19,7 @@ of vector-based applications.
 MATLAB typically refers to vectors, matrices, and arrays. Perl already
 has arrays, and the terms "vector" and "matrix" typically refer to one-
 and two-dimensional collections of data. Having no good term to describe
-their object, PDL developers coined the term "I<piddle>" to give a name to
+their object, PDLA developers coined the term "I<piddle>" to give a name to
 their data type.
 
 A I<piddle> consists of a series of numbers organized as an N-dimensional
@@ -28,10 +28,10 @@ N-dimensional matrices. They are highly optimized for numerical work.
 
 =head1 THINKING IN TERMS OF THREADING
 
-If you have used PDL for a little while already, you may have been using
-threading without realising it. Start the PDL shell (type C<perldl> or
-C<pdl2> on a terminal). Most examples in this tutorial use the PDL shell.
-Make sure that L<PDL::NiceSlice|PDL::NiceSlice> and L<PDL::AutoLoader|PDL::AutoLoader>
+If you have used PDLA for a little while already, you may have been using
+threading without realising it. Start the PDLA shell (type C<perldl> or
+C<pdl2> on a terminal). Most examples in this tutorial use the PDLA shell.
+Make sure that L<PDLA::NiceSlice|PDLA::NiceSlice> and L<PDLA::AutoLoader|PDLA::AutoLoader>
 are enabled. For example:
 
   % pdl2
@@ -39,12 +39,12 @@ are enabled. For example:
   ...
   ReadLines, NiceSlice, MultiLines  enabled
  ...
-  Note: AutoLoader not enabled ('use PDL::AutoLoader' recommended)
+  Note: AutoLoader not enabled ('use PDLA::AutoLoader' recommended)
 
   pdl> 
 
 In this example, NiceSlice was automatically enabled, but AutoLoader was not.
-To enable it, type C<use PDL::AutoLoader>.
+To enable it, type C<use PDLA::AutoLoader>.
 
 Let's start with a two-dimensional I<piddle>:
 
@@ -65,7 +65,7 @@ Let's start with a two-dimensional I<piddle>:
 The C<info> method gives you basic information about a I<piddle>:
 
   pdl> p $a->info
-  PDL: Double D [11,9]
+  PDLA: Double D [11,9]
 
 This tells us that C<$a> is an 11 x 9 I<piddle> composed of double
 precision numbers. If we wanted to add 3 to all elements in an C<n x m>
@@ -81,7 +81,7 @@ piddle, a traditional language would use two nested for-loops:
 B<Note>: Notice that indices start at 0, as in Perl, C and Java (and unlike
 MATLAB and IDL).
 
-But with PDL, we can just write:
+But with PDLA, we can just write:
 
   pdl> $b = $a + 3
   pdl> p $b
@@ -120,18 +120,18 @@ line from every row in C<$a>:
   ]
 
 Two things to note here: First, the value of C<$a> is still the same. Try
-C<p $a> to check. Second, PDL automatically subtracted C<$line> from each
+C<p $a> to check. Second, PDLA automatically subtracted C<$line> from each
 row in C<$a>. Why did it do that? Let's look at the dimensions of C<$a>,
 C<$line> and C<$c>:
 
-  pdl> p $line->info  =>  PDL: Double D [11]
-  pdl> p $a->info     =>  PDL: Double D [11,9]
-  pdl> p $c->info     =>  PDL: Double D [11,9]
+  pdl> p $line->info  =>  PDLA: Double D [11]
+  pdl> p $a->info     =>  PDLA: Double D [11,9]
+  pdl> p $c->info     =>  PDLA: Double D [11,9]
 
 So, both C<$a> and C<$line> have the same number of elements in the 0th
-dimension! What PDL then did was thread over the higher dimensions in C<$a>
+dimension! What PDLA then did was thread over the higher dimensions in C<$a>
 and repeated the same operation 9 times to all the rows on C<$a>. This is
-PDL threading in action.
+PDLA threading in action.
 
 What if you want to subtract C<$line> from the first line in C<$a> only?
 You can do that by specifying the line explicitly:
@@ -150,7 +150,7 @@ You can do that by specifying the line explicitly:
    [88 89 90 91 92 93 94 95 96 97 98]
   ]
 
-See L<PDL::Indexing|PDL::Indexing> and L<PDL::NiceSlice|PDL::NiceSlice> to
+See L<PDLA::Indexing|PDLA::Indexing> and L<PDLA::NiceSlice|PDLA::NiceSlice> to
 learn more about specifying subsets from piddles.
 
 The true power of threading comes when you realise that the piddle can
@@ -161,10 +161,10 @@ have any number of dimensions! Let's make a 4 dimensional piddle:
 
 Now C<$c> is a piddle of the same dimension as C<$piddle_4D>.
 
-  pdl> p $piddle_4D->info  =>  PDL: Double D [11,3,7,2]
-  pdl> p $c->info          =>  PDL: Double D [11,3,7,2]
+  pdl> p $piddle_4D->info  =>  PDLA: Double D [11,3,7,2]
+  pdl> p $c->info          =>  PDLA: Double D [11,3,7,2]
 
-This time PDL has threaded over three higher dimensions automatically,
+This time PDLA has threaded over three higher dimensions automatically,
 subtracting C<$line> all the way.
 
 But, maybe you don't want to subtract from the rows (dimension 0), but from
@@ -172,21 +172,21 @@ the columns (dimension 1). How do I subtract a column of numbers from each
 column in C<$a>?
 
   pdl> $cols = sequence(9)
-  pdl> p $a->info      =>  PDL: Double D [11,9]
-  pdl> p $cols->info   =>  PDL: Double D [9]
+  pdl> p $a->info      =>  PDLA: Double D [11,9]
+  pdl> p $cols->info   =>  PDLA: Double D [9]
 
 Naturally, we can't just type C<$a - $cols>. The dimensions don't match:
 
   pdl> p $a - $cols
-  PDL: PDL::Ops::minus(a,b,c): Parameter 'b'
-  PDL: Mismatched implicit thread dimension 0: should be 11, is 9
+  PDLA: PDLA::Ops::minus(a,b,c): Parameter 'b'
+  PDLA: Mismatched implicit thread dimension 0: should be 11, is 9
 
-How do we tell PDL that we want to subtract from  dimension 1 instead?
+How do we tell PDLA that we want to subtract from  dimension 1 instead?
 
 =head1 MANIPULATING DIMENSIONS
 
-There are many PDL functions that let you rearrange the dimensions of PDL
-arrays. They are mostly covered in L<PDL::Slices|PDL::Slices>. The three
+There are many PDLA functions that let you rearrange the dimensions of PDLA
+arrays. They are mostly covered in L<PDLA::Slices|PDLA::Slices>. The three
 most common ones are:
 
  xchg
@@ -201,8 +201,8 @@ The C<xchg> method "B<exchanges>" two dimensions in a piddle:
   pdl> $a = sequence(6,7,8,9)
   pdl> $a_xchg = $a->xchg(0,3)
   
-  pdl> p $a->info       =>  PDL: Double D [6,7,8,9]
-  pdl> p $a_xchg->info  =>  PDL: Double D [9,7,8,6]
+  pdl> p $a->info       =>  PDLA: Double D [6,7,8,9]
+  pdl> p $a_xchg->info  =>  PDLA: Double D [9,7,8,6]
                                            |     |
                                            V     V
                                        (dim 0) (dim 3)
@@ -219,8 +219,8 @@ dimensions as necessary.
   pdl> $a = sequence(6,7,8,9)         (dim 0)
   pdl> $a_mv = $a->mv(0,3)               |
   pdl>                                   V _____
-  pdl> p $a->info     =>  PDL: Double D [6,7,8,9]
-  pdl> p $a_mv->info  =>  PDL: Double D [7,8,9,6]
+  pdl> p $a->info     =>  PDLA: Double D [6,7,8,9]
+  pdl> p $a_mv->info  =>  PDLA: Double D [7,8,9,6]
                                           ----- |
                                                 V
                                               (dim 3)
@@ -237,13 +237,13 @@ It "B<reorders>" the dimensions in any way you specify:
   pdl> $a = sequence(6,7,8,9)
   pdl> $a_reorder = $a->reorder(3,0,2,1)
   pdl>
-  pdl> p $a->info          =>  PDL: Double D [6,7,8,9]
-  pdl> p $a_reorder->info  =>  PDL: Double D [9,6,8,7]
+  pdl> p $a->info          =>  PDLA: Double D [6,7,8,9]
+  pdl> p $a_reorder->info  =>  PDLA: Double D [9,6,8,7]
                                               | | | |
                                               V V v V
                                  dimensions:  0 1 2 3
 
-Notice what happened. When we wrote C<reorder(3,0,2,1)> we instructed PDL to:
+Notice what happened. When we wrote C<reorder(3,0,2,1)> we instructed PDLA to:
 
  * Put dimension 3 first.
  * Put dimension 0 next.
@@ -328,11 +328,11 @@ Now we are ready to solve the problem that motivated this whole discussion:
   pdl> $a = sequence(11,9)
   pdl> $cols = sequence(9)
   pdl>
-  pdl> p $a->info     =>  PDL: Double D [11,9]
-  pdl> p $cols->info  =>  PDL: Double D [9]
+  pdl> p $a->info     =>  PDLA: Double D [11,9]
+  pdl> p $cols->info  =>  PDLA: Double D [9]
 
-How do we tell PDL to subtract C<$cols> along dimension 1 instead of dimension 0?
-The simplest way is to use the C<xchg> method and rely on PDL linking:
+How do we tell PDLA to subtract C<$cols> along dimension 1 instead of dimension 0?
+The simplest way is to use the C<xchg> method and rely on PDLA linking:
 
   pdl> p $a
   [
@@ -365,14 +365,14 @@ The simplest way is to use the C<xchg> method and rely on PDL linking:
 =item General Strategy:
 
 Move the dimensions you want to operate on to the start of your piddle's
-dimension list. Then let PDL thread over the higher dimensions.
+dimension list. Then let PDLA thread over the higher dimensions.
 
 =back
 
 =head1 EXAMPLE: CONWAY'S GAME OF LIFE
 
 Okay, enough theory. Let's do something a bit more interesting: We'll write
-B<Conway's Game of Life> in PDL and see how powerful PDL can be!
+B<Conway's Game of Life> in PDLA and see how powerful PDLA can be!
 
 The B<Game of Life> is a simulation run on a big two dimensional grid. Each
 cell in the grid can either be alive or dead (represented by 1 or 0). The
@@ -393,12 +393,12 @@ loops) and then fill the next generation grid.
 
 =head2 Classical implementation
 
-Here's a classic way of writing this program in Perl. We only use PDL for
+Here's a classic way of writing this program in Perl. We only use PDLA for
 addressing individual cells.
 
   #!/usr/bin/perl -w
-  use PDL;
-  use PDL::NiceSlice;
+  use PDLA;
+  use PDLA::NiceSlice;
   
   # Make a board for the game of life.
   my $nx = 20;
@@ -459,14 +459,14 @@ addressing individual cells.
 If you run this, you will see a small glider crawl diagonally across the grid
 of zeroes. On my machine, it prints out a couple of generations per second.
 
-=head2 Threaded PDL implementation
+=head2 Threaded PDLA implementation
 
-And here's the threaded version in PDL. Just four lines of PDL code, and
+And here's the threaded version in PDLA. Just four lines of PDLA code, and
 one of those is printing out the latest generation!
 
   #!/usr/bin/perl -w
-  use PDL;
-  use PDL::NiceSlice;
+  use PDLA;
+  use PDLA::NiceSlice;
   
   my $a = zeroes(20,20);
   
@@ -487,7 +487,7 @@ one of those is printing out the latest generation!
     print $a;
   }
 
-The threaded PDL version is much faster:
+The threaded PDLA version is much faster:
 
   Classical => 32.79 seconds.
   Threaded  =>  0.41 seconds.
@@ -496,7 +496,7 @@ The threaded PDL version is much faster:
 
 How does the threaded version work?
 
-There are many PDL functions designed to help you carry out PDL threading.
+There are many PDLA functions designed to help you carry out PDLA threading.
 In this example, the key functions are:
 
 =head3 Method: C<range>
@@ -523,7 +523,7 @@ another piddle.
    [13]
   ]
 
-At this point, the C<range> method looks very similar to a regular PDL slice.
+At this point, the C<range> method looks very similar to a regular PDLA slice.
 But the C<range> method is more general. For example, you can select several
 components at once:
 
@@ -545,7 +545,7 @@ of the chunk to return:
 We can use this to select one or more 3x3 boxes.
 
 Finally, C<range> can take a third parameter called the "boundary" condition.
-It tells PDL what to do if the size box you request goes beyond the edge of
+It tells PDLA what to do if the size box you request goes beyond the edge of
 the piddle. We won't go over all the options. We'll just say that the option
 C<periodic> means that the piddle "wraps around". For example:
 
@@ -870,13 +870,13 @@ Putting it all together, the next generation is:
 
 =head2 Bonus feature: Graphics!
 
-If you have L<PDL::Graphics::TriD|PDL::Graphics::TriD> installed, you can
+If you have L<PDLA::Graphics::TriD|PDLA::Graphics::TriD> installed, you can
 make a graphical version of the program by just changing three lines:
 
   #!/usr/bin/perl
-  use PDL;
-  use PDL::NiceSlice;
-  use PDL::Graphics::TriD;
+  use PDLA;
+  use PDLA::NiceSlice;
+  use PDLA::Graphics::TriD;
   
   my $a = zeroes(20,20);
   
@@ -913,9 +913,9 @@ changes:
 
 
   #!/usr/bin/perl
-  use PDL;
-  use PDL::NiceSlice;
-  use PDL::Graphics::TriD;
+  use PDLA;
+  use PDLA::NiceSlice;
+  use PDLA::Graphics::TriD;
   use Time::HiRes qw(usleep);
   
   my $a = random(100,100);
@@ -942,12 +942,12 @@ changes:
 =head1 CONCLUSION: GENERAL STRATEGY
 
 The general strategy is: I<Move the dimensions you want to operate on to the
-start of your piddle's dimension list. Then let PDL thread over the higher
+start of your piddle's dimension list. Then let PDLA thread over the higher
 dimensions.>
 
 Threading is a powerful tool that helps eliminate for-loops and can make your
 code more concise. Hopefully this tutorial has shown why it is worth getting
-to grips with threading in PDL.
+to grips with threading in PDLA.
 
 
 =head1 COPYRIGHT

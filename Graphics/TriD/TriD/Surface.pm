@@ -1,17 +1,17 @@
 
-package PDL::Graphics::TriD::Surface;
+package PDLA::Graphics::TriD::Surface;
 
 BEGIN {
-   use PDL::Config;
-   if ( $PDL::Config{USE_POGL} ) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw(:all)";
-      eval 'use PDL::Graphics::OpenGL::Perl::OpenGL';
+   use PDLA::Config;
+   if ( $PDLA::Config{USE_POGL} ) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw(:all)";
+      eval 'use PDLA::Graphics::OpenGL::Perl::OpenGL';
    } else {
-      eval 'use PDL::Graphics::OpenGL';
+      eval 'use PDLA::Graphics::OpenGL';
    }
 }
 
-use PDL::Lite;
+use PDLA::Lite;
 
 sub new {
 	my($nvertices,$nfaces,$nvertpface) = @_;

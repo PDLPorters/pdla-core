@@ -8,7 +8,7 @@ BEGIN{
 	  $ENV{'PERL_DL_NONLAZY'}=0;
 }
 
-# use PDL::Graphics::OpenGL;
+# use PDLA::Graphics::OpenGL;
 
 sub hasDISPLAY {
   return defined $ENV{DISPLAY} && $ENV{DISPLAY} !~ /^\s*$/;
@@ -17,17 +17,17 @@ sub hasDISPLAY {
 use Test::More;
 
 BEGIN { 
-   use PDL::Config;
-   if ( $PDL::Config{WITH_3D} ) {  # check if compiled
-      if ( $PDL::Config{USE_POGL} ) {  # check if using Perl OpenGL
-         if ( hasDISPLAY or exists($ENV{'PDL_INT'}) ) {
+   use PDLA::Config;
+   if ( $PDLA::Config{WITH_3D} ) {  # check if compiled
+      if ( $PDLA::Config{USE_POGL} ) {  # check if using Perl OpenGL
+         if ( hasDISPLAY or exists($ENV{'PDLA_INT'}) ) {
             plan tests => 4;
-            use_ok("OpenGL $PDL::Config{POGL_VERSION}", qw(:all));
-            use_ok('PDL::Graphics::OpenGL::Perl::OpenGL');
+            use_ok("OpenGL $PDLA::Config{POGL_VERSION}", qw(:all));
+            use_ok('PDLA::Graphics::OpenGL::Perl::OpenGL');
          } else {  # no DISPLAY
             plan tests => 2;
-            use_ok("OpenGL $PDL::Config{POGL_VERSION}", qw(:all));
-            use_ok('PDL::Graphics::OpenGL::Perl::OpenGL');
+            use_ok("OpenGL $PDLA::Config{POGL_VERSION}", qw(:all));
+            use_ok('PDLA::Graphics::OpenGL::Perl::OpenGL');
             exit;
          }
       } else {
@@ -58,11 +58,11 @@ SKIP: {
    foreach(0..$numwins-1){
       $opt->{x} = ($numwins % 10) *100;
       $opt->{y} = int($numwins / 10) *100;
-      my $win=eval 'PDL::Graphics::OpenGL::OO->new($opt)';
+      my $win=eval 'PDLA::Graphics::OpenGL::OO->new($opt)';
       if (! defined($win) ) {
          skip "$@", 2 if $@ =~ /display mode not possible/;
       } else {
-         isa_ok($win, 'PDL::Graphics::OpenGL::OO');
+         isa_ok($win, 'PDLA::Graphics::OpenGL::OO');
       }
       push @windows, $win;
    }

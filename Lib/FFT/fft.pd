@@ -2,17 +2,17 @@
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::FFT - FFTs for PDL
+PDLA::FFT - FFTs for PDLA
 
 =head1 DESCRIPTION
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-As of PDL-2.006_04, the direction of the FFT/IFFT has been
+As of PDLA-2.006_04, the direction of the FFT/IFFT has been
 reversed to match the usage in the FFTW library and the convention
 in use generally.
 !!!!!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-FFTs for PDL.  These work for arrays of any dimension, although ones
+FFTs for PDLA.  These work for arrays of any dimension, although ones
 with small prime factors are likely to be the quickest.  The forward
 FFT is unnormalized while the inverse FFT is normalized so that the
 IFFT of the FFT returns the original values.
@@ -22,7 +22,7 @@ the in-place flag.  That should be fixed.
 
 =head1 SYNOPSIS
 
-        use PDL::FFT qw/:Func/;
+        use PDLA::FFT qw/:Func/;
 
 	fft($real, $imag);
 	ifft($real, $imag);
@@ -56,13 +56,13 @@ But if $r and $i are unsigned short integers (ushorts):
 	print $r,$i;
 	[2 0 65534 0] [0 0 0 0]
 
-This used to occur because L<PDL::PP|PDL::PP> converts the ushort
+This used to occur because L<PDLA::PP|PDLA::PP> converts the ushort
 piddles to floats or doubles, performs the FFT on them, and then
 converts them back to ushort, causing the overflow where the amplitude
 of the frequency should be -2.
 
 Therefore, if you pass in a piddle of integer datatype (byte, short,
-ushort, long) to any of the routines in PDL::FFT, your data will be
+ushort, long) to any of the routines in PDLA::FFT, your data will be
 promoted to a double-precision piddle.  If you pass in a float, the
 single-precision FFT will be performed.
 
@@ -92,9 +92,9 @@ C<< $kx = $real->xlinvals(-($N/2-0.5)/$N/$D,($N/2-0.5)/$N/$D)->rotate(-($N-1)/2)
 =head1 ALTERNATIVE FFT PACKAGES
 
 Various other modules - such as 
-L<PDL::FFTW|PDL::FFTW> and L<PDL::Slatec|PDL::Slatec> - 
+L<PDLA::FFTW|PDLA::FFTW> and L<PDLA::Slatec|PDLA::Slatec> - 
 contain FFT routines.
-However, unlike PDL::FFT, these modules are optional,
+However, unlike PDLA::FFT, these modules are optional,
 and so may not be installed.
 
 =cut
@@ -141,21 +141,21 @@ pp_add_exported('',"fft ifft fftnd ifftnd fftconvolve realfft realifft kernctr")
 pp_addpm(<<'EOD');
 
 use Carp;
-use PDL::Core qw/:Func/;
-use PDL::Basic qw/:Func/;
-use PDL::Types;
-use PDL::ImageND qw/kernctr/; # moved to ImageND since FFTW uses it too
+use PDLA::Core qw/:Func/;
+use PDLA::Basic qw/:Func/;
+use PDLA::Types;
+use PDLA::ImageND qw/kernctr/; # moved to ImageND since FFTW uses it too
 
 END {
   # tidying up required after using fftn
-  print "Freeing FFT space\n" if $PDL::verbose;
+  print "Freeing FFT space\n" if $PDLA::verbose;
   fft_free();
 }
 
 sub todecimal {
     my ($arg) = @_;
-    $arg = $arg->double if (($arg->get_datatype != $PDL_F) && 
-			   ($arg->get_datatype != $PDL_D));
+    $arg = $arg->double if (($arg->get_datatype != $PDLA_F) && 
+			   ($arg->get_datatype != $PDLA_D));
     $_[0] = $arg;
 1;}
 
@@ -175,9 +175,9 @@ fft($real,$imag);
 
 =cut
 
-*fft = \&PDL::fft;
+*fft = \&PDLA::fft;
 
-sub PDL::fft {
+sub PDLA::fft {
 	# Convert the first argument to decimal and check for trouble.
 	eval {	todecimal($_[0]);	};
 	if ($@) {
@@ -213,9 +213,9 @@ ifft($real,$imag);
 
 =cut
 
-*ifft = \&PDL::ifft;
+*ifft = \&PDLA::ifft;
 
-sub PDL::ifft {
+sub PDLA::ifft {
 	# Convert the first argument to decimal and check for trouble.
 	eval {	todecimal($_[0]);	};
 	if ($@) {
@@ -250,9 +250,9 @@ the array.
 
 =cut
 
-*realfft = \&PDL::realfft;
+*realfft = \&PDLA::realfft;
 
-sub PDL::realfft {
+sub PDLA::realfft {
     barf("Usage: realfft(real(*)") if $#_ != 0;
     my ($a) = @_;
     todecimal($a);
@@ -276,10 +276,10 @@ Inverse of one-dimensional realfft routine [inplace].
 
 =cut
 
-*realifft = \&PDL::realifft;
+*realifft = \&PDLA::realifft;
 
-sub PDL::realifft {
-    use PDL::Ufunc 'max';
+sub PDLA::realifft {
+    use PDLA::Ufunc 'max';
     barf("Usage: realifft(xfm(*)") if $#_ != 0;
     my ($a) = @_;
     todecimal($a);
@@ -307,9 +307,9 @@ N-dimensional FFT over all pdl dims of input (inplace)
 
 =cut
 
-*fftnd = \&PDL::fftnd;
+*fftnd = \&PDLA::fftnd;
 
-sub PDL::fftnd {
+sub PDLA::fftnd {
     barf "Must have real and imaginary parts for fftnd" if $#_ != 1;
     my ($r,$i) = @_;
     my ($n) = $r->getndims;
@@ -341,9 +341,9 @@ N-dimensional inverse FFT over all pdl dims of input (inplace)
 
 =cut
 
-*ifftnd = \&PDL::ifftnd;
+*ifftnd = \&PDLA::ifftnd;
 
-sub PDL::ifftnd {
+sub PDLA::ifftnd {
     barf "Must have real and imaginary parts for ifftnd" if $#_ != 1;
     my ($r,$i) = @_;
     my ($n) = $r->getndims;
@@ -366,7 +366,7 @@ sub PDL::ifftnd {
 EOD
 
 # This version uses the fft routines' internal row/column swapping.
-# Doing this instead through PDL seems quicker at the moment.
+# Doing this instead through PDLA seems quicker at the moment.
 
 if (0) {
 pp_def('fftnd',
@@ -374,7 +374,7 @@ pp_def('fftnd',
 	GenericTypes => [F,D],
         PMCode => '
 
-sub PDL::fftnd{
+sub PDLA::fftnd{
     barf("Usage: fftnd(real(*), imag(*)") if $#_ != 1;
     my($a,$b) = @_;
     my(@dimsa) = $a->dims;
@@ -384,7 +384,7 @@ sub PDL::fftnd{
 	barf "Real and imaginary arrays must have same dimensions"
 	  if ($_ != shift @dimsb);
     }
-    &PDL::_fftnd_int($dimsa, $a->clump(-1), $b->clump(-1));
+    &PDLA::_fftnd_int($dimsa, $a->clump(-1), $b->clump(-1));
 }
 
 ',
@@ -405,7 +405,7 @@ pp_def('ifftnd',
 	GenericTypes => [F,D],
         PMCode => '
 
-sub PDL::ifftnd{
+sub PDLA::ifftnd{
     barf("Usage: ifftnd(real(*), imag(*)") if $#_ != 1;
     my($a,$b) = @_;
     my(@dimsa) = $a->dims;
@@ -415,7 +415,7 @@ sub PDL::ifftnd{
 	barf "Real and imaginary arrays must have same dimensions"
 	  if ($_ != shift @dimsb);
     }
-    &PDL::_ifftnd_int($dimsa, $a->clump(-1), $b->clump(-1));
+    &PDLA::_ifftnd_int($dimsa, $a->clump(-1), $b->clump(-1));
 }
 
 ',
@@ -448,22 +448,22 @@ N-dimensional convolution with periodic boundaries (FFT method)
 fftconvolve works inplace, and returns an error array in kernel as an
 accuracy check -- all the values in it should be negligible.
 
-See also L<PDL::ImageND::convolveND|PDL::ImageND/convolveND>, which 
+See also L<PDLA::ImageND::convolveND|PDLA::ImageND/convolveND>, which 
 performs speed-optimized convolution with a variety of boundary conditions.
 
 The sizes of the image and the kernel must be the same.
-L<kernctr|PDL::ImageND/kernctr> centres a small kernel to emulate the
+L<kernctr|PDLA::ImageND/kernctr> centres a small kernel to emulate the
 behaviour of the direct convolution routines.
 
 The speed cross-over between using straight convolution 
-(L<PDL::Image2D::conv2d()|PDL::Image2D/conv2d>) and
+(L<PDLA::Image2D::conv2d()|PDLA::Image2D/conv2d>) and
 these fft routines is for kernel sizes roughly 7x7.
 
 =cut
 
-*fftconvolve = \&PDL::fftconvolve;
+*fftconvolve = \&PDLA::fftconvolve;
 
-sub PDL::fftconvolve {
+sub PDLA::fftconvolve {
     barf "Must have image & kernel for fftconvolve" if $#_ != 1;
     my ($a, $k) = @_;
 
@@ -488,7 +488,7 @@ sub PDL::fftconvolve {
     ($cr,$ci);
 }
 
-sub PDL::fftconvolve_inplace {
+sub PDLA::fftconvolve_inplace {
     barf "Must have image & kernel for fftconvolve" if $#_ != 1;
     my ($hr, $hi) = @_;
     my ($n) = $hr->getndims;
@@ -597,8 +597,8 @@ This file copyright (C) 1997, 1998 R.J.R. Williams
 Tuomas J. Lukka, (lukka@husc.harvard.edu).  All rights reserved. There
 is no warranty. You are allowed to redistribute this software /
 documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 
 =cut

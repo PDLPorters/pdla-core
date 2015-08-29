@@ -1,12 +1,12 @@
 =head1 NAME
 
-PDL::Delta - PDL changes between V1.0 and V2.0
+PDLA::Delta - PDLA changes between V1.0 and V2.0
 
 
 =head1 DESCRIPTION
 
 This file is an attempt to list the major user-visible changes
-between PDL versions 1.0 and 2.0.
+between PDLA versions 1.0 and 2.0.
 
 
 =head1 Core Changes
@@ -23,7 +23,7 @@ syntactic issues. If you want to have a hash, use
     $a->hdr()
 
 which returns a reference to an anonymous hash. Also,
-subclassing works if you store a piddle in the hash member ``PDL''.
+subclassing works if you store a piddle in the hash member ``PDLA''.
 
 There are also many core enhancements to support Dataflow and
 Slicing tricks, but these do not introduce any incompatibilities.
@@ -50,7 +50,7 @@ Many of the base and library pods were updated.
 
 The F<Changes> file for exhaustive details on what changed.
 
-The F<INSTALL> file for how to build PDL.
+The F<INSTALL> file for how to build PDLA.
 
 The F<README> file for general stuff.
 

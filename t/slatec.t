@@ -1,21 +1,21 @@
 # -*-perl-*-
-use PDL::LiteF;
-use PDL::Config;
+use PDLA::LiteF;
+use PDLA::Config;
 use Test::More;
 my $ntests;
 BEGIN {
-   if ($PDL::Config{WITH_SLATEC}) {
-      eval " use PDL::Slatec; ";
+   if ($PDLA::Config{WITH_SLATEC}) {
+      eval " use PDLA::Slatec; ";
       $loaded = ($@ ? 0 : 1);
       if ($loaded) {
          $ntests = 40;
-         $ntests -= 3 unless ($PDL::Config{WITH_BADVAL}); # two fewer tests if no bad val support
+         $ntests -= 3 unless ($PDLA::Config{WITH_BADVAL}); # two fewer tests if no bad val support
          plan tests => $ntests;
       } 
    }
    else { 
       ## print STDERR "$@\n";
-      plan skip_all => 'PDL::Slatec not available';
+      plan skip_all => 'PDLA::Slatec not available';
    }
 }
 
@@ -65,7 +65,7 @@ ok(tapprox($deti,-0.5));
 # Now do the polynomial fitting tests
 
 
-if ($PDL::Config{WITH_BADVAL}) {
+if ($PDLA::Config{WITH_BADVAL}) {
 
   # Set up tests x, y and weight
   my $y = pdl (1,4,9,16,25,36,49,64.35,32);
@@ -270,9 +270,9 @@ ok(all( abs($int-$ans) < 0.06 ) );
 my $nknots = 0;
 my $t = zeroes( float, 2*$x->nelem+4 );
 my $bcoef  = zeroes( float, 2*$x->nelem );
-my $ndim = PDL->null;
-my $kord = PDL->null;
-$err = PDL->null;
+my $ndim = PDLA->null;
+my $kord = PDLA->null;
+$err = PDLA->null;
 echbs( $x, $f, $d, 0, $nknots, $t, $bcoef, $ndim, $kord, $err );
 ok(all($err == 0));
 exit(0);

@@ -62,7 +62,7 @@ Cephes Math Library Release 2.3:  June, 1995
 Copyright 1984, 1987, 1989, 1995 by Stephen L. Moshier
 */
 
-/* For PDL, use system defaults where possible */
+/* For PDLA, use system defaults where possible */
 #include <math.h>
 #if !defined(WIN32) && !defined(_WIN32) && !defined(__APPLE__)
 /* values.h is gone on OpenBSD(?) and depracated on GNU systems */
@@ -97,7 +97,7 @@ Copyright 1984, 1987, 1989, 1995 by Stephen L. Moshier
 #define NANARG_SIGNATURE
 #endif
 
-/* Redefine nan so PDL doesn't die when we see one.
+/* Redefine nan so PDLA doesn't die when we see one.
    OK, nasty, but means the C-code is still as in the original */
 #define nan() quiet_nan(NANARG)
 

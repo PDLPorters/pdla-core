@@ -1,13 +1,13 @@
 # Perform pdl demos on terminals
 
-package PDL::Demos::Routines;
+package PDLA::Demos::Routines;
 
 # Copyright (C) 1998 Tuomas J. Lukka.
 # All rights reserved, except redistribution
-# with PDL under the PDL License permitted.
+# with PDLA under the PDLA License permitted.
 
 use Carp;
-use PDL;
+use PDLA;
 
 @ISA="Exporter";
 @EXPORT = qw/comment act actnw output/;
@@ -38,8 +38,8 @@ sub act($) {
    print $script;
    print "---- Output:\n";
    my $pack = (caller)[0];
-#	eval "package $pack; use PDL; $_[0]";
-   eval "package $pack; use PDL; $_[0]";
+#	eval "package $pack; use PDLA; $_[0]";
+   eval "package $pack; use PDLA; $_[0]";
    print "----\nOOPS!!! Something went wrong, please make a bug report!: $@\n----\n" if $@;
    my $prompt = "---- (press enter)";
    defined($PERLDL::TERM) ? $PERLDL::TERM->readline($prompt) : ( print $prompt, <> );
@@ -53,8 +53,8 @@ sub actnw($) {
    print $script;
    print "---- Output:\n";
    my $pack = (caller)[0];
-#	eval "package $pack; use PDL; $_[0]";
-   eval "package $pack; use PDL; $_[0]";
+#	eval "package $pack; use PDLA; $_[0]";
+   eval "package $pack; use PDLA; $_[0]";
    print "----\n";
    print "----\nOOPS!!! Something went wrong, please make a bug report!: $@\n----\n" if $@;
 }

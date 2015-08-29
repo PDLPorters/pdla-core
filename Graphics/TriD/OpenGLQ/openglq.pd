@@ -1,7 +1,7 @@
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::Graphics::OpenGLQ - quick routines to plot lots of stuff from piddles.
+PDLA::Graphics::OpenGLQ - quick routines to plot lots of stuff from piddles.
 
 =head1 SYNOPSIS
 
@@ -16,8 +16,8 @@ only for internal use - see source
 Copyright (C) 1997,1998 Tuomas J. Lukka.  
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL 
-distribution. If this file is separated from the PDL distribution, 
+conditions. For details, see the file COPYING in the PDLA 
+distribution. If this file is separated from the PDLA distribution, 
 the copyright notice should be included in the file.
 
 

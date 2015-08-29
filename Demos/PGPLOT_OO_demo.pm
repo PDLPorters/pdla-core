@@ -1,11 +1,11 @@
-package PDL::Demos::PGPLOT_OO_demo;
+package PDLA::Demos::PGPLOT_OO_demo;
 
 # show how to use the new OO PGPLOT interface
 
-use PDL;
-use PDL::Graphics::PGPLOT::Window;
+use PDLA;
+use PDLA::Graphics::PGPLOT::Window;
 
-PDL::Demos::Routines->import();
+PDLA::Demos::Routines->import();
 sub comment($);
 sub act($);
 sub output;
@@ -29,11 +29,11 @@ comment q|
 
 act q|
     # we start with a different module to the traditional interface
-    use PDL::Graphics::PGPLOT::Window;
+    use PDLA::Graphics::PGPLOT::Window;
 
     # create a window "object"
     $dev = $^O =~ /MSWin32/ ? '/GW' : '/XSERVE';
-    $win = PDL::Graphics::PGPLOT::Window->new( { Dev => $dev } );
+    $win = PDLA::Graphics::PGPLOT::Window->new( { Dev => $dev } );
 
 |;
 
@@ -86,7 +86,7 @@ act q|
 act q|
   # let's try and read the cursor
 
-  use PDL::Complex;
+  use PDLA::Complex;
   $c =  zeroes(300)->xlinvals(0,12)+i*zeroes(300)->xlinvals(2,10);
   $sin = sin $c;
   $win->line( $sin->im, $sin->re );
@@ -103,7 +103,7 @@ act q|
 act q|
   # how about another window?
 
-  $win2 = PDL::Graphics::PGPLOT::Window->new( { Dev => $dev } );
+  $win2 = PDLA::Graphics::PGPLOT::Window->new( { Dev => $dev } );
   $win2->env( 0, 4, -2, 0, { Axis => 'logy' } );
   $x = sequence(101) / 25;
   $win2->points( $x, $x->sin->abs()->log10 );

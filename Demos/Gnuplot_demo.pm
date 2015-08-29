@@ -1,25 +1,25 @@
 ##############################
-# Gnuplot_demo package for PDL
+# Gnuplot_demo package for PDLA
 #
 # To use this manually:
-#    use PDL::Demos::Screen;
+#    use PDLA::Demos::Screen;
 #    do 'Gnuplot_demo.pm';
-#    PDL::Demos::Gnuplot_demo::run();
+#    PDLA::Demos::Gnuplot_demo::run();
 #
 # Authors: Dima Kogan & Craig DeForest
 
-package PDL::Demos::Gnuplot_demo;
+package PDLA::Demos::Gnuplot_demo;
 
-use PDL;
+use PDLA;
 
 BEGIN {
-    eval 'use PDL::Graphics::Gnuplot;';
-    if ($@ or !defined($PDL::Graphics::Gnuplot::VERSION)) {
+    eval 'use PDLA::Graphics::Gnuplot;';
+    if ($@ or !defined($PDLA::Graphics::Gnuplot::VERSION)) {
 	eval <<'EOF';
 	    sub run {
 	    print qq{
 
-PDL::Graphics::Gnuplot is required for this demo, but didn't load.  You may have
+PDLA::Graphics::Gnuplot is required for this demo, but didn't load.  You may have
 to go get it from CPAN (http://search.cpan.org).  You might also need to get the 
 external "gnuplot" app (http://www.gnuplot.info).
 
@@ -30,24 +30,24 @@ EOF
     return 1;
 }
 
-use PDL::ImageND;
+use PDLA::ImageND;
 
-use PDL::Demos::Screen;   # This is awful but seems to be needed since Screen.pm is where the Routines are located. -CED 2/2013
+use PDLA::Demos::Screen;   # This is awful but seems to be needed since Screen.pm is where the Routines are located. -CED 2/2013
 
-PDL::Demos::Routines->import();
+PDLA::Demos::Routines->import();
 sub comment($);
 sub act($);
 sub output;
 
 
 sub run {
-    local($PDL::debug) = 0;
-    local($PDL::verbose) = 0;
+    local($PDLA::debug) = 0;
+    local($PDLA::verbose) = 0;
     
 
     $s = q|
   # ensure that the module is loaded 
-  use PDL::Graphics::Gnuplot;
+  use PDLA::Graphics::Gnuplot;
 
   # Create a Gnuplot object - the default device displays on most 
   # operating systems.  (No plot window yet - just the object).
@@ -59,23 +59,23 @@ sub run {
   $y = $x/1000 * sin($x/10);
 
 |;
-    if(!defined($PDL::Graphics::Gnuplot::VERSION)) {
+    if(!defined($PDLA::Graphics::Gnuplot::VERSION)) {
 	die q{
 
 *******************************************************************************
 This demo requires both the external "gnuplot" application and the module 
-"PDL::Graphics::Gnuplot".  You don't seem to have the module installed on your 
+"PDLA::Graphics::Gnuplot".  You don't seem to have the module installed on your 
 system.  You might want to get it from CPAN and try again.
 *******************************************************************************
 
 };
     }
 
-    if(!defined($PDL::Graphics::Gnuplot::valid_terms)) {
-	my $ww = new PDL::Graphics::Gnuplot;
+    if(!defined($PDLA::Graphics::Gnuplot::valid_terms)) {
+	my $ww = new PDLA::Graphics::Gnuplot;
     }
 
-    if($PDL::Graphics::Gnuplot::valid_terms->{wxt}) {
+    if($PDLA::Graphics::Gnuplot::valid_terms->{wxt}) {
 	$subst = "wxt, size=>[8,6,'in'], title=>'Gnuplot demo window', persist=>0";
     } elsif($ENV{DISPLAY}) {
 	$subst = "x11, size=>[8,6,'in'], title=>'Gnuplot demo window', persist=>0";
@@ -88,7 +88,7 @@ system.  You might want to get it from CPAN and try again.
 
    $s = q|
   # ensure that the module is loaded 
-  use PDL::Graphics::Gnuplot;
+  use PDLA::Graphics::Gnuplot;
 
   # Create a Gnuplot object - the default device displays on most 
   # operating systems.  (No plot window yet - just the object).
@@ -120,14 +120,14 @@ system.  You might want to get it from CPAN and try again.
   $w->options(title=>"Two lines", xl=>"Ordinate", yl=>"Abscissa");
 
   # A two-line plot.  
-  # Groups of data are separated by non-PDL options -- in this
+  # Groups of data are separated by non-PDLA options -- in this
   # case, the null hash since there are no per-curve options.
 
   $y2 = sqrt($x) * cos(100*$x);
   $w->lines($x,$y,{},$x,$y2);
 
   # A two-line plot with legend.
-  # The legend for each line separates the groups of PDL data.
+  # The legend for each line separates the groups of PDLA data.
 
   $w->options(title=>"Two lines (with legend)", key=>'left');
   $w->lines( legend=>"sin",$x,$y,  legend=>"cos",$x,$y2 );
@@ -137,7 +137,7 @@ system.  You might want to get it from CPAN and try again.
 
  act q|
   # You can also generate multiline plots with threading.
-  # Here, $x is a 1000-element 1-D PDL, and $yy is a 1000x2 2-D PDL.
+  # Here, $x is a 1000-element 1-D PDLA, and $yy is a 1000x2 2-D PDLA.
   
   $x       = xvals(1000)/1000;
   ($y,$y2) =  ( $x * sin(100 * $x),   sqrt($x) * cos(100 * $x)  );
@@ -265,7 +265,7 @@ act q|
 
  
     use File::Spec;
-    $d = File::Spec->catdir( "PDL", "Demos" );
+    $d = File::Spec->catdir( "PDLA", "Demos" );
     $m51path = undef;
     foreach my $path ( @INC ) {
 	my $check = File::Spec->catdir( $path, $d );
@@ -278,7 +278,7 @@ act q|
   
  ******************************************************
   You seem to be missing the file 'm51.fits', which 
-  should be included in the PDL distribution.  Without
+  should be included in the PDLA distribution.  Without
   it, I can't show you the m51 image demos, so I'll 
   quit now.  
  ******************************************************

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-my @pack = (["pnm.pd", qw(Pnm PDL::IO::Pnm)]);
+my @pack = (["pnm.pd", qw(Pnm PDLA::IO::Pnm)]);
 
 my %hash = pdlpp_stdargs_int(@pack);
 $hash{'PM'}->{'Pic.pm'} = '$(INST_LIBDIR)/Pic.pm';

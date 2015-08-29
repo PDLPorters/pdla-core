@@ -1,6 +1,6 @@
-use PDL::LiteF;
-use PDL::IO::FlexRaw;
-use PDL::Config;
+use PDLA::LiteF;
+use PDLA::IO::FlexRaw;
+use PDLA::Config;
 use Config;
 
 use strict;
@@ -23,8 +23,8 @@ $|=1;
 my $ndata = 10;
 my $Verbose = 0;
 my $DEBUG = 0;
-$PDL::Verbose = 0;
-$Verbose |= $PDL::Verbose;
+$PDLA::Verbose = 0;
+$Verbose |= $PDLA::Verbose;
 
 my $exec = $^O =~ /win32/i ? '.exe' : '';
 my $null = $^O =~ /win32/i ? ' 2>nul' : ' 2>/dev/null';
@@ -35,7 +35,7 @@ BEGIN{
    my $datalen;
    $datalen = length($data);
 
-   eval " use PDL::Slatec; ";
+   eval " use PDLA::Slatec; ";
    my $loaded = ($@ ? 0 : 1);
    unless ( $loaded ) {
       plan skip_all => "Skipped tests as F77 compiler not found";
@@ -54,14 +54,14 @@ BEGIN{
    }
 
     # Configuration
-    # Get ExtUtils::F77 if run in either PDL/t/ or PDL/
+    # Get ExtUtils::F77 if run in either PDLA/t/ or PDLA/
     #
     if(-e 'flexraw.t') {
 	unshift @INC, '../Lib/Slatec/' if -e 'flexraw.t';
     } elsif(-e 'INTERNATIONALIZATION') {
 	unshift @INC, 'Lib/Slatec/' if -e 'INTERNATIONALIZATION';
     } else {
-	print "I'm not in PDL now, right? Still trying\n";
+	print "I'm not in PDLA now, right? Still trying\n";
     }
 
 }
@@ -597,7 +597,7 @@ SKIP: {
 
 # Try writing data
 my $flexhdr = writeflex($data,@req);
-writeflexhdr($data,$flexhdr) unless $PDL::IO::FlexRaw::writeflexhdr;
+writeflexhdr($data,$flexhdr) unless $PDLA::IO::FlexRaw::writeflexhdr;
 @a = readflex($data);
 unlink $hdr;
 $ok = 1;
@@ -637,7 +637,7 @@ ok( $ok, "writeflex combined types[10], readflex explicit hdr array");
 # Writing multidimensional data
 map {$_ = $_->dummy(0,10)} @req;
 $flexhdr = writeflex($data,@req);
-writeflexhdr($data,$flexhdr) unless $PDL::IO::FlexRaw::writeflexhdr;
+writeflexhdr($data,$flexhdr) unless $PDLA::IO::FlexRaw::writeflexhdr;
 @a = readflex($data);
 unlink $data;
 unlink $hdr;

@@ -1,13 +1,13 @@
 
-package PDL::Graphics::VRML::Protos;
-PDL::Graphics::VRMLNode->import();
-PDL::Graphics::VRMLProto->import();
+package PDLA::Graphics::VRML::Protos;
+PDLA::Graphics::VRMLNode->import();
+PDLA::Graphics::VRMLProto->import();
 
-sub PDLBlockText10 {
-	vrp('PDLBlockText10',
+sub PDLABlockText10 {
+	vrp('PDLABlockText10',
 		[fv3f('position',"0 0 0"),
 		 fv3f('size',"1 1 0.1"),
-		 fmstr('text','["TESTING PDL","TEXTBLOCK","LONG LONG LONG LONG LONG TEXT","Short","FOOOOOOOOOOOOOOOO"]')],
+		 fmstr('text','["TESTING PDLA","TEXTBLOCK","LONG LONG LONG LONG LONG TEXT","Short","FOOOOOOOOOOOOOOOO"]')],
 		vrn('Transform',
 		    'translation' => 'IS position',
 		    'scale' => 'IS size',

@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::Graphics::TriD -- PDL 3D interface
+PDLA::Graphics::TriD -- PDLA 3D interface
 
 =head1 SYNOPSIS
 
- use PDL::Graphics::TriD;
+ use PDLA::Graphics::TriD;
  
  # Generate a somewhat interesting sequence of points:
  $t = sequence(100)/10;
@@ -47,7 +47,7 @@ strange.
 
 =head1 DESCRIPTION
 
-This module implements a generic 3D plotting interface for PDL.
+This module implements a generic 3D plotting interface for PDLA.
 Points, lines and surfaces (among other objects) are supported.
 
 With OpenGL, it is easy to manipulate the resulting 3D objects
@@ -62,7 +62,7 @@ at C<http://vrml.sgi.com/> or C<http://www.vrml.org/>
 
 The default device for TriD is currently OpenGL.
 You can specify a different device either in your program
-or in the environment variable C<PDL_3D_DEVICE>.
+or in the environment variable C<PDLA_3D_DEVICE>.
 The one specified in the program takes priority.
 
 The currently available devices are
@@ -94,7 +94,7 @@ in motion.
 For OpenGL you can select either on- or off-line rendering.
 VRML is currently always offline (this may change  later,
 if someone bothers to write  the  java(script)  code to  contact
-PDL and wait for the next PDL image over the network.
+PDLA and wait for the next PDLA image over the network.
 
 =head1 COORDINATE SPECIFICATIONS
 
@@ -210,8 +210,8 @@ meaningful surface (unless you're into fractals, perhaps).
 
  #!/usr/bin/perl
 
- use PDL;
- use PDL::Graphics::TriD;
+ use PDLA;
+ use PDLA::Graphics::TriD;
 
  # Draw out a trajectory in three-space
  $t = sequence(100)/10;
@@ -555,58 +555,58 @@ Those that do not have a calling sequence described here should
 have their own manual pages.
 
 There are objects that are not mentioned here; they are either internal
-to PDL3D or in rapidly changing states. If you use them, you do so at
+to PDLA3D or in rapidly changing states. If you use them, you do so at
 your own risk.
 
-The syntax C<PDL::Graphics::TriD::Scale(x,y,z)> here means that you create
+The syntax C<PDLA::Graphics::TriD::Scale(x,y,z)> here means that you create
 an object like
 
-	$a = new PDL::Graphics::TriD::Scale($x,$y,$z);
+	$a = new PDLA::Graphics::TriD::Scale($x,$y,$z);
 
-=head2 PDL::Graphics::TriD::LineStrip
+=head2 PDLA::Graphics::TriD::LineStrip
 
 This is just a line or a set of lines. The arguments are 3 1-or-more-D
 piddles which describe the vertices of a continuous line and an 
 optional color piddle (which is 1-D also and simply
 defines the color between red and blue. This will probably change).
 
-=head2 PDL::Graphics::TriD::Lines
+=head2 PDLA::Graphics::TriD::Lines
 
 This is just a line or a set of lines. The arguments are 3 1-or-more-D
 piddles where each contiguous pair of vertices describe a line segment 
 and an optional color piddle (which is 1-D also and simply
 defines the color between red and blue. This will probably change).
 
-=head2 PDL::Graphics::TriD::Image
+=head2 PDLA::Graphics::TriD::Image
 
 This is a 2-dimensional RGB image consisting of colored
 rectangles. With OpenGL, this is implemented by texturing so this should
 be relatively memory and execution-time-friendly.
 
-=head2 PDL::Graphics::TriD::Lattice
+=head2 PDLA::Graphics::TriD::Lattice
 
 This is a 2-D set of points connected by lines in 3-space.
 The constructor takes as arguments 3 2-dimensional piddles.
 
-=head2 PDL::Graphics::TriD::Points
+=head2 PDLA::Graphics::TriD::Points
 
 This is simply a set of points in 3-space. Takes as arguments
 the x, y and z coordinates of the points as piddles.
 
-=head2 PDL::Graphics::TriD::Scale(x,y,z)
+=head2 PDLA::Graphics::TriD::Scale(x,y,z)
 
 Self-explanatory
 
-=head2 PDL::Graphics::TriD::Translation(x,y,z)
+=head2 PDLA::Graphics::TriD::Translation(x,y,z)
 
 Ditto
 
-=head2 PDL::Graphics::TriD::Quaternion(c,x,y,z)
+=head2 PDLA::Graphics::TriD::Quaternion(c,x,y,z)
 
 One way of representing rotations is with quaternions. See the appropriate
 man page.
 
-=head2 PDL::Graphics::TriD::ViewPort
+=head2 PDLA::Graphics::TriD::ViewPort
 
 This is a special class: in order to obtain a new viewport, you
 need to have an earlier viewport on hand. The usage is:
@@ -628,25 +628,25 @@ method.
 
 # List of global variables
 # 
-# $PDL::Graphics::TriD::offline
-# $PDL::Graphics::TriD::Settings 
-# $PDL::Graphics::TriD::verbose
-# $PDL::Graphics::TriD::keeptwiddling
-# $PDL::Graphics::TriD::hold_on
-# $PDL::Graphics::TriD::curgraph
-# $PDL::Graphics::TriD::cur
-# $PDL::Graphics::TriD::create_window_sub
-# $PDL::Graphics::TriD::current_window
+# $PDLA::Graphics::TriD::offline
+# $PDLA::Graphics::TriD::Settings 
+# $PDLA::Graphics::TriD::verbose
+# $PDLA::Graphics::TriD::keeptwiddling
+# $PDLA::Graphics::TriD::hold_on
+# $PDLA::Graphics::TriD::curgraph
+# $PDLA::Graphics::TriD::cur
+# $PDLA::Graphics::TriD::create_window_sub
+# $PDLA::Graphics::TriD::current_window
 # 
 # '
 
-package PDL::Graphics::TriD::Basic;
-package PDL::Graphics::TriD;
+package PDLA::Graphics::TriD::Basic;
+package PDLA::Graphics::TriD;
 
-use PDL::Exporter;
-use PDL::Core '';  # barf
+use PDLA::Exporter;
+use PDLA::Core '';  # barf
 use vars qw/@ISA @EXPORT_OK %EXPORT_TAGS/;
-@ISA = qw/PDL::Exporter/;
+@ISA = qw/PDLA::Exporter/;
 @EXPORT_OK = qw/imag3d_ns imag3d line3d mesh3d lattice3d points3d
   spheres3d describe3d imagrgb imagrgb3d hold3d release3d
   keeptwiddling3d nokeeptwiddling3d
@@ -654,26 +654,26 @@ use vars qw/@ISA @EXPORT_OK %EXPORT_TAGS/;
 %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 
 #use strict;
-use PDL::Graphics::TriD::Object;
-use PDL::Graphics::TriD::Window;
-use PDL::Graphics::TriD::ViewPort;
-use PDL::Graphics::TriD::Graph;
-use PDL::Graphics::TriD::Quaternion;
-use PDL::Graphics::TriD::Objects;
-use PDL::Graphics::TriD::Rout;
+use PDLA::Graphics::TriD::Object;
+use PDLA::Graphics::TriD::Window;
+use PDLA::Graphics::TriD::ViewPort;
+use PDLA::Graphics::TriD::Graph;
+use PDLA::Graphics::TriD::Quaternion;
+use PDLA::Graphics::TriD::Objects;
+use PDLA::Graphics::TriD::Rout;
 
 
 # Then, see which display method are we using:
 
 BEGIN {
 	my $dev;
-	$dev ||= $::PDL::Graphics::TriD::device; # First, take it from this variable.
-	$dev ||= $::ENV{PDL_3D_DEVICE};
+	$dev ||= $::PDLA::Graphics::TriD::device; # First, take it from this variable.
+	$dev ||= $::ENV{PDLA_3D_DEVICE};
 
         if(!defined $dev) {
-#            warn "Default PDL 3D device is GL (OpenGL):
-# Set PDL_3D_DEVICE=GL in your environment in order not to see this warning.
-# You must have OpenGL or Mesa installed and the PDL::Graphics::OpenGL extension
+#            warn "Default PDLA 3D device is GL (OpenGL):
+# Set PDLA_3D_DEVICE=GL in your environment in order not to see this warning.
+# You must have OpenGL or Mesa installed and the PDLA::Graphics::OpenGL extension
 # compiled. Otherwise you will get strange warnings.";
 
            $dev = "GL";  # default GL works on all platforms now
@@ -681,11 +681,11 @@ BEGIN {
 	my $dv;
 # The following is just a sanity check.
 	for($dev) {
-#		(/^OOGL$/  and $dv="PDL::Graphics::TriD::OOGL") or
-		(/^GL$/  and $dv="PDL::Graphics::TriD::GL") or
-		(/^GLpic$/  and $dv="PDL::Graphics::TriD::GL" and $PDL::Graphics::TriD::offline=1) or
-		(/^VRML$/  and $dv="PDL::Graphics::TriD::VRML" and $PDL::Graphics::TriD::offline=1) or
-		(barf "Invalid PDL 3D device '$_' specified!");
+#		(/^OOGL$/  and $dv="PDLA::Graphics::TriD::OOGL") or
+		(/^GL$/  and $dv="PDLA::Graphics::TriD::GL") or
+		(/^GLpic$/  and $dv="PDLA::Graphics::TriD::GL" and $PDLA::Graphics::TriD::offline=1) or
+		(/^VRML$/  and $dv="PDLA::Graphics::TriD::VRML" and $PDLA::Graphics::TriD::offline=1) or
+		(barf "Invalid PDLA 3D device '$_' specified!");
 	}
 	my $mod = $dv;
 	$mod =~ s|::|//|g;
@@ -698,7 +698,7 @@ BEGIN {
 
 
 # currently only used by VRML backend
-sub tridsettings {return $PDL::Graphics::TriD::Settings}
+sub tridsettings {return $PDLA::Graphics::TriD::Settings}
 
 # Allowable forms:
 # x(3,..)  [x(..),y(..),z(..)]
@@ -735,24 +735,24 @@ sub realcoords {
 	}
 	# allow a constant (either pdl or not) to be introduced in one dimension
         foreach(0..2){  
-	  if(ref($c->[$_]) ne "PDL" or $c->[$_]->nelem==1){
-	    $c->[$_] = $c->[$_]*(PDL->ones($c->[($_+1)%3]->dims));
+	  if(ref($c->[$_]) ne "PDLA" or $c->[$_]->nelem==1){
+	    $c->[$_] = $c->[$_]*(PDLA->ones($c->[($_+1)%3]->dims));
 	  }
 	}
-	my $g = PDL->null;
-	&PDL::Graphics::TriD::Rout::combcoords(@$c,$g);
-	$g->dump if $PDL::Graphics::TriD::verbose;
+	my $g = PDLA->null;
+	&PDLA::Graphics::TriD::Rout::combcoords(@$c,$g);
+	$g->dump if $PDLA::Graphics::TriD::verbose;
 	return $g;
 }
 
 sub objplotcommand {
 	my($object) = @_;
-	my $win = PDL::Graphics::TriD::get_current_window();
+	my $win = PDLA::Graphics::TriD::get_current_window();
 	my $world = $win->world();
 }
 
 sub checkargs {
-	if(ref $_[$#_] eq "HASH" and $PDL::Graphics::TriD::verbose) {
+	if(ref $_[$#_] eq "HASH" and $PDLA::Graphics::TriD::verbose) {
 
 	  print "enter checkargs \n";
 		for([KeepTwiddling,\&keeptwiddling3d]) {
@@ -764,17 +764,17 @@ sub checkargs {
 	}
 }
 
-*keeptwiddling3d = \&PDL::keeptwiddling3d;
-sub PDL::keeptwiddling3d {
-	$PDL::Graphics::TriD::keeptwiddling = (defined $_[0] ? $_[0] : 1);
+*keeptwiddling3d = \&PDLA::keeptwiddling3d;
+sub PDLA::keeptwiddling3d {
+	$PDLA::Graphics::TriD::keeptwiddling = (defined $_[0] ? $_[0] : 1);
 }
-*nokeeptwiddling3d = \&PDL::nokeeptwiddling3d;
-sub PDL::nokeeptwiddling3d {
-	$PDL::Graphics::TriD::keeptwiddling = 0 ;
+*nokeeptwiddling3d = \&PDLA::nokeeptwiddling3d;
+sub PDLA::nokeeptwiddling3d {
+	$PDLA::Graphics::TriD::keeptwiddling = 0 ;
 }
 keeptwiddling3d();
-*twiddle3d = \&PDL::twiddle3d;
-sub PDL::twiddle3d {
+*twiddle3d = \&PDLA::twiddle3d;
+sub PDLA::twiddle3d {
 	twiddle_current();
 }
 
@@ -783,14 +783,14 @@ sub graph_object {
 	if(!defined $obj or !ref $obj) {
 		barf("Invalid object to TriD::graph_object");
 	}
-	print "graph_object: calling get_new_graph\n" if($PDL::debug_trid);
+	print "graph_object: calling get_new_graph\n" if($PDLA::debug_trid);
 	my $g = get_new_graph();
-	print "graph_object: back from get_new_graph\n" if($PDL::debug_trid);
+	print "graph_object: back from get_new_graph\n" if($PDLA::debug_trid);
 
 	my $name = $g->add_dataseries($obj);
 	$g->bind_default($name);
 	$g->scalethings();
-	print "ADDED TO GRAPH: '$name'\n" if $PDL::Graphics::TriD::verbose;
+	print "ADDED TO GRAPH: '$name'\n" if $PDLA::Graphics::TriD::verbose;
 
 	twiddle_current();
 	return $obj;
@@ -798,22 +798,22 @@ sub graph_object {
 
 # Plotting routines that use the whole viewport
 
-*describe3d=\&PDL::describe3d;
-sub PDL::describe3d {
-	require PDL::Graphics::TriD::TextObjects;
+*describe3d=\&PDLA::describe3d;
+sub PDLA::describe3d {
+	require PDLA::Graphics::TriD::TextObjects;
 	my ($text) = @_;
-	my $win = PDL::Graphics::TriD::get_current_window();
-	my $imag = new PDL::Graphics::TriD::Description($text);
+	my $win = PDLA::Graphics::TriD::get_current_window();
+	my $imag = new PDLA::Graphics::TriD::Description($text);
 	$win->add_object($imag);
 #	$win->twiddle();
 }
 
-*imagrgb=\&PDL::imagrgb;
-sub PDL::imagrgb {
-	require PDL::Graphics::TriD::Image;
+*imagrgb=\&PDLA::imagrgb;
+sub PDLA::imagrgb {
+	require PDLA::Graphics::TriD::Image;
 	my (@data) = @_; &checkargs;
-	my $win = PDL::Graphics::TriD::get_current_window();
-	my $imag = new PDL::Graphics::TriD::Image(@data);
+	my $win = PDLA::Graphics::TriD::get_current_window();
+	my $imag = new PDLA::Graphics::TriD::Image(@data);
 
 	$win->clear_viewports();
 
@@ -824,94 +824,94 @@ sub PDL::imagrgb {
 # Plotting routines that use the 3D graph
 
 # Call: line3d([$x,$y,$z],[$color]);
-*line3d=\&PDL::line3d;
-sub PDL::line3d { 
+*line3d=\&PDLA::line3d;
+sub PDLA::line3d { 
     &checkargs;
-    my $obj = new PDL::Graphics::TriD::LineStrip(@_);
-    print "line3d: object is $obj\n" if($PDL::debug_trid);
+    my $obj = new PDLA::Graphics::TriD::LineStrip(@_);
+    print "line3d: object is $obj\n" if($PDLA::debug_trid);
     &graph_object($obj);
 }
 
-*contour3d=\&PDL::contour3d;
-sub PDL::contour3d { 
+*contour3d=\&PDLA::contour3d;
+sub PDLA::contour3d { 
 #  &checkargs;
-  require PDL::Graphics::TriD::Contours;
-  &graph_object(new PDL::Graphics::TriD::Contours(@_));
+  require PDLA::Graphics::TriD::Contours;
+  &graph_object(new PDLA::Graphics::TriD::Contours(@_));
 }
 
 # XXX Should enable different positioning...
-*imagrgb3d=\&PDL::imagrgb3d;
-sub PDL::imagrgb3d { &checkargs;
-	require PDL::Graphics::TriD::Image;
-	&graph_object(new PDL::Graphics::TriD::Image(@_));
+*imagrgb3d=\&PDLA::imagrgb3d;
+sub PDLA::imagrgb3d { &checkargs;
+	require PDLA::Graphics::TriD::Image;
+	&graph_object(new PDLA::Graphics::TriD::Image(@_));
 }
 
-*imag3d_ns=\&PDL::imag3d_ns;
-sub PDL::imag3d_ns {  &checkargs;
-	&graph_object(new PDL::Graphics::TriD::SLattice(@_));
+*imag3d_ns=\&PDLA::imag3d_ns;
+sub PDLA::imag3d_ns {  &checkargs;
+	&graph_object(new PDLA::Graphics::TriD::SLattice(@_));
 }
 
-*imag3d=\&PDL::imag3d;
-sub PDL::imag3d { &checkargs;
-	&graph_object(new PDL::Graphics::TriD::SLattice_S(@_));
+*imag3d=\&PDLA::imag3d;
+sub PDLA::imag3d { &checkargs;
+	&graph_object(new PDLA::Graphics::TriD::SLattice_S(@_));
 }
 
 ####################################################################
 ################ JNK 15mar11 added section start ###################
-*STrigrid_S_imag3d=\&PDL::STrigrid_S_imag3d;
-sub PDL::STrigrid_S_imag3d { &checkargs;
-  &graph_object(new PDL::Graphics::TriD::STrigrid_S(@_)); }
+*STrigrid_S_imag3d=\&PDLA::STrigrid_S_imag3d;
+sub PDLA::STrigrid_S_imag3d { &checkargs;
+  &graph_object(new PDLA::Graphics::TriD::STrigrid_S(@_)); }
         
-*STrigrid_imag3d=\&PDL::STrigrid_imag3d;
-sub PDL::STrigrid_imag3d { &checkargs;
-  &graph_object(new PDL::Graphics::TriD::STrigrid(@_)); }
+*STrigrid_imag3d=\&PDLA::STrigrid_imag3d;
+sub PDLA::STrigrid_imag3d { &checkargs;
+  &graph_object(new PDLA::Graphics::TriD::STrigrid(@_)); }
 ################ JNK 15mar11 added section finis ###################
 ####################################################################
 
-*mesh3d=\&PDL::mesh3d;
-*lattice3d=\&PDL::mesh3d;
-*PDL::lattice3d=\&PDL::mesh3d;
-sub PDL::mesh3d { &checkargs;
-	&graph_object(new PDL::Graphics::TriD::Lattice(@_));
+*mesh3d=\&PDLA::mesh3d;
+*lattice3d=\&PDLA::mesh3d;
+*PDLA::lattice3d=\&PDLA::mesh3d;
+sub PDLA::mesh3d { &checkargs;
+	&graph_object(new PDLA::Graphics::TriD::Lattice(@_));
 }
 
-*points3d=\&PDL::points3d;
-sub PDL::points3d { &checkargs;
-	&graph_object(new PDL::Graphics::TriD::Points(@_));
+*points3d=\&PDLA::points3d;
+sub PDLA::points3d { &checkargs;
+	&graph_object(new PDLA::Graphics::TriD::Points(@_));
 }
 
 
-*spheres3d=\&PDL::spheres3d;
-sub PDL::spheres3d { &checkargs;
-	&graph_object(new PDL::Graphics::TriD::Spheres(@_));
+*spheres3d=\&PDLA::spheres3d;
+sub PDLA::spheres3d { &checkargs;
+	&graph_object(new PDLA::Graphics::TriD::Spheres(@_));
 }
 
-*grabpic3d=\&PDL::grabpic3d;
-sub PDL::grabpic3d {
-	my $win = PDL::Graphics::TriD::get_current_window();
+*grabpic3d=\&PDLA::grabpic3d;
+sub PDLA::grabpic3d {
+	my $win = PDLA::Graphics::TriD::get_current_window();
 	barf "backend doesn't support grabing the rendered scene"
 	  unless $win->can('read_picture');
 	my $pic = $win->read_picture();
 	return ($pic->float) / 255;
 }
 
-$PDL::Graphics::TriD::hold_on = 0;
+$PDLA::Graphics::TriD::hold_on = 0;
 
-sub PDL::hold3d {$PDL::Graphics::TriD::hold_on =(!defined $_[0] ? 1 : $_[0]);}
-sub PDL::release3d {$PDL::Graphics::TriD::hold_on = 0;}
+sub PDLA::hold3d {$PDLA::Graphics::TriD::hold_on =(!defined $_[0] ? 1 : $_[0]);}
+sub PDLA::release3d {$PDLA::Graphics::TriD::hold_on = 0;}
 
-*hold3d=\&PDL::hold3d;
-*release3d=\&PDL::release3d;
+*hold3d=\&PDLA::hold3d;
+*release3d=\&PDLA::release3d;
 
 sub get_new_graph {
-    print "get_new_graph: calling PDL::Graphics::TriD::get_current_window...\n" if($PDL::debug_trid);
-	my $win = PDL::Graphics::TriD::get_current_window();
+    print "get_new_graph: calling PDLA::Graphics::TriD::get_current_window...\n" if($PDLA::debug_trid);
+	my $win = PDLA::Graphics::TriD::get_current_window();
 
-    print "get_new_graph: calling get_current_graph...\n" if($PDL::debug_trid);
+    print "get_new_graph: calling get_current_graph...\n" if($PDLA::debug_trid);
 	my $g = get_current_graph($win);
-    print "get_new_graph: back get_current_graph returned $g...\n" if($PDL::debug_trid);
+    print "get_new_graph: back get_current_graph returned $g...\n" if($PDLA::debug_trid);
 
-	if(!$PDL::Graphics::TriD::hold_on) {
+	if(!$PDLA::Graphics::TriD::hold_on) {
 		$g->clear_data();
 		$win->clear_viewport();
 	}
@@ -926,7 +926,7 @@ sub get_current_graph {
 	my $g = $win->current_viewport()->graph();
 
 	if(!defined $g) {
-		$g = new PDL::Graphics::TriD::Graph();
+		$g = new PDLA::Graphics::TriD::Graph();
 		$g->default_axes();
 		$win->current_viewport()->graph($g);
 	}
@@ -934,35 +934,35 @@ sub get_current_graph {
 }
 
 
-# $PDL::Graphics::TriD::cur = {};
-# $PDL::Graphics::TriD::create_window_sub = undef;
+# $PDLA::Graphics::TriD::cur = {};
+# $PDLA::Graphics::TriD::create_window_sub = undef;
 sub get_current_window {
   my $opts = shift @_;
-  my $win = $PDL::Graphics::TriD::cur;
+  my $win = $PDLA::Graphics::TriD::cur;
 
   if(!defined $win) {
-	 if(!$PDL::Graphics::TriD::create_window_sub) {
-		barf("PDL::Graphics::TriD must be used with a display mechanism: for example PDL::Graphics::TriD::GL!\n");
+	 if(!$PDLA::Graphics::TriD::create_window_sub) {
+		barf("PDLA::Graphics::TriD must be used with a display mechanism: for example PDLA::Graphics::TriD::GL!\n");
 	 }
-	 print "get_current_window - creating window...\n" if($PDL::debug_trid);
-	 $win = new PDL::Graphics::TriD::Window($opts);
+	 print "get_current_window - creating window...\n" if($PDLA::debug_trid);
+	 $win = new PDLA::Graphics::TriD::Window($opts);
 
-	 print "get_current_window - calling set_material...\n" if($PDL::debug_trid);
-	 $win->set_material(new PDL::Graphics::TriD::Material);
-	 $PDL::Graphics::TriD::current_window = $win;
-	 $PDL::Graphics::TriD::cur = $win
+	 print "get_current_window - calling set_material...\n" if($PDLA::debug_trid);
+	 $win->set_material(new PDLA::Graphics::TriD::Material);
+	 $PDLA::Graphics::TriD::current_window = $win;
+	 $PDLA::Graphics::TriD::cur = $win
   }
-  return $PDL::Graphics::TriD::current_window;
+  return $PDLA::Graphics::TriD::current_window;
 }
 
 # Get the current graphbox
 sub get_current_graphbox {
         die "get_current_graphbox: ERROR graphbox is not implemented! \n";
-	my $graph = $PDL::Graphics::TriD::curgraph;
+	my $graph = $PDLA::Graphics::TriD::curgraph;
 	if(!defined $graph) {
-		$graph = new PDL::Graphics::TriD::Graph();
+		$graph = new PDLA::Graphics::TriD::Graph();
 		$graph->default_axes();
-		$PDL::Graphics::TriD::curgraph = $graph;
+		$PDLA::Graphics::TriD::curgraph = $graph;
 	}
 	return $graph;
 }
@@ -975,7 +975,7 @@ sub twiddle_current {
 ###################################
 #
 #
-package PDL::Graphics::TriD::Material;
+package PDLA::Graphics::TriD::Material;
 
 sub new {
   my ($type,%ops) = @_;
@@ -994,8 +994,8 @@ sub new {
   return $this;
 }
 
-package PDL::Graphics::TriD::BoundingBox;
-use base qw/PDL::Graphics::TriD::Object/;
+package PDLA::Graphics::TriD::BoundingBox;
+use base qw/PDLA::Graphics::TriD::Object/;
 use fields qw/Box/;
 
 sub new { 
@@ -1006,17 +1006,17 @@ sub new {
 
 sub normalize {my($this,$x0,$y0,$z0,$x1,$y1,$z1) = @_;
 	$this = $this->{Box};
-	my $trans = PDL::Graphics::TriD::Transformation->new();
+	my $trans = PDLA::Graphics::TriD::Transformation->new();
 	my $sx = ($x1-$x0)/($this->[3]-$this->[0]);
 	my $sy = ($y1-$y0)/($this->[4]-$this->[1]);
 	my $sz = ($z1-$z0)/($this->[5]-$this->[2]);
 	$trans->add_transformation(
-		PDL::Graphics::TriD::Translation->new(
+		PDLA::Graphics::TriD::Translation->new(
 			($x0-$this->[0]*$sx),
 			($y0-$this->[1]*$sy),
 			($z0-$this->[2]*$sz)
 		));
-	$trans->add_transformation(PDL::Graphics::TriD::Scale->new($sx,$sy,$sz));
+	$trans->add_transformation(PDLA::Graphics::TriD::Scale->new($sx,$sy,$sz));
 	return $trans;
 }
 
@@ -1024,7 +1024,7 @@ sub normalize {my($this,$x0,$y0,$z0,$x1,$y1,$z1) = @_;
 ###################################
 #
 #
-package PDL::Graphics::TriD::OneTransformation;
+package PDLA::Graphics::TriD::OneTransformation;
 use fields qw/Args/;
 
 sub new {
@@ -1036,15 +1036,15 @@ sub new {
   $this;
 }
 
-package PDL::Graphics::TriD::Scale;
-use base qw/PDL::Graphics::TriD::OneTransformation/;
+package PDLA::Graphics::TriD::Scale;
+use base qw/PDLA::Graphics::TriD::OneTransformation/;
 
-package PDL::Graphics::TriD::Translation;
-use base qw/PDL::Graphics::TriD::OneTransformation/;
+package PDLA::Graphics::TriD::Translation;
+use base qw/PDLA::Graphics::TriD::OneTransformation/;
 
 
-package PDL::Graphics::TriD::Transformation;
-use base qw/PDL::Graphics::TriD::Object/;
+package PDLA::Graphics::TriD::Transformation;
+use base qw/PDLA::Graphics::TriD::Object/;
 
 #sub new {
 #	my($type) = @_;
@@ -1068,8 +1068,8 @@ Copyright (C) 1997 Tuomas J. Lukka (lukka@husc.harvard.edu). Documentation
 contributions from Karl Glazebrook (kgb@aaoepp.aao.gov.au).
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 

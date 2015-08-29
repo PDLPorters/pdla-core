@@ -13,8 +13,8 @@ object-oriented approach.
 
 =cut
 
-use PDL;
-use PDL::Graphics::PGPLOT::Window;
+use PDLA;
+use PDLA::Graphics::PGPLOT::Window;
 
 
 ##
@@ -36,7 +36,7 @@ function_to_do ('dev(), env(), hold(), release(), bin(), line()');
 #
 # Create a window object to which we will subsequently plot.
 #
-my $w = PDL::Graphics::PGPLOT::Window->new({Device => '/xw', Aspect => 1,
+my $w = PDLA::Graphics::PGPLOT::Window->new({Device => '/xw', Aspect => 1,
 					       WindowWidth => 7});
 # Note how we call the functions via the window object. This particular
 # call will set the axis colour to Red.
@@ -129,7 +129,7 @@ function_to_do('imag(), ctab(), hi2d and several panels');
 # at present - changes to the code welcome.
 #
 $w->close();
-$w = PDL::Graphics::PGPLOT::Window->new({Device => '/xw',
+$w = PDLA::Graphics::PGPLOT::Window->new({Device => '/xw',
 					 Aspect => 0.5,
 					 NX => 2, NY => 2,
 					 CharSize => 2});
@@ -165,11 +165,11 @@ function_to_do('Several plot windows. focus_window(), window_list()');
 # at least when you use the OO interface!
 #
 $w->close();
-my $w1 = PDL::Graphics::PGPLOT::Window->new({Device => '/xw', Aspect => 1,
+my $w1 = PDLA::Graphics::PGPLOT::Window->new({Device => '/xw', Aspect => 1,
 					     AxisColour => 'Blue',
 					     WindowName => 'First',
 					     WindowWidth => 6});
-my $w2 = PDL::Graphics::PGPLOT::Window->new({Device => '/xw', Aspect => 0.618,
+my $w2 = PDLA::Graphics::PGPLOT::Window->new({Device => '/xw', Aspect => 0.618,
 					     AxisColour => 'Red',
 					     WindowWidth => 6});
 # First draw something in Window 1
@@ -219,7 +219,7 @@ function_to_do('circle(), ellipse(), rectangle() and arrow()');
 # intrinsic display aspect ratio so if you want a really round circle,
 # you must make sure that the aspect ratio is 1.
 $w1->close();
-$w1 = PDL::Graphics::PGPLOT::Window->new({Device => '/xs', Aspect => 1,
+$w1 = PDLA::Graphics::PGPLOT::Window->new({Device => '/xs', Aspect => 1,
 					  WindowWidth => 6});
 $w1->env(0, 100, 0,100);
 
@@ -239,7 +239,7 @@ $w1->arrow(40, 20, 70, 20, {Color => 'Green'});
 next_plot();
 $w1->close();
 
-$w1 = PDL::Graphics::PGPLOT::Window->new({Device => '/xs', Aspect => 1,
+$w1 = PDLA::Graphics::PGPLOT::Window->new({Device => '/xs', Aspect => 1,
 					  NX => 2, NY => 2});
 $w1->line($x, $y);
 

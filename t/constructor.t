@@ -5,8 +5,8 @@
 # and I'd like to keep the granularity of the core.t tests
 #
 use Test::More tests => 80;
-use PDL::LiteF;
-use PDL::Config;
+use PDLA::LiteF;
+use PDLA::Config;
 
 my $scalar = 1;
 my $pdl_e = pdl([]);
@@ -20,10 +20,10 @@ my $pdl_col = pdl([[12],[13]]);
 
 ##############################
 # Test the basics (21 tests)
-isa_ok($pdl_s, 'PDL');
+isa_ok($pdl_s, 'PDLA');
 
-is $pdl_s->ndims(), 0, "scalar goes to scalar PDL";
-is $pdl_s, 2, "PDL gets assigned scalar value";
+is $pdl_s->ndims(), 0, "scalar goes to scalar PDLA";
+is $pdl_s, 2, "PDLA gets assigned scalar value";
 
 is $pdl_v->ndims(), 1, "vector dims";
 is $pdl_v->dim(0), 2, "vector size is 2";
@@ -78,7 +78,7 @@ for my $i(0..$#testvals) {
 is $test_ok, 1, "contents of complex array-ingestion case";
 
 {
-    local $PDL::undefval = 99;
+    local $PDLA::undefval = 99;
     $pdl_a = pdl(@a);
     $test_ok = 1;
     for my $i(0..$#testvals) {
@@ -88,18 +88,18 @@ is $test_ok, 1, "contents of complex array-ingestion case";
 }
 
 ##############################
-# Test some basic PDL-as-PDL cases
+# Test some basic PDLA-as-PDLA cases
 
-## Ingest a scalar PDL
+## Ingest a scalar PDLA
 my $p = pdl($pdl_s);
-isa_ok($p, 'PDL');
-is $p->ndims(), 0, "scalar PDL goes to scalar PDL";
+isa_ok($p, 'PDLA');
+is $p->ndims(), 0, "scalar PDLA goes to scalar PDLA";
 is $p, $pdl_s, "pdl(pdl(2)) same as pdl(2)";
 
-## Ingest five scalar PDLs -- should make a 1-D array
+## Ingest five scalar PDLAs -- should make a 1-D array
 $p = pdl($pdl_s, $pdl_s, $pdl_s, $pdl_s, $pdl_s);
-isa_ok($p, 'PDL');
-is $p->ndims(), 1, "two scalar PDLs -> a vector";
+isa_ok($p, 'PDLA');
+is $p->ndims(), 1, "two scalar PDLAs -> a vector";
 is $p->dim(0), 5, "5-vector";
 is $p->at(0), $pdl_s, 'vector element 0 ok';
 is $p->at(1), $pdl_s, 'vector element 1 ok';
@@ -107,32 +107,32 @@ is $p->at(2), $pdl_s, 'vector element 2 ok';
 is $p->at(3), $pdl_s, 'vector element 3 ok';
 is $p->at(4), $pdl_s, 'vector element 4 ok';
 
-## Ingest a vector PDL and a scalar PDL - should make a 2-D array
+## Ingest a vector PDLA and a scalar PDLA - should make a 2-D array
 $p = pdl($pdl_v, $pdl_s);
-isa_ok($p, 'PDL');
+isa_ok($p, 'PDLA');
 is $p->ndims(), 2, 'pdl($pdl_v, $pdl_s) -> 2x2 matrix';
 is $p->dim(0), 2, '2 wide';
 is $p->dim(1), 2, '2 high';
 is $p->at(0,0), $pdl_v->at(0), "vector element 0 got copied OK";
 is $p->at(1,0), $pdl_v->at(1), "vector element 1 got copied OK";
 is $p->at(0,1), $pdl_s, "scalar copied OK";
-is $p->at(1,1), $PDL::undefval, "scalar got padded OK";
+is $p->at(1,1), $PDLA::undefval, "scalar got padded OK";
 
-## Ingest a scalar PDL and a vector PDL - should make a 2-D array
+## Ingest a scalar PDLA and a vector PDLA - should make a 2-D array
 $p = pdl($pdl_s, $pdl_v);
-isa_ok($p, 'PDL');
+isa_ok($p, 'PDLA');
 is $p->ndims(), 2, 'pdl($pdl_s, $pdl_v) -> 2x2 matrix';
 is $p->dim(0), 2, '2 wide';
 is $p->dim(1), 2, '2 high';
 is $p->at(0,0), $pdl_s, "scalar copied OK";
-is $p->at(1,0), $PDL::undefval, "scalar got padded OK";
+is $p->at(1,0), $PDLA::undefval, "scalar got padded OK";
 is $p->at(0,1), $pdl_v->at(0), "vector element 0 got copied OK";
 is $p->at(1,1), $pdl_v->at(1), "vector element 1 got copied OK";
 
 ## A more complicated case 
 $p = pdl($pdl_s, 5, $pdl_v, $pdl_m, [$pdl_v, $pdl_v]);
-isa_ok($p,'PDL');
-is $p->ndims(), 3, 'complicated case -> 3-d PDL';
+isa_ok($p,'PDLA');
+is $p->ndims(), 3, 'complicated case -> 3-d PDLA';
 is $p->dim(0), 2, 'complicated case -> dim 0 is 2';
 is $p->dim(1), 2, 'complicated case -> dim 1 is 2';
 is $p->dim(2), 5, 'complicated case -> dim 1 is 5';
@@ -149,38 +149,38 @@ for my $i(0..$#testvals) {
 is $test_ok, 1, "contents of complicated case";
 
 ##############################
-# test empty PDLs.
+# test empty PDLAs.
 $p = pdl($pdl_e);
 is $p->nelem, 0, "piddlifying an empty piddle yields 0 elements";
 
 $p = pdl($pdl_e, $pdl_e);
-is $p->ndims, 2, "piddlifying two 0-PDLs makes a 2D-PDL";
-is $p->dim(0),0, "piddlifying two empty piddles makes a 0x2-PDL";
-is $p->dim(1),2, "piddlifying two empty piddles makes a 0x2-PDL";
+is $p->ndims, 2, "piddlifying two 0-PDLAs makes a 2D-PDLA";
+is $p->dim(0),0, "piddlifying two empty piddles makes a 0x2-PDLA";
+is $p->dim(1),2, "piddlifying two empty piddles makes a 0x2-PDLA";
 eval { $p->at(0,0) };
-ok( $@ =~ m/^Position out of range/ , "can't index an empty PDL with at" );
+ok( $@ =~ m/^Position out of range/ , "can't index an empty PDLA with at" );
 
 $p = pdl(pdl([4]),5);
-is $p->ndims, 2,  "catenating a 1-PDL and a scalar yields a 2D PDL";
-is $p->dim(0), 1, "catenating a 1-PDL and a scalar yields a 1x2-PDL";
-is $p->dim(1), 2, "catenating a 1-PDL and a scalar yields a 1x2-PDL";
-is $p->at(0,0), 4, "catenating a 1-PDL and a scalar does the Right Thing";
-is $p->at(0,1), 5, "catenating a 1-PDL and a scalar does the Right Thing, redux";
+is $p->ndims, 2,  "catenating a 1-PDLA and a scalar yields a 2D PDLA";
+is $p->dim(0), 1, "catenating a 1-PDLA and a scalar yields a 1x2-PDLA";
+is $p->dim(1), 2, "catenating a 1-PDLA and a scalar yields a 1x2-PDLA";
+is $p->at(0,0), 4, "catenating a 1-PDLA and a scalar does the Right Thing";
+is $p->at(0,1), 5, "catenating a 1-PDLA and a scalar does the Right Thing, redux";
 
 $p = pdl($pdl_e, 5);
-is $p->ndims, 2,  "catenating an empty and a scalar yields a 2D PDL";
-is $p->dim(0), 1, "catenating an empty and a scalar yields a 1x2-PDL";
-is $p->dim(1), 2, "catenating an empty and a scalar yields a 1x2-PDL";
-is $p->at(0,0), $PDL::undefval, "padding OK for empty & scalar case";
+is $p->ndims, 2,  "catenating an empty and a scalar yields a 2D PDLA";
+is $p->dim(0), 1, "catenating an empty and a scalar yields a 1x2-PDLA";
+is $p->dim(1), 2, "catenating an empty and a scalar yields a 1x2-PDLA";
+is $p->at(0,0), $PDLA::undefval, "padding OK for empty & scalar case";
 is $p->at(0,1), 5, "scalar OK for empty & scalar";
 
 
 $p = pdl(5, $pdl_e);
-is $p->ndims, 2,  "catenating a scalar and an empty yields a 2D PDL";
-is $p->dim(0), 1, "catenating a scalar and an empty yields a 1x2-PDL";
-is $p->dim(1), 2, "catenating a scalar and an empty yields a 1x2-PDL";
+is $p->ndims, 2,  "catenating a scalar and an empty yields a 2D PDLA";
+is $p->dim(0), 1, "catenating a scalar and an empty yields a 1x2-PDLA";
+is $p->dim(1), 2, "catenating a scalar and an empty yields a 1x2-PDLA";
 is $p->at(0,0), 5, "scalar OK for scalar & empty";
-is $p->at(0,1), $PDL::undefval, "padding OK for scalar & empty";
+is $p->at(0,1), $PDLA::undefval, "padding OK for scalar & empty";
 
 
 

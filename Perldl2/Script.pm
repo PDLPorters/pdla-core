@@ -1,4 +1,4 @@
-package PDL::Perldl2::Script;
+package PDLA::Perldl2::Script;
 
 use Moose;
 
@@ -7,8 +7,8 @@ use namespace::clean -except => [ qw(meta) ];
 extends 'Devel::REPL::Script';
 
 sub _startup_def {
-   return "PDL/default.pdl" if $^O =~ /win32/i;
-   return "PDL/default.perldlrc";
+   return "PDLA/default.pdl" if $^O =~ /win32/i;
+   return "PDLA/default.perldlrc";
 }
 
 sub load_rcfile {

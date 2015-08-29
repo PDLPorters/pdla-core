@@ -66,9 +66,9 @@ sub create_low_level
         foreach my $i ( 0 .. $#vars )
         {
             my $type = $types[$i];
-            if ($type =~ /PDL/) 
+            if ($type =~ /PDLA/) 
             {
-                $type =~ s/PDL//; # Get rid of PDL type when writing xs CODE section
+                $type =~ s/PDLA//; # Get rid of PDLA type when writing xs CODE section
                 $xsout .= "($type)$vars[$i]"."->data,";
             }
             else 
@@ -88,7 +88,7 @@ sub create_low_level
         }
         $xsout .= "\n\n";
         
-        # Add it to the PDL::PP file:
+        # Add it to the PDLA::PP file:
         pp_addxs ('', $xsout);
     }
 } # End of create_low_level()...

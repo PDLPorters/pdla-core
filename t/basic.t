@@ -7,7 +7,7 @@ BEGIN {
     plan tests => 19;
 }
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
 sub tapprox {
     my($a,$b) = @_;

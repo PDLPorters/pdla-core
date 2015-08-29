@@ -1,13 +1,13 @@
 
-# Test routine for PDL::IO::Misc module
+# Test routine for PDLA::IO::Misc module
 
 use strict; 
 
-use PDL::LiteF;
-use PDL::IO::Misc;
+use PDLA::LiteF;
+use PDLA::IO::Misc;
 
-use PDL::Core ':Internal'; # For howbig()
-use PDL::Config;
+use PDLA::Core ':Internal'; # For howbig()
+use PDLA::Config;
 
 use File::Temp qw( tempfile tempdir );
 
@@ -37,7 +37,7 @@ EOD
 close($fileh);
 
 {
-   local $PDL::undefval = -1;
+   local $PDLA::undefval = -1;
    $a = rcols $file, [], { colsep=>',' };
 }
 
@@ -131,7 +131,7 @@ print $fileh <<EOD;
 EOD
 close($fileh);
 
-$a = PDL->null;
+$a = PDLA->null;
 $a->rasc($file,20);
 is( abs($a->sum - 5.13147) < .01, 1, "rasc on null piddle" );
  
@@ -174,21 +174,21 @@ is( $a->nelem==1 && $a->at(0)==-5 && $b->at(0)==6, 1,
 is( $a->nelem==3 && tapprox($a,pdl(-5,3,1)) && tapprox($b,pdl(6,4,2)), 1,
     "rcols: lines option" );
 
-use PDL::Types;
+use PDLA::Types;
 ($a,$b) = rcols $file, { DEFTYPE => long };
-is( $a->nelem==4 && $a->get_datatype==$PDL_L && $b->get_datatype==$PDL_L, 1,
+is( $a->nelem==4 && $a->get_datatype==$PDLA_L && $b->get_datatype==$PDLA_L, 1,
     "rcols: deftype option" );
 
 ($a,$b) = rcols $file, { TYPES => [ ushort ] };
-is( $a->nelem==4 && $a->get_datatype==$PDL_US && $b->get_datatype==$PDL_D, 1,
+is( $a->nelem==4 && $a->get_datatype==$PDLA_US && $b->get_datatype==$PDLA_D, 1,
     "rcols: types option" );
 
-is( UNIVERSAL::isa($PDL::IO::Misc::deftype,"PDL::Type"), 1,
-    "PDL::IO::Misc::deftype is a PDL::Type object" );
-is( $PDL::IO::Misc::deftype->[0], double->[0],
-    "PDL::IO::Misc::deftype check" );
+is( UNIVERSAL::isa($PDLA::IO::Misc::deftype,"PDLA::Type"), 1,
+    "PDLA::IO::Misc::deftype is a PDLA::Type object" );
+is( $PDLA::IO::Misc::deftype->[0], double->[0],
+    "PDLA::IO::Misc::deftype check" );
 
-$PDL::IO::Misc::deftype = short;
+$PDLA::IO::Misc::deftype = short;
 ($a,$b) = rcols $file;
 is( $a->get_datatype, short->[0], "rcols: can read in as 'short'" );
 

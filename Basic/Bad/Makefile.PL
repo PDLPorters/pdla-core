@@ -3,16 +3,16 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 # we create a Bad.pm whatever the value of
-# PDL_CONFIG - it's just the contents that will be
+# PDLA_CONFIG - it's just the contents that will be
 # different...
 
-my $bvalflag = $PDL::Config{WITH_BADVAL};
-my $usenan = $PDL::Config{BADVAL_USENAN};
-my $bvalPerPdl = $PDL::Config{BADVAL_PER_PDL};
+my $bvalflag = $PDLA::Config{WITH_BADVAL};
+my $usenan = $PDLA::Config{BADVAL_USENAN};
+my $bvalPerPdl = $PDLA::Config{BADVAL_PER_PDLA};
 
 # print a banner to the screen
 if ( $bvalflag ) {
-    print "Congratulations - building PDL with bad value support (WITH_BADVAL=1)\n\t";
+    print "Congratulations - building PDLA with bad value support (WITH_BADVAL=1)\n\t";
 
     if ( $usenan ) {
  	print "+ using NaN for floating-point bad value";
@@ -22,11 +22,11 @@ if ( $bvalflag ) {
     print "+ with per-piddle bad values (EXPERIMENTAL FEATURE)"
       if $bvalPerPdl;
 } else {
-    print "building PDL without bad value support (WITH_BADVAL!=1)";
+    print "building PDLA without bad value support (WITH_BADVAL!=1)";
 }
 print "\n";
 
-my @pack = (["bad.pd",qw(Bad PDL::Bad)]);
+my @pack = (["bad.pd",qw(Bad PDLA::Bad)]);
 
 my %hash = pdlpp_stdargs_int(@pack);
 

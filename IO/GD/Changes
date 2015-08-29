@@ -1,5 +1,5 @@
 
-PDL::IO::GD Changes:
+PDLA::IO::GD Changes:
     
 1.3: 19 Feb 2004 (Judd Taylor)
     - Added support to write only chunks of PNG images.
@@ -12,7 +12,7 @@ PDL::IO::GD Changes:
         using the best PNG compression available.
 
 2.0: 30 Mar 2006 (Judd Taylor)
-    - Transferred to new name PDL::IO::GD, and modified for inclusion to the 
-        PDL CVS tree.
+    - Transferred to new name PDLA::IO::GD, and modified for inclusion to the 
+        PDLA CVS tree.
 
 

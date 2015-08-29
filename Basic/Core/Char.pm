@@ -1,21 +1,21 @@
-package PDL::Char;
+package PDLA::Char;
 
-@ISA = qw (PDL);
-use overload ("\"\""   =>  \&PDL::Char::string);
+@ISA = qw (PDLA);
+use overload ("\"\""   =>  \&PDLA::Char::string);
 use strict;
 use vars ('$level', '@dims'); # Global Vars used
 
 
 =head1 NAME
 
-PDL::Char -- PDL subclass which allows reading and writing of fixed-length character strings as byte PDLs
+PDLA::Char -- PDLA subclass which allows reading and writing of fixed-length character strings as byte PDLAs
 
 =head1 SYNOPSIS
 
- use PDL;
- use PDL::Char;
+ use PDLA;
+ use PDLA::Char;
 
- my $pchar = PDL::Char->new( [['abc', 'def', 'ghi'],['jkl', 'mno', 'pqr']] );
+ my $pchar = PDLA::Char->new( [['abc', 'def', 'ghi'],['jkl', 'mno', 'pqr']] );
  
  $pchar->setstr(1,0,'foo');
  
@@ -32,14 +32,14 @@ PDL::Char -- PDL subclass which allows reading and writing of fixed-length chara
 
 =head1 DESCRIPTION
 
-This subclass of PDL allows one to manipulate PDLs of 'byte' type as if they were made of fixed
+This subclass of PDLA allows one to manipulate PDLAs of 'byte' type as if they were made of fixed
 length strings, not just numbers.
 
 This type of behavior is useful when you want to work with charactar grids.  The indexing is done
 on a string level and not a character level for the 'setstr' and 'atstr' commands.  
 
 This module is in particular useful for writing NetCDF files that include character data using the
-PDL::NetCDF module.
+PDLA::NetCDF module.
 
 =head1 FUNCTIONS
 
@@ -47,19 +47,19 @@ PDL::NetCDF module.
 
 =for ref
 
-Function to create a byte PDL from a string, list of strings, list of list of strings, etc.
+Function to create a byte PDLA from a string, list of strings, list of list of strings, etc.
 
 =for usage
 
- # create a new PDL::Char from a perl array of strings
- $strpdl = PDL::Char->new( ['abc', 'def', 'ghij'] );  
+ # create a new PDLA::Char from a perl array of strings
+ $strpdl = PDLA::Char->new( ['abc', 'def', 'ghij'] );  
 
- # Convert a PDL of type 'byte' to a PDL::Char
- $strpdl1 = PDL::Char->new (sequence (byte, 4, 5)+99);
+ # Convert a PDLA of type 'byte' to a PDLA::Char
+ $strpdl1 = PDLA::Char->new (sequence (byte, 4, 5)+99);
 
 =for example
 
- $pdlchar3d = PDL::Char->new([['abc','def','ghi'],['jkl', 'mno', 'pqr']]); 
+ $pdlchar3d = PDLA::Char->new([['abc','def','ghi'],['jkl', 'mno', 'pqr']]); 
 
 =cut
 
@@ -68,15 +68,15 @@ sub new {
   my $type = shift;
   my $value = (scalar(@_)>1 ? [@_] : shift);  # ref thyself
 
-  # re-bless byte PDLs as PDL::Char
-  if (ref($value) =~ /PDL/) {
-    PDL::Core::barf('Cannot convert a non-byte PDL to PDL::Char')
-      if ($value->get_datatype != $PDL::Types::PDL_B);
+  # re-bless byte PDLAs as PDLA::Char
+  if (ref($value) =~ /PDLA/) {
+    PDLA::Core::barf('Cannot convert a non-byte PDLA to PDLA::Char')
+      if ($value->get_datatype != $PDLA::Types::PDLA_B);
     return bless $value, $type;
   }
 
-  my $ptype = $PDL::Types::PDL_B;
-  my $self  = PDL->initialize();
+  my $ptype = $PDLA::Types::PDLA_B;
+  my $self  = PDLA->initialize();
   $self->set_datatype($ptype);
   $value = 0 if !defined($value);
   $level = 0; @dims = (); # package vars
@@ -114,14 +114,14 @@ sub _rcharpack {
   $ret = "";
   if (ref($a) eq "ARRAY") {
 
-    PDL::Core::barf('Array is not rectangular') if (defined($dims[$level]) and 
+    PDLA::Core::barf('Array is not rectangular') if (defined($dims[$level]) and 
 					$dims[$level] != scalar(@$a));
     $dims[$level] = scalar (@$a);
     $level++;
     
     $type = ref($$a[0]);
     for(@$a) {
-      PDL::Core::barf('Array is not rectangular') unless $type eq ref($_); # Equal types
+      PDLA::Core::barf('Array is not rectangular') unless $type eq ref($_); # Equal types
       $ret .= _rcharpack($_,$maxlenref, $samelenref);
     }
     
@@ -139,7 +139,7 @@ sub _rcharpack {
     $ret = $a;
     
   }else{
-    PDL::Core::barf("Don't know how to make a PDL object from passed argument");
+    PDLA::Core::barf("Don't know how to make a PDLA object from passed argument");
   }
   return $ret;
 }				
@@ -190,11 +190,11 @@ sub _rcharpack2 {
 
 =for ref
 
-Function to print a character PDL (created by 'char') in a pretty format.
+Function to print a character PDLA (created by 'char') in a pretty format.
 
 =for usage
 
- $char = PDL::Char->new( [['abc', 'def', 'ghi'], ['jkl', 'mno', 'pqr']] );
+ $char = PDLA::Char->new( [['abc', 'def', 'ghi'], ['jkl', 'mno', 'pqr']] );
  print $char; # 'string' bound to "", perl stringify function
  # Prints:
  # [
@@ -212,7 +212,7 @@ sub string {
   my $self   = shift;
   my $level  = shift || 0;
 
-  my $sep = $PDL::use_commas ? "," : " ";
+  my $sep = $PDLA::use_commas ? "," : " ";
 
   if ($self->dims == 1) {
     my $str = ${$self->get_dataref}; # get copy of string
@@ -238,16 +238,16 @@ sub string {
 
 =for ref
 
-Function to set one string value in a character PDL.  The input position is 
+Function to set one string value in a character PDLA.  The input position is 
 the position of the string, not a character in the string.  The first dimension
 is assumed to be the length of the string.  
 
 The input string will be null-padded if the string is shorter than the first
-dimension of the PDL.  It will be truncated if it is longer.
+dimension of the PDLA.  It will be truncated if it is longer.
 
 =for usage
 
- $char = PDL::Char->new( [['abc', 'def', 'ghi'], ['jkl', 'mno', 'pqr']] );
+ $char = PDLA::Char->new( [['abc', 'def', 'ghi'], ['jkl', 'mno', 'pqr']] );
  $char->setstr(0,1, 'foobar');
  print $char; # 'string' bound to "", perl stringify function
  # Prints:
@@ -266,7 +266,7 @@ dimension of the PDL.  It will be truncated if it is longer.
 =cut
 
 sub setstr {    # Sets a particular single value to a string.
-  PDL::Core::barf('Usage: setstr($pdl, $x, $y,.., $value)') if $#_<2;
+  PDLA::Core::barf('Usage: setstr($pdl, $x, $y,.., $value)') if $#_<2;
   my $self = shift;
   my $val  = pop;
 
@@ -275,7 +275,7 @@ sub setstr {    # Sets a particular single value to a string.
 
   for (my $i=0;$i<$n;$i++) {
     my $chr = ($i >= length($val)) ? 0 : unpack ("C", substr ($val, $i, 1));
-    PDL::Core::set_c ($self, [$i, @_], $chr);
+    PDLA::Core::set_c ($self, [$i, @_], $chr);
   }
   
 }
@@ -284,21 +284,21 @@ sub setstr {    # Sets a particular single value to a string.
 
 =for ref
 
-Function to fetch one string value from a PDL::Char type PDL, given a position within the PDL.
+Function to fetch one string value from a PDLA::Char type PDLA, given a position within the PDLA.
 The input position of the string, not a character in the string.  The length of the input
 string is the implied first dimension.
 
 =for usage
 
- $char = PDL::Char->new( [['abc', 'def', 'ghi'], ['jkl', 'mno', 'pqr']] );
+ $char = PDLA::Char->new( [['abc', 'def', 'ghi'], ['jkl', 'mno', 'pqr']] );
  print $char->atstr(0,1);
  # Prints:
  # jkl
 
 =cut
 
-sub atstr {    # Fetchs a string value from a PDL::Char
-  PDL::Core::barf('Usage: atstr($pdl, $x, $y,..,)') if (@_ < 2);
+sub atstr {    # Fetchs a string value from a PDLA::Char
+  PDLA::Core::barf('Usage: atstr($pdl, $x, $y,..,)') if (@_ < 2);
   my $self = shift;
   
   my $str = ':,' . join (',', map {"($_)"} @_);
@@ -310,11 +310,11 @@ sub atstr {    # Fetchs a string value from a PDL::Char
 }
 
 # yuck ;) this is a cool little accessor method
-# rebless a slice into PDL; originally
-# Marc's idea used in PDL::Complex
+# rebless a slice into PDLA; originally
+# Marc's idea used in PDLA::Complex
 sub numeric {
   my ($seq) = @_;
-  return bless $seq->slice(''), 'PDL';
+  return bless $seq->slice(''), 'PDLA';
 }
 
 1;

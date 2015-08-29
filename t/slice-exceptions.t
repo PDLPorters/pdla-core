@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use PDL;
+use PDLA;
 use Test::More;
 
 for my $start (0, 4, -4, 20, -20) {

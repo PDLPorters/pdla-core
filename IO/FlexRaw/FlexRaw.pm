@@ -1,16 +1,16 @@
 =head1 NAME
 
-PDL::IO::FlexRaw -- A flexible binary I/O format for PerlDL
+PDLA::IO::FlexRaw -- A flexible binary I/O format for PerlDL
 
 =head1 SYNOPSIS
 
-    use PDL;
-    use PDL::IO::FlexRaw;
+    use PDLA;
+    use PDLA::IO::FlexRaw;
 
     # To obtain the header for reading (if multiple files use the
     # same header, for example):
     #
-    $hdr = PDL::IO::FlexRaw::_read_flexhdr("filename.hdr")
+    $hdr = PDLA::IO::FlexRaw::_read_flexhdr("filename.hdr")
 
     ($x,$y,...) = readflex("filename" [, $hdr])
     ($x,$y,...) = mapflex("filename" [, $hdr] [, $opts])
@@ -18,7 +18,7 @@ PDL::IO::FlexRaw -- A flexible binary I/O format for PerlDL
     $hdr = writeflex($file, $pdl1, $pdl2,...)
     writeflexhdr($file, $hdr)
 
-    # if $PDL::IO::FlexRaw::writeflexhdr is true and
+    # if $PDLA::IO::FlexRaw::writeflexhdr is true and
     #    $file is a filename, writeflexhdr() is called automatically
     #
     $hdr = writeflex($file, $pdl1, $pdl2,...)  # need $hdr for something
@@ -104,24 +104,24 @@ give header information, rather than using a .hdr file.  For example,
 reads our example file again.  As a special case, when NDims is 1, Dims
 may be given as a scalar.
 
-Within PDL, readflex and writeflex can be used to write several pdls
+Within PDLA, readflex and writeflex can be used to write several pdls
 to a single file -- e.g.
 
-    use PDL;
-    use PDL::IO::FlexRaw;
+    use PDLA;
+    use PDLA::IO::FlexRaw;
 
     @pdls = ($pdl1, $pdl2, ...);
     $hdr = writeflex("fname",@pdls);
     @pdl2 = readflex("fname",$hdr);
 
-    writeflexhdr("fname",$hdr);  # not needed if $PDL::IO::FlexRaw::writeflexhdr is set
+    writeflexhdr("fname",$hdr);  # not needed if $PDLA::IO::FlexRaw::writeflexhdr is set
     @pdl3 = readflex("fname");
 
 -- C<writeflex> produces the data file and returns the file header as an
 anonymous hash, which can be written to a .hdr file using
 C<writeflexhdr>.
 
-If the package variable C<$PDL::IO::FlexRaw::writeflexhdr>
+If the package variable C<$PDLA::IO::FlexRaw::writeflexhdr>
 is true, and the C<writeflex> call was with a I<filename> and not
 a handle, C<writeflexhdr> will be called automatically (as done by
 C<writefraw>.
@@ -136,8 +136,8 @@ the data is read or written to the open filehandle.  This
 gives an easy way to read an arbitrary slice in a big data
 volume, as in the following example:
 
-    use PDL;
-    use PDL::IO::FastRaw;
+    use PDLA;
+    use PDLA::IO::FastRaw;
 
     open(DATA, "raw3d.dat");
     binmode(DATA);
@@ -172,7 +172,7 @@ You may have run into similar problems with common blocks in FORTRAN.
 For instance, floating point numbers may have to align on 4 byte
 boundaries -- if the data file consists of 3 bytes then a float, it
 cannot be read.  C<mapflex> will warn about this problem when it occurs,
-and return the PDLs mapped before the problem arose.  This can be
+and return the PDLAs mapped before the problem arose.  This can be
 dealt with either by reorganizing the data file (large types first
 helps, as a rule-of-thumb), or more simply by using C<readflex>.
 
@@ -225,7 +225,7 @@ Write a binary file with flexible format specification
 
 or
 
-    $PDL::IO::FlexRaw::writeflexhdr = 1;  # set so we don't have to call writeflexhdr
+    $PDLA::IO::FlexRaw::writeflexhdr = 1;  # set so we don't have to call writeflexhdr
 
     $hdr = writeflex($file, $pdl1, $pdl2,...)  # remember, $file must be filename
     writeflex($file, $pdl1, $pdl2,...)         # remember, $file must be filename
@@ -244,7 +244,7 @@ Write the header file corresponding to a previous writeflex call
 
     $file or "filename" is the filename used in a previous writeflex
     If $file is actually a "filename" then writeflexhdr() will be
-    called automatically if $PDL::IO::FlexRaw::writeflexhdr is true.
+    called automatically if $PDLA::IO::FlexRaw::writeflexhdr is true.
     If writeflex() was to a FILEHANDLE, you will need to call
     writeflexhdr() yourself since the filename cannot be determined
     (at least easily).
@@ -278,7 +278,7 @@ Read a FlexRaw header file and return a header structure.
 
     Usage:
 
-    $hdr = PDL::IO::FlexRaw::_read_flexhdr($file)
+    $hdr = PDLA::IO::FlexRaw::_read_flexhdr($file)
 
 Note that C<_read_flexhdr> is supposed to be an internal function.  It
 was not originally documented and it is not tested.  However, there
@@ -287,8 +287,8 @@ a file, so I figured I would write a small bit of documentation on it.
 
 =head1 Bad Value Support
 
-As of PDL-2.4.8, L<PDL::IO::FlexRaw|PDL::IO::FlexRaw> has support for reading and writing
-pdls with L<bad|PDL::Bad> values in them.
+As of PDLA-2.4.8, L<PDLA::IO::FlexRaw|PDLA::IO::FlexRaw> has support for reading and writing
+pdls with L<bad|PDLA::Bad> values in them.
 
 On C<writeflex>, a piddle
 argument with C<< $pdl->badflag == 1 >> will have the keyword/token "badvalue"
@@ -296,8 +296,8 @@ added to the header file after the dimension list and an additional token
 with the bad value for that pdl if C<< $pdl->badvalue != $pdl->orig_badvalue >>.
 
 On C<readflex>, a pdl with the "badvalue" token in the header will
-automatically have its L<badflag|PDL::Bad/#badflag> set and its
-L<badvalue|PDL::Bad/#badvalue> as well if it is not the standard default for that type.
+automatically have its L<badflag|PDLA::Bad/#badflag> set and its
+L<badvalue|PDLA::Bad/#badvalue> as well if it is not the standard default for that type.
 
 =for example
 
@@ -315,7 +315,7 @@ reference the current C<$hdr> looks like this:
 
     $badpdl = readflex('badpdl', [$hdr]);
 
-If you use bad values and try the new L<PDL::IO::FlexRaw|PDL::IO::FlexRaw> bad value
+If you use bad values and try the new L<PDLA::IO::FlexRaw|PDLA::IO::FlexRaw> bad value
 support, please let us know via the perldl mailing list.
 Suggestions and feedback are also welcome.
 
@@ -325,15 +325,15 @@ Suggestions and feedback are also welcome.
 Copyright (C) Robin Williams <rjrw@ast.leeds.ac.uk> 1997.
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 Documentation contributions copyright (C) David Mertens, 2010.
 
 =cut
 
-package PDL::IO::FlexRaw;
+package PDLA::IO::FlexRaw;
 
 BEGIN {
    our $have_file_map = 0;
@@ -342,13 +342,13 @@ BEGIN {
    $have_file_map = 1 unless $@;
 }
 
-use PDL;
+use PDLA;
 use Exporter;
 use FileHandle;
-use PDL::Types ':All';
-use PDL::IO::Misc qw(bswap2 bswap4 bswap8);
+use PDLA::Types ':All';
+use PDLA::IO::Misc qw(bswap2 bswap4 bswap8);
 
-@PDL::IO::FlexRaw::ISA = qw/Exporter/;
+@PDLA::IO::FlexRaw::ISA = qw/Exporter/;
 
 @EXPORT = qw/writeflex writeflexhdr readflex mapflex/;
 
@@ -361,7 +361,7 @@ use PDL::IO::Misc qw(bswap2 bswap4 bswap8);
 		    )}
 	       typesrtkeys());
 %flexswap = ( map {my $val = typefld($_,'numval');
-		   my $nb = PDL::Core::howbig($val);
+		   my $nb = PDLA::Core::howbig($val);
 		   ($val =>  $nb > 1 ? "bswap$nb" : undef)}
 	      typesrtkeys());
 
@@ -371,21 +371,21 @@ use PDL::IO::Misc qw(bswap2 bswap4 bswap8);
 # print Dumper \%flexswap;
 
 # %flexnames = (
-#    $PDL_B => 'byte', $PDL_S => 'short',
-#    $PDL_US => 'ushort', $PDL_L => 'long',
-#    $PDL_F => 'float', $PDL_D => 'double');
+#    $PDLA_B => 'byte', $PDLA_S => 'short',
+#    $PDLA_US => 'ushort', $PDLA_L => 'long',
+#    $PDLA_F => 'float', $PDLA_D => 'double');
 
 # %flextypes = (
-# 'byte'   => $PDL_B, '0' => $PDL_B, 'b' => $PDL_B, 'c' => $PDL_B,
-# 'short'  => $PDL_S, '1' => $PDL_S, 's' => $PDL_S,
-# 'ushort' => $PDL_US,'2' => $PDL_US,'u' => $PDL_US,
-# 'long'   => $PDL_L, '3' => $PDL_L, 'l' => $PDL_L,
-# 'float'  => $PDL_F, '4' => $PDL_F, 'f' => $PDL_F,
-# 'double' => $PDL_D, '5' => $PDL_D, 'd' => $PDL_D
+# 'byte'   => $PDLA_B, '0' => $PDLA_B, 'b' => $PDLA_B, 'c' => $PDLA_B,
+# 'short'  => $PDLA_S, '1' => $PDLA_S, 's' => $PDLA_S,
+# 'ushort' => $PDLA_US,'2' => $PDLA_US,'u' => $PDLA_US,
+# 'long'   => $PDLA_L, '3' => $PDLA_L, 'l' => $PDLA_L,
+# 'float'  => $PDLA_F, '4' => $PDLA_F, 'f' => $PDLA_F,
+# 'double' => $PDLA_D, '5' => $PDLA_D, 'd' => $PDLA_D
 # );
 
-$PDL::IO::FlexRaw::verbose = 0;
-$PDL::IO::FlexRaw::writeflexhdr = defined($PDL::FlexRaw::IO::writeflexhdr) ? $PDL::FlexRaw::IO::writeflexhdr : 0;
+$PDLA::IO::FlexRaw::verbose = 0;
+$PDLA::IO::FlexRaw::writeflexhdr = defined($PDLA::FlexRaw::IO::writeflexhdr) ? $PDLA::FlexRaw::IO::writeflexhdr : 0;
 
 sub _read_flexhdr {
     my ($hname) = @_;
@@ -485,7 +485,7 @@ sub readchunk {
     my ($d, $pdl, $len, $name) = @_;
     my ($nread);
     print "Reading $len at $offset from $name\n"
-      if $PDL::IO::FlexRaw::verbose;
+      if $PDLA::IO::FlexRaw::verbose;
     ($nread = read($d, ${$pdl->get_dataref}, $len)) == $len
 	or barf "Couldn't read $len bytes at offset $offset from '$name', got $nread";
     $pdl->upd_data();
@@ -588,11 +588,11 @@ READ:
 	if ($newfile) {
 	    if ($type eq 'f77') {
 		$hdr = {
-		    Type => $PDL_L,
+		    Type => $PDLA_L,
 		    Dims => [ ],
 		    NDims => 0
 		    };
-		$type = $PDL_L;
+		$type = $PDLA_L;
 		$f77mode = 1;
 	    } elsif ($type eq 'swap') {
 		next READ;
@@ -605,7 +605,7 @@ READ:
 		if (!defined($flextypes{$type}));
 	    $type = $flextypes{$type};
 	}
-	$pdl = PDL->zeroes ((new PDL::Type($type)),
+	$pdl = PDLA->zeroes ((new PDLA::Type($type)),
 			    ref $hdr->{Dims} ? @{$hdr->{Dims}} : $hdr->{Dims});
 	$len = length $ {$pdl->get_dataref};
 
@@ -614,10 +614,10 @@ READ:
 	if ($swapbyte) {
 	  my $method = $flexswap{$type};
 	  $pdl->$method if $method;
-# 	    bswap2($pdl) if $pdl->get_datatype == $PDL_S;
-# 	    bswap4($pdl) if $pdl->get_datatype == $PDL_L
-# 		|| $pdl->get_datatype == $PDL_F;
-# 	    bswap8($pdl) if $pdl->get_datatype == $PDL_D;
+# 	    bswap2($pdl) if $pdl->get_datatype == $PDLA_S;
+# 	    bswap4($pdl) if $pdl->get_datatype == $PDLA_L
+# 		|| $pdl->get_datatype == $PDLA_F;
+# 	    bswap8($pdl) if $pdl->get_datatype == $PDLA_D;
 	}
 	if ($newfile && $f77mode) {
 	    if ($zipt || $swapbyte) {
@@ -719,7 +719,7 @@ sub mapflex {
 			barf("Bad typename '$type' in mapflex")
 				unless defined $flextypes{$type};
 			$type = $flextypes{$type};
-			$size += $si * PDL::Core::howbig ($type);
+			$size += $si * PDLA::Core::howbig ($type);
 		}
     }
 # $s now contains estimated size of data in header --
@@ -732,12 +732,12 @@ sub mapflex {
     }
     # print "Size $size f77mode $f77mode\n";
 
-    $d = PDL->zeroes(byte());
+    $d = PDLA->zeroes(byte());
 
     # print "Mapping total size $size\n";
     # use Data::Dumper;
     # print "Options: ", Dumper(\%opts), "\n";
-    if ($have_file_map and not defined($PDL::force_use_mmap_code) ) {
+    if ($have_file_map and not defined($PDLA::force_use_mmap_code) ) {
        $d->set_data_by_file_map($name,
                             $size,
                             1,
@@ -765,11 +765,11 @@ READ:
 		if ($newfile) {
 			if ($type eq 'f77') {
 			$hdr = {
-				Type => $PDL_L,
+				Type => $PDLA_L,
 				Dims => [ ],
 				NDims => 0
 				};
-			$type = $PDL_L;
+			$type = $PDLA_L;
 			} else {
 			$newfile = 0;
 			}
@@ -779,7 +779,7 @@ READ:
 				unless defined $flextypes{$type};
 			$type = $flextypes{$type};
 		}
-		my $pdl = PDL->zeroes ((new PDL::Type($type)),
+		my $pdl = PDLA->zeroes ((new PDLA::Type($type)),
 					ref $hdr->{Dims} ? @{$hdr->{Dims}} : $hdr->{Dims});
 		$len = length $ {$pdl->get_dataref};
 
@@ -855,7 +855,7 @@ sub writeflex {
    }
    if (defined wantarray) {
       # list or scalar context
-      writeflexhdr($name, $hdr) if $isname and $PDL::IO::FlexRaw::writeflexhdr;
+      writeflexhdr($name, $hdr) if $isname and $PDLA::IO::FlexRaw::writeflexhdr;
       return $hdr;
    } else {
       # void context so write header file
@@ -872,7 +872,7 @@ sub writeflexhdr {
 	or barf "Couldn't open '$hname' for writing";
     binmode $h;
     print $h
-	"# Output from PDL::IO::writeflex, data in $name\n";
+	"# Output from PDLA::IO::writeflex, data in $name\n";
     foreach (@$hdr) {
 	my ($type) = $_->{Type};
 	if (! exists $flextypes{$type}) {

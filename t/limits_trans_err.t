@@ -1,14 +1,14 @@
 
 use Test::More;
-use PDL;
+use PDLA;
 
 BEGIN {
-   eval "use PDL::Slatec;";
+   eval "use PDLA::Slatec;";
    if ( !$@ ) {
-      eval "use PDL::Graphics::Limits;";
+      eval "use PDLA::Graphics::Limits;";
       plan tests => 3;
    } else {
-      plan skip_all => 'PDL::Slatec not available';
+      plan skip_all => 'PDLA::Slatec not available';
    }
 };
 

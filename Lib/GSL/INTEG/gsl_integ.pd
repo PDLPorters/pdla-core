@@ -1,7 +1,7 @@
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::GSL::INTEG - PDL interface to numerical integration routines in GSL
+PDLA::GSL::INTEG - PDLA interface to numerical integration routines in GSL
 
 =head1 DESCRIPTION
 
@@ -67,8 +67,8 @@ Please check the GSL documentation for more information.
 
 =head1 SYNOPSIS
 
-   use PDL;
-   use PDL::GSL::INTEG;
+   use PDLA;
+   use PDLA::GSL::INTEG;
 
    my $a = 1.2;
    my $b = 3.7;
@@ -461,9 +461,9 @@ Usage:
 Example:
 
   my $PI = 3.14159265358979323846264338328;
-  my ($res,$abserr,$ierr) = PDL::GSL::INTEG::gslinteg_qawo(\&f,10*$PI,'sin',0,1,0,1e-7,1000);
+  my ($res,$abserr,$ierr) = PDLA::GSL::INTEG::gslinteg_qawo(\&f,10*$PI,'sin',0,1,0,1e-7,1000);
   # with warnings on
-  ($res,$abserr,$ierr) = PDL::GSL::INTEG::gslinteg_qawo(\&f,10*$PI,'sin',0,1,0,1e-7,1000,{Warn => 'y'});
+  ($res,$abserr,$ierr) = PDLA::GSL::INTEG::gslinteg_qawo(\&f,10*$PI,'sin',0,1,0,1e-7,1000,{Warn => 'y'});
 
   sub f{
     my ($x) = @_;
@@ -513,12 +513,12 @@ Example:
 
 =head1 BUGS
 
-Feedback is welcome. Log bugs in the PDL bug database (the
+Feedback is welcome. Log bugs in the PDLA bug database (the
 database is always linked from L<http://pdl.perl.org>).
 
 =head1 SEE ALSO
 
-L<PDL>
+L<PDLA>
 
 The GSL documentation is online at
 
@@ -529,8 +529,8 @@ The GSL documentation is online at
 This file copyright (C) 2003,2005 Andres Jordan <ajordan@eso.org>
 All rights reserved. There is no warranty. You are allowed to redistribute 
 this software documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 The GSL integration routines were written by Brian Gough. QUADPACK
 was written by Piessens, Doncker-Kapenga, Uberhuber and Kahaner.

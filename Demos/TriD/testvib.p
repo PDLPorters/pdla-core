@@ -1,10 +1,10 @@
 use blib ;
 
-use PDL;
+use PDLA;
 
-use PDL::Graphics::TriD;
+use PDLA::Graphics::TriD;
 
-# $PDL::Graphics::TriD::verbose=1;
+# $PDLA::Graphics::TriD::verbose=1;
 
 $offs = 0.0;
 
@@ -55,19 +55,19 @@ $s = $ach * 0;
 
 $round = 0;
 
-$win = PDL::Graphics::TriD::get_current_window();
+$win = PDLA::Graphics::TriD::get_current_window();
 # points3d([SURF2D,$a]);
-$g = PDL::Graphics::TriD::get_current_graph();
+$g = PDLA::Graphics::TriD::get_current_graph();
 
 keeptwiddling3d(1);
 
-$surf = new PDL::Graphics::TriD::SLattice_S([$a]);
+$surf = new PDLA::Graphics::TriD::SLattice_S([$a]);
 
 if(0) {
 	$g->add_dataseries($surf,"surf");
 	$g->bind_default("surf");
 	$g->scalethings();
-	$g->PDL::Graphics::TriD::Object::changed();
+	$g->PDLA::Graphics::TriD::Object::changed();
 	$win->add_object($g);
 	$win->twiddle();
 } else {
@@ -96,7 +96,7 @@ while(1) {
 		if(0) {
 			$surf->data_changed();
 	#		$g->data_changed();
-			$g->PDL::Graphics::TriD::Object::changed();
+			$g->PDLA::Graphics::TriD::Object::changed();
 			$win->changed();
 			$win->twiddle(1);
 		} else {

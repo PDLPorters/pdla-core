@@ -1,40 +1,40 @@
 HINT
 ----
 For the latest install and per-platform guidance on
-how to get and install PDL, see the Install PDL page at:
+how to get and install PDLA, see the Install PDLA page at:
 http://pdl.perl.org/?page=install
 
 
 
 INSTALLATION
 ------------
-To install PDL on your machine, first check that you
+To install PDLA on your machine, first check that you
 have a recent enough version of Perl.  5.8.x and above
 is required.
 
-See win32/INSTALL for details on installing PDL on
+See win32/INSTALL for details on installing PDLA on
 windows platforms.
 
-See cygwin/INSTALL for details on installing PDL on
+See cygwin/INSTALL for details on installing PDLA on
 cygwin platforms.
 
 The file DEPENDENCIES summarizes the dependencies of
-various PDL modules on libraries/other packages.  The
+various PDLA modules on libraries/other packages.  The
 location of some of these files needs to be specified
 in the file perldl.conf.
 
-PDL depends on a number of other Perl modules for
+PDLA depends on a number of other Perl modules for
 feature complete operation.  These modules are generally
 available at the CPAN. The easiest way to resolve these
-dependencies is to use the CPAN module to install PDL.
+dependencies is to use the CPAN module to install PDLA.
 Installation should be as simple as
 
-  cpan install PDL   # if the cpan script is in your path
+  cpan install PDLA   # if the cpan script is in your path
 
 or if you don't have the cpan script try
 
   perl -MCPAN -e shell
-  cpan> install PDL
+  cpan> install PDLA
 
 NOTE: if this is your first time running the cpan shell,
 you'll be prompted to configure the running environment.
@@ -57,8 +57,8 @@ And to change to something better:
 
 perldl.conf
 -----------
-Edit the file perldl.conf in the PDL source directory
-to specify configuration options for building PDL.  The
+Edit the file perldl.conf in the PDLA source directory
+to specify configuration options for building PDLA.  The
 comments in this file specify what the options are and
 give examples.
 
@@ -67,11 +67,11 @@ keep the file handy for future reference.  Place it in
 ~/.perldl.conf where it will be picked up automatically
 or use this command
 
-    perl Makefile.PL PDLCONF=your_conf_file
+    perl Makefile.PL PDLACONF=your_conf_file
 
-the next time you configure PDL.  (You should check if
+the next time you configure PDLA.  (You should check if
 new config flags were introduced when installing a new
-version of PDL by consulting its perldl.conf.)
+version of PDLA by consulting its perldl.conf.)
 
 After editing the configuration options just say
 
@@ -85,7 +85,7 @@ and if that seems ok, try:
 
 If there are any strange error messages, please contact
 the developers with a full bug report; response is
-often rapid (We would like to have PDL work right out
+often rapid (We would like to have PDLA work right out
 of the box on as many platforms as possible).
 
 If the make command completed successfully, try:
@@ -98,7 +98,7 @@ seen before.  Again, if there are
 errors, please contact the developers (via the
 pdl-devel mailing list, see Basic/Pod/FAQ.pod).
 
-If everything works and you wish to install PDL, type
+If everything works and you wish to install PDLA, type
 
    make install
 
@@ -107,9 +107,9 @@ There is also another make item:
    make doctest
 
 which creates the documentation database for use
-in the PDL shell (pdl2 or perldl).  It will be run
-automatically on PDL install, but you may wish to
-run it by hand to have access to PDL on-line docs
+in the PDLA shell (pdl2 or perldl).  It will be run
+automatically on PDLA install, but you may wish to
+run it by hand to have access to PDLA on-line docs
 when running from the build directory before/without
 install.
 
@@ -118,7 +118,7 @@ install.
 F77 Configuration
 -----------------
 F77 configuration information is normally picked up
-from ExtUtils::F77 to build modules like PDL::Slatec
+from ExtUtils::F77 to build modules like PDLA::Slatec
 that rely on a working fortran compiler.
 
 In cases where you don't want to rely on ExtUtils::F77
@@ -127,7 +127,7 @@ platform without ExtUtils::F77 support) there is now
 the config variable F77CONF.  It is supposed to point
 to a perl file that implements a minimal F77Conf class
 (see debian/f77conf.pl for an example).  The use of
-F77CONF is similar to the PDLCONF variable, e.g.
+F77CONF is similar to the PDLACONF variable, e.g.
 
    perl Makefile.PL F77CONF=debian/f77conf.pl
 
@@ -139,9 +139,9 @@ Win32 is special. See win32/INSTALL.
 
 COMMON PROBLEMS
 ---------------
-If you have problems building or installing PDL, we
-suggest contacting the PDL users and developers via
-the PDL mailing lists.  See
+If you have problems building or installing PDLA, we
+suggest contacting the PDLA users and developers via
+the PDLA mailing lists.  See
 
    http://pdl.perl.org/?page=mailing-lists
 
@@ -149,9 +149,9 @@ to get started.  Links to searchable archives of the lists
 are available on the same page.
 
 The build process has been significantly cleaned up
-since PDL-2.4.3.  If you are unable to install PDL,
+since PDLA-2.4.3.  If you are unable to install PDLA,
 even after consulting the list archives or other users
-and developers on the PDL lists, please do submit
+and developers on the PDLA lists, please do submit
 a bug report (see the BUGS file for directions).
 
 * Test failures in t/gis_proj.t, t/proj_transform.t, or
@@ -180,7 +180,7 @@ a bug report (see the BUGS file for directions).
     - Ubuntu:  These are included in the libproj-dev.
     - Fedora:  You have to install the proj-nad package.
 
-* make failures for PDL with error messages like:
+* make failures for PDLA with error messages like:
 
       make: Warning: File `Makefile.PL' has modification
       time 3.1e+05 s in the future
@@ -193,7 +193,7 @@ a bug report (see the BUGS file for directions).
   updates the file time for Makefile.PL to "now" so make
   runs correctly.
 
-* If you wish to avoid interactive prompts during the PDL
+* If you wish to avoid interactive prompts during the PDLA
   configure process (e.g., the perl Makefile.PL stage),
   you can set the environment variable PERL_MM_USE_DEFAULT
   to 1 so the default values are taken automatically.
@@ -205,7 +205,7 @@ a bug report (see the BUGS file for directions).
   code directory to change '-O3' to '-g3' that should allow
   the build to complete successfully.  E.g.:
 
-    cd PDL-2.4.11      # or whatever the build dir is
+    cd PDLA-2.4.11      # or whatever the build dir is
     perl Makefile.PL   # configure the build
     make
     # ... gcc dies building Primitive.o ...

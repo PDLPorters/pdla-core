@@ -1,5 +1,5 @@
 #
-# Proj.pd - PP def file for the Proj4->PDL interface.
+# Proj.pd - PP def file for the Proj4->PDLA interface.
 #
 # COPYRIGHT NOTICE:
 #
@@ -21,11 +21,11 @@ $VERSION = "1.32";
 pp_addpm(<<'EODOC');
 =head1 NAME
 
-PDL::GIS::Proj - PDL interface to the Proj4 projection library.
+PDLA::GIS::Proj - PDLA interface to the Proj4 projection library.
 
 =head1 DESCRIPTION
 
-PDL interface to the Proj4 projection library.
+PDLA interface to the Proj4 projection library.
 
 For more information on the proj library, see: http://www.remotesensing.org/proj/
 
@@ -42,7 +42,7 @@ judd dot t at orbitalsystems dot com
 
 =head2 1.32 (29 March 2006) Judd Taylor
 
-    - Getting ready to merge this into the PDL CVS. 
+    - Getting ready to merge this into the PDLA CVS. 
     
 =head2 1.31 (???) Judd Taylor
 
@@ -100,7 +100,7 @@ Proj4 forward transformation $params is a string of the projection transformatio
 parameters.
 
 Returns two pdls for x and y values respectively. The units are dependant on Proj4
-behavior. They will be PDL->null if an error has occurred.
+behavior. They will be PDLA->null if an error has occurred.
 
 BadDoc: Ignores bad elements of $lat and $lon, and sets the corresponding elements 
 of $x and $y to BAD
@@ -127,7 +127,7 @@ Proj4 inverse transformation $params is a string of the projection transformatio
 parameters.
 
 Returns two pdls for lat and lon values respectively. The units are dependant on Proj4
-behavior. They will be PDL->null if an error has occurred.
+behavior. They will be PDLA->null if an error has occurred.
 
 BadDoc: Ignores bad elements of $lat and $lon, and sets the corresponding elements 
 of $x and $y to BAD
@@ -618,7 +618,7 @@ pp_addpm( <<'ENDPM' );
 
 sub load_projection_information
 {
-    my $descriptions = PDL::GIS::Proj::load_projection_descriptions();
+    my $descriptions = PDLA::GIS::Proj::load_projection_descriptions();
     
     my $info = {};
     

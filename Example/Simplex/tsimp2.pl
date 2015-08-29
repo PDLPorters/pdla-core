@@ -1,5 +1,5 @@
-use PDL;
-use PDL::Opt::Simplex;
+use PDLA;
+use PDLA::Opt::Simplex;
 #
 # Simplex Demo - Alison Offer (aro@aaocbn.aao.gov.au)
 #

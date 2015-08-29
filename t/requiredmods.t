@@ -29,7 +29,7 @@ EOP
     print STDERR << 'EOP';
 *                                                      *
 * Please install the missing module(s) and start the   *
-* PDL build process again (perl Makefile.PL; ....)     *
+* PDLA build process again (perl Makefile.PL; ....)     *
 *                                                      *
 ********************************************************
 

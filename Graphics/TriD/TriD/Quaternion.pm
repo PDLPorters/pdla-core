@@ -2,13 +2,13 @@
 #
 # Quaternions... inefficiently.
 #
-# Should probably use PDL and C... ?
+# Should probably use PDLA and C... ?
 #
 # Stored as [c,x,y,z].
 #
 # XXX REMEMBER!!!! First component = cos(angle*2), *NOT* cos(angle)
 
-package PDL::Graphics::TriD::Quaternion;
+package PDLA::Graphics::TriD::Quaternion;
 
 sub new {
 	my($type,$c,$x,$y,$z) = @_;
@@ -23,7 +23,7 @@ sub new {
 }
 
 sub copy {
-	return new PDL::Graphics::TriD::Quaternion(@{$_[0]});
+	return new PDLA::Graphics::TriD::Quaternion(@{$_[0]});
 }
 
 sub new_vrmlrot {
@@ -46,7 +46,7 @@ sub to_vrmlrot {
 # Yuck
 sub multiply {
 	my($this,$with) = @_;
-	return PDL::Graphics::TriD::Quaternion->new(
+	return PDLA::Graphics::TriD::Quaternion->new(
 		$this->[0] * $with->[0] -
 		$this->[1] * $with->[1] -
 		$this->[2] * $with->[2] -
@@ -71,11 +71,11 @@ sub multiply_scalar {
 	my $ang = POSIX::acos($this->[0]);
 	my $d = sin($ang);
 	if(abs($d) < 0.0000001) {
-		return new PDL::Graphics::TriD::Quaternion(1,0,0,0);
+		return new PDLA::Graphics::TriD::Quaternion(1,0,0,0);
 	}
 	$ang *= $scalar;
 	my $d2 = sin($ang);
-	return new PDL::Graphics::TriD::Quaternion(
+	return new PDLA::Graphics::TriD::Quaternion(
 		cos($ang), map {$_*$d2/$d} @{$this}[1..3]
 	);
 }
@@ -87,7 +87,7 @@ sub set {
 
 sub add {
 	my($this,$with) = @_;
-	return PDL::Graphics::TriD::Quaternion->new(
+	return PDLA::Graphics::TriD::Quaternion->new(
 		$this->[0] * $with->[0],
 		$this->[1] * $with->[1],
 		$this->[2] * $with->[2],
@@ -105,7 +105,7 @@ sub abssq {
 sub invert {
 	my($this) = @_;
 	my $abssq = $this->abssq();
-	return PDL::Graphics::TriD::Quaternion->new(
+	return PDLA::Graphics::TriD::Quaternion->new(
 		 1/$abssq * $this->[0] ,
 		-1/$abssq * $this->[1] ,
 		-1/$abssq * $this->[2] ,
@@ -125,7 +125,7 @@ sub normalize_this {
 
 sub rotate {
   my($this,$vec) = @_;
-  my $q = (PDL::Graphics::TriD::Quaternion)->new(0,@$vec);
+  my $q = (PDLA::Graphics::TriD::Quaternion)->new(0,@$vec);
   my $m = $this->multiply($q->multiply($this->invert));
   return [@$m[1..3]];
 }

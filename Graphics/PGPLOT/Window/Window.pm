@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::Graphics::PGPLOT::Window - A OO interface to PGPLOT windows
+PDLA::Graphics::PGPLOT::Window - A OO interface to PGPLOT windows
 
 =head1 SYNOPSIS
 
- pdl> use PDL::Graphics::PGPLOT::Window
+ pdl> use PDLA::Graphics::PGPLOT::Window
  pdl> $win = pgwin(Device => '/xs');
  pdl> $a = pdl [1..100]
  pdl> $b = sqrt($a)
@@ -21,14 +21,14 @@ trouble.
 
 This package offers a OO interface to the PGPLOT plotting package. This
 is intended to replace the traditional interface in
-L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT>
+L<PDLA::Graphics::PGPLOT|PDLA::Graphics::PGPLOT>
 and contains interfaces to a large number of PGPLOT routines. Below the
 usage examples for each function tend to be given in the non-OO version for
 historical reasons. This will slowly be changed, but in the meantime refer
 to the section on OO-interface below to see how to convert the usage
 information below to OO usage (it is totally trivial).
 
-PDL::Graphics::PGPLOT::Window is an interface to the PGPLOT graphical
+PDLA::Graphics::PGPLOT::Window is an interface to the PGPLOT graphical
 libraries.  It currently supports PGPLOT-5.2 and PGPLOT-5.2-cd2.  The
 -cd2 version includes RGB output and anti-aliasing.
 
@@ -238,7 +238,7 @@ need to log the data yourself, e.g.
 
   line $x->log10, $y, {axis=>'LOGX'};
 
-For your convenience you can put PDL::Graphics::PGPLOT into
+For your convenience you can put PDLA::Graphics::PGPLOT into
 autolog mode. In this mode a call to C<line> or C<points>
 will log the data for you and you can pass in the unmodified
 data, e.g.
@@ -364,7 +364,7 @@ hand side of your plot, or when you want to plot an image in (RA,dec)
 coordinates.
 
 You can use either a scalar or a two-element perl array.  If you set it to
-0 (the default) then PDL will guess which direction you want to go.  If you
+0 (the default) then PDLA will guess which direction you want to go.  If you
 set it to a positive number, the axis will always increase to the right. If
 you set it to a negative number, the axis will always increase to the left.
 
@@ -506,7 +506,7 @@ window (see the L<NXPanel and NYPanel options in the
 constructor|/new>).  You can explicitly set
 in which panel most plotting commands occur, by passing either a
 scalar or an array ref into the C<Panel> option.  There is also a
-L<panel|PDL::Graphics::PGPLOT/panel> method, but its use is deprecated
+L<panel|PDLA::Graphics::PGPLOT/panel> method, but its use is deprecated
 because of a wart with the PGPLOT interface.
 
 =item plotting & imaging range
@@ -531,7 +531,7 @@ each axis.
 
 =head1 OBJECT-ORIENTED INTERFACE
 
-This section will briefly describe how the PDL::Graphics::PGPLOT::Window
+This section will briefly describe how the PDLA::Graphics::PGPLOT::Window
 package can be used in an object-oriented (OO) approach and what the
 advantages of this would be. We will start with the latter
 
@@ -574,10 +574,10 @@ user to be able to monitor both the birth rates and accumulated number
 of rabbits and the spatial distribution of the births. Since these are
 logically different he chooses to have two windows open:
 
-  $rate_win = PDL::Graphics::PGPLOT::Window->new(Device => '/xw',
+  $rate_win = PDLA::Graphics::PGPLOT::Window->new(Device => '/xw',
               Aspect => 1, WindowWidth => 5, NXPanel => 2);
 
-  $area_win = PDL::Graphics::PGPLOT::Window->new(Device => '/xw',
+  $area_win = PDLA::Graphics::PGPLOT::Window->new(Device => '/xw',
               Aspect => 1, WindowWidth => 5);
 
 See the documentation for L<new|/new> below for a full overview of the
@@ -611,7 +611,7 @@ described below so I will discuss them and their use here.
 
 Recording is off by default. To turn it on when you create a new
 device you can set the C<Recording> option to true, or you can set
-the C<$PDL::Graphics::PGPLOT::RECORDING> variable to 1. I recommend doing the
+the C<$PDLA::Graphics::PGPLOT::RECORDING> variable to 1. I recommend doing the
 latter in your C<.perldlrc> file at least since you will often have use
 for recording in the perldl or pdl2 script.
 
@@ -633,7 +633,7 @@ you can just replay your commands:
 
 This should result in a C<pgplot.ps> file with a parabola drawn with a
 dashed line. Note the command C<retrieve_state> which retrieves the current
-state of the recorder and return an object (of type PDL::Graphics::State)
+state of the recorder and return an object (of type PDLA::Graphics::State)
 that is used to replay commands later.
 
 =head2 Controlling the recording
@@ -642,7 +642,7 @@ Like any self-respecting recorder you can turn the recorder on and off
 using the C<turn_on_recording> and C<turn_off_recording> respectively.
 Likewise you can clear the state using the C<clear_state> command.
 
-  $w=PDL::Graphics::PGPLOT::Window->new(Device => '/xs');
+  $w=PDLA::Graphics::PGPLOT::Window->new(Device => '/xs');
   $w->turn_on_recording;
   $x=sequence(10); $y=$x*$x;
   $w->line($x, $y);
@@ -734,7 +734,7 @@ as:
 
   Usage: $win->a_simple_function($x, $y, $z [, $opt]);
 
-where C<$win> is a PDL::Graphics::PGPLOT::Window object. That is all.
+where C<$win> is a PDLA::Graphics::PGPLOT::Window object. That is all.
 
 
 =head2 Window control functions.
@@ -754,7 +754,7 @@ Exported constructor for PGPLOT object/device/plot window.
 Parameters are passed on to new() and can either be specified by hash
 reference or as a list.
 
-See the documentation fo PDL::Graphics::PGPLOT::Window::new for details.
+See the documentation fo PDLA::Graphics::PGPLOT::Window::new for details.
 
 Because pgwin is a convenience function, you can specify the device by
 passing in a single non-ref parameter.  For even further convenience, you
@@ -762,7 +762,7 @@ can even omit the '/' in the device specifier, so these two lines
 deliver the same result:
 
     $a = pgwin(gif);
-    $a = new PDL::Graphics::PGPLOT::Window({Dev=>'/gif'});
+    $a = new PDLA::Graphics::PGPLOT::Window({Dev=>'/gif'});
 
 =head2 new
 
@@ -772,17 +772,17 @@ Constructor for PGPLOT object/device/plot window.
 
 =for usage
 
-  Usage: PDL::Graphics::PGPLOT::Window->new($opt);
-  Usage: PDL::Graphics::PGPLOT::Window->new($option=>$value,...);
+  Usage: PDLA::Graphics::PGPLOT::Window->new($opt);
+  Usage: PDLA::Graphics::PGPLOT::Window->new($option=>$value,...);
 
 Options to new() can either be specified via a reference to a hash
 
-  $win = PDL::Graphics::PGPLOT::Window->new({Dev=>'/xserve',ny=>2});
+  $win = PDLA::Graphics::PGPLOT::Window->new({Dev=>'/xserve',ny=>2});
 
 or directly, as an array
 
   # NOTE: no more {} !
-  $win = PDL::Graphics::PGPLOT::Window->new(Dev=>'/xserve',ny=>2);
+  $win = PDLA::Graphics::PGPLOT::Window->new(Dev=>'/xserve',ny=>2);
 
 The following lists the recognised options:
 
@@ -857,7 +857,7 @@ Thus the following call will set up a window where the default axis colour
 will be yellow and where plot lines normally have red colour and dashed
 linestyle.
 
-  $win = PDL::Graphics::PGPLOT::Window->new(Device => '/xs',
+  $win = PDLA::Graphics::PGPLOT::Window->new(Device => '/xs',
           AxisColour => 'Yellow', Colour => 'Red', LineStyle => 'Dashed');
 
 
@@ -892,7 +892,7 @@ device is closed.
 
 A message will be printed to STDOUT giving the name of the
 file created if the plot was made to a hardcopy device and
-C<$PDL::verbose> is true.
+C<$PDLA::verbose> is true.
 
 =head2 held
 
@@ -1355,7 +1355,7 @@ value used by C<imag> (recommended choice).  Default is C<undef>.
 =for example
 
  $a = rvals(50,50);
- $win = PDL::Graphics::PGPLOT::Window->new();
+ $win = PDLA::Graphics::PGPLOT::Window->new();
  $win->imag( $a, { Justify => 1, ITF => 'sqrt' } );
  $win->draw_wedge( { Wedge => { Width => 4, Label => 'foo' } } );
  # although the following might be more sensible
@@ -1377,7 +1377,7 @@ Load an image colour table.
    ctab ( $levels, $red, $green, $blue, [$contrast, $brightness] )
    ctab ( '', $contrast, $brightness ) # use last color table
 
-Note: See L<PDL::Graphics::LUT|PDL::Graphics::LUT> for access to a large
+Note: See L<PDLA::Graphics::LUT|PDLA::Graphics::LUT> for access to a large
 number of colour tables.
 
 Notionally, all non-RGB images and vectors have their colors looked up
@@ -1417,7 +1417,7 @@ the L<axis option|axis>.
 
 =for example
 
-   my $win = PDL::Graphics::PGPLOT::Window->new(dev=>'/xserve');
+   my $win = PDLA::Graphics::PGPLOT::Window->new(dev=>'/xserve');
    my $x=sequence(10);
    my $y=$x*$x+1;
 
@@ -1535,7 +1535,7 @@ C<SymbolSize> allows to adjust the symbol size, it defaults to CharSize.
 The C<ColorValues> option allows one to plot XYZ data with the
 Z axis mapped to a color value.  For example:
 
- use PDL::Graphics::LUT;
+ use PDLA::Graphics::LUT;
  ctab(lut_data('idl5')); # set up color palette to 'idl5'
  points ($x, $y, {ColorValues => $z});
 
@@ -1674,8 +1674,8 @@ The following standard options influence this command:
 Note that meddling with the C<ioffset> and C<bias> often will require you to
 change the default plot range somewhat. It is also worth noting that if
 you have TriD working you will probably be better off using
-L<mesh3d|PDL::Graphics::TriD/mesh3d> or
-a similar command - see the L<PDL::Graphics::TriD|PDL::Graphics::TriD>
+L<mesh3d|PDLA::Graphics::TriD/mesh3d> or
+a similar command - see the L<PDLA::Graphics::TriD|PDLA::Graphics::TriD>
 module.
 
 =for example
@@ -1925,7 +1925,7 @@ Create transform array for contour and image plotting
 
  $win->transform([$xdim,$ydim], $options);
 
-(For information on coordinate transforms, try L<PDL::Transform|PDL::Transform>.)
+(For information on coordinate transforms, try L<PDLA::Transform|PDLA::Transform>.)
 This function creates a transform array in the format required by the image
 and contouring routines. You must call it with the dimensions of your image
 as arguments or pass these as an anonymous hash - see the example below.
@@ -1976,7 +1976,7 @@ from 0 (as all good pixel coordinates should).
 Example:
 
    $im = rvals(100, 100);
-   $w = PDL::Graphics::PGPLOT::Window->new(Device => '/xs');
+   $w = PDLA::Graphics::PGPLOT::Window->new(Device => '/xs');
    $t = $w->transform(dims($im), {ImageCenter => 0,  Pixinc => 5});
    $w->imag($im, {Transform => $t});
 
@@ -2244,19 +2244,19 @@ To select a region of the X-axis:
 
 #'
 
-package PDL::Graphics::PGPLOT::Window;
+package PDLA::Graphics::PGPLOT::Window;
 require Exporter;
 
-use PDL::Core qw/:Func :Internal/; # Grab the Core names
-use PDL::Basic;
-use PDL::Ufunc;
-use PDL::Primitive;
-use PDL::Types;
-use PDL::Options;
-use PDL::Graphics::State;
-use PDL::Graphics::PGPLOTOptions qw(default_options);
-use PDL::Slices;
-use PDL::NiceSlice;
+use PDLA::Core qw/:Func :Internal/; # Grab the Core names
+use PDLA::Basic;
+use PDLA::Ufunc;
+use PDLA::Primitive;
+use PDLA::Types;
+use PDLA::Options;
+use PDLA::Graphics::State;
+use PDLA::Graphics::PGPLOTOptions qw(default_options);
+use PDLA::Slices;
+use PDLA::NiceSlice;
 use SelfLoader;
 use PGPLOT;
 
@@ -2265,8 +2265,8 @@ require DynaLoader;
 @ISA = qw( Exporter SelfLoader DynaLoader );
 @EXPORT = qw( pgwin );
 
-bootstrap PDL::Graphics::PGPLOT::Window;
-$PDL::Graphics::PGPLOT::RECORDING = 0; # By default recording is off..
+bootstrap PDLA::Graphics::PGPLOT::Window;
+$PDLA::Graphics::PGPLOT::RECORDING = 0; # By default recording is off..
 
 
 ####
@@ -2332,7 +2332,7 @@ sub signal_catcher {
 
   if($sig_nest == 0) {
     $sig_nest = 1;
-    print STDERR "PDL::Graphics::PGPLOT: Warning - who left the light on when they left?\n";
+    print STDERR "PDLA::Graphics::PGPLOT: Warning - who left the light on when they left?\n";
     &release_signals;
   }
 
@@ -2345,17 +2345,17 @@ sub signal_catcher {
   }
 
   # Print message if debugging is on or on multiple INT signals
-  if($PDL::debug || ($sig_log{$sig} && ($sig eq 'INT'))) {
+  if($PDLA::debug || ($sig_log{$sig} && ($sig eq 'INT'))) {
     if($sig_log{$sig}==1) {
-      print STDERR "PDL::Graphics::PGPLOT: deferred $sig for PGPLOT; one more aborts operation\n";
+      print STDERR "PDLA::Graphics::PGPLOT: deferred $sig for PGPLOT; one more aborts operation\n";
     } else {
-      print STDERR "PDL::Graphics::PGPLOT: deferred $sig signal for PGPLOT operation (l=$sig_nest)\n"
+      print STDERR "PDLA::Graphics::PGPLOT: deferred $sig signal for PGPLOT operation (l=$sig_nest)\n"
       }
   }
 
   # Handle multiple INT signals (user pressing ^C a bunch)
   if(defined($sig_log{$sig}) && ($sig_log{$sig}>1) && ($sig eq 'INT')) {
-    print STDERR "Aborting PGPLOT operation".($PDL::debug ? " (may mess up future PGPLOT commands)\n" : "\n");
+    print STDERR "Aborting PGPLOT operation".($PDLA::debug ? " (may mess up future PGPLOT commands)\n" : "\n");
     $sig_nest = 1;
     &release_signals ;
   }
@@ -2488,7 +2488,7 @@ sub pgwin {
       unshift(@a,'Dev');
     }
 
-    return PDL::Graphics::PGPLOT::Window->new(@a);
+    return PDLA::Graphics::PGPLOT::Window->new(@a);
 }
 
 sub new {
@@ -2523,7 +2523,7 @@ sub new {
 
   &catch_signals;
 
-  my $this_opt = PDL::Options->new($opt);
+  my $this_opt = PDLA::Options->new($opt);
   my $t=$WindowOptions->translation();
   $this_opt->translation($t);
   my $s=$WindowOptions->synonyms();
@@ -2533,7 +2533,7 @@ sub new {
   # This is the setup for the plot options - which also can
   # be set on a per-window basis by the user.
   my $popt = $GeneralOptions->options($u_opt);
-  my $this_plotopt = PDL::Options->new($popt);
+  my $this_plotopt = PDLA::Options->new($popt);
   $t = $GeneralOptions->translation();
   $this_plotopt->translation($t);
   $s = $GeneralOptions->synonyms();
@@ -2555,7 +2555,7 @@ sub new {
 	      'CurrentPanel'  => 0,
 	      '_env_options'  => undef,
 	      'State'         => undef,
-	      'Recording'     => $opt->{Recording}        || $PDL::Graphics::PGPLOT::RECORDING,
+	      'Recording'     => $opt->{Recording}        || $PDLA::Graphics::PGPLOT::RECORDING,
 	      'CTAB'          => undef, # The default colour table
 	     };
 
@@ -2570,7 +2570,7 @@ sub new {
   # This weird setup is required to create the object.
 
   # We always have to create a state variable to avoid undefined errors.
-  $self->{State}=PDL::Graphics::State->new();
+  $self->{State}=PDLA::Graphics::State->new();
 
   &release_signals;
   return $self;
@@ -2870,7 +2870,7 @@ sub _advance_panel {
   $self->panel($new_panel);
   if ($self->held()) {
     $self->{Hold}=0;
-    print "Graphic released (panel move)\n" if $PDL::verbose;
+    print "Graphic released (panel move)\n" if $PDLA::verbose;
   }
 
   &release_signals;
@@ -2967,7 +2967,7 @@ sub replay {
     # turn on recording, let us remind him/her
 
     warn "Replaying an empty state - did you turn on recording?\n";
-    print "Hint: Put PDL::Graphics::PGPLOT::RECORDING=1 in your .perldlrc file\n"
+    print "Hint: Put PDLA::Graphics::PGPLOT::RECORDING=1 in your .perldlrc file\n"
   }
 
   foreach my $arg (@list) {
@@ -2996,7 +2996,7 @@ sub turn_on_recording {
   # Previous calls are not recorded of course..
   print "Turning on state!\n" if $DEBUGSTATE;
   $self->{Recording} = 1;
-  $self->{State}=PDL::Graphics::State->new() unless defined($self->{State});
+  $self->{State}=PDLA::Graphics::State->new() unless defined($self->{State});
 }
 
 sub _add_to_state {
@@ -3027,7 +3027,7 @@ sub close {
   # let the user know that we've created a file
   if ( $self->_status() eq 'OPEN' ) {
       my @info = $self->info( 'HARDCOPY', 'FILE' );
-      print "Created: $info[1]\n" if $info[0] eq 'YES' and $PDL::verbose;
+      print "Created: $info[1]\n" if $info[0] eq 'YES' and $PDLA::verbose;
       pgclos();
   }
   $self->{ID}=undef;
@@ -3239,7 +3239,7 @@ EOD
     # Parse options
     my $u_opt = shift;
     if (defined($u_opt) && ref($u_opt) eq 'HASH') {
-      $erase_options = PDL::Options->new({Panel => undef}) if
+      $erase_options = PDLA::Options->new({Panel => undef}) if
 	!defined($erase_options);
       my $o = $erase_options->options($u_opt);
       # Change panel if requested
@@ -3392,7 +3392,7 @@ This routine checks and optionally alters the arguments given to it.
 sub _checkarg {			# Check/alter arguments utility
   my $self = shift;
   my ($arg,$dims,$type,$nobarf) = @_;
-  $type = $PDL_F unless defined $type;
+  $type = $PDLA_F unless defined $type;
 
   # nobarf added so the end-user can choose whether to die or not..x
   $nobarf = 0 unless defined($nobarf);
@@ -3428,7 +3428,7 @@ sub _checkarg {			# Check/alter arguments utility
 # useful to draw_wedge().
 #
 # This routine needs changing:
-#  . store values using PDL::Options, so you can update rather than overwrite
+#  . store values using PDLA::Options, so you can update rather than overwrite
 #  . associate the information with a particular window/panel/whatever
 #  . clear information when plot erased (correct for current use by imag(),
 #    but maybe not in more general cases?)
@@ -3503,8 +3503,8 @@ that colour index is used.
 =item *
 
 If the colour is a reference the routine checks whether it is an
-C<ARRAY> or a C<PDL> reference. If it is not an error message is given.
-If it is a C<PDL> reference it will be converted to an array ref.
+C<ARRAY> or a C<PDLA> reference. If it is not an error message is given.
+If it is a C<PDLA> reference it will be converted to an array ref.
 
 =item *
 
@@ -3552,8 +3552,8 @@ should be ok,  as that routine returns a rather sensible error-message.
     # Extended treatment of colours - added 2/10/01 JB.
     #
     if (ref($col)) {
-      if ((ref($col) eq 'PDL') or (ref($col) eq 'ARRAY')) {
-	my @colvals = (ref($col) eq 'PDL' ? list($col) : @{$col});
+      if ((ref($col) eq 'PDLA') or (ref($col) eq 'ARRAY')) {
+	my @colvals = (ref($col) eq 'PDLA' ? list($col) : @{$col});
 	my ($r, $g, $b)=@colvals;
 	my $index = $work_ci;
 	if ($#colvals == 3) {
@@ -3574,7 +3574,7 @@ should be ok,  as that routine returns a rather sensible error-message.
 	  pgsci($index);
 	}
       } else {
-	warn "The colour option must be a number, string, array or PDL!\n";
+	warn "The colour option must be a number, string, array or PDLA!\n";
       }
     } else {
       # Now check if this is a name that could be recognised by pgscrn.
@@ -3839,7 +3839,7 @@ sub initenv{
       release_and_barf "The PlotPosition must be given as an array reference!" unless
 	ref($o->{PlotPosition}) eq 'ARRAY';
       my ($x0, $x1, $y0, $y1)=@{$o->{PlotPosition}};
-      print "pgsvp($wx0,$wx1,$wy0,$wy1);\n" if($PDL::Graphics::PGPLOT::debug);
+      print "pgsvp($wx0,$wx1,$wy0,$wy1);\n" if($PDLA::Graphics::PGPLOT::debug);
       pgsvp ($x0, $x1, $y0, $y1);
     }
 
@@ -3988,7 +3988,7 @@ sub initenv{
   }
 
     if (ref($o->{Axis}) eq 'ARRAY') {
-      print "found array ref axis option...\n" if($PDL::Graphics::PGPLOT::debug);
+      print "found array ref axis option...\n" if($PDLA::Graphics::PGPLOT::debug);
       pgtbox($o->{Axis}[0], 0.0, 0, $o->{Axis}[1], 0.0, 0);
     } else {
       pgtbox($o->{Axis}, 0.0, 0, $o->{Axis}, 0.0, 0);
@@ -4167,19 +4167,19 @@ information on the Representation of World Coordinate Systems in FITS.
 	my $pdl  = shift;
 	my $opts = shift || {};
 
-	$_FITS_tr_opt = PDL::Options->new( { WCS => undef } )
+	$_FITS_tr_opt = PDLA::Options->new( { WCS => undef } )
 	    unless defined $_FITS_tr_opt;
 	my $user_opts = $_FITS_tr_opt->options( $opts );
 
 	# Can either be sent a piddle or a hash reference for the header
 	# information
 	#
-	my $isapdl = UNIVERSAL::isa($pdl,'PDL');
+	my $isapdl = UNIVERSAL::isa($pdl,'PDLA');
 	my $hdr = $isapdl ? $pdl->hdr() : $pdl->hdr;
 
 	print STDERR
 	    "Warning: null FITS header in _FITS_tr (do you need to set hdrcpy?)\n"
-	    unless (scalar(keys %$hdr) || (!$PDL::debug));
+	    unless (scalar(keys %$hdr) || (!$PDLA::debug));
 
 	my ( $cdelt1, $cpix1, $cval1, $n1 );
 	my ( $cdelt2, $cpix2, $cval2, $n2 );
@@ -4195,7 +4195,7 @@ information on the Representation of World Coordinate Systems in FITS.
 		unless $id =~ /^[A-Z]?$/;
 	}
 	print "Using the WCS '$id' mapping (if it exists)\n"
-	    if $PDL::verbose and $id ne "";
+	    if $PDLA::verbose and $id ne "";
 
 	{
 	    # don't complain about missing fields in fits headers
@@ -4222,7 +4222,7 @@ information on the Representation of World Coordinate Systems in FITS.
 	    # -- This broke a few things because CROTA is a pseudostandard
 	    #    in the solar physics community.  I added a fallback to
 	    #    CROTA in case CROTA2 doesn't exist. --CED
-	    # 13-Apr-2010: changed sign of CROTA2 to match update to PDL::Transform in 2.4.3 --CED
+	    # 13-Apr-2010: changed sign of CROTA2 to match update to PDLA::Transform in 2.4.3 --CED
 	    $angle  = - ( (defined $hdr->{"CROTA2$id"}) ? $hdr->{"CROTA2$id"} :
 			(defined $hdr->{"CROTA"}) ? $hdr->{"CROTA"} : 0)   *
 		3.14159265358979323846264338/180;
@@ -4560,7 +4560,7 @@ sub env {
 	#
 	if (defined $o->{ImageCenter}) {
 	    print "transform() ignoring RefPos as seen ImageCentre\n"
-		if defined $o->{RefPos} and $PDL::verbose;
+		if defined $o->{RefPos} and $PDLA::verbose;
 	    my $ic = $o->{ImageCenter};
 	    if (ref($ic) eq 'ARRAY') {
 	        ($xref_wrld, $yref_wrld) = @{$ic};
@@ -4720,11 +4720,11 @@ sub env {
     $self->_checkarg($contours,1);
 
     print "Contouring $nx x $ny image from ",min($contours), " to ",
-      max($contours), " in ",nelem($contours)," steps\n" if $PDL::verbose;
+      max($contours), " in ",nelem($contours)," steps\n" if $PDLA::verbose;
 
     if (defined($fillcontours)) {
       pgbbuf();
-      if (ref $fillcontours ne PDL) {
+      if (ref $fillcontours ne PDLA) {
 	$fillcontours = zeroes($ncont - 1)->xlinvals(0,1)->dummy(0,3);
       } elsif ($fillcontours->getndims == 1) {
 	$fillcontours = $fillcontours->dummy(0,3);
@@ -5058,15 +5058,15 @@ sub tline {
     $self->initenv( $xmin, $xmax, $ymin, $ymax, $opt);
     $self->hold; # we hold for the duration of the threaded plot
   }
-  _tline($x, $y, PDL->sequence($y->getdim(1)), $self, $o);
+  _tline($x, $y, PDLA->sequence($y->getdim(1)), $self, $o);
   $self->release unless $tmp_hold;
 
   &release_signals;
 }
 
 
-PDL::thread_define('_tline(a(n);b(n);ind()), NOtherPars => 2',
-  PDL::over {
+PDLA::thread_define('_tline(a(n);b(n);ind()), NOtherPars => 2',
+  PDLA::over {
     my ($x, $y, $ind, $self, $opt)=@_;
     # use Data::Dumper;
     # print Dumper $opt->[$ind->at(0)];
@@ -5131,7 +5131,7 @@ sub tpoints {
     $self->initenv( $xmin, $xmax, $ymin, $ymax, $opt);
     $self->hold; # we hold for the duration of the threaded plot
   }
-  _tpoints($x, $y, PDL->sequence($y->getdim(1)), $self, $o);
+  _tpoints($x, $y, PDLA->sequence($y->getdim(1)), $self, $o);
   $self->release unless $tmp_hold;
 
   &release_signals;
@@ -5139,8 +5139,8 @@ sub tpoints {
 }
 
 
-PDL::thread_define('_tpoints(a(n);b(n);ind()), NOtherPars => 2',
-  PDL::over {
+PDLA::thread_define('_tpoints(a(n);b(n);ind()), NOtherPars => 2',
+  PDLA::over {
     my ($x, $y, $ind, $self, $opt)=@_;
     $self->points($x, $y, $opt->[$ind->at(0)] || {});
 });
@@ -5182,10 +5182,10 @@ PDL::thread_define('_tpoints(a(n);b(n);ind()), NOtherPars => 2',
       my($b) = (ref $in->[1] eq 'ARRAY') ? $in->[1] : [$in->[1]];
 
       release_and_barf " lines: \$xy must be a piddle\n"
-	unless(UNIVERSAL::isa($a->[0],'PDL'));
+	unless(UNIVERSAL::isa($a->[0],'PDLA'));
 
       if(  ( ref $in->[0] ne ref $in->[1] ) ||
-	   ( ! UNIVERSAL::isa($b->[0],'PDL') ) ||
+	   ( ! UNIVERSAL::isa($b->[0],'PDLA') ) ||
 	   ( $a->[0]->ndims > $b->[0]->ndims )
 	   ) { # $xy, $p case -- split $xy into $x and $y.
 
@@ -5259,7 +5259,7 @@ PDL::thread_define('_tpoints(a(n);b(n);ind()), NOtherPars => 2',
 
       for my $i(0..$#$x) {
 	my($pp) = $#$p ? $p->[$i] : $p->[0]; # allow scalar pen in array case
-        $pp = pdl($pp) unless UNIVERSAL::isa($pp,'PDL');
+        $pp = pdl($pp) unless UNIVERSAL::isa($pp,'PDLA');
 	my $miss = defined $o->{Missing} ? $o->{Missing}->[$i] : undef;
 	&$thunk($u_opt->{XRange},$x->[$i],$miss,$xmin->(($i)),$xmax->(($i)),$pp);
 	&$thunk($u_opt->{YRange},$y->[$i],$miss,$ymin->(($i)),$ymax->(($i)),$pp);
@@ -5274,7 +5274,7 @@ PDL::thread_define('_tpoints(a(n);b(n);ind()), NOtherPars => 2',
       if($ymin==$ymax) { $ymin -= 0.5; $ymax += 0.5; }
 
       print "lines: xmin=$xmin; xmax=$xmax; ymin=$ymin; ymax=$ymax\n"
-	if($PDL::verbose);
+	if($PDLA::verbose);
       $self->initenv($xmin,$xmax,$ymin,$ymax,$opt);
     }
 
@@ -5294,7 +5294,7 @@ PDL::thread_define('_tpoints(a(n);b(n);ind()), NOtherPars => 2',
       my($miss) = defined $o->{Missing} ? $o->{Missing}->[$i] : undef;
       my($n) = $xx->nelem;
 
-      $pp = pdl($pp) unless UNIVERSAL::isa($pp,'PDL');
+      $pp = pdl($pp) unless UNIVERSAL::isa($pp,'PDLA');
 
       $pp = zeroes($xx)+$pp
 	if($pp->nelem == 1);
@@ -5409,7 +5409,7 @@ PDL::thread_define('_tpoints(a(n);b(n);ind()), NOtherPars => 2',
       if ($xmin == $xmax) { $xmin -= 0.5; $xmax += 0.5; }
       if ($ymin == $ymax) { $ymin -= 0.5; $ymax += 0.5; }
       print("line: xmin=$xmin; xmax=$max; ymin=$ymin; ymax=$ymax\n")
-	if($PDL::verbose);
+	if($PDLA::verbose);
       $self->initenv( $xmin, $xmax, $ymin, $ymax, $opt);
     }
     $self->_save_status();
@@ -5531,7 +5531,7 @@ sub arrow {
     if (exists($opt->{ColorValues})) {
       my $sym ||= $o->{Symbol} || 0;
       my $z   = $opt->{ColorValues};
-      $self->_checkarg($z,1);    # make sure this is a float PDL
+      $self->_checkarg($z,1);    # make sure this is a float PDLA
       pgcolorpnts($n, $x->get_dataref, $y->get_dataref, $z->get_dataref, $sym);
     } else {
 
@@ -5805,7 +5805,7 @@ sub arrow {
     $c1 = int($i1 + ($i2-$i1) * $cmin + 0.5);
     $c2 = int($i1 + ($i2-$i1) * $cmax + 0.5);
 
-    print "Displaying $nx x $ny image from $min to $max, using ".($c2-$c1+1)." colors ($c1-$c2)...\n" if $PDL::verbose;
+    print "Displaying $nx x $ny image from $min to $max, using ".($c2-$c1+1)." colors ($c1-$c2)...\n" if $PDLA::verbose;
 
 
     # Disable PS pggray output because the driver is busted in pgplot-2.3
@@ -5813,7 +5813,7 @@ sub arrow {
     # output tho'.
     if ($c2-$c1<16 || $self->{Device} =~ /^v?ps$/i) {
       print STDERR "_imag: Under 16 colors available; reverting to pggray\n"
-	if($PDL::debug || $PDL::verbose);
+	if($PDLA::debug || $PDLA::verbose);
       pggray( $image->get_dataref,
 	      $nx,$ny,1,$nx,1,$ny, $min, $max,
 	      $tr->get_dataref);
@@ -5863,7 +5863,7 @@ sub imag {
   my $im = shift;
   my @a = @_;
 
-  if(UNIVERSAL::isa($im,'PDL') && ($im->ndims == 3) && ($im->dim(2)==3)) {
+  if(UNIVERSAL::isa($im,'PDLA') && ($im->ndims == 3) && ($im->dim(2)==3)) {
     rgbi($me,$im,@a);
     return;
   }
@@ -5929,11 +5929,11 @@ sub rgbi {
   my @a = @_;
   my($in,$opt) = _extract_hash(@_);
   my($image) = shift @$in;
-  if(UNIVERSAL::isa($image,'PDL')) {
+  if(UNIVERSAL::isa($image,'PDLA')) {
     @dims = $image->dims;
     if($dims[0] == 3 && $dims[1] > 3 && $dims[2] > 3) {
       print "rgbi: Hmmm... Found (rgb,X,Y) [deprecated] rather than (X,Y,rgb) [approved]."
-	if($PDL::debug || $PDL::verbose);
+	if($PDLA::debug || $PDLA::verbose);
       $image = $image->mv(0,2);
     }
   }
@@ -6165,7 +6165,7 @@ EOD
       ($ctab, $contrast, $brightness) = @arg;
       @t = $ctab->dims; release_and_barf 'Must be a Nx4 array' if $#t != 1 || $t[1] != 4;
       $n = $t[0];
-      $ctab   = float($ctab) if $ctab->get_datatype != $PDL_F;
+      $ctab   = float($ctab) if $ctab->get_datatype != $PDLA_F;
       my $nn = $n-1;
       $levels = $ctab->(0:$nn,0:0);
       $red    = $ctab->(0:$nn,1:1);
@@ -6444,15 +6444,15 @@ sub tcircle {
     $self->initenv( $xmin, $xmax, $ymin, $ymax, $opt);
     $self->hold;
       }
-    _tcircle($x,$y,$radius,PDL->sequence($x->nelem),$self,$o);
+    _tcircle($x,$y,$radius,PDLA->sequence($x->nelem),$self,$o);
     $self->release unless $tmp_hold;
 
     &release_signals;
 
 }
 
-PDL::thread_define '_tcircle(a();b();c();ind()), NOtherPars => 2',
-   PDL::over {
+PDLA::thread_define '_tcircle(a();b();c();ind()), NOtherPars => 2',
+   PDLA::over {
      my ($x,$y,$r,$ind,$self,$opt)=@_;
      $self->circle($x,$y,$r,$opt->[$ind->at(0)] || {} );
  };
@@ -6525,7 +6525,7 @@ PDL::thread_define '_tcircle(a();b();c();ind()), NOtherPars => 2',
     if (!defined($rect_opt)) {
       # No need to use $self->{PlotOptions} here since we
       # pass control to poly below.
-      $rect_opt = PDL::Options->new({XCenter => undef, YCenter => undef,
+      $rect_opt = PDLA::Options->new({XCenter => undef, YCenter => undef,
 				     XSide => undef, YSide => undef,
 				     Angle => 0, Side => undef});
       $rect_opt->synonyms({XCentre => 'XCenter', YCentre => 'YCenter',
@@ -6641,7 +6641,7 @@ PDL::thread_define '_tcircle(a();b();c();ind()), NOtherPars => 2',
     &catch_signals;
 
     $self->initenv( 0, $nx-1, 0, $ny-1, $opt ) unless $self->held();
-    print "Vectoring $nx x $ny images ...\n" if $PDL::verbose;
+    print "Vectoring $nx x $ny images ...\n" if $PDLA::verbose;
 
     $self->_save_status();
     $self->_standard_options_parser($u_opt); # For arrowtype and arrowhead
@@ -6909,7 +6909,7 @@ PDL::thread_define '_tcircle(a();b();c();ind()), NOtherPars => 2',
     foreach (my $i=0; $i<$n_lines; $i++) {
       $self->text($text->[$i], $xpos, $ypos);
       # Since the parsing of options does not go down array references
-      # we need to create a temporary PDL::Options object here to do the
+      # we need to create a temporary PDLA::Options object here to do the
       # parsing..
       my $t_o = $self->{PlotOptions}->options({
 					Symbol => $myopt{symbol}[$i],
@@ -6977,7 +6977,7 @@ PDL::thread_define '_tcircle(a();b();c();ind()), NOtherPars => 2',
     }
 
     if (!defined($cursor_options)) {
-      $cursor_options = PDL::Options->new(
+      $cursor_options = PDLA::Options->new(
 					  {
 					   'XRef' => undef,
 					   'YRef' => undef,
@@ -7083,8 +7083,8 @@ bugfixes from Kaj Wiik, Doug Burke, Craig DeForest, and many others.
 
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =cut

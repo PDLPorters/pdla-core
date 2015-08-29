@@ -6,7 +6,7 @@
 
 ****************************************************************/
 
-#define PDL_CORE      /* For certain ifdefs */
+#define PDLA_CORE      /* For certain ifdefs */
 #include "pdl.h"      /* Data structure declarations */
 #include "pdlcore.h"  /* Core declarations */
 
@@ -20,9 +20,9 @@
 
 /* Compute offset of (x,y,z,...) position in row-major list */
 
-PDL_Indx pdl_get_offset(PDL_Indx* pos, PDL_Indx* dims, PDL_Indx *incs, PDL_Indx offset, int ndims) {
+PDLA_Indx pdl_get_offset(PDLA_Indx* pos, PDLA_Indx* dims, PDLA_Indx *incs, PDLA_Indx offset, int ndims) {
    int i;
-   PDL_Indx result;
+   PDLA_Indx result;
    result = offset;
    for (i=0; i<ndims; i++) {
        result = result + (pos[i]+((pos[i]<0)?dims[i]:0))*incs[i];
@@ -32,16 +32,16 @@ PDL_Indx pdl_get_offset(PDL_Indx* pos, PDL_Indx* dims, PDL_Indx *incs, PDL_Indx 
 
 /* Check validity of section - return number of elements in it */
 
-PDL_Indx pdl_validate_section( PDL_Indx* sec, PDL_Indx* dims, int ndims ){
+PDLA_Indx pdl_validate_section( PDLA_Indx* sec, PDLA_Indx* dims, int ndims ){
 
-   PDL_Indx i,start,end,count;
+   PDLA_Indx i,start,end,count;
 
    count=1;
 
    for(i=0;i<ndims;i++){
 
        if (dims[i]<=0 || ndims==0)    /* Never happens :-) */
-           croak("PDL object has a dimension <=0 !");
+           croak("PDLA object has a dimension <=0 !");
 
        start = sec[2*i];
        end   = sec[2*i+1];
@@ -56,7 +56,7 @@ PDL_Indx pdl_validate_section( PDL_Indx* sec, PDL_Indx* dims, int ndims ){
 
 /* Increrement a position pointer array by one row */
 
-void pdl_row_plusplus ( PDL_Indx* pos, PDL_Indx* dims, int ndims ) {
+void pdl_row_plusplus ( PDLA_Indx* pos, PDLA_Indx* dims, int ndims ) {
 
     int i, noescape;
 
@@ -83,20 +83,20 @@ void pdl_row_plusplus ( PDL_Indx* pos, PDL_Indx* dims, int ndims ) {
 
 #ifdef FOOBAR
 
-void pdl_subsection( char *y, char*x, int datatype, PDL_Indx* sec,
-                     PDL_Indx* dims, PDL_Indx *incs, PDL_Indx offs, int* ndims) {
+void pdl_subsection( char *y, char*x, int datatype, PDLA_Indx* sec,
+                     PDLA_Indx* dims, PDLA_Indx *incs, PDLA_Indx offs, int* ndims) {
 
 
    /* Note dims, ndims are altered and returned to reflect the new section */
 
-   PDL_Indx *start,*end;
+   PDLA_Indx *start,*end;
    int i,n1,n2,nrow,count,dsize;
-   PDL_Indx n1,n2,nrow,count;
+   PDLA_Indx n1,n2,nrow,count;
 
    /* Seperate section into start and end arrays - KISS! */
 
-   start = (PDL_Indx *) pdl_malloc( (*ndims)*sizeof(PDL_Indx) );
-   end   = (PDL_Indx *) pdl_malloc( (*ndims)*sizeof(PDL_Indx) );
+   start = (PDLA_Indx *) pdl_malloc( (*ndims)*sizeof(PDLA_Indx) );
+   end   = (PDLA_Indx *) pdl_malloc( (*ndims)*sizeof(PDLA_Indx) );
 
    if (start == NULL || end == NULL)
        croak("Out of memory");
@@ -146,14 +146,14 @@ void pdl_subsection( char *y, char*x, int datatype, PDL_Indx* sec,
 
 /* Insert one N-dimensional array in another */
 
-void pdl_insertin( char*y, PDL_Indx* ydims, int nydims,
-                   char*x, PDL_Indx* xdims, int nxdims,
-                   int datatype, PDL_Indx* pos) {
+void pdl_insertin( char*y, PDLA_Indx* ydims, int nydims,
+                   char*x, PDLA_Indx* xdims, int nxdims,
+                   int datatype, PDLA_Indx* pos) {
 
    /* Note inserts x[] in y[] */
 
    int i,dsize;
-   PDL_Indx nyvals,nxvals,n1,n2,nrow,ntran;
+   PDLA_Indx nyvals,nxvals,n1,n2,nrow,ntran;
 
    nyvals = 1; nxvals = 1;
 
@@ -204,12 +204,12 @@ void pdl_insertin( char*y, PDL_Indx* ydims, int nydims,
 
 /* Return value at position (x,y,z...) */
 
-PDL_Anyval pdl_at( void* x, int datatype, PDL_Indx* pos, PDL_Indx* dims, 
-	PDL_Indx* incs, PDL_Indx offset, int ndims) {
+PDLA_Anyval pdl_at( void* x, int datatype, PDLA_Indx* pos, PDLA_Indx* dims, 
+	PDLA_Indx* incs, PDLA_Indx offset, int ndims) {
 
     int i;
-    PDL_Indx ioff;
-    PDL_Anyval result;
+    PDLA_Indx ioff;
+    PDLA_Anyval result;
 
     for(i=0; i<ndims; i++) { /* Check */
 
@@ -225,7 +225,7 @@ PDL_Anyval pdl_at( void* x, int datatype, PDL_Indx* pos, PDL_Indx* dims,
    GENERICLOOP (datatype)
 
       generic *xx = (generic *) x;
-      result = (PDL_Anyval)xx[ioff];
+      result = (PDLA_Anyval)xx[ioff];
 
    ENDGENERICLOOP
 
@@ -239,10 +239,10 @@ PDL_Anyval pdl_at( void* x, int datatype, PDL_Indx* pos, PDL_Indx* dims,
 
 /* Set value at position (x,y,z...) */
 
-void pdl_set( void* x, int datatype, PDL_Indx* pos, PDL_Indx* dims, PDL_Indx* incs, PDL_Indx offs, int ndims, PDL_Anyval value){
+void pdl_set( void* x, int datatype, PDLA_Indx* pos, PDLA_Indx* dims, PDLA_Indx* incs, PDLA_Indx offs, int ndims, PDLA_Anyval value){
 
     int i;
-    PDL_Indx ioff;
+    PDLA_Indx ioff;
 
     for(i=0; i<ndims; i++) { /* Check */
 

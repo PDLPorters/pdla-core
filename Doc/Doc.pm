@@ -1,8 +1,8 @@
-# the filter for the PDL pod format (which is a valid general perl
+# the filter for the PDLA pod format (which is a valid general perl
 # pod format but with special interpretation of some =for directives)
 
-package PDL::PodParser;
-use PDL::Core '';
+package PDLA::PodParser;
+use PDLA::Core '';
 use Pod::Select;
 use File::Spec;
 use File::Basename;
@@ -150,48 +150,48 @@ sub trim {
 
 =head1 NAME
 
-PDL::Doc - support for PDL online documentation
+PDLA::Doc - support for PDLA online documentation
 
 =head1 SYNOPSIS
 
-  use PDL::Doc;
-  $onlinedc = new PDL::Doc ($docfile);
+  use PDLA::Doc;
+  $onlinedc = new PDLA::Doc ($docfile);
   @match = $onlinedc->search('m/slice|clump/');
 
 =head1 DESCRIPTION
 
-An implementation of online docs for PDL.
+An implementation of online docs for PDLA.
 
-=head1 Using PDL documentation
+=head1 Using PDLA documentation
 
-PDL::Doc's main use is in the "help" (synonym "?") and "apropos"
-(synonym "??") commands in the perldl shell.  PDL:Doc provides the
-infrastrucure to index and access PDL's documentation through these
+PDLA::Doc's main use is in the "help" (synonym "?") and "apropos"
+(synonym "??") commands in the perldl shell.  PDLA:Doc provides the
+infrastrucure to index and access PDLA's documentation through these
 commands.  There is also an API for direct access to the documentation 
 database (see below).
 
-The PDL doc system is built on Perl's pod (Plain Old Documentation),
-included inline with each module. The PDL core modules are
-automatically indexed when PDL is built and installed, and there is
+The PDLA doc system is built on Perl's pod (Plain Old Documentation),
+included inline with each module. The PDLA core modules are
+automatically indexed when PDLA is built and installed, and there is
 provision for indexing external modules as well.
 
 To include your module's pod into the Perl::Doc index, you should
 follow the documentation conventions below.  
 
-=head1 PDL documentation conventions
+=head1 PDLA documentation conventions
 
-For a package like PDL that has I<a lot> of functions it
+For a package like PDLA that has I<a lot> of functions it
 is very desirable to have some form of online help to
 make it easy for the user to remind himself of names,
 calling conventions and typical usage of the multitude
 of functions at his disposal. To make it straightforward
 to extract the relevant information from the POD documentation
-in source files that make up the PDL distribution
+in source files that make up the PDLA distribution
 certain conventions have been adopted in formatting this
 documentation.
 
 The first convention says that all documentation for
-PDL functions appears in the POD section introduced
+PDLA functions appears in the POD section introduced
 by one of the following:
 
   =head1 FUNCTIONS
@@ -201,7 +201,7 @@ by one of the following:
 
 If you're documenting an object-oriented interface to a class
 that your module defines, you should use METHODS and CONSTRUCTORS
-as appropriate.  If you are simply adding functions to PDL,
+as appropriate.  If you are simply adding functions to PDLA,
 use FUNCTIONS and OPERATORS as appropriate.
 
 Individual functions or methods in these section are introduced by
@@ -209,13 +209,13 @@ Individual functions or methods in these section are introduced by
   =head2 funcname
 
 where signature is the argumentlist for a PP defined function as
-explained in L<PDL::PP>. Generally, PDL documentation is in valid POD
+explained in L<PDLA::PP>. Generally, PDLA documentation is in valid POD
 format (see L<perlpod|perlpod>) but uses the C<=for> directive in a
-special way. The C<=for> directive is used to flag to the PDL Pod
+special way. The C<=for> directive is used to flag to the PDLA Pod
 parser that information is following that will be used to generate
 online help.
 
-The PDL Pod parser recognises the following C<=for> directives:
+The PDLA Pod parser recognises the following C<=for> directives:
 
 =over 5
 
@@ -275,14 +275,14 @@ gives examples of typical usage for the current function:
 =item Bad
 
 provides information on how the function handles bad values (if
-C<$PDL:Config{WITH_BADVAL}> is set to 1). The documentation under
+C<$PDLA:Config{WITH_BADVAL}> is set to 1). The documentation under
 this directive should indicate if this function accepts piddles
 with bad values and under what circumstances this function might
 return piddles with bad values.
 
 =back
 
-The PDL podparser is implemented as a simple state machine. Any of
+The PDLA podparser is implemented as a simple state machine. Any of
 the above C<=for> statements switches the podparser into a state
 where the following paragraph is accepted as information for the
 respective field (C<Ref>, C<Usage>, C<Opt>, C<Example> or C<Bad>). 
@@ -308,7 +308,7 @@ translated by the standard podformatters without loss of contents
 (and without requiring any changes in the existing POD format).
 
 The preceding explanations should be further explained by the
-following example (extracted from PDL/IO/Misc/misc.pd):
+following example (extracted from PDLA/IO/Misc/misc.pd):
 
    =head2 rcols()
 
@@ -330,7 +330,7 @@ following example (extracted from PDL/IO/Misc/misc.pd):
 
      ($x,$y)    = rcols 'file1'
      ($x,$y,$z) = rcols 'file2', "/foo/",3,4
-     $x = PDL->rcols 'file1';
+     $x = PDLA->rcols 'file1';
 
    Note: currently quotes are required on the pattern.
 
@@ -350,7 +350,7 @@ which is translated by, e.g, the standard C<pod2text> converter into:
 
       ($x,$y)    = rcols 'file1'
       ($x,$y,$z) = rcols 'file2', "/foo/",3,4
-      $x = PDL->rcols 'file1';
+      $x = PDLA->rcols 'file1';
 
     Note: currently quotes are required on the pattern.
 
@@ -366,9 +366,9 @@ start with the
 
   =head1 NAME
 
-  PDL::Modulename -- do something with piddles
+  PDLA::Modulename -- do something with piddles
 
-section (as anyway required by C<pod2man>) since the PDL podparser
+section (as anyway required by C<pod2man>) since the PDLA podparser
 extracts the name of the module this function belongs to from
 that section.
 
@@ -377,13 +377,13 @@ should be documented, introduced with the C<=head2> directive
 in the C<=head1 FUNCTIONS> section. The only field that every function
 documented along these lines should have is the I<Ref> field preceding
 a one line description of its intended functionality (suitable for
-inclusion in a concise reference card). PP defined functions (see L<PDL::PP>)
+inclusion in a concise reference card). PP defined functions (see L<PDLA::PP>)
 should have a I<Sig> field stating their signature. To facilitate
 maintainance of this documentation for such functions the 'Doc' field
-has been introduced into the definition of C<pp_def> (see again L<PDL::PP>)
+has been introduced into the definition of C<pp_def> (see again L<PDLA::PP>)
 which will take care that name and signature of the so defined function
 are documented in this way (for examples of this usage see, for example,
-the PDL::Slices module, especially F<slices.pd> and the resulting
+the PDLA::Slices module, especially F<slices.pd> and the resulting
 F<Slices.pm>). Similarly, the 'BadDoc' field provides a means of
 specifying information on how the routine handles the presence of
 bad values: this will be autpmatically created if 
@@ -401,7 +401,7 @@ the form
 
 then the possible options (and aproppriate values) should be explained
 in the textblock following the C<=for Opt> directive (see example above
-and, e.g., PDL::IO::Pic).
+and, e.g., PDLA::IO::Pic).
 
 It is well possible that some of these conventions appear to be clumsy
 at times and the author is keen to hear of any suggestions for better
@@ -409,17 +409,17 @@ alternatives.
 
 =cut
 
-package PDL::Doc;
-use PDL::Core '';
+package PDLA::Doc;
+use PDLA::Core '';
 use IO::File;  # for file handles
 use File::Basename;
-use PDL::Doc::Config;
+use PDLA::Doc::Config;
 
 =head1 INSTANCE METHODS
 
 =head2 new
 
-  $onlinedc = new PDL::Doc ('file.pdl',[more files]);
+  $onlinedc = new PDLA::Doc ('file.pdl',[more files]);
 
 =cut
 
@@ -486,7 +486,7 @@ sub ensuredb {
 
 =head2 savedb
 
-save the database (i.e., the hash of PDL symbols) to the file associated
+save the database (i.e., the hash of PDLA symbols) to the file associated
 with this object.
 
 =cut
@@ -512,7 +512,7 @@ sub savedb {
 
 =head2 gethash
 
-Return the PDL symhash (e.g. for custom search operations)
+Return the PDLA symhash (e.g. for custom search operations)
 
 The symhash is a multiply nested hash with the following structure:
 
@@ -552,7 +552,7 @@ sub gethash {
 
 =head2 search
 
-Search a PDL symhash
+Search a PDLA symhash
 
 =for usage
 
@@ -637,7 +637,7 @@ sub checkregex {
 
 =head2 scan
 
-Scan a source file using the PDL podparser to extract information
+Scan a source file using the PDLA podparser to extract information
 for online documentation
 
 =cut
@@ -670,7 +670,7 @@ sub scan {
   my $file2 = $file;
   $file2 =~ s/^$ENV{BUILDROOTPREFIX}// if $ENV{BUILDROOTPREFIX} ne "";
 
-  my $parser = new PDL::PodParser;
+  my $parser = new PDLA::PodParser;
   $parser->{verbose} = $verbose;
   eval { $parser->parse_from_filehandle($infile,$outfile) };
   warn "cannot parse '$file'" if $@;
@@ -696,7 +696,7 @@ sub scan {
 
   $infile =  new IO::File $file;
   $outfile_text = '';
-  $parser = new PDL::PodParser;
+  $parser = new PDLA::PodParser;
   $parser->select('NAME');
   eval { $parser->parse_from_filehandle($infile,$outfile) };
   warn "cannot parse '$file'" if $@;
@@ -704,7 +704,7 @@ sub scan {
   my @namelines = split("\n",$outfile_text);
   my ($name,$does);
   for (@namelines) {
-     if (/^(PDL) (-) (.*)/ or  /^\s*(Inline::Pdlpp)\s*(-*)?\s*(.*)\s*$/ or /\s*(PDL::[\w:]*)\s*(-*)?\s*(.*)\s*$/) {
+     if (/^(PDLA) (-) (.*)/ or  /^\s*(Inline::Pdlpp)\s*(-*)?\s*(.*)\s*$/ or /\s*(PDLA::[\w:]*)\s*(-*)?\s*(.*)\s*$/) {
 	$name = $1; $does = $3;
      }
      if (/^\s*([a-z][a-z0-9]*) (-+) (.*)/) { # lowercase shell script name
@@ -755,7 +755,7 @@ sub scantree {
 =head2 funcdocs
 
 extract the complete documentation about a function from its
-  source file using the PDL::Pod::Parser filter.
+  source file using the PDLA::Pod::Parser filter.
 
 =cut
 
@@ -781,7 +781,7 @@ sub funcdocs_fromfile {
   local $SIG{PIPE}= sub {}; # Prevent crashing if user exits the pager
   my $in = new IO::File $file;
   my $out = ($#_ > 1 && defined($_[2])) ? $_[2] :
-    new IO::File "| pod2text | $PDL::Doc::pager";
+    new IO::File "| pod2text | $PDLA::Doc::pager";
   barf "can't open file $file" unless $in;
   barf "can't open output handle" unless $out;
   getfuncdocs($func,$in,$out);
@@ -814,13 +814,13 @@ sub getfuncdocs {
 
 =for usage
 
- use PDL::Doc; PDL::Doc::add_module("my::module");
+ use PDLA::Doc; PDLA::Doc::add_module("my::module");
 
 =for ref
 
 The C<add_module> function allows you to add POD from a particular Perl
 module that you've installed somewhere in @INC.  It searches for the
-active PDL document database and the module's .pod and .pm files, and
+active PDLA document database and the module's .pod and .pm files, and
 scans and indexes the module into the database.
 
 C<add_module> is meant to be added to your module's Makefile as part of the
@@ -828,7 +828,7 @@ installation script.
 
 =cut
 
-package PDL::Doc;
+package PDLA::Doc;
 sub add_module {
     my($module) = shift;
 
@@ -840,14 +840,14 @@ sub add_module {
   DIRECTORY:
     for(@INC){
 	$dir = $_;
-	$file = $dir."/PDL/pdldoc.db";
+	$file = $dir."/PDLA/pdldoc.db";
 	if( -f $file) {
-	    if(! -w "$dir/PDL") {
-		die "No write permission at $dir/PDL - not updating docs database.\n";
+	    if(! -w "$dir/PDLA") {
+		die "No write permission at $dir/PDLA - not updating docs database.\n";
 	    }
 
 	    print "Found docs database $file\n";
-	    $pdldoc = new ("PDL::Doc",($file));
+	    $pdldoc = new ("PDLA::Doc",($file));
 	    last DIRECTORY;
 	}
     }
@@ -866,7 +866,7 @@ sub add_module {
 		$pdldoc->scan($f);
 		eval { $pdldoc->savedb(); };
 		warn $@ if $@;
-		print "PDL docs database updated - added $f.\n";
+		print "PDLA docs database updated - added $f.\n";
 		$hit = 1;
 	    }
 	}
@@ -878,19 +878,19 @@ sub add_module {
 
 1;
 
-=head1 PDL::DOC EXAMPLE
+=head1 PDLA::DOC EXAMPLE
 
-Here's an example of how you might use the PDL Doc database in your
+Here's an example of how you might use the PDLA Doc database in your
 own code.
 
- use PDL::Doc;
+ use PDLA::Doc;
  # Find the pdl documentation
  my ($dir,$file,$pdldoc);
  DIRECTORY: for $dir (@INC) {
-     $file = $dir."/PDL/pdldoc.db";
+     $file = $dir."/PDLA/pdldoc.db";
      if (-f $file) {
          print "Found docs database $file\n";
-         $pdldoc = new PDL::Doc ($file);
+         $pdldoc = new PDLA::Doc ($file);
          last DIRECTORY;
      }
  }
@@ -931,9 +931,9 @@ How can you tell if you've gotten a module for one of your entries?
 The Ref entry will begin with 'Module:' if it's a module. In code:
 
  # Prints:
- #  Module: fundamental PDL functionality
+ #  Module: fundamental PDLA functionality
  my $sym_hash = $pdldoc->gethash;
- print $pdldoc->gethash->{'PDL::Core'}->{Ref}, "\n"
+ print $pdldoc->gethash->{'PDLA::Core'}->{Ref}, "\n"
 
 =head1 BUGS
 
@@ -950,8 +950,8 @@ E<lt>dcmertens.perl@gmail.comE<gt>
 
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =cut

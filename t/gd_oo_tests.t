@@ -1,14 +1,14 @@
 #!/usr/bin/perl
 
 #
-# Tests for the OO interface of PDL::IO::GD.
+# Tests for the OO interface of PDLA::IO::GD.
 #
 # Judd Taylor, Orbital Sytstems, Ltd.
 # 07 Apr 2006
 #
 
 use strict;
-use PDL;
+use PDLA;
 use Test::More;
 use File::Temp qw(tempdir);
 
@@ -16,13 +16,13 @@ BEGIN
 {
     my $Ntests = 32;
 
-    use PDL::Config;
-    if ( $PDL::Config{WITH_GD} ) 
+    use PDLA::Config;
+    if ( $PDLA::Config{WITH_GD} ) 
     {
-        eval( " use PDL::IO::GD; " );
+        eval( " use PDLA::IO::GD; " );
         if( $@ )
         {
-            plan skip_all => "PDL::IO::GD requires the gd image library.";
+            plan skip_all => "PDLA::IO::GD requires the gd image library.";
         }  
 #        elsif( $^O =~ /bsd$/i or $^O =~ /dragonfly/i )
 #        {
@@ -43,14 +43,14 @@ BEGIN
     }
     else
     {
-        plan skip_all => "PDL::IO::GD not compiled.";
+        plan skip_all => "PDLA::IO::GD not compiled.";
     }
 }
 
 use ExtUtils::testlib;
 
-use PDL::IO::GD;
-use PDL::Config;
+use PDLA::IO::GD;
+use PDLA::Config;
 
 
 sub tapprox
@@ -108,7 +108,7 @@ sub tapprox
     #
     # TEST 4:
     # Create a new object:
-    my $gd = PDL::IO::GD->new( { filename => $testfile1 } );
+    my $gd = PDLA::IO::GD->new( { filename => $testfile1 } );
     #diag "Object created!\n";
     ok( defined( $gd ), 'Object created' );
 
@@ -121,7 +121,7 @@ sub tapprox
     #diag "\$x = $x\t\$y = $y\n";
 
     # TEST 7:
-    # Read it into a PDL, and make sure it matches:
+    # Read it into a PDLA, and make sure it matches:
     my $pdl2 = $gd->to_pdl();
     ok( tapprox( $pdl, $pdl2 ), 'image matches original pdl' );
 
@@ -136,7 +136,7 @@ sub tapprox
     # 
     # TEST 9:
     # Create a new image from scratch:
-    my $im = PDL::IO::GD->new( { x => 300, y => 300 } );
+    my $im = PDLA::IO::GD->new( { x => 300, y => 300 } );
     ok( defined( $im ), 'creat new image from scratch' );
 
     #
@@ -186,28 +186,28 @@ sub tapprox
     #
 
     # TEST 19:
-    # Create from a 2d PDL without a LUT:
+    # Create from a 2d PDLA without a LUT:
     my $pic = sequence(100, 100);
-    $im = PDL::IO::GD->new({ pdl => $pic });
-    ok( defined( $im ), 'create from 2d PDL without a LUT' );
+    $im = PDLA::IO::GD->new({ pdl => $pic });
+    ok( defined( $im ), 'create from 2d PDLA without a LUT' );
     $im->DESTROY(); $im = undef;
 
     # TEST 20:
-    # Create from a 2d PDL and a LUT:
-    $im = PDL::IO::GD->new({ pdl => $pic, lut => $lut });
-    ok( defined( $im ), 'create from 2d PDL and a LUT' );
+    # Create from a 2d PDLA and a LUT:
+    $im = PDLA::IO::GD->new({ pdl => $pic, lut => $lut });
+    ok( defined( $im ), 'create from 2d PDLA and a LUT' );
     $im->DESTROY(); $im = undef;
 
     # TEST 21:
-    # Create from a RGB PDL:
+    # Create from a RGB PDLA:
     my $pic3d = $pic->dummy(2,3);
-    $im = PDL::IO::GD->new({ pdl => $pic3d });
-    ok( defined( $im ), 'create from a RGB PDL' );
+    $im = PDLA::IO::GD->new({ pdl => $pic3d });
+    ok( defined( $im ), 'create from a RGB PDLA' );
     $im->DESTROY(); $im = undef;
 
     # TEST 22:
     # Create an RGB from scratch:
-    $im = PDL::IO::GD->new({ x => 100, y => 100, true_color => 1 });
+    $im = PDLA::IO::GD->new({ x => 100, y => 100, true_color => 1 });
     ok( defined( $im ), 'create an RGB from scratch' );
     $im->DESTROY(); $im = undef;
 
@@ -219,13 +219,13 @@ sub tapprox
     $/ = undef;
     my $blob = <TF1>;
     close( TF1 );
-    $im = PDL::IO::GD->new({ data => $blob });
+    $im = PDLA::IO::GD->new({ data => $blob });
     ok( defined( $im ), 'create from a 2d PNG data glob' );
     $im->DESTROY(); $im = undef;
 
     # TEST 25:
     # Create from a 2d PNG data glob, with the type given:
-    $im = PDL::IO::GD->new({ data => $blob, type => 'png' });
+    $im = PDLA::IO::GD->new({ data => $blob, type => 'png' });
     ok( defined( $im ), 'create from glob with type given' );
     $im->DESTROY(); $im = undef;
 
@@ -237,7 +237,7 @@ sub tapprox
     $/ = undef;
     my $blob3d = <TF3>;
     close( TF3 );
-    $im = PDL::IO::GD->new({ data => $blob3d });
+    $im = PDLA::IO::GD->new({ data => $blob3d });
     ok( defined( $im ), 'create from a 3d PNG data glob' );
 
     # TEST 28:
@@ -248,24 +248,24 @@ sub tapprox
 
     # TEST 29:
     # Try a nicer way to make an object. Just pass in a filename:
-    my $gd_new_just_filename = PDL::IO::GD->new( $testfile1 );
+    my $gd_new_just_filename = PDLA::IO::GD->new( $testfile1 );
     ok( defined( $gd_new_just_filename ), 'initialize an object from JUST the filename' );
 
     # TEST 30:
     # Try another nicer way to make an object: Pass in an inline hash:
-    my $gd_new_inline_hash = PDL::IO::GD->new( filename => $testfile1 );
+    my $gd_new_inline_hash = PDLA::IO::GD->new( filename => $testfile1 );
     ok( defined( $gd_new_inline_hash ), 'initialize an object from an inline hash' );
 
     # TEST 31:
     # Make sure bogus inline hashes generate complaints. First, give an odd
     # number of args
     my $gd_new_inline_hash_broken1;
-    eval { $gd_new_inline_hash_broken1 = PDL::IO::GD->new( filename => $testfile1, 34 ) };
+    eval { $gd_new_inline_hash_broken1 = PDLA::IO::GD->new( filename => $testfile1, 34 ) };
     ok( $@ && !defined( $gd_new_inline_hash_broken1 ), 'incorrectly initialize an object from an inline hash: odd Nargs' );
     # TEST 32:
     # Make sure bogus inline hashes generate complaints. Give a non-string key
     my $gd_new_inline_hash_broken2;
-    eval { $gd_new_inline_hash_broken2 = PDL::IO::GD->new( filename => $testfile1, [34] => 12 ) };
+    eval { $gd_new_inline_hash_broken2 = PDLA::IO::GD->new( filename => $testfile1, [34] => 12 ) };
     ok( $@ && !defined( $gd_new_inline_hash_broken2 ), 'incorrectly initialize an object from an inline hash: non-string key' );
 
 

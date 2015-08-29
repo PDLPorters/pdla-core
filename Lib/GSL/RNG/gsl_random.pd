@@ -1,11 +1,11 @@
 
-pp_bless('PDL::GSL::RNG'); # make the functions generated go into our namespace, and 
-				# not PDL's namespace
+pp_bless('PDLA::GSL::RNG'); # make the functions generated go into our namespace, and 
+				# not PDLA's namespace
 
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::GSL::RNG - PDL interface to RNG and randist routines in GSL
+PDLA::GSL::RNG - PDLA interface to RNG and randist routines in GSL
 
 =head1 DESCRIPTION
 
@@ -14,10 +14,10 @@ in the GNU Scientific Library.
 
 =head1 SYNOPSIS
 
-   use PDL;
-   use PDL::GSL::RNG;
+   use PDLA;
+   use PDLA::GSL::RNG;
 
-   $rng = PDL::GSL::RNG->new('taus');
+   $rng = PDLA::GSL::RNG->new('taus');
 
    $rng->set_seed(time());
 
@@ -55,13 +55,13 @@ information.
 
 Usage:
 
-   $blessed_ref = PDL::GSL::RNG->new($RNG_name);
+   $blessed_ref = PDLA::GSL::RNG->new($RNG_name);
 
 Example:
 
 =for example
 
-   $rng = PDL::GSL::RNG->new('taus');
+   $rng = PDLA::GSL::RNG->new('taus');
 
 =head2 set_seed();
 
@@ -575,12 +575,12 @@ Usage:
 
 =head1 BUGS
 
-Feedback is welcome. Log bugs in the PDL bug database (the
+Feedback is welcome. Log bugs in the PDLA bug database (the
 database is always linked from L<http://pdl.perl.org/>).
 
 =head1 SEE ALSO
 
-L<PDL>
+L<PDLA>
 
 The GSL documentation is online at
 L<http://www.gnu.org/software/gsl/manual/html_node/>
@@ -591,8 +591,8 @@ This file copyright (C) 1999 Christian Pellegrin <chri@infis.univ.trieste.it>
 Docs mangled by C. Soeller. All rights reserved. There
 is no warranty. You are allowed to redistribute this software /
 documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 The GSL RNG and randist modules were written by James Theiler.
 
@@ -606,8 +606,8 @@ EOD
 
 ##############################
 # 
-# make_get_sub generates a wrapper PDL subroutine that handles the 
-# fill-a-PDL and create-a-PDL cases for each of the GSL functions.
+# make_get_sub generates a wrapper PDLA subroutine that handles the 
+# fill-a-PDLA and create-a-PDLA cases for each of the GSL functions.
 #  --CED 
 #
 sub make_get_sub {
@@ -625,7 +625,7 @@ my ($obj,' . $par . '@var) = @_;';
        $s .= 'if (!(' . $ss . '>0)) {barf("first parameter must be an int >0")};';
     }
 
-$s .= 'if (ref($var[0]) eq \'PDL\') {
+$s .= 'if (ref($var[0]) eq \'PDLA\') {
     gsl_' . $fname . '_meat($var[0],' . $par . '$$obj);
     return $var[0]; 
 }
@@ -644,13 +644,13 @@ pp_addpm(<<'EOPM');
 
 use strict;
 
-# PDL::GSL::RNG::nullcreate just creates a null PDL. Used
-#  for the GSL functions that create PDLs
+# PDLA::GSL::RNG::nullcreate just creates a null PDLA. Used
+#  for the GSL functions that create PDLAs
 sub nullcreate{
 	
 	my ($type,$arg) = @_;
 
-	PDL->nullcreate($arg);
+	PDLA->nullcreate($arg);
 }
 EOPM
 
@@ -741,7 +741,7 @@ $x() = gsl_ran_' . $name . '(INT2PTR(gsl_rng *, $COMP(rng)),' . $fcall1 . ');');
   pp_addpm('
 sub ran_' . $name . ' {
 my ($obj,' . $arglist . '@var) = @_;
-if (ref($var[0]) eq \'PDL\') {
+if (ref($var[0]) eq \'PDLA\') {
     ran_' . $name . '_meat($var[0],' . $arglist . '$$obj);
     return $var[0]; 
 }
@@ -780,8 +780,8 @@ my ($obj,@var) = @_;
 #  pp_addpm('
 #sub ran_' . $name . '_add {
 #my ($obj,' . $arglist . '@var) = @_;
-#if (ref($var[0]) eq \'PDL\') {
-#    PDL::ran_' . $name . '_add_meat($var[0],' . $arglist . '$$obj);
+#if (ref($var[0]) eq \'PDLA\') {
+#    PDLA::ran_' . $name . '_add_meat($var[0],' . $arglist . '$$obj);
 #    return $var[0]; 
 #}
 #else {
@@ -801,8 +801,8 @@ my ($obj,@var) = @_;
 #    pp_addpm('
 #sub ran_' . $name . '_feed {
 #my ($obj, @var) = @_;
-#if (ref($var[0]) eq \'PDL\') {
-#    PDL::ran_' . $name . '_feed_meat($var[0], $$obj);
+#if (ref($var[0]) eq \'PDLA\') {
+#    PDLA::ran_' . $name . '_feed_meat($var[0], $$obj);
 #    return $var[0]; 
 #}
 #else {
@@ -855,7 +855,7 @@ pp_defnd(
 pp_addpm('
        sub ran_additive_gaussian {
 	 my ($obj,$sigma,@var) = @_;
-	 if (ref($var[0]) eq \'PDL\') {
+	 if (ref($var[0]) eq \'PDLA\') {
 	   ran_additive_gaussian_meat($var[0],$sigma,$$obj);
 	   return $var[0]; 
 	 }
@@ -874,7 +874,7 @@ pp_defnd(
 pp_addpm('
        sub ran_additive_poisson {
 	 my ($obj,$sigma,@var) = @_;
-	 if (ref($var[0]) eq \'PDL\') {
+	 if (ref($var[0]) eq \'PDLA\') {
 	   ran_additive_poisson_meat($var[0],$sigma,$$obj);
 	   return $var[0]; 
 	 }
@@ -893,7 +893,7 @@ pp_defnd(
 pp_addpm('
        sub ran_feed_poisson {
 	 my ($obj,@var) = @_;
-	 if (ref($var[0]) eq \'PDL\') {
+	 if (ref($var[0]) eq \'PDLA\') {
 	   ran_feed_poisson_meat($var[0],$$obj);
 	   return $var[0]; 
 	 }
@@ -989,7 +989,7 @@ $x()=gsl_ran_discrete(INT2PTR(gsl_rng *, $COMP(rng)), INT2PTR(gsl_ran_discrete_t
   pp_addpm('
 sub ran_discrete {
 my ($obj, $rdt, @var) = @_;
-if (ref($var[0]) eq \'PDL\') {
+if (ref($var[0]) eq \'PDLA\') {
     ran_discrete_meat($var[0], $$rdt, $$obj);
     return $var[0]; 
 }
@@ -1082,7 +1082,7 @@ pp_addpm('
 # XS function for the RNG object
 
 pp_addxs('','
-MODULE = PDL::GSL::RNG PACKAGE = PDL::GSL::RNG
+MODULE = PDLA::GSL::RNG PACKAGE = PDLA::GSL::RNG
 
 #define DEF_RNG(X) if (!strcmp(TYPE,#X)) rng=gsl_rng_alloc( gsl_rng_ ## X ); strcat(rngs,#X ", ");
 
@@ -1211,11 +1211,11 @@ ran_discrete_preproc(rng, p)
      CODE:
        int n;
 
-       if (p->ndims!=1 || p->datatype!=PDL_D) {
+       if (p->ndims!=1 || p->datatype!=PDLA_D) {
 	 barf("Bad input to ran_discrete_preproc!");
        }
        n = p->dims[0];
-       PDL->make_physical(p);
+       PDLA->make_physical(p);
        RETVAL = gsl_ran_discrete_preproc(n,(double *) p->data);
      OUTPUT:
        RETVAL
@@ -1228,14 +1228,14 @@ ran_shuffle(rng, in)
   int size, n;
 
   n = in->nvals;
-  PDL->make_physical(in);
+  PDLA->make_physical(in);
   switch(in->datatype) {
-   case PDL_B: size=sizeof(PDL_Byte); break;
-   case PDL_S: size=sizeof(PDL_Short); break;
-   case PDL_US: size=sizeof(PDL_Ushort); break;
-   case PDL_L: size=sizeof(PDL_Long); break;
-   case PDL_F: size=sizeof(PDL_Float); break;
-   case PDL_D: size=sizeof(PDL_Double); break;
+   case PDLA_B: size=sizeof(PDLA_Byte); break;
+   case PDLA_S: size=sizeof(PDLA_Short); break;
+   case PDLA_US: size=sizeof(PDLA_Ushort); break;
+   case PDLA_L: size=sizeof(PDLA_Long); break;
+   case PDLA_F: size=sizeof(PDLA_Float); break;
+   case PDLA_D: size=sizeof(PDLA_Double); break;
   }
   gsl_ran_shuffle(rng,(double *) in->data,n,size);
 
@@ -1250,15 +1250,15 @@ ran_choose(rng, in, out)
   n = in->nvals;
   m = out->nvals;
   if (in->datatype != out->datatype) barf("Data Types must match for ran_chooser");
-  PDL->make_physical(in);
-  PDL->make_physical(out);
+  PDLA->make_physical(in);
+  PDLA->make_physical(out);
   switch(in->datatype) {
-   case PDL_B: size=sizeof(PDL_Byte); break;
-   case PDL_S: size=sizeof(PDL_Short); break;
-   case PDL_US: size=sizeof(PDL_Ushort); break;
-   case PDL_L: size=sizeof(PDL_Long); break;
-   case PDL_F: size=sizeof(PDL_Float); break;
-   case PDL_D: size=sizeof(PDL_Double); break;
+   case PDLA_B: size=sizeof(PDLA_Byte); break;
+   case PDLA_S: size=sizeof(PDLA_Short); break;
+   case PDLA_US: size=sizeof(PDLA_Ushort); break;
+   case PDLA_L: size=sizeof(PDLA_Long); break;
+   case PDLA_F: size=sizeof(PDLA_Float); break;
+   case PDLA_D: size=sizeof(PDLA_Double); break;
   }
   gsl_ran_choose(rng,(double *) out->data, m, (double *) in->data,n,size);
 

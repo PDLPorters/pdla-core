@@ -1,8 +1,8 @@
 use Test::More;
-use PDL::LiteF;
+use PDLA::LiteF;
 BEGIN {
-        eval " use PDL::Fit::Polynomial; ";
-        plan skip_all => "PDL::Fit::Polynomial: $@" if $@;
+        eval " use PDLA::Fit::Polynomial; ";
+        plan skip_all => "PDLA::Fit::Polynomial: $@" if $@;
 }
 
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-my @pack = (["matrixops.pd", qw(MatrixOps PDL::MatrixOps)]);
+my @pack = (["matrixops.pd", qw(MatrixOps PDLA::MatrixOps)]);
 my %hash = pdlpp_stdargs_int(@pack);
 
 $hash{OBJECT} = "" unless exists $hash{OBJECT};

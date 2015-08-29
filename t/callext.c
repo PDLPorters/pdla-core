@@ -1,7 +1,7 @@
 
 /*
 
-  Example C routine for how to use callext() in PDL
+  Example C routine for how to use callext() in PDLA
   - return log x to base y vector.
 
   E.g. on Solaris this would be compiled:
@@ -61,7 +61,7 @@ DLLEXPORT int loglog_ext(int nargs, pdlsimple **args) {
 
    x = args[0]; y = args[1];
 
-   if (x->datatype != PDL_F || y->datatype != PDL_F) {
+   if (x->datatype != PDLA_F || y->datatype != PDLA_F) {
       fprintf(stderr, "Error in data type of arguments %d %d\n",
               x->datatype, y->datatype);
       return (0); /* Failure */

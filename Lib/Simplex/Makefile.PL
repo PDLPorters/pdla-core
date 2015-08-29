@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-WriteMakefile(NAME => "PDL::Opt::Simplex",
+WriteMakefile(NAME => "PDLA::Opt::Simplex",
 	PM => {
 	 map {($_ => '$(INST_LIBDIR)/'.$_)} <*.pm>
 	},

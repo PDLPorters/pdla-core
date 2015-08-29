@@ -1,13 +1,13 @@
 #!/usr/bin/perl
 #
-# Simple tests for PDL::Constants
+# Simple tests for PDLA::Constants
 #
 BEGIN {
    use Test::More tests => 3;
 }
 
 BEGIN {
-   use_ok( 'PDL::Constants', qw(PI E) );
+   use_ok( 'PDLA::Constants', qw(PI E) );
 }
 
 # just checks values, assumes constant part is ok

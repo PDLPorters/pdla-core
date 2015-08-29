@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::Tips - Small tidbits of useful arcana. Programming tidbits and such.
+PDLA::Tips - Small tidbits of useful arcana. Programming tidbits and such.
 
 =head1 SYNOPSIS
 
-	use PDL;
+	use PDLA;
 
 	# Whatever happens here.
 
@@ -18,10 +18,10 @@ Perl Data Language v2.0.
 Use C<help help> within I<perldl> or I<pdl2> or use the C<pdldoc>
 program from the command line for access to the PerlDL documentation.
 HTML versions of the pages should also be present, in the
-F<HtmlDocs/PDL> directory of the PDL distribution. To find this 
+F<HtmlDocs/PDLA> directory of the PDLA distribution. To find this 
 directory, try the following
 
- pdl> foreach ( map{"$_/PDL/HtmlDocs"}@INC ) { p "$_\n" if -d $_ }  
+ pdl> foreach ( map{"$_/PDLA/HtmlDocs"}@INC ) { p "$_\n" if -d $_ }  
 
 =head2 Indexing idioms
 
@@ -35,9 +35,9 @@ This works regardless of the dimensionality of $a.
 If you want to see what the code is actually doing,
 try the command
 
-	PDL::Core::set_debugging(1);
+	PDLA::Core::set_debugging(1);
 
-somewhere. This spews out a huge amount of debug info for PDL
+somewhere. This spews out a huge amount of debug info for PDLA
 into STDOUT. Plans for the future include making it possible to
 redirect the output, and also making it possible to select mesages
 with more precision.

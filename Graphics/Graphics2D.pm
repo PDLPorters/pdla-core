@@ -1,4 +1,4 @@
-package PDL::Graphics2D;
+package PDLA::Graphics2D;
 
 use Exporter 'import'; # gives you Exporter's import() method directly
 @EXPORT = qw(imag2d imag2d_update twiddle);     # symbols to export on request
@@ -6,19 +6,19 @@ use Exporter 'import'; # gives you Exporter's import() method directly
 
 =head1 NAME
 
-PDL::Graphics2D - An object oriented interface to PDL graphics
+PDLA::Graphics2D - An object oriented interface to PDLA graphics
 
 =head1 SYNOPSIS
 
- use PDL::Graphics2D;
- $win = PDL::Graphics2D->new(<Interface>, <Options>);
+ use PDLA::Graphics2D;
+ $win = PDLA::Graphics2D->new(<Interface>, <Options>);
 
  $w = imag2d( $image, 'Title Here', ... );
 
 =head1 DESCRIPTION
 
 This is an umbrella class allowing for a simple interface to all plotting
-routines in PDL. On its own it does not do any work it merely passes
+routines in PDLA. On its own it does not do any work it merely passes
 information to the appropriate class. Ideally this should probably offer
 a uniform interface to a variety of packages.
 
@@ -38,7 +38,7 @@ Create a 2-D graphics object with the requested interface type
 
 {
   my %lookup=(
-              'PGPLOT' => 'PDL::Graphics::PGPLOT::Window'
+              'PGPLOT' => 'PDLA::Graphics::PGPLOT::Window'
              );
   sub new {
 
@@ -60,24 +60,24 @@ use strict;
 
 my $debug = 0;
 
-use PDL::Lite;
-use PDL::NiceSlice;
+use PDLA::Lite;
+use PDLA::NiceSlice;
 
 #------------------------------------------------------------------------
-# PDL constants used by imag2d
+# PDLA constants used by imag2d
 #------------------------------------------------------------------------
 #
-#   PDL_B
-#   PDL_D
-#   PDL_F
-#   PDL_L
-#   PDL_S
-#   PDL_US
+#   PDLA_B
+#   PDLA_D
+#   PDLA_F
+#   PDLA_L
+#   PDLA_S
+#   PDLA_US
 #
 #------------------------------------------------------------------------
 
 #------------------------------------------------------------------------
-# PDL methods used by imag2d
+# PDLA methods used by imag2d
 #------------------------------------------------------------------------
 #
 #   .=
@@ -349,20 +349,20 @@ sub display_image {
    };
 
    # convert to float if double for display
-   if ($img->type->symbol eq 'PDL_D') {         # clean up code
+   if ($img->type->symbol eq 'PDLA_D') {         # clean up code
       $img = $img->float;
    }
 
    # determine display pixel type to use
-   if ($img->type->symbol eq 'PDL_F') {
+   if ($img->type->symbol eq 'PDLA_F') {
       $gldrawtype = GL_FLOAT;
-   } elsif ($img->type->symbol eq 'PDL_B') {
+   } elsif ($img->type->symbol eq 'PDLA_B') {
       $gldrawtype = GL_UNSIGNED_BYTE;
-   } elsif ($img->type->symbol eq 'PDL_S') {
+   } elsif ($img->type->symbol eq 'PDLA_S') {
       $gldrawtype = GL_SHORT;
-   } elsif ($img->type->symbol eq 'PDL_US') {
+   } elsif ($img->type->symbol eq 'PDLA_US') {
       $gldrawtype = GL_UNSIGNED_SHORT;
-   } elsif ($img->type->symbol eq 'PDL_L') {
+   } elsif ($img->type->symbol eq 'PDLA_L') {
       $gldrawtype = ( $gldrawformat == GL_RGBA ) ? GL_UNSIGNED_INT_8_8_8_8 : GL_INT;
    } else {
       die "display_image: unsupported data type '", $img->type->symbol, "' for image display\n";
@@ -436,7 +436,7 @@ sub key_ops {
       warn "Exit program command, key '" . (($key == 27) ? 'ESC' : 'Ctrl-C') . "', detected.\n";
       if (defined $PERLDL::TERM) {         # don't exit if in the perldl or pdl2 shell
          $imag2d_is_twiddling = 0;
-         warn "PDL shell in use, stop twiddling instead of exit...\n";
+         warn "PDLA shell in use, stop twiddling instead of exit...\n";
          return;
       } else {
          exit; 
@@ -644,7 +644,7 @@ the sub, only the imag2d() windows will update correctly.
 
 =for example
 
-  use PDL::Graphics2D;     # imports imag2d() and twiddle()
+  use PDLA::Graphics2D;     # imports imag2d() and twiddle()
 
   $a = sequence(64,48,3);  # make test RGB image
   $a = $a->mv(2,0);        # color must be dim(0) with size [0..4]
@@ -730,20 +730,20 @@ sub imag2d {
    };
 
    # convert to float if double for display
-   if ($img->type->symbol eq 'PDL_D') {         # clean up code
+   if ($img->type->symbol eq 'PDLA_D') {         # clean up code
       $img = $img->float;
    }
 
    # determine display pixel type to use
-   if ($img->type->symbol eq 'PDL_F') {
+   if ($img->type->symbol eq 'PDLA_F') {
       $gldrawtype = GL_FLOAT;
-   } elsif ($img->type->symbol eq 'PDL_B') {
+   } elsif ($img->type->symbol eq 'PDLA_B') {
       $gldrawtype = GL_UNSIGNED_BYTE;
-   } elsif ($img->type->symbol eq 'PDL_S') {
+   } elsif ($img->type->symbol eq 'PDLA_S') {
       $gldrawtype = GL_SHORT;
-   } elsif ($img->type->symbol eq 'PDL_US') {
+   } elsif ($img->type->symbol eq 'PDLA_US') {
       $gldrawtype = GL_UNSIGNED_SHORT;
-   } elsif ($img->type->symbol eq 'PDL_L') {
+   } elsif ($img->type->symbol eq 'PDLA_L') {
       $gldrawtype = ( $gldrawformat == GL_RGBA ) ? GL_UNSIGNED_INT_8_8_8_8 : GL_INT;
    } else {
       die "display_image: unsupported data type '", $img->type->symbol, "' for image display\n";
@@ -803,7 +803,7 @@ sub imag2d {
    glDrawPixels_s( $img->dim($glds+0), $img->dim($glds+1), $gldrawformat, $gldrawtype,         $img->get_dataref );
    glFlush();
 
-   # we don't twiddle if in PDL shell and glutRunning is on
+   # we don't twiddle if in PDLA shell and glutRunning is on
    {
       no warnings 'once';
       twiddle() unless defined $PERLDL::TERM and ref $Term::ReadLine::toloop;
@@ -914,7 +914,7 @@ sub twiddle {
 }
 
 #------------------------------------------------------------------------
-# Threaded image display as tiles (code from PDL::Graphics::TriD::Image)
+# Threaded image display as tiles (code from PDLA::Graphics::TriD::Image)
 #------------------------------------------------------------------------
 
 # N-D piddle -> 2-D
@@ -960,9 +960,9 @@ sub flatten {
       $xxd=$txd=$xdr; $yyd=$tyd=$ydr;
    }
 
-   my $p = PDL->zeroes(PDL::float(),$imdim0,$xxd,$yyd);
+   my $p = PDLA->zeroes(PDLA::float(),$imdim0,$xxd,$yyd);
 
-   # # object is PDL not PDL::Graphics::TriD::Image
+   # # object is PDLA not PDLA::Graphics::TriD::Image
    # if(defined $this->{Opts}{Bg}) {
    #     $p .= $this->{Opts}{Bg};
    # }
@@ -988,7 +988,7 @@ sub flatten {
       $ind++; # Just to keep even/odd correct
    }
    # $foop->dump;
-   print "ASSGNFOOP!\n" if $PDL::debug;
+   print "ASSGNFOOP!\n" if $PDLA::debug;
 
    $foop .= $this->{Im};
    # print "P: $p\n";

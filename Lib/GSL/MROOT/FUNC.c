@@ -2,8 +2,8 @@
 // and Simon Casassus <simon@das.uchile.cl>
 // All rights reserved. There is no warranty. You are allowed to 
 // redistribute this  software/documentation under certain conditions. 
-// For details, see the file COPYING in the PDL distribution. If this file 
-// is separated from the PDL distribution, the copyright notice should be 
+// For details, see the file COPYING in the PDLA distribution. If this file 
+// is separated from the PDLA distribution, the copyright notice should be 
 // included in the file.
 
 #include <stdlib.h>
@@ -33,32 +33,32 @@ void DFF(int* n, double* xval, double* vector){
   SV* pvectorsv;
 
   int ndims;
-  PDL_Indx *pdims;
+  PDLA_Indx *pdims;
 
   dSP;
   ENTER;
   SAVETMPS;
 
   ndims = 1;
-  pdims = (PDL_Indx *)  PDL->smalloc((STRLEN) ((ndims) * sizeof(*pdims)) );
+  pdims = (PDLA_Indx *)  PDLA->smalloc((STRLEN) ((ndims) * sizeof(*pdims)) );
   
-  pdims[0] = (PDL_Indx) ene;
+  pdims[0] = (PDLA_Indx) ene;
 
   PUSHMARK(SP);
-  XPUSHs(sv_2mortal(newSVpv("PDL", 0)));
+  XPUSHs(sv_2mortal(newSVpv("PDLA", 0)));
   PUTBACK;
   perl_call_method("initialize", G_SCALAR);
   SPAGAIN;
   pxsv = POPs;
   PUTBACK;
-  px = PDL->SvPDLV(pxsv);
+  px = PDLA->SvPDLAV(pxsv);
   
-  PDL->converttype( &px, PDL_D, PDL_PERM );
-  PDL->children_changesoon(px,PDL_PARENTDIMSCHANGED|PDL_PARENTDATACHANGED);
-  PDL->setdims (px,pdims,ndims);
-  px->state &= ~PDL_NOMYDIMS;
-  px->state |= PDL_ALLOCATED | PDL_DONTTOUCHDATA;
-  PDL->changed(px,PDL_PARENTDIMSCHANGED|PDL_PARENTDATACHANGED,0);
+  PDLA->converttype( &px, PDLA_D, PDLA_PERM );
+  PDLA->children_changesoon(px,PDLA_PARENTDIMSCHANGED|PDLA_PARENTDATACHANGED);
+  PDLA->setdims (px,pdims,ndims);
+  px->state &= ~PDLA_NOMYDIMS;
+  px->state |= PDLA_ALLOCATED | PDLA_DONTTOUCHDATA;
+  PDLA->changed(px,PDLA_PARENTDIMSCHANGED|PDLA_PARENTDATACHANGED,0);
 
   px->data = (void *) xval;
 
@@ -85,9 +85,9 @@ void DFF(int* n, double* xval, double* vector){
 
 
   pvectorsv = ST(0);
-  pvector = PDL->SvPDLV(pvectorsv);
+  pvector = PDLA->SvPDLAV(pvectorsv);
   
-  PDL->make_physical(pvector);
+  PDLA->make_physical(pvector);
   
   xpass  =  (double *) pvector->data;
   

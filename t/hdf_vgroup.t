@@ -8,18 +8,18 @@
 # Judd Taylor, USF IMaRS
 #
 use strict;
-use PDL;
+use PDLA;
 use Test::More;
 
 BEGIN
 {
-    use PDL::Config;
-    if ( $PDL::Config{WITH_HDF} ) 
+    use PDLA::Config;
+    if ( $PDLA::Config{WITH_HDF} ) 
     {
-        eval( " use PDL::IO::HDF; " );
+        eval( " use PDLA::IO::HDF; " );
         if( $@ )
         {
-            plan skip_all => "PDL::IO::HDF module compiled, but not available.";
+            plan skip_all => "PDLA::IO::HDF module compiled, but not available.";
         }  
         else
         {
@@ -28,13 +28,13 @@ BEGIN
     }
     else
     {
-        plan skip_all => "PDL::IO::HDF module not compiled.";
+        plan skip_all => "PDLA::IO::HDF module not compiled.";
     }
 }
 
-use PDL::IO::HDF::VS;
+use PDLA::IO::HDF::VS;
 
-use PDL::Config;
+use PDLA::Config;
 use File::Temp qw(tempdir);
 my $tmpdir = tempdir( CLEANUP => 1 );
 
@@ -43,38 +43,38 @@ my $testfile = "$tmpdir/vgroup.hdf";
 # Vgroup test suite
 
 # TEST 1:
-my $Hid = PDL::IO::HDF::VS::_Hopen( $testfile, PDL::IO::HDF->DFACC_CREATE, 2 );
+my $Hid = PDLA::IO::HDF::VS::_Hopen( $testfile, PDLA::IO::HDF->DFACC_CREATE, 2 );
 ok( $Hid != -1 );
 
-PDL::IO::HDF::VS::_Vstart( $Hid );
+PDLA::IO::HDF::VS::_Vstart( $Hid );
 
-my $vgroup_id = PDL::IO::HDF::VS::_Vattach( $Hid, -1, "w" );
-PDL::IO::HDF::VS::_Vsetname( $vgroup_id, 'vgroup_name' );
-PDL::IO::HDF::VS::_Vsetclass( $vgroup_id, 'vgroup_class' );
+my $vgroup_id = PDLA::IO::HDF::VS::_Vattach( $Hid, -1, "w" );
+PDLA::IO::HDF::VS::_Vsetname( $vgroup_id, 'vgroup_name' );
+PDLA::IO::HDF::VS::_Vsetclass( $vgroup_id, 'vgroup_class' );
 
 # TEST 2:
-my $vgroup_ref = PDL::IO::HDF::VS::_Vgetid( $Hid, -1 );
-ok( $vgroup_ref != PDL::IO::HDF->FAIL );
+my $vgroup_ref = PDLA::IO::HDF::VS::_Vgetid( $Hid, -1 );
+ok( $vgroup_ref != PDLA::IO::HDF->FAIL );
 
 # TEST 3:
 my $name = "";
-PDL::IO::HDF::VS::_Vgetname( $vgroup_id, $name);
+PDLA::IO::HDF::VS::_Vgetname( $vgroup_id, $name);
 ok( $name eq "vgroup_name" );
 
 # TEST 4:
 my $class = "";
-PDL::IO::HDF::VS::_Vgetclass( $vgroup_id, $class);
+PDLA::IO::HDF::VS::_Vgetclass( $vgroup_id, $class);
 ok( $class eq "vgroup_class" );
 
-PDL::IO::HDF::VS::_Vdetach( $vgroup_id );
+PDLA::IO::HDF::VS::_Vdetach( $vgroup_id );
 
-PDL::IO::HDF::VS::_Vend( $Hid );
+PDLA::IO::HDF::VS::_Vend( $Hid );
 
 # TEST 5:
-ok( PDL::IO::HDF::VS::_Hclose( $Hid ) );
+ok( PDLA::IO::HDF::VS::_Hclose( $Hid ) );
 
 # TEST 6:
-my $vOBJ = PDL::IO::HDF::VS->new( "+$testfile" );
+my $vOBJ = PDLA::IO::HDF::VS->new( "+$testfile" );
 ok( defined($vOBJ) );
 
 # TEST 7:

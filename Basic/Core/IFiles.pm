@@ -1,13 +1,13 @@
 =head1 NAME
 
-PDL::Install::Files
+PDLA::Install::Files
 
 =head1 SYNOPSIS
 
-  use Inline with => 'PDL';
-  # or alternatively, if your XS module uses PDL:
+  use Inline with => 'PDLA';
+  # or alternatively, if your XS module uses PDLA:
   use ExtUtils::Depends;
-  my $pkg = ExtUtils::Depends->new(qw(MyPackage PDL));
+  my $pkg = ExtUtils::Depends->new(qw(MyPackage PDLA));
 
 =head1 DESCRIPTION
 
@@ -16,15 +16,15 @@ no user-serviceable parts inside.
 
 =cut
 
-package PDL::Install::Files;
+package PDLA::Install::Files;
 # support ExtUtils::Depends
-require PDL::Core::Dev;
+require PDLA::Core::Dev;
 
 our $VERSION = '2.009';
 
 $self = {
-  'typemaps' => [ &PDL::Core::Dev::PDL_TYPEMAP ],
-  'inc' => &PDL::Core::Dev::PDL_INCLUDE,
+  'typemaps' => [ &PDLA::Core::Dev::PDLA_TYPEMAP ],
+  'inc' => &PDLA::Core::Dev::PDLA_INCLUDE,
   'libs' => '',
   'deps' => [],
 };
@@ -34,11 +34,11 @@ $libs = $self->{libs};
 $inc = $self->{inc};
 $CORE = undef;
 foreach (@INC) {
-  if ( -f "$_/PDL/Install/Files.pm") { $CORE = $_ . "/PDL/Install/"; last; }
+  if ( -f "$_/PDLA/Install/Files.pm") { $CORE = $_ . "/PDLA/Install/"; last; }
 }
 
 sub deps { }
-# support: use Inline with => 'PDL';
+# support: use Inline with => 'PDLA';
 
 require Inline;
 
@@ -46,14 +46,14 @@ sub Inline {
   my ($class, $lang) = @_;
   return {} if $lang eq 'Pdlpp';
   return unless $lang eq 'C';
-  unless($ENV{"PDL_Early_Inline"} // ($Inline::VERSION >= 0.68) ) {
-      die "PDL::Inline: requires Inline version 0.68 or higher to make sense\n  (yours is $Inline::VERSION). You should upgrade Inline, \n   or else set \$ENV{PDL_Early_Inline} to a true value to ignore this message.\n";
+  unless($ENV{"PDLA_Early_Inline"} // ($Inline::VERSION >= 0.68) ) {
+      die "PDLA::Inline: requires Inline version 0.68 or higher to make sense\n  (yours is $Inline::VERSION). You should upgrade Inline, \n   or else set \$ENV{PDLA_Early_Inline} to a true value to ignore this message.\n";
   }
   +{
-    TYPEMAPS      => [ &PDL::Core::Dev::PDL_TYPEMAP ],
-    INC           => &PDL::Core::Dev::PDL_INCLUDE,
-    AUTO_INCLUDE  => &PDL::Core::Dev::PDL_AUTO_INCLUDE,
-    BOOT          => &PDL::Core::Dev::PDL_BOOT,
+    TYPEMAPS      => [ &PDLA::Core::Dev::PDLA_TYPEMAP ],
+    INC           => &PDLA::Core::Dev::PDLA_INCLUDE,
+    AUTO_INCLUDE  => &PDLA::Core::Dev::PDLA_AUTO_INCLUDE,
+    BOOT          => &PDLA::Core::Dev::PDLA_BOOT,
   };
 }
 

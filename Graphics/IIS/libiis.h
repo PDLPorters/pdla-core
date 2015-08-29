@@ -1,6 +1,6 @@
 
 /*
-   Note: libiis.h in PDL distribution has iis_display
+   Note: libiis.h in PDLA distribution has iis_display
    redefined
 */
 
@@ -34,8 +34,8 @@
 
 /* Transfer ID definitions */
 
-#define  PDL_IIS_IREAD             0100000
-#define  PDL_IIS_IWRITE                 00
+#define  PDLA_IIS_IREAD             0100000
+#define  PDLA_IIS_IWRITE                 00
 #define  PACKED             040000
 #define  BYPASSIFM          020000
 #define  BYTE               010000

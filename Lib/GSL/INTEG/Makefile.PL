@@ -39,11 +39,11 @@ EOI
 EOB
 }
 
-if (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==0) {
-  $msg = "\n   Will skip build of PDL::GSL::INTEG on this system   \n";
+if (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==0) {
+  $msg = "\n   Will skip build of PDLA::GSL::INTEG on this system   \n";
   $skip = 1;
-} elsif (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==1) {
-  print "\n   Will forcibly try and build PDL::GSL::INTEG on this system   \n\n";
+} elsif (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==1) {
+  print "\n   Will forcibly try and build PDLA::GSL::INTEG on this system   \n\n";
   $forcebuild=1;
 }
 
@@ -52,15 +52,15 @@ if (($skip && !$forcebuild) ||
   warn "trying to force GSL build but link test failed\n".
     "\t -- aborting GSL build\n" if $forcebuild;
   $msg ||=
-    "\n GSL Libraries not found... Skipping build of PDL::GSL::INTEG.\n";
+    "\n GSL Libraries not found... Skipping build of PDLA::GSL::INTEG.\n";
   write_dummy_make( $msg );
   return;
 } else {
-  print "\n   Building PDL::GSL::INTEG.", 
+  print "\n   Building PDLA::GSL::INTEG.", 
     "Turn off WITH_GSL if there are any problems\n\n";
 }
 
-my @pack = (["gsl_integ.pd", qw(INTEG PDL::GSL::INTEG)]);
+my @pack = (["gsl_integ.pd", qw(INTEG PDLA::GSL::INTEG)]);
 my %hash = pdlpp_stdargs_int(@pack);
 
 $hash{INC} .= " $GSL_includes";

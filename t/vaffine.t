@@ -2,7 +2,7 @@ use Test::More tests => 1;
 
 # Test vaffine optimisation
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
 $x = zeroes(100,100);
 

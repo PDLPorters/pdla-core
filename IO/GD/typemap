@@ -1,5 +1,5 @@
 #
-# Extra type mappings for Judd::PDL::IO::GD
+# Extra type mappings for Judd::PDLA::IO::GD
 #
 gdImagePtr   T_PTR
 gdImage *    T_PTR

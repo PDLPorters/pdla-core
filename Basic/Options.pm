@@ -1,20 +1,20 @@
 
-package PDL::Options;
+package PDLA::Options;
 
 =head1 NAME
 
-PDL::Options - simplifies option passing by hash in PerlDL
+PDLA::Options - simplifies option passing by hash in PerlDL
 
 =head1 SYNOPSIS
 
-  use PDL::Options;
+  use PDLA::Options;
 
   %hash = parse( \%defaults, \%user_options);
 
-  use PDL::Options ();
+  use PDLA::Options ();
 
-  $opt = new PDL::Options;
-  $opt = new PDL::Options ( \%defaults );
+  $opt = new PDLA::Options;
+  $opt = new PDLA::Options ( \%defaults );
 
   $opt->defaults ( \%defaults );
   $opt->synonyms ( { 'COLOR' => 'COLOUR' } );
@@ -128,7 +128,7 @@ sub _parse {
       unless ref($user) eq "HASH";
 
    # Create new object
-   my $opt = new PDL::Options ( $defaults );
+   my $opt = new PDLA::Options ( $defaults );
 
    # Set up default behaviour
    $opt->minmatch(1);
@@ -155,7 +155,7 @@ The following default synonyms are available in the non-OO interface:
 
 =head1 METHODS
 
-The following methods are available to PDL::Options objects.
+The following methods are available to PDLA::Options objects.
 
 =over 4
 
@@ -395,7 +395,7 @@ sub current {
 
 =item clear_current
 
-This routine clears the 'state' of the C<PDL::Options> object so that
+This routine clears the 'state' of the C<PDLA::Options> object so that
 the next call to current will return an empty list
 
 =cut
@@ -919,7 +919,7 @@ the second uses the object-oriented interface.
 
 =head1 Non-OO
 
-   use PDL::Options (':Func');
+   use PDLA::Options (':Func');
 
    %options = parse( {
 		   LINE => 1,
@@ -942,10 +942,10 @@ This will return a hash containg
 
 The following example will try to show the main points:
 
-   use PDL::Options ();
+   use PDLA::Options ();
 
    # Create new object and supply defaults
-   $opt = new PDL::Options(   { Colour => 'red',
+   $opt = new PDLA::Options(   { Colour => 'red',
 	   		        LineStyle => 'dashed',
 			        LineWidth => 1
 			      }
@@ -999,8 +999,8 @@ could be added quite simply.
 Copyright (C) Tim Jenness 1998 (t.jenness@jach.hawaii.edu).  All
 rights reserved. There is no warranty. You are allowed to redistribute
 this software / documentation under certain conditions. For details,
-see the file COPYING in the PDL distribution. If this file is
-separated from the PDL distribution, the copyright notice should be
+see the file COPYING in the PDLA distribution. If this file is
+separated from the PDLA distribution, the copyright notice should be
 included in the file.
 
 =cut

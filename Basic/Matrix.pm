@@ -1,17 +1,17 @@
 =head1 NAME
 
-PDL::Matrix -- a convenience matrix class for column-major access
+PDLA::Matrix -- a convenience matrix class for column-major access
 
 =head1 VERSION
 
-This document refers to version PDL::Matrix 0.5 of PDL::Matrix
+This document refers to version PDLA::Matrix 0.5 of PDLA::Matrix
 
 =head1 SYNOPSIS
 
-  use PDL::Matrix;
+  use PDLA::Matrix;
 
   $m = mpdl [[1,2,3],[4,5,6]];
-  $m = PDL::Matrix->pdl([[1,2,3],[4,5,6]]);
+  $m = PDLA::Matrix->pdl([[1,2,3],[4,5,6]]);
   $m = msequence(4,3);
   @dimsa = $a->mdims; # 'dims' is not overloaded
 
@@ -22,14 +22,14 @@ This document refers to version PDL::Matrix 0.5 of PDL::Matrix
 
 =head2 Overview
 
-This package tries to help people who want to use PDL for 2D matrix
-computation with lots of indexing involved. It provides a PDL
+This package tries to help people who want to use PDLA for 2D matrix
+computation with lots of indexing involved. It provides a PDLA
 subclass so one- and two-dimensional piddles that are used as
 vectors resp and matrices can be typed in using traditional matrix
 convention.
 
-If you want to know more about matrix operation support in PDL, you 
-want to read L<PDL::MatrixOps> or L<PDL::Slatec>.
+If you want to know more about matrix operation support in PDLA, you 
+want to read L<PDLA::MatrixOps> or L<PDLA::Slatec>.
 
 The original pdl class refers to the first index as the first row,
 the second index as the first column of a matrix. Consider
@@ -45,30 +45,30 @@ constructor used (3,2). This might get more confusing when using
 slices like sequence(3,2)->slice("1:2,(0)") : with traditional
 matrix convention one would expect [2 4] instead of [1 2].
 
-This subclass PDL::Matrix overloads the constructors and indexing
+This subclass PDLA::Matrix overloads the constructors and indexing
 functions of pdls so that they are compatible with the usual matrix
 convention, where the first dimension refers to the row of a
 matrix. So now, the above example would be written as
 
-  print $B = PDL::Matrix->sequence(3,2) # or $B = msequence(3,2)
+  print $B = PDLA::Matrix->sequence(3,2) # or $B = msequence(3,2)
   [
    [0 1]
    [2 3]
    [4 5]
   ]
 
-Routines like L<eigens|PDL::MatrixOps/eigens> or
-L<inv|PDL::MatrixOps/inv> can be used without any changes.
+Routines like L<eigens|PDLA::MatrixOps/eigens> or
+L<inv|PDLA::MatrixOps/inv> can be used without any changes.
 
 Furthermore one can construct and use vectors as n x 1 matrices
 without mentioning the second index '1'.
 
 =head2 Implementation
 
-C<PDL::Matrix> works by overloading a number of PDL constructors
+C<PDLA::Matrix> works by overloading a number of PDLA constructors
 and methods such that first and second args (corresponding to
 first and second dims of corresponding matrices) are effectively swapped.
-It is not yet clear if PDL::Matrix achieves a consistent column-major 
+It is not yet clear if PDLA::Matrix achieves a consistent column-major 
 look-and-feel in this way.
 
 =head1 NOTES
@@ -81,17 +81,17 @@ and everything else works the way you think it should.
 
 =cut
 
-package PDL::Matrix;
+package PDLA::Matrix;
 
 @EXPORT_OK = ();
 
 
-#use PDL::Core;
-#use PDL::Slatec;
-use PDL::Exporter;
+#use PDLA::Core;
+#use PDLA::Slatec;
+use PDLA::Exporter;
 use Carp;
 
-@ISA = qw/PDL::Exporter PDL/;
+@ISA = qw/PDLA::Exporter PDLA/;
 
 our $VERSION = "0.5";
 $VERSION = eval $VERSION;
@@ -103,7 +103,7 @@ $VERSION = eval $VERSION;
 
 use overload( '""' => \&string,
               'x'  => sub {my $foo = $_[0]->null();
-                           &PDL::Primitive::matmult(@_[1,0],$foo); 
+                           &PDLA::Primitive::matmult(@_[1,0],$foo); 
                            $foo;}
             );
 
@@ -117,16 +117,16 @@ sub string {
 
 # --------> constructors
 
-=head2 mpdl, PDL::Matrix::pdl
+=head2 mpdl, PDLA::Matrix::pdl
 
 =for ref
 
-constructs an object of class PDL::Matrix which is a piddle child class.
+constructs an object of class PDLA::Matrix which is a piddle child class.
 
 =for example
 
     $m = mpdl [[1,2,3],[4,5,6]];
-    $m = PDL::Matrix->pdl([[1,2,3],[4,5,6]]);
+    $m = PDLA::Matrix->pdl([[1,2,3],[4,5,6]]);
 
 =cut
 
@@ -144,21 +144,21 @@ sub pdl {
 
 =for ref
 
-constructs a PDL::Matrix object similar to the piddle constructors
+constructs a PDLA::Matrix object similar to the piddle constructors
 zeroes, ones, sequence.
 
 =cut
 
 for my $func (qw /pdl zeroes ones sequence dims/) {
   push @EXPORT_OK, "m$func";
-  eval " sub m$func { PDL::Matrix->$func(\@_) }; ";
+  eval " sub m$func { PDLA::Matrix->$func(\@_) }; ";
 }
 
 =head2 vpdl 
 
 =for ref
 
-constructs an object of class PDL::Matrix which is of matrix
+constructs an object of class PDLA::Matrix which is of matrix
 dimensions (n x 1)
 
 =for example
@@ -172,8 +172,8 @@ dimensions (n x 1)
 =cut 
 
 sub vpdl {
-  my $pdl = PDL->pdl(@_);
-  bless $pdl, PDL::Matrix;
+  my $pdl = PDLA->pdl(@_);
+  bless $pdl, PDLA::Matrix;
 }
 push @EXPORT_OK, "vpdl";
 
@@ -181,7 +181,7 @@ push @EXPORT_OK, "vpdl";
 
 =for ref
 
-constructs a PDL::Matrix object with matrix dimensions (n x 1),
+constructs a PDLA::Matrix object with matrix dimensions (n x 1),
 therefore only the first scalar argument is used.
 
 =for example
@@ -200,9 +200,9 @@ for my $func (qw /zeroes ones sequence/) {
 
 sub v$func {
   my \@arg = \@_;
-  ref(\$arg[0]) ne 'PDL::Type' ? (\@arg = (\$arg[0],1)) :
+  ref(\$arg[0]) ne 'PDLA::Type' ? (\@arg = (\$arg[0],1)) :
                                  (\@arg = (\$arg[0],\$arg[1],1));
-  PDL::Matrix->$func(\@arg);
+  PDLA::Matrix->$func(\@arg);
 }
 
 EOE
@@ -212,12 +212,12 @@ EOE
 
 
 
-eval "use PDL::Slatec";
+eval "use PDLA::Slatec";
 
 my $has_slatec = ($@ ? 0 : 1);
 sub inv {
   my $self = shift;
-  croak "inv: PDL::Slatec not available" unless $has_slatec;
+  croak "inv: PDLA::Slatec not available" unless $has_slatec;
   return $self->matinv;
 }
 
@@ -267,7 +267,7 @@ sub rotate {
 
 sub msumover {
   my ($mpdl) = @_;
-  return PDL::sumover(transpose($mpdl)->xchg(0,2));
+  return PDLA::sumover(transpose($mpdl)->xchg(0,2));
 }
 push @EXPORT_OK, "msumover";
 
@@ -291,10 +291,10 @@ print msequence(3,3)->determinant(2) # determinant of
 # 
 sub det_general {
   my ($mpdl,$rank) = @_;
-  my $eigenvalues = (PDL::Math::eigens($mpdl))[1];
-  my @sort = list(PDL::Ufunc::qsorti(abs($eigenvalues)));
+  my $eigenvalues = (PDLA::Math::eigens($mpdl))[1];
+  my @sort = list(PDLA::Ufunc::qsorti(abs($eigenvalues)));
   $eigenvalues = $eigenvalues->dice([@sort[-$rank..-1]]);
-  PDL::Ufunc::dprod($eigenvalues);
+  PDLA::Ufunc::dprod($eigenvalues);
 }
 
 =head2 trace
@@ -310,8 +310,8 @@ sub trace {
   $mpdl->diagonal(0,1)->sum;
 }
 
-# this has to be overloaded so that the PDL::slice
-# is called and not PDL::Matrix::slice :-(
+# this has to be overloaded so that the PDLA::slice
+# is called and not PDLA::Matrix::slice :-(
 sub dummy($$;$) {
    my ($pdl,$dim) = @_;
    $dim = $pdl->getndims+1+$dim if $dim < 0;
@@ -319,12 +319,12 @@ sub dummy($$;$) {
   . $_[0]->getndims)
      if $dim>$pdl->getndims || $dim < 0;
    $_[2] = 1 if ($#_ < 2);
-   $pdl->PDL::slice((','x$dim)."*$_[2]");
+   $pdl->PDLA::slice((','x$dim)."*$_[2]");
 }
 
 
 # now some of my very own helper functions...
-# stupid function to print a PDL::Matrix object in Maple code
+# stupid function to print a PDLA::Matrix object in Maple code
 sub stringifymaple {
   my ($self,@args) = @_;
 
@@ -359,7 +359,7 @@ sub printmaple {
   print stringifymaple(@_).";\n";
 }
 
-# stupid function to print a PDL::Matrix object in (La)TeX code
+# stupid function to print a PDLA::Matrix object in (La)TeX code
 sub stringifyTeX {
   my ($self,@args) = @_;
 
@@ -392,20 +392,20 @@ DAL commented this out 17-June-2008. It didn't work, it used the
 outmoded (and incorrect) ~-is-transpose convention, and it wasn't
 necessary since the regular cross product worked fine.
 
-=head2  vcrossp, PDL::Matrix::crossp
+=head2  vcrossp, PDLA::Matrix::crossp
 
 =for ref
 
-similar to PDL::crossp, however reflecting PDL::Matrix notations
+similar to PDLA::crossp, however reflecting PDLA::Matrix notations
 
 #=cut
 
 # crossp for my special vectors
 sub crossp {
   my ($pdl1,$pdl2) = @_;
-  return PDL::transpose(PDL::crossp(~$pdl1,~$pdl2));
+  return PDLA::transpose(PDLA::crossp(~$pdl1,~$pdl2));
 }
-sub vcrossp { PDL::Matrix->crossp(\@_) }
+sub vcrossp { PDLA::Matrix->crossp(\@_) }
 push @EXPORT_OK, "vcrossp";
 
 =end comment
@@ -423,12 +423,12 @@ operators may be applied to piddle-matrices. The inner product is not
 redefined. We might have missed some functions/methods. Internal
 consistency of our approach needs yet to be established.
 
-Because PDL::Matrix changes the way slicing behaves, it breaks many
+Because PDLA::Matrix changes the way slicing behaves, it breaks many
 operators, notably those in MatrixOps.  
 
 =head1 TODO
 
-check all PDL functions, benchmarks, optimization, lots of other things ...
+check all PDLA functions, benchmarks, optimization, lots of other things ...
 
 =head1 AUTHOR(S)
 
@@ -439,8 +439,8 @@ Stephan Heuel (stephan@heuel.org), Christian Soeller
 
 All rights reserved. There is no warranty. You are allowed to
 redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution, the
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution, the
 copyright notice should be included in the file.
 
 =cut

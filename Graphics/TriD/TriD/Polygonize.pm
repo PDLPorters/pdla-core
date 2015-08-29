@@ -1,15 +1,15 @@
 # XXXX NOTHING BUT stupidpolygonize WORKS!!!!
 
-package PDL::Graphics::TriD::StupidPolygonize;
+package PDLA::Graphics::TriD::StupidPolygonize;
 
-use PDL::Core '';
+use PDLA::Core '';
 
 # A very simplistic polygonizer...
 # Center = positive, outside = negative.
 
 sub stupidpolygonize {
 	my($center, $initrad, $npatches, $nrounds, $func) = @_;
-	$a = PDL->zeroes(PDL::float(),3,$npatches,$npatches);
+	$a = PDLA->zeroes(PDLA::float(),3,$npatches,$npatches);
 	$mult = 2*3.14 / ($npatches-1);
 	my $ya = ($a->slice("(0)"))->xvals;
 	$ya *= $mult;
@@ -42,12 +42,12 @@ sub polygonizeraw {
 sub contours {
 }
 
-package PDL::Graphics::TriD::ContourPolygonize;
+package PDLA::Graphics::TriD::ContourPolygonize;
 
 #
 # First compute contours.
 use vars qw/$cube $cents/;
-$cube = PDL->pdl([
+$cube = PDLA->pdl([
  [-1,-1,-1],
  [-1,-1,1],
  [-1,1,-1],
@@ -58,7 +58,7 @@ $cube = PDL->pdl([
  [1,1,1]
 ]);
 
-$cents = PDL->pdl([
+$cents = PDLA->pdl([
  [0,0,-1],
  [0,0,1],
  [0,-1,0],
@@ -90,9 +90,9 @@ sub contourpolygonize {
 #	find_3nn(
 #}
 
-package PDL::Graphics::TriD::Polygonize;
+package PDLA::Graphics::TriD::Polygonize;
 
-use PDL::Core '';
+use PDLA::Core '';
 
 # Inside positive, outside negative!
 #

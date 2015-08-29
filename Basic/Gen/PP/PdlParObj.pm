@@ -2,21 +2,21 @@
 
 ##############################################
 
-package PDL::PP::PdlParObj;
+package PDLA::PP::PdlParObj;
 
 use Carp;
-use PDL::Types;
+use PDLA::Types;
 
 # check for bad value support
 #
-use PDL::Config;
-my $usenan = $PDL::Config{BADVAL_USENAN} || 0;
+use PDLA::Config;
+my $usenan = $PDLA::Config{BADVAL_USENAN} || 0;
 
 our %Typemap = ();
-use PDL::Types ':All';
+use PDLA::Types ':All';
 
 # build a typemap for our translation purposes
-# again from info in PDL::Types
+# again from info in PDLA::Types
 for my $typ (typesrtkeys) {
   $Typemap{typefld($typ,'ppforcetype')} = {
 					  Ctype => typefld($typ,'ctype'),
@@ -66,7 +66,7 @@ sub splitprotected ($$) {
 # null != [0]
 #  - in Core.
 
-#{package PDL;
+#{package PDLA;
 # sub isnull {
 #   my $this = shift;
 #   return ($this->getndims==1 && $this->getdim(0)==0) ? 1:0 }
@@ -93,12 +93,12 @@ sub new {
 	$badflag ||= 0;
 	my $this = bless {Number => $number, BadFlag => $badflag},$type;
 	# Parse the parameter string. Note that the regexes for this match were
-	# originally defined here, but were moved to PDL::PP for FullDoc parsing.
+	# originally defined here, but were moved to PDLA::PP for FullDoc parsing.
 	$string =~ $pars_re
 		 or confess "Invalid pdl def $string (regex $typeregex)\n";
 	my($opt1,$opt2,$name,$inds) = ($1,$2,$3,$4);
 	map {$_ = '' unless defined($_)} ($opt1,$opt2,$inds); # shut up -w
-	print "PDL: '$opt1', '$opt2', '$name', '$inds'\n"
+	print "PDLA: '$opt1', '$opt2', '$name', '$inds'\n"
 		  if $::PP_VERBOSE;
 # Set my internal variables
 	$this->{Name} = $name;
@@ -192,19 +192,19 @@ sub getcreatedims {
 }
 
 
-# find the value for a given PDL type
+# find the value for a given PDLA type
 sub typeval {
   my $ctype = shift;
   my @match = grep {$Typemap{$_}->{Ctype} =~ /^$ctype$/} keys(%Typemap);
   if ($#match < 0) {
     use Data::Dumper;
     print Dumper \%Typemap;
-    croak "unknown PDL type '$ctype'" ;
+    croak "unknown PDLA type '$ctype'" ;
   }
   return $Typemap{$match[0]}->{Val};
 }
 
-# return the PDL type for this pdl
+# return the PDLA type for this pdl
 sub ctype {
   my ($this,$generic) = @_;
   return $generic unless $this->{FlagTyped};
@@ -213,7 +213,7 @@ sub ctype {
   my $type = $Typemap{$this->{Type}}->{Ctype};
   if ($this->{FlagTplus}) {
     $type = $Typemap{$this->{Type}}->{Val} >
-      PDL::PP::PdlParObj::typeval($generic) ?
+      PDLA::PP::PdlParObj::typeval($generic) ?
       $Typemap{$this->{Type}}->{Ctype} : $generic;
   }
   return $type;
@@ -223,8 +223,8 @@ sub ctype {
 sub cenum {
     my $this = shift;
     croak "cenum: unknown type [" . $this->{Type} . "]"
-	unless defined($PDL::PP::PdlParObj::Typemap{$this->{Type}});
-    return $PDL::PP::PdlParObj::Typemap{$this->{Type}}->{Cenum};
+	unless defined($PDLA::PP::PdlParObj::Typemap{$this->{Type}});
+    return $PDLA::PP::PdlParObj::Typemap{$this->{Type}}->{Cenum};
 }
 
 sub get_nname{ my($this) = @_;
@@ -261,7 +261,7 @@ sub get_xsnormdimchecks {
 		my $size = $iref->[$_-1]->get_size();      
 		"      if (($pdl)->ndims < $_ && $size <= 1) $size = 1;\n"
 		} (1..$ninds)) 
-# XXX why is this here, commented, and not removed? If re-inserted, be sure to use PDL_COMMENT
+# XXX why is this here, commented, and not removed? If re-inserted, be sure to use PDLA_COMMENT
 ##		."      /* \$CROAK(\"Too few dimensions for argument \'$this->{Name}\'\\n\"); */\n"
 		. "   }\n";
     }
@@ -275,7 +275,7 @@ sub get_xsnormdimchecks {
 	$str .= "   if($siz == -1 || ($ndims > $no && $siz == 1)) {\n" .
 	        "      $siz = $dim;\n" .
 		"   } else if($ndims > $no && $siz != $dim) {\n" .
-# XXX should these lines simply be removed? If re-inserted, be sure to use PDL_COMMENT
+# XXX should these lines simply be removed? If re-inserted, be sure to use PDLA_COMMENT
 #		"      if($dim == 1) {\n" .
 #		"         /* Do nothing */ /* XXX Careful, increment? */" .
 #		"      } else {\n" .
@@ -285,17 +285,17 @@ sub get_xsnormdimchecks {
 	$no++;
     } 
 
-    $str .= "PDL->make_physical(($pdl));\n" if $this->{FlagPhys};
+    $str .= "PDLA->make_physical(($pdl));\n" if $this->{FlagPhys};
 
     if ( $this->{FlagCreat} ) { 
 	$str .= "} else {\n";
 	
 	# We are creating this pdl.
-	$str .= " PDL_Indx dims[".($ninds+1)."]; PDL_COMMENT(\"Use ninds+1 to avoid smart (stupid) compilers\")";
+	$str .= " PDLA_Indx dims[".($ninds+1)."]; PDLA_COMMENT(\"Use ninds+1 to avoid smart (stupid) compilers\")";
 	$str .= join "",
 	(map {"dims[$_] = ".$iref->[$_]->get_size().";"} 0 .. $#$iref);
 	my $istemp = $this->{FlagTemp} ? 1 : 0;
-	$str .="\n PDL->thread_create_parameter(&\$PRIV(__pdlthread),$this->{Number},dims,$istemp);\n";
+	$str .="\n PDLA->thread_create_parameter(&\$PRIV(__pdlthread),$this->{Number},dims,$istemp);\n";
 	$str .= "}";
     }
     return $str;
@@ -315,7 +315,7 @@ sub get_incdecls {
 	my($this) = @_;
 	if(scalar(@{$this->{IndObjs}}) == 0) {return "";}
 	(join '',map {
-		"PDL_Indx ".($this->get_incname($_)).";";
+		"PDLA_Indx ".($this->get_incname($_)).";";
 	} (0..$#{$this->{IndObjs}}) ) . ";"
 }
 
@@ -323,7 +323,7 @@ sub get_incregisters {
 	my($this) = @_;
 	if(scalar(@{$this->{IndObjs}}) == 0) {return "";}
 	(join '',map {
-		"register PDL_Indx ".($this->get_incname($_))." = \$PRIV(".
+		"register PDLA_Indx ".($this->get_incname($_))." = \$PRIV(".
 			($this->get_incname($_)).");\n";
 	} (0..$#{$this->{IndObjs}}) )
 }
@@ -345,7 +345,7 @@ sub get_incsets {
 		 \$PRIV(".($this->get_incname($_)).
 			") = ".($this->{FlagPhys}?
 				   "$str->dimincs[$_];" :
-				   "PDL_REPRINC($str,$_);");
+				   "PDLA_REPRINC($str,$_);");
 	} (0..$#{$this->{IndObjs}}) )
 }
 
@@ -369,7 +369,7 @@ sub do_access {
 	if(scalar(keys %subst) != 0) {
 		confess("Substitutions left: ".(join ',',keys %subst)."\n");
 	}
-       return "$text PDL_COMMENT(\"ACCESS($access)\") ";
+       return "$text PDLA_COMMENT(\"ACCESS($access)\") ";
 }
 
 sub has_dim {
@@ -389,7 +389,7 @@ sub do_resize {
 	}
 	my $pdl = $this->get_nname;
 	return (join '',map {"$pdl->dims[$_] = $size;\n"} @c).
-		"PDL->resize_defaultincs($pdl);PDL->allocdata($pdl);".
+		"PDLA->resize_defaultincs($pdl);PDLA->allocdata($pdl);".
 		$this->get_xsdatapdecl(undef,1);
 }
 
@@ -450,17 +450,17 @@ sub get_xsdatapdecl {
 # ThreadLoop does this for us.
 #	return "$declini ${name}_datap = ($cast((${_})->data)) + (${_})->offs;\n";
     
-    my $str = "$declini ${name}_datap = ($cast(PDL_REPRP_TRANS($pdl,$flag)));\n" .
+    my $str = "$declini ${name}_datap = ($cast(PDLA_REPRP_TRANS($pdl,$flag)));\n" .
 	"$declini ${name}_physdatap = ($cast($pdl->data));\n";
 
     # assuming we always need this 
     # - may not be true - eg if $asgnonly ??
     # - not needed for floating point types when using NaN as bad values
     if ( $this->{BadFlag} and $type and 
-	 ( $usenan == 0 or $type !~ /^PDL_(Float|Double)$/ ) ) {
-	my $cname = $type; $cname =~ s/^PDL_//;
-#	$str .= "\t$type   ${name}_badval = PDL->bvals.$cname;\n";
-        $str .= "\t$type   ${name}_badval = ($type) PDL->get_pdl_badvalue($pdl);\n";
+	 ( $usenan == 0 or $type !~ /^PDLA_(Float|Double)$/ ) ) {
+	my $cname = $type; $cname =~ s/^PDLA_//;
+#	$str .= "\t$type   ${name}_badval = PDLA->bvals.$cname;\n";
+        $str .= "\t$type   ${name}_badval = ($type) PDLA->get_pdl_badvalue($pdl);\n";
     }	
 
     return "$str\n";

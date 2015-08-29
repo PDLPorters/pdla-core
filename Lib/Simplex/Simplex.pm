@@ -1,11 +1,11 @@
 
 =head1 NAME
 
-PDL::Opt::Simplex -- Simplex optimization routines
+PDLA::Opt::Simplex -- Simplex optimization routines
 
 =head1 SYNOPSIS
 
- use PDL::Opt::Simplex;
+ use PDLA::Opt::Simplex;
 
  ($optimum,$ssize,$optval) = simplex($init,$initsize,$minsize,
  		 $maxiter,
@@ -65,7 +65,7 @@ Simplex optimization routine
  		 sub {display_simplex($_[0])}
  		 );
 
-See module C<PDL::Opt::Simplex> for more information.
+See module C<PDLA::Opt::Simplex> for more information.
 
 =head1 CAVEATS
 
@@ -91,37 +91,37 @@ The demonstration (Examples/Simplex/tsimp.pl and tsimp2.pl).
 Copyright(C) 1997 Tuomas J. Lukka. 
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL 
-distribution. If this file is separated from the PDL distribution, 
+conditions. For details, see the file COPYING in the PDLA 
+distribution. If this file is separated from the PDLA distribution, 
 the copyright notice should be included in the file.
 
 
 
 =cut
 
-package PDL::Opt::Simplex;
-use PDL;
-use PDL::Primitive;
+package PDLA::Opt::Simplex;
+use PDLA;
+use PDLA::Primitive;
 use strict;
-use PDL::Exporter;
+use PDLA::Exporter;
 
 # use AutoLoader;
 
-@PDL::Opt::Simplex::ISA = qw/PDL::Exporter/;
+@PDLA::Opt::Simplex::ISA = qw/PDLA::Exporter/;
 
-@PDL::Opt::Simplex::EXPORT_OK = qw/simplex/;
-%PDL::Opt::Simplex::EXPORT_TAGS = ( Func => [@PDL::Opt::Simplex::EXPORT_OK] );
+@PDLA::Opt::Simplex::EXPORT_OK = qw/simplex/;
+%PDLA::Opt::Simplex::EXPORT_TAGS = ( Func => [@PDLA::Opt::Simplex::EXPORT_OK] );
 
-*simplex = \&PDL::simplex;
+*simplex = \&PDLA::simplex;
 
-sub PDL::simplex {
+sub PDLA::simplex {
     my ( $init, $initsize, $minsize, $maxiter, $sub, $logsub, $t ) = @_;
     if ( !defined $t ) { $t = 0 }
     my ( $i, $j );
     my ( $nd, $nd2 ) = ( dims($init), 1 );
     my $simp;
     if ( $nd2 == 1 ) {
-        $simp = PDL->zeroes( $nd, $nd + 1 );
+        $simp = PDLA->zeroes( $nd, $nd + 1 );
         $simp .= $init;
 
         # Constructing a tetrahedron:
@@ -129,7 +129,7 @@ sub PDL::simplex {
         # take vertices 0..n and move them 1/(n+1) to negative dir on axis n.
         # Take vertex n+1 and move it n/(n+1) to positive dir on axis n
         if ( !ref $initsize ) {
-            $initsize = PDL->pdl($initsize)->dummy( 0, $nd );
+            $initsize = PDLA->pdl($initsize)->dummy( 0, $nd );
         }
         for ( $i = 0 ; $i < $nd ; $i++ ) {
             my $pj = $i / ( $i + 1 );
@@ -145,19 +145,19 @@ sub PDL::simplex {
     else {
         return;
     }
-    my $maxind = PDL->zeroes(2);
-    my $minind = PDL->null;
-    my $ssum   = PDL->null;
+    my $maxind = PDLA->zeroes(2);
+    my $minind = PDLA->null;
+    my $ssum   = PDLA->null;
     my $worst;
     my $new;
     my $vals = &{$sub}($simp);
     my $ss1  = ( $simp - $simp->slice(":,0") )**2;
-    sumover( $ss1, ( my $ss2 = PDL->null ) );
-    my $ssize = PDL::max( sqrt($ss2) );
+    sumover( $ss1, ( my $ss2 = PDLA->null ) );
+    my $ssize = PDLA::max( sqrt($ss2) );
     &{$logsub}( $simp, $vals, $ssize )
       if $logsub;
 
-    while ( $maxiter-- and max( PDL->topdl($ssize) ) > $minsize ) {
+    while ( $maxiter-- and max( PDLA->topdl($ssize) ) > $minsize ) {
         my $valsn = $vals;
         if ($t) {
             my $noise = $vals->random();
@@ -217,12 +217,12 @@ sub PDL::simplex {
             ( my $stoopid = $vals->index($idx) ) .= &{$sub}($simp->dice_axis(1,$idx));
         }
         my $ss1 = ( $simp - $simp->slice(":,0") )**2;
-        sumover( $ss1, ( $ss2 = PDL->null ) );
-        $ssize = PDL::max( sqrt($ss2) );
+        sumover( $ss1, ( $ss2 = PDLA->null ) );
+        $ssize = PDLA::max( sqrt($ss2) );
         &{$logsub}( $simp, $vals, $ssize )
           if $logsub;
     }
-    minimum_ind( $vals, ( my $mmind = PDL->null ) );
+    minimum_ind( $vals, ( my $mmind = PDLA->null ) );
     return ( $simp->slice(":,$mmind"), $ssize, $vals->index($mmind) );
 }
 

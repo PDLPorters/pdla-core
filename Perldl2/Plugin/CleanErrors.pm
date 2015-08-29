@@ -1,4 +1,4 @@
-package PDL::Perldl2::Plugin::CleanErrors;
+package PDLA::Perldl2::Plugin::CleanErrors;
 
 use Devel::REPL::Plugin;
 
@@ -19,7 +19,7 @@ sub clean_error_string {
    $bigerr =~ s/^\s+Lexical::Persistence.*$//ms;
    $bigerr =~ s/^\s+main::.*$//ms;
    $bigerr =~ s/^\s+eval \{.*$//ms;
-   $bigerr =~ s/^\s+PDL::Core::barf.*$//ms;
+   $bigerr =~ s/^\s+PDLA::Core::barf.*$//ms;
    return $bigerr;
 }
 
@@ -29,7 +29,7 @@ __END__
 
 =head1 NAME
 
-PDL::Perldl2::Plugin::CleanErrors - filter out Moose cruft
+PDLA::Perldl2::Plugin::CleanErrors - filter out Moose cruft
 
 =head1 DESCRIPTION
 
@@ -37,7 +37,7 @@ Runtime errors in pdl2 are extremely verbose since they
 include the entire call chain from the start of the interactive
 Devel::REPL shell, through the Moose and Class::MOP stuff and
 including Lexical::Persistence as well.  This plugin, which
-is loaded by default, strips out the non-PDL stuff to make the
+is loaded by default, strips out the non-PDLA stuff to make the
 error messages much more concise.
 
 

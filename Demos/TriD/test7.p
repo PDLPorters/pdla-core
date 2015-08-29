@@ -3,8 +3,8 @@ use Carp;
 
 $SIG{__DIE__} = sub {die Carp::longmess(@_);};
 
-use PDL;
-use PDL::Graphics::TriD;
+use PDLA;
+use PDLA::Graphics::TriD;
 
 $nx = 20;
 

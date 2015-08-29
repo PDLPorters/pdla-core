@@ -1,11 +1,11 @@
 use strict;
-use PDL::Types;
+use PDLA::Types;
 
 pp_addpm({At=>'Top'},<<'EOD');
 
 =head1 NAME
 
-PDL::Image2D - Miscellaneous 2D image processing functions
+PDLA::Image2D - Miscellaneous 2D image processing functions
 
 =head1 DESCRIPTION
 
@@ -14,12 +14,12 @@ of anywhere else to put them.
 
 =head1 SYNOPSIS
 
- use PDL::Image2D;
+ use PDLA::Image2D;
 
 =cut
 
-use PDL;  # ensure qsort routine available
-use PDL::Math;
+use PDLA;  # ensure qsort routine available
+use PDLA::Math;
 use Carp;
 
 use strict;
@@ -36,8 +36,8 @@ and Doug Burke (burke@ifa.hawaii.edu).
 
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =cut
@@ -56,8 +56,8 @@ pp_addhdr('
 #define PX(n) ps[2*n]
 #define PY(n) ps[2*n+1]
 
-void polyfill(PDL_Long *image, int wx, int wy, float *ps, int n,
-	PDL_Long col, int *ierr)
+void polyfill(PDLA_Long *image, int wx, int wy, float *ps, int n,
+	PDLA_Long col, int *ierr)
 {
    int ymin, ymax, xmin, xmax, fwrd = 1, i, j, k, nsect;
    int x[MAXSEC], temp, l;
@@ -193,9 +193,9 @@ pp_addhdr('
 
 ');
 
-for (keys %PDL::Types::typehash) {
-    my $ctype = $PDL::Types::typehash{$_}{ctype};
-    my $ppsym = $PDL::Types::typehash{$_}{ppsym};
+for (keys %PDLA::Types::typehash) {
+    my $ctype = $PDLA::Types::typehash{$_}{ctype};
+    my $ppsym = $PDLA::Types::typehash{$_}{ppsym};
 
   pp_addhdr << "EOH";
 
@@ -351,7 +351,7 @@ pp_def('conv2d', Doc=><<'EOD',
 2D convolution of an array with a kernel (smoothing)
 
 For large kernels, using a FFT routine,
-such as L<fftconvolve()|PDL::FFT/fftconvolve()> in C<PDL::FFT>,
+such as L<fftconvolve()|PDLA::FFT/fftconvolve()> in C<PDLA::FFT>,
 will be quicker.
 
 =for usage
@@ -382,13 +382,13 @@ EOD
         OtherPars => 'int opt;',
         PMCode => '
 
-sub PDL::conv2d {
+sub PDLA::conv2d {
    my $opt; $opt = pop @_ if ref($_[$#_]) eq \'HASH\';
    die \'Usage: conv2d( a(m,n), kern(p,q), [o]b(m,n), {Options} )\'
       if $#_<1 || $#_>2;
    my($a,$kern) = @_;
    my $c = $#_ == 2 ? $_[2] : $a->nullcreate;
-   &PDL::_conv2d_int($a,$kern,$c,
+   &PDLA::_conv2d_int($a,$kern,$c,
 	(!(defined $opt && exists $$opt{Boundary}))?0:
 	(($$opt{Boundary} eq "Reflect") +
 	2*($$opt{Boundary} eq "Truncate") +
@@ -398,7 +398,7 @@ sub PDL::conv2d {
 
 ',
         Code =>
-           init_vars( { vars => 'PDL_Double tmp;' } ) .
+           init_vars( { vars => 'PDLA_Double tmp;' } ) .
            init_map("i") .
            init_map("j") .
 '
@@ -423,7 +423,7 @@ sub PDL::conv2d {
            %}
 	   free(mapj+1-q_size); free(mapi+1-p_size);',
         BadCode =>
-           init_vars( { vars => 'PDL_Double tmp; int flag;' } ) .
+           init_vars( { vars => 'PDLA_Double tmp; int flag;' } ) .
            init_map("i") .
            init_map("j") .
 '
@@ -493,7 +493,7 @@ kernel are bad, the output is set bad.',
         OtherPars => 'int opt;',
         PMCode => '
 
-sub PDL::med2d {
+sub PDLA::med2d {
    my $opt; $opt = pop @_ if ref($_[$#_]) eq \'HASH\';
    die \'Usage: med2d( a(m,n), kern(p,q), [o]b(m,n), {Options} )\'
       if $#_<1 || $#_>2;
@@ -501,7 +501,7 @@ sub PDL::med2d {
    croak "med2d: kernel must contain some positive elements.\n"
        if all( $kern <= 0 );
    my $c = $#_ == 2 ? $_[2] : $a->nullcreate;
-   &PDL::_med2d_int($a,$kern,$c,
+   &PDLA::_med2d_int($a,$kern,$c,
 	(!(defined $opt && exists $$opt{Boundary}))?0:
 	(($$opt{Boundary} eq "Reflect") +
 	2*($$opt{Boundary} eq "Truncate") +
@@ -511,8 +511,8 @@ sub PDL::med2d {
 
 ',
         Code =>
-           init_vars( { vars => 'PDL_Double *tmp, kk; int count;',
-                        malloc => 'tmp = malloc(p_size*q_size*sizeof(PDL_Double));',
+           init_vars( { vars => 'PDLA_Double *tmp, kk; int count;',
+                        malloc => 'tmp = malloc(p_size*q_size*sizeof(PDLA_Double));',
                         check => '(tmp==NULL) || ' } ) .
            init_map("i") .
            init_map("j") .
@@ -536,7 +536,7 @@ sub PDL::med2d {
 		       } /* for: i1 */
 		 } /* for: j1 */
 
-                 PDL->qsort_D( tmp, 0, count-1 );
+                 PDLA->qsort_D( tmp, 0, count-1 );
                  $b(m=>i,n=>j) = tmp[(count-1)/2];
 
               } /* for: i */
@@ -545,8 +545,8 @@ sub PDL::med2d {
            free(mapj+1-q_size); free(mapi+1-p_size); free(tmp);
 ',
         BadCode =>
-           init_vars( { vars => 'PDL_Double *tmp, kk, aa; int count, flag;',
-                        malloc => 'tmp = malloc(p_size*q_size*sizeof(PDL_Double));',
+           init_vars( { vars => 'PDLA_Double *tmp, kk, aa; int count, flag;',
+                        malloc => 'tmp = malloc(p_size*q_size*sizeof(PDLA_Double));',
                         check => '(tmp==NULL) || ' } ) .
            init_map("i") .
            init_map("j") .
@@ -578,7 +578,7 @@ sub PDL::med2d {
 		    $SETBAD(b(m=>i,n=>j));
                  } else {
 
-                    PDL->qsort_D( tmp, 0, count-1 );
+                    PDLA->qsort_D( tmp, 0, count-1 );
                     $b(m=>i,n=>j) = tmp[(count-1)/2];
 
 		 }
@@ -625,7 +625,7 @@ EOD
         OtherPars => 'int __p_size; int __q_size; int opt;',
         PMCode => '
 
-sub PDL::med2df {
+sub PDLA::med2df {
    my $opt; $opt = pop @_ if ref($_[$#_]) eq \'HASH\';
    die \'Usage: med2df( a(m,n), [o]b(m,n), p, q, {Options} )\'
       if $#_<2 || $#_>3;
@@ -633,7 +633,7 @@ sub PDL::med2df {
    croak "med2df: kernel must contain some positive elements.\n"
        if $p == 0 && $q == 0;
    my $c = $#_ == 3 ? $_[3] : $a->nullcreate;
-   &PDL::_med2df_int($a,$c,$p,$q,
+   &PDLA::_med2df_int($a,$c,$p,$q,
 	(!(defined $opt && exists $$opt{Boundary}))?0:
 	(($$opt{Boundary} eq "Reflect") +
 	2*($$opt{Boundary} eq "Truncate") +
@@ -913,7 +913,7 @@ bad values, depending on the pattern of bad values in the input piddle.',
       %} /* threadloop */
 
          /* handle bad flag */
-         if ( flag ) $PDLSTATESETBAD(b);
+         if ( flag ) $PDLASTATESETBAD(b);
          ', # BadCode
 );
 
@@ -1064,9 +1064,9 @@ pp_addhdr('
 
 /* Add an equivalence to a list - used by pdl_ccNcompt */
 
-void AddEquiv ( PDL_Long* equiv, PDL_Long i, PDL_Long j) {
+void AddEquiv ( PDLA_Long* equiv, PDLA_Long i, PDLA_Long j) {
 
-   PDL_Long k, tmp;
+   PDLA_Long k, tmp;
 
    if (i==j)
       return;
@@ -1120,15 +1120,15 @@ This is just a front-end to ccNcompt.  See also L<cc8compt|cc8compt>.
 
 =cut
 
-sub PDL::cc8compt{
+sub PDLA::cc8compt{
 return ccNcompt(shift,8);
 }
-*cc8compt = \&PDL::cc8compt;
+*cc8compt = \&PDLA::cc8compt;
 
-sub PDL::cc4compt{
+sub PDLA::cc4compt{
 return ccNcompt(shift,4);
 }
-*cc4compt = \&PDL::cc4compt;
+*cc4compt = \&PDLA::cc4compt;
 
 EOPM
 
@@ -1160,15 +1160,15 @@ where the second parameter specifies the connectivity (4 or 8) of the labeling.
         OtherPars => 'int con',
         Code => '
 
-      PDL_Long i,j,k;
-      PDL_Long newlabel;
-      PDL_Long neighbour[4];
-      PDL_Long nfound;
-      PDL_Long pass,count,next,this;
-      PDL_Long *equiv;
-      PDL_Long i1,j1,i2;
-      PDL_Long nx = $SIZE(m);
-      PDL_Long ny = $SIZE(n);
+      PDLA_Long i,j,k;
+      PDLA_Long newlabel;
+      PDLA_Long neighbour[4];
+      PDLA_Long nfound;
+      PDLA_Long pass,count,next,this;
+      PDLA_Long *equiv;
+      PDLA_Long i1,j1,i2;
+      PDLA_Long nx = $SIZE(m);
+      PDLA_Long ny = $SIZE(n);
 
       if ($COMP(con)!=4 && $COMP(con)!=8)
          barf("In ccNcompt, connectivity must be 4 or 8, you gave %d",$COMP(con));
@@ -1181,8 +1181,8 @@ where the second parameter specifies the connectivity (4 or 8) of the labeling.
       for (pass = 0; pass<2; pass++) {
 
       if (pass==1) {
-         equiv = (PDL_Long*) malloc((newlabel+1)*sizeof(PDL_Long));
-         if (equiv==(PDL_Long*)0)
+         equiv = (PDLA_Long*) malloc((newlabel+1)*sizeof(PDLA_Long));
+         if (equiv==(PDLA_Long*)0)
             barf("Out of memory");
          for(i=0;i<=newlabel;i++)
              equiv[i]=i;
@@ -1214,7 +1214,7 @@ where the second parameter specifies the connectivity (4 or 8) of the labeling.
                   $b(m=>i, n=>j) =  neighbour[0];
                   if (nfound>1 && pass == 1) {  /* Assign equivalents */
                       for(k=1; k<nfound; k++)
-                         AddEquiv( equiv, (PDL_Long)$b(m=>i, n=>j),
+                         AddEquiv( equiv, (PDLA_Long)$b(m=>i, n=>j),
                             neighbour[k] );
                   }
                }
@@ -1248,7 +1248,7 @@ where the second parameter specifies the connectivity (4 or 8) of the labeling.
       /* Now remove equivalences */
 
       for(j=0; j<ny; j++) { for(i=0; i<nx; i++) { /* Loop over image pixels */
-           $b(m=>i, n=>j)   = equiv[ (PDL_Long) $b(m=>i, n=>j)  ] ;
+           $b(m=>i, n=>j)   = equiv[ (PDLA_Long) $b(m=>i, n=>j)  ] ;
       }}
 
       free(equiv); /* Tidy */
@@ -1275,7 +1275,7 @@ and edge points. Set the C<Method> option to change this behaviour.
 =for option
 
 Method   -  Set the method used to determine which points lie in the polygon.
-            => Default - internal PDL algorithm
+            => Default - internal PDLA algorithm
             => pnpoly  - use the L<pnpoly|pnpoly> algorithm
 
 =for example
@@ -1285,29 +1285,29 @@ Method   -  Set the method used to determine which points lie in the polygon.
   polyfill($im,$ps,1,{'Method' =>'pnpoly'});
 
 =cut
-sub PDL::polyfill {
+sub PDLA::polyfill {
 	my $opt;
 	$opt = pop @_ if ref($_[-1]) eq 'HASH';
 	barf('Usage: polyfill($im,$ps,$colour,[\%options])') unless @_==3;
 	my ($im,$ps,$colour) = @_;
 
 	if($opt) {
-		use PDL::Options qw();
-		my $parsed = PDL::Options->new({'Method' => undef});
+		use PDLA::Options qw();
+		my $parsed = PDLA::Options->new({'Method' => undef});
 		$parsed->options($opt);
 		if( $parsed->current->{'Method'} eq 'pnpoly' ) {
-			PDL::pnpolyfill_pp($im,$ps,$colour);
+			PDLA::pnpolyfill_pp($im,$ps,$colour);
 		}
 	}
 	else
 	{
-		PDL::polyfill_pp($im,$ps,$colour);
+		PDLA::polyfill_pp($im,$ps,$colour);
 	}
 	return $im;
 
 }
 
-*polyfill = \&PDL::polyfill;
+*polyfill = \&PDLA::polyfill;
 
 EOPM
 
@@ -1332,7 +1332,7 @@ the output of pnpoly is a mask corresponding to whether or not each
 coordinate (x,y) in the set of test points, {$x,$y}, is in the interior
 of the polygon.  This is the 'points in a polygon' algorithm from
 L<http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html>
-and vectorized for PDL by Karl Glazebrook.
+and vectorized for PDLA by Karl Glazebrook.
 
 =for example
 
@@ -1368,7 +1368,7 @@ and vectorized for PDL by Karl Glazebrook.
 #   By adding the value of $mask we prevent a divide-by-zero since the &
 #   operator does not "short circuit".
 
-sub PDL::pnpoly {
+sub PDLA::pnpoly {
 	barf('Usage: $mask = pnpoly($img, $ps);') unless(@_==2 || @_==4);
  	my ($tx, $ty, $vertx, $verty) = @_;
 
@@ -1377,20 +1377,20 @@ sub PDL::pnpoly {
 		barf("ps must contain pairwise points.\n") unless $ty->getdim(0) == 2;
 
 		# Input mapping:  $img => $tx, $ps => $ty
-		return PDL::pnpoly_pp($tx,$ty);
+		return PDLA::pnpoly_pp($tx,$ty);
 	}
 
-	my $testx = PDL::Core::topdl($tx)->dummy(0);
-	my $testy = PDL::Core::topdl($ty)->dummy(0);
-	my $vertxj = PDL::Core::topdl($vertx)->rotate(1);
-	my $vertyj = PDL::Core::topdl($verty)->rotate(1);
+	my $testx = PDLA::Core::topdl($tx)->dummy(0);
+	my $testy = PDLA::Core::topdl($ty)->dummy(0);
+	my $vertxj = PDLA::Core::topdl($vertx)->rotate(1);
+	my $vertyj = PDLA::Core::topdl($verty)->rotate(1);
 	my $mask = ( ($verty>$testy) == ($vertyj>$testy) );
 	my $c = sumover( ! $mask & ( $testx < ($vertxj-$vertx) * ($testy-$verty)
 	                             / ($vertyj-$verty+$mask) + $vertx) ) % 2;
 	return $c;
 }
 
-*pnpoly = \&PDL::pnpoly;
+*pnpoly = \&PDLA::pnpoly;
 
 EOPM
 
@@ -1414,7 +1414,7 @@ and edge points. Set the C<Method> option to change this behaviour.
 =for option
 
 Method   -  Set the method used to determine which points lie in the polygon.
-            => Default - internal PDL algorithm
+            => Default - internal PDLA algorithm
             => pnpoly  - use the L<pnpoly|pnpoly> algorithm
 
 =for example
@@ -1427,7 +1427,7 @@ Method   -  Set the method used to determine which points lie in the polygon.
 
 =cut
 
-sub PDL::polyfillv :lvalue {
+sub PDLA::polyfillv :lvalue {
 	my $opt;
 	$opt = pop @_ if ref($_[-1]) eq 'HASH';
 	barf('Usage: polyfillv($im,$ps,[\%options])') unless @_==2;
@@ -1436,17 +1436,17 @@ sub PDL::polyfillv :lvalue {
 	barf("ps must contain pairwise points.\n") unless $ps->getdim(0) == 2;
 
 	if($opt) {
-		use PDL::Options qw();
-		my $parsed = PDL::Options->new({'Method' => undef});
+		use PDLA::Options qw();
+		my $parsed = PDLA::Options->new({'Method' => undef});
 		$parsed->options($opt);
-		return $im->where(PDL::pnpoly_pp($im, $ps)) if $parsed->current->{'Method'} eq 'pnpoly';
+		return $im->where(PDLA::pnpoly_pp($im, $ps)) if $parsed->current->{'Method'} eq 'pnpoly';
 	}
 
 	my $msk = zeroes(long,$im->dims);
-	PDL::polyfill_pp($msk, $ps, 1);
+	PDLA::polyfill_pp($msk, $ps, 1);
 	return $im->where($msk);
 }
-*polyfillv = \&PDL::polyfillv;
+*polyfillv = \&PDLA::polyfillv;
 
 EOPM
 
@@ -1484,9 +1484,9 @@ pp_def('rot2d',
 	# when the redodimscode is called
 	# need to fix this!
 	RedoDimsCode => 'int ncols, nrows;
-			if ($PDL(im)->ndims < 2)
+			if ($PDLA(im)->ndims < 2)
 				croak("need > 2d piddle");
-			if (getnewsize($PDL(im)->dims[0],$PDL(im)->dims[1],
+			if (getnewsize($PDLA(im)->dims[0],$PDLA(im)->dims[1],
 				$angle(), &ncols,
 				&nrows) != 0)
 			   croak("error during rotate, wrong angle");
@@ -1518,7 +1518,7 @@ newly created image
 
   ($newcols,$newrows) = rotnewsz $oldn, $oldm, $angle;
 
-L<PDL::Transform|PDL::Transform> offers a more general interface to
+L<PDLA::Transform|PDLA::Transform> offers a more general interface to
 distortions, including rotation, with various types of sampling; but
 rot2d is faster.
 
@@ -1586,7 +1586,7 @@ The first piddle is rescaled to the dimensions of the second
 Nothing useful is returned.
 
 If you want photometric accuracy or automatic FITS header metadata
-tracking, consider using L<PDL::Transform::map|PDL::Transform/map>
+tracking, consider using L<PDLA::Transform::map|PDLA::Transform/map>
 instead: it does these things, at some speed penalty compared to
 rescale2d.
 
@@ -1845,7 +1845,7 @@ sub _svd ($$$) {
     # perform the back substitution
     #
     my $tmp = $y x $svd_u;
-    if ( $PDL::Bad::Status ) {
+    if ( $PDLA::Bad::Status ) {
 	$tmp /= $svd_w->setvaltobad(0.0);
 	$tmp->inplace->setbadtoval(0.0);
     } else {
@@ -1886,7 +1886,7 @@ sub _mkbasis ($$$$) {
 
 } # sub: _mkbasis()
 
-sub PDL::fitwarp2d {
+sub PDLA::fitwarp2d {
     croak "Usage: (\$px,\$py) = fitwarp2d(x(m);y(m);u(m);v(m);\$nf; { options })"
 	if $#_ < 4 or ( $#_ >= 5 and ref($_[5]) ne "HASH" );
 
@@ -1896,7 +1896,7 @@ sub PDL::fitwarp2d {
     my $v  = shift;
     my $nf = shift;
 
-    my $opts = PDL::Options->new( { FIT => ones(byte,$nf,$nf), THRESH => 1.0e-5 } );
+    my $opts = PDLA::Options->new( { FIT => ones(byte,$nf,$nf), THRESH => 1.0e-5 } );
     $opts->options( $_[0] ) if $#_ > -1;
     my $oref = $opts->current();
 
@@ -1913,7 +1913,7 @@ sub PDL::fitwarp2d {
     my $fit = $$oref{FIT};
     my $fit_ndim = $fit->getndims();
     croak "fitwarp2d: FIT option must be sent a (\$nf,\$nf[,2]) element piddle"
-	unless UNIVERSAL::isa($fit,"PDL") and
+	unless UNIVERSAL::isa($fit,"PDLA") and
 	    ($fit_ndim == 2 or ($fit_ndim == 3 and $fit->getdim(2) == 2)) and
 	    $fit->getdim(0) == $nf and $fit->getdim(1) == $nf;
 
@@ -1977,9 +1977,9 @@ sub PDL::fitwarp2d {
 
 } # sub: fitwarp2d
 
-*fitwarp2d = \&PDL::fitwarp2d;
+*fitwarp2d = \&PDLA::fitwarp2d;
 
-sub PDL::applywarp2d {
+sub PDLA::applywarp2d {
     # checks
     croak "Usage: (\$x,\$y) = applywarp2d(px(nf,nf);py(nf,nf);u(m);v(m);)"
 	if $#_ != 3;
@@ -2010,7 +2010,7 @@ sub PDL::applywarp2d {
 
 } # sub: applywarp2d
 
-*applywarp2d = \&PDL::applywarp2d;
+*applywarp2d = \&PDLA::applywarp2d;
 
 ' );
 
@@ -2167,8 +2167,8 @@ pp_def(
     GenericTypes => [ 'F', 'D' ],
         PMCode => '
 
-sub PDL::warp2d {
-    my $opts = PDL::Options->new( { KERNEL => "tanh", NOVAL => 0 } );
+sub PDLA::warp2d {
+    my $opts = PDLA::Options->new( { KERNEL => "tanh", NOVAL => 0 } );
     $opts->options( pop(@_) ) if ref($_[$#_]) eq "HASH";
 
     die "Usage: warp2d( in(m,n), px(np,np); py(np,np); [o] out(m,n), {Options} )"
@@ -2176,13 +2176,13 @@ sub PDL::warp2d {
     my $img = shift;
     my $px  = shift;
     my $py  = shift;
-    my $out = $#_ == -1 ? PDL->null() : shift;
+    my $out = $#_ == -1 ? PDLA->null() : shift;
 
     # safety checks
     my $copt   = $opts->current();
     my $kernel = _check_kernel( $$copt{KERNEL}, "warp2d" );
 
-    &PDL::_warp2d_int( $img, $px, $py, $out, $kernel, $$copt{NOVAL} );
+    &PDLA::_warp2d_int( $img, $px, $py, $out, $kernel, $$copt{NOVAL} );
     return $out;
 }
 
@@ -2368,19 +2368,19 @@ pp_def( 'warp2d_kernel',
     HandleBad => 0,
     PMCode => '
 
-sub PDL::warp2d_kernel ($) {
+sub PDLA::warp2d_kernel ($) {
     my $kernel = _check_kernel( shift, "warp2d_kernel" );
 
     my $nelem = _get_kernel_size();
     my $x     = zeroes( $nelem );
     my $k     = zeroes( $nelem );
 
-    &PDL::_warp2d_kernel_int( $x, $k, $kernel );
+    &PDLA::_warp2d_kernel_int( $x, $k, $kernel );
     return ( $x, $k );
 
 #    return _get_kernel( $kernel );
 }
-*warp2d_kernel = \&PDL::warp2d_kernel;
+*warp2d_kernel = \&PDLA::warp2d_kernel;
 
 ',
      Pars => '[o] x(n); [o] k(n);',

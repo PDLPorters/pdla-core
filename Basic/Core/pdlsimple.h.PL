@@ -4,7 +4,7 @@ use Config;
 use File::Basename qw(&basename &dirname);
 
 require 'Types.pm';
-my $PDL_DATATYPES = PDL::Types::datatypes_header();
+my $PDLA_DATATYPES = PDLA::Types::datatypes_header();
 
 # List explicitly here the variables you want Configure to
 # generate.  Metaconfig only looks for shell variables, so you
@@ -30,11 +30,11 @@ print "Extracting $file (with variable substitutions)\n";
 
 print OUT <<"!GROK!THIS!";
 
-#ifndef __PDL_H
+#ifndef __PDLA_H
 
 /* These are kept automaticallu in sync with pdl.h during perl build */
 
-$PDL_DATATYPES
+$PDLA_DATATYPES
 
 #endif
 
@@ -50,9 +50,9 @@ $PDL_DATATYPES
 struct pdlsimple {
    int     datatype;  /* whether byte/int/float etc. */
    void       *data;  /* Generic pointer to the data block */
-   PDL_Indx  nvals;  /* Number of data values */
-   PDL_Indx  *dims;  /* Array of data dimensions */
-   PDL_Long   ndims;  /* Number of data dimensions */
+   PDLA_Indx  nvals;  /* Number of data values */
+   PDLA_Indx  *dims;  /* Array of data dimensions */
+   PDLA_Long   ndims;  /* Number of data dimensions */
 };
 
 typedef struct pdlsimple pdlsimple;

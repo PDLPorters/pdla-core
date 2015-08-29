@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use PDL;
+use PDLA;
 use Test::More tests => 1;
 
 my $array = [

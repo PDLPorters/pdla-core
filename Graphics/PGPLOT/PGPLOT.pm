@@ -1,10 +1,10 @@
-# Graphics functions for the PDL module, this module
+# Graphics functions for the PDLA module, this module
 # requires the PGPLOT module be previously installed.
 # PGPLOT functions are also made available to the caller.
 
 =head1 NAME
 
-PDL::Graphics::PGPLOT - PGPLOT enhanced interface for PDL
+PDLA::Graphics::PGPLOT - PGPLOT enhanced interface for PDLA
 
 =head1 SYNOPSIS
 
@@ -18,9 +18,9 @@ PDL::Graphics::PGPLOT - PGPLOT enhanced interface for PDL
 
 =head1 DESCRIPTION
 
-C<PDL::Graphics::PGPLOT> is a convenience interface to the PGPLOT commands,
+C<PDLA::Graphics::PGPLOT> is a convenience interface to the PGPLOT commands,
 implemented using the object oriented PGPLOT plotting package in
-L<PDL::Graphics::PGPLOT::Window|PDL::Graphics::PGPLOT::Window>. See the documentation for that package
+L<PDLA::Graphics::PGPLOT::Window|PDLA::Graphics::PGPLOT::Window>. See the documentation for that package
 for in-depth information about the usage of these commands and the options
 they accept.
 
@@ -65,7 +65,7 @@ Device manipulation commands:
 =head1 FUNCTIONS
 
 The following is a list of the functions that are private to this package,
-for the other functions please read the L<PDL::Graphics::PGPLOT::Window|PDL::Graphics::PGPLOT::Window>
+for the other functions please read the L<PDLA::Graphics::PGPLOT::Window|PDLA::Graphics::PGPLOT::Window>
 documentation.
 
 =head2 dev
@@ -88,7 +88,7 @@ C<focus_window> to select the window.
 The result of this command can be modified using options. The options
 recognised are the same as for C<new_window> - which primarily and in
 addition it is possible to set the default values for a window that are
-defined in L<PDL::Graphics::PGPLOTOptions|PDL::Graphics::PGPLOTOptions>, see this for details but see below for
+defined in L<PDLA::Graphics::PGPLOTOptions|PDLA::Graphics::PGPLOTOptions>, see this for details but see below for
 a synopsis.
 
 In addition C<dev> recognises the option C<NewWindow> which allows the
@@ -117,7 +117,7 @@ The width of the plot window in inches
 
 The axis colour to be used as default for plots in this window. In the same
 way it is possible to set the default character size (C<CharSize>) and axis
-and box styles. See L<PDL::Graphics::PGPLOTOptions|PDL::Graphics::PGPLOTOptions> for details.
+and box styles. See L<PDLA::Graphics::PGPLOTOptions|PDLA::Graphics::PGPLOTOptions> for details.
 
 =item WindowName
 
@@ -139,13 +139,13 @@ To open two windows, one small and square, one large and wide:
 
 =cut
 
-package PDL::Graphics::PGPLOT;
+package PDLA::Graphics::PGPLOT;
 
 # Just a plain function exporting package
 
-use PDL::Core qw/:Func :Internal/; # Grab the Core names
-use PDL::Graphics::PGPLOTOptions qw(default_options);
-use PDL::Graphics::PGPLOT::Window;
+use PDLA::Core qw/:Func :Internal/; # Grab the Core names
+use PDLA::Graphics::PGPLOTOptions qw(default_options);
+use PDLA::Graphics::PGPLOT::Window;
 use PGPLOT;
 use Exporter;
 
@@ -171,7 +171,7 @@ use vars qw (@ISA @EXPORT);
 ############################################################################
 
 #############################################################
-# This is a new version of PGPLOT which uses PDL::Options for
+# This is a new version of PGPLOT which uses PDLA::Options for
 # option parsing.
 #############################################################
 
@@ -181,11 +181,11 @@ use vars qw (@ISA @EXPORT);
 #   global options that may or may not affect a particular routine.
 #   The global options are defined here in the start of the code.
 #
-#   This require a minor adjustment to the PDL::Options code since
+#   This require a minor adjustment to the PDLA::Options code since
 #   otherwise we would need to define the global options everywhere.
 #
 #   The actual setting of default parameters is split off in a separate
-#   file PDL::Graphics::PGPLOTOptions - which also exports default_options
+#   file PDLA::Graphics::PGPLOTOptions - which also exports default_options
 #   used below.
 
 # The list of default global opttions, synonyms and translations.
@@ -253,7 +253,7 @@ sub new_window {
   # Now insert the necessary information in the variables above.
   #    barf "Options must be an anonymous hash!\n" if defined($_[0]) && 
   #      ref($_[0]) ne 'HASH';
-  my $win = PDL::Graphics::PGPLOT::Window->new($opt);
+  my $win = PDLA::Graphics::PGPLOT::Window->new($opt);
   my ($name, $id) = ($win->name(), $win->id());
   $_WINDOWS[$id] = $name;
   $_WINDOWNAMES{$name}=$win;
@@ -388,7 +388,7 @@ sub _get_windownumber {
     # This delayed creation of the options variable is for increased speed.
     # Although for dev() this is unnecessary...
     if (!defined($dev_options)) {
-      $dev_options = PDL::Options->new({NewWindow => 0});
+      $dev_options = PDLA::Options->new({NewWindow => 0});
       $dev_options->warnonmissing(0); # Turn off warnings.
     }
 
@@ -448,7 +448,7 @@ sub focus_window {
   my $windownumber = _get_windownumber($name);
   die "No such window ($name)\n" if $windownumber < 0;
   $CW = $_WINDOWNAMES{$_WINDOWS[$windownumber]};
-  print "Window focus switched to Window nr $windownumber ($_WINDOWNAMES{$windownumber})\n" if $PDL::verbose;
+  print "Window focus switched to Window nr $windownumber ($_WINDOWNAMES{$windownumber})\n" if $PDLA::verbose;
   $CW->focus();
 }
 
@@ -474,7 +474,7 @@ sub window_list {
   my @numbers=();
   my @names=();
   foreach (keys %_WINDOWNAMES) {
-    if (ref($_WINDOWNAMES{$_}) eq 'PDL::Graphics::PGPLOT::Window') {
+    if (ref($_WINDOWNAMES{$_}) eq 'PDLA::Graphics::PGPLOT::Window') {
       push @names, $_;
     } else {
       push @numbers, $_;
@@ -534,7 +534,7 @@ sub clear_state {
 
 sub autolog { # for this one we use the class method to set autolog globally
   dev() if !defined($CW);
-  PDL::Graphics::PGPLOT::Window->autolog(@_);
+  PDLA::Graphics::PGPLOT::Window->autolog(@_);
 }
 
 sub text {
@@ -575,8 +575,8 @@ sub transform {
   $CW->transform(@_);
 }
 
-sub hold    { return if !defined($CW); $CW->hold(); print "Graphics on HOLD\n" if $PDL::verbose;};
-sub release { return if !defined($CW); $CW->release(); print "Graphics RELEASED\n" if $PDL::verbose;};
+sub hold    { return if !defined($CW); $CW->hold(); print "Graphics on HOLD\n" if $PDLA::verbose;};
+sub release { return if !defined($CW); $CW->release(); print "Graphics RELEASED\n" if $PDLA::verbose;};
 #sub held { return 0 if !defined($CW); return $CW->held()};
 #sub current_device { return $CW->device(); };
 

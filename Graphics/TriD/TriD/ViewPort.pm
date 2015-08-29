@@ -1,9 +1,9 @@
 #
-# The PDL::Graphics::TriD::ViewPort is already partially defined in
+# The PDLA::Graphics::TriD::ViewPort is already partially defined in
 # the appropriate gdriver (GL or VRML), items defined here are common
 # to both
 # 
-package PDL::Graphics::TriD::ViewPort;
+package PDLA::Graphics::TriD::ViewPort;
 use strict;
 
 sub new {
@@ -15,7 +15,7 @@ sub new {
 	  $this->{Y0} = $y0;
 	  $this->{W} = $w;
 	  $this->{H} = $h;
-	  $this->{DefMaterial} = new PDL::Graphics::TriD::Material;
+	  $this->{DefMaterial} = new PDLA::Graphics::TriD::Material;
 
      return $this;
 }
@@ -64,7 +64,7 @@ sub resize {
 sub add_resizecommand {
 	my($this,$com) = @_;
 	push @{$this->{ResizeCommands}},$com;
-	print "ARC: $this->{W},$this->{H}\n" if($PDL::Graphics::TriD::verbose);
+	print "ARC: $this->{W},$this->{H}\n" if($PDLA::Graphics::TriD::verbose);
 	&$com($this->{W},$this->{H});
 }
 

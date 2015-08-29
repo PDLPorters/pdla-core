@@ -1,33 +1,33 @@
 #
-package PDL::Demos::Cartography_demo;
+package PDLA::Demos::Cartography_demo;
 
-use PDL;
-use PDL::Graphics::PGPLOT::Window;
-use PDL::Transform::Cartography;
+use PDLA;
+use PDLA::Graphics::PGPLOT::Window;
+use PDLA::Transform::Cartography;
 
 use File::Spec;
 
-PDL::Demos::Routines->import();
+PDLA::Demos::Routines->import();
 sub comment($);
 sub act($);
 sub output;
 
 sub run {
-  local($PDL::debug) = 0;
-  local($PDL::verbose) = 0;
+  local($PDLA::debug) = 0;
+  local($PDLA::verbose) = 0;
 
 ##$ENV{PGPLOT_XW_WIDTH}=0.6;
 $ENV{PGPLOT_DEV}=$^O =~ /MSWin32/ ? '/GW' : "/XWIN";
 
 
-  unless( PDL->rpiccan('JPEG') ) {
+  unless( PDLA->rpiccan('JPEG') ) {
     comment q|
-This demo illustrates the PDL::Transform::Cartography module.  
+This demo illustrates the PDLA::Transform::Cartography module.  
 
 It requires PGPLOT and also the ability to read/write JPEG images.
 
 You don't seem to have that ability at the moment -- this is likely
-because you do not have NetPBM installed.  See the man page for PDL::IO::Pic.
+because you do not have NetPBM installed.  See the man page for PDLA::IO::Pic.
 
 I'll continue with the demo anyway, but it will likely crash on the 
 earth_image('day') call on the next screen.
@@ -37,10 +37,10 @@ earth_image('day') call on the next screen.
 
 comment q|
 
- This demo illustrates the PDL::Transform::Cartography module.
+ This demo illustrates the PDLA::Transform::Cartography module.
  It also requires PGPLOT support: you must have PGPLOT installed to run it.
 
- PDL::Transform::Cartography includes a global earth vector coastline map
+ PDLA::Transform::Cartography includes a global earth vector coastline map
  and night and day world image maps, as well as the infrastructure for 
  transforming them to different coordinate systems.
    
@@ -53,8 +53,8 @@ comment q|
 
 act q|
   ### Load the necessary modules 
-    use PDL::Graphics::PGPLOT::Window;
-    use PDL::Transform::Cartography;
+    use PDLA::Graphics::PGPLOT::Window;
+    use PDLA::Transform::Cartography;
     
   ### Get the vector coastline map (and a lon/lat grid), and load the Earth
   ### RGB daytime image -- both of these are built-in to the module. The
@@ -159,7 +159,7 @@ comment q|
 That concludes the basic cartography demo.  Numerous other transforms
 are available.  
 
-Because PDL's cartographic transforms work with in the Transform module
+Because PDLA's cartographic transforms work with in the Transform module
 and are invertible, it's easy to use them both forwards and backwards.
 In particular, the perspective transformation is useful for ingesting 
 scientific image data of the Earth or other planets, and converting to

@@ -27,7 +27,7 @@ OK as all it means is that the important constants are in
 floating point format rather than binary hex.
 The only advantage of the latter is that it is exact, however
 we prefer portability to exactly the same numbers at the
-epsilon level. (After all PDL also uses system routines).
+epsilon level. (After all PDLA also uses system routines).
 
 We can ignore the comments about BIGENDIAN - it is not used
 in any of the .c files we have taken from cephes, **AT LEAST

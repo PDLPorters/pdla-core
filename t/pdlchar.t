@@ -1,13 +1,13 @@
 #!/bin/perl -w
 
-## Test of PDL::Char subclass -- treating byte PDLs as matrices of fixed strings
+## Test of PDLA::Char subclass -- treating byte PDLAs as matrices of fixed strings
 
 use Test::More tests => 6;
-use PDL;
-use PDL::Char;
+use PDLA;
+use PDLA::Char;
 use strict;
 
-my $a = PDL::Char->new ([[['abc', 'def', 'ghi'],['jkl', 'mno', 'qrs']],
+my $a = PDLA::Char->new ([[['abc', 'def', 'ghi'],['jkl', 'mno', 'qrs']],
 		    [['tuv', 'wxy', 'zzz'],['aaa', 'bbb', 'ccc']]]);
 
 my $stringized = $a->string;
@@ -32,13 +32,13 @@ ok( ($a->atstr(2,0,0) eq 'bar'));
 $a->setstr(0,0,1, 'f');
 ok( ($a->atstr(0,0,1) eq "f"));
 $b = sequence (byte, 4, 5) + 99;
-$b = PDL::Char->new($b);
+$b = PDLA::Char->new($b);
 $stringized = $b->string;
 $comp = "[ 'cdef' 'ghij' 'klmn' 'opqr' 'stuv' ] \n";
 ok( ($stringized eq $comp));
 
 # Variable-length string test
-my $varstr = PDL::Char->new( [ ["longstring", "def", "ghi"],["jkl", "mno", 'pqr'] ] );
+my $varstr = PDLA::Char->new( [ ["longstring", "def", "ghi"],["jkl", "mno", 'pqr'] ] );
  
 # Variable Length Strings: Expected Results
 my $comp2 = 

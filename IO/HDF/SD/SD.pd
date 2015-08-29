@@ -2,19 +2,19 @@ pp_addpm({At => Top}, <<'EOD');
 
 =head1 NAME 
 
-PDL::IO::HDF::SD - PDL interface to the HDF4 SD library.
+PDLA::IO::HDF::SD - PDLA interface to the HDF4 SD library.
 
 =head1 SYNOPSIS
 
-  use PDL;
-  use PDL::IO::HDF::SD;
+  use PDLA;
+  use PDLA::IO::HDF::SD;
   
   #      
   # Creating and writing an HDF file
   #
 
   # Create an HDF file:
-  my $hdf = PDL::IO::HDF::SD->new("-test.hdf");
+  my $hdf = PDLA::IO::HDF::SD->new("-test.hdf");
 
   # Define some data
   my $data = sequence(short, 500, 5);
@@ -38,10 +38,10 @@ PDL::IO::HDF::SD - PDL interface to the HDF4 SD library.
   $res = $hdf->SDsettextattr('This is a local text testl!!', "myLText", "myData" );
 
   # Set a global value attribute (you can put all values you want)
-  $res = $hdf->SDsetvalueattr( PDL::short( 20 ), "myGValue");
+  $res = $hdf->SDsetvalueattr( PDLA::short( 20 ), "myGValue");
 
   # Set a local value attribute (you can put all values you want)
-  $res = $hdf->SDsetvalueattr( PDL::long( [20, 15, 36] ), "myLValues", "myData" );
+  $res = $hdf->SDsetvalueattr( PDLA::long( [20, 15, 36] ), "myLValues", "myData" );
 
   # Close the file
   $hdf->close();
@@ -51,7 +51,7 @@ PDL::IO::HDF::SD - PDL interface to the HDF4 SD library.
   #
 
   # Open an HDF file in read only mode:
-  my $hdf = PDL::IO::HDF::SD->new("test.hdf");
+  my $hdf = PDLA::IO::HDF::SD->new("test.hdf");
 
   # Get a list of all datasets:
   my @dataset_list = $hdf->SDgetvariablename();
@@ -65,13 +65,13 @@ PDL::IO::HDF::SD - PDL interface to the HDF4 SD library.
   # Get the value of local attribute for a dataset:
   my $value = $hdf->SDgetattribut("myLText","myData");
 
-  # Get a PDL var of the entire dataset 'myData':
+  # Get a PDLA var of the entire dataset 'myData':
   my $data = $hdf->SDget("myData");
 
   # Apply the scale factor of 'myData'
   $data *= $hdf->SDgetscalefactor("myData");
 
-  # Get the fill value and fill the PDL var in with BAD:
+  # Get the fill value and fill the PDLA var in with BAD:
   $data->inplace->setvaltobad( $hdf->SDgetfillvalue("myData") );
 
   # Get the valid range of a dataset:
@@ -108,14 +108,14 @@ pp_addhdr(<<'EOH');
 #include <mfhdf.h>
 #include <string.h>
 
-#define PDLchar pdl
-#define PDLuchar pdl
-#define PDLshort pdl
-#define PDLint pdl
-#define PDLlong pdl
-#define PDLfloat pdl
-#define PDLdouble pdl
-#define PDLvoid pdl
+#define PDLAchar pdl
+#define PDLAuchar pdl
+#define PDLAshort pdl
+#define PDLAint pdl
+#define PDLAlong pdl
+#define PDLAfloat pdl
+#define PDLAdouble pdl
+#define PDLAvoid pdl
 #define uchar unsigned char
 
 
@@ -142,20 +142,20 @@ int SDstart(const char *filename, int access_mode);
 int SDfileinfo(int sd_id, int *ndatasets, int *global_attr);
 int SDattrinfo(int s_id, int attr_index, char *attr_name, int *number_type, int *count);
 #int SDreadattr(int s_id, int attr_index, void *data);
-int SDreadattr(int s_id, int attr_index, PDLvoid *data);
+int SDreadattr(int s_id, int attr_index, PDLAvoid *data);
 int SDgetinfo(int sds_id, char *sds_name, int *rank, int *dimsizes, int *number_type, int *nattrs);
 int SDselect(int sd_id, int index);
 int SDgetdimid(int sds_id, int dim_number);
 int SDdiminfo(int dim_id, char *name, int *count, int *number_type, int *nattrs);
 int SDnametoindex(int sd_id, const char *sds_name);
 #int SDreaddata(int sds_id, int *start, int *stride, int *edge, void *buffer);
-int SDreaddata(int sds_id, int *start, int *stride, int *edge, PDLvoid *buffer);
+int SDreaddata(int sds_id, int *start, int *stride, int *edge, PDLAvoid *buffer);
 #int SDsetfillvalue(int sds_id, const void *fill_val);
-int SDsetfillvalue(int sds_id, const PDLvoid *fill_val);
+int SDsetfillvalue(int sds_id, const PDLAvoid *fill_val);
 #int SDsetrange(int sds_id, const void *max, const void *min);
-int SDsetrange(int sds_id, const PDLvoid *max, const PDLvoid *min);
+int SDsetrange(int sds_id, const PDLAvoid *max, const PDLAvoid *min);
 #int SDwritedata(int sds_id, const int *start, const int *stride, const int *edge, const void *data);
-int SDwritedata(int sds_id, const int *start, const int *stride, const int *edge, const PDLvoid *data);
+int SDwritedata(int sds_id, const int *start, const int *stride, const int *edge, const PDLAvoid *data);
 int SDsetexternalfile(int sds_id, const char *filename, int offset);
 int SDsetdimstrs(int dim_id, const char *label, const char *unit, const char *format);
 int SDsetdimscale(int dim_id, int count, int number_type, const void *data);
@@ -181,7 +181,7 @@ int SDendaccess(int sds_id);
 int SDend(int sd_id);
 int SDcreate(int sd_id, const char *name, int number_type, int rank, const int *dimsizes);
 
-int SDwritechunk(int sds_id, const int* origin, const PDLvoid *data);
+int SDwritechunk(int sds_id, const int* origin, const PDLAvoid *data);
 int SDsetchunkcache(int sds_id, int maxcache, int flag);
 
 EODEF
@@ -207,10 +207,10 @@ _SDgetcal(sds_id, cal, cal_err, offset, offset_err, number_type)
             RETVAL
 
 void
-UnpackSBigEndianPDL(size, buff, p)
+UnpackSBigEndianPDLA(size, buff, p)
                 int                size
                 unsigned char      * buff
-                PDLint             * p
+                PDLAint             * p
         CODE:
                 int                i, INTtmp;
                 unsigned char      bch1, bch2;
@@ -356,15 +356,15 @@ ENDXS
  
 pp_addpm(<<'EOPM');
 
-use PDL::Primitive;
-use PDL::Basic;
+use PDLA::Primitive;
+use PDLA::Basic;
 
-use PDL::IO::HDF;
+use PDLA::IO::HDF;
 
 require POSIX;
 
 sub _pkg_name 
-    { return "PDL::IO::HDF::SD::" . shift() . "()"; }
+    { return "PDLA::IO::HDF::SD::" . shift() . "()"; }
 
 # Convert a byte to a char:
 sub Byte2Char
@@ -398,7 +398,7 @@ sub Byte2Char
 
 =for example
 
-    my $hdf = PDL::IO::HDF::SD->new("file.hdf");
+    my $hdf = PDLA::IO::HDF::SD->new("file.hdf");
 
 =cut
 
@@ -418,23 +418,23 @@ sub new
     if (substr($filename, 0, 1) eq '+')
     {   # open for writing
         $filename = substr ($filename, 1);      # chop off +
-        $self->{ACCESS_MODE} = PDL::IO::HDF->DFACC_WRITE + PDL::IO::HDF->DFACC_READ;
+        $self->{ACCESS_MODE} = PDLA::IO::HDF->DFACC_WRITE + PDLA::IO::HDF->DFACC_READ;
     }
     if (substr($filename, 0, 1) eq '-')
     {   # Create new file
         $filename = substr ($filename, 1);      # chop off -
         print "$sub: Creating HDF File $filename\n"
             if $debug;
-        $self->{ACCESS_MODE} = PDL::IO::HDF->DFACC_CREATE;
-        $self->{SDID} = PDL::IO::HDF::SD::_SDstart( $filename, $self->{ACCESS_MODE} );
-        my $res = PDL::IO::HDF::SD::_SDend( $self->{SDID} );
+        $self->{ACCESS_MODE} = PDLA::IO::HDF->DFACC_CREATE;
+        $self->{SDID} = PDLA::IO::HDF::SD::_SDstart( $filename, $self->{ACCESS_MODE} );
+        my $res = PDLA::IO::HDF::SD::_SDend( $self->{SDID} );
         die "$sub: _ERR::Create\n" 
-            if( ($self->{SDID} == PDL::IO::HDF->FAIL ) || ( $res == PDL::IO::HDF->FAIL ));
-        $self->{ACCESS_MODE} = PDL::IO::HDF->DFACC_WRITE + PDL::IO::HDF->DFACC_READ;
+            if( ($self->{SDID} == PDLA::IO::HDF->FAIL ) || ( $res == PDLA::IO::HDF->FAIL ));
+        $self->{ACCESS_MODE} = PDLA::IO::HDF->DFACC_WRITE + PDLA::IO::HDF->DFACC_READ;
     }
     unless( defined( $self->{ACCESS_MODE} )  )
     {   # Default to Read-only access:
-        $self->{ACCESS_MODE} = PDL::IO::HDF->DFACC_READ; 
+        $self->{ACCESS_MODE} = PDLA::IO::HDF->DFACC_READ; 
     }
     $self->{FILE_NAME} = $filename;
 
@@ -442,38 +442,38 @@ sub new
     print "$sub: Loading HDF File $self->{FILE_NAME}\n"
         if $debug;
     
-    $self->{SDID} = PDL::IO::HDF::SD::_SDstart( $self->{FILE_NAME}, $self->{ACCESS_MODE} );
+    $self->{SDID} = PDLA::IO::HDF::SD::_SDstart( $self->{FILE_NAME}, $self->{ACCESS_MODE} );
     die "$sub: _ERR::SDstart\n"
-        if( $self->{SDID} == PDL::IO::HDF->FAIL );
+        if( $self->{SDID} == PDLA::IO::HDF->FAIL );
 
     my $num_datasets = -999;
     my $num_global_attrs = -999;
     my $res = _SDfileinfo( $self->{SDID}, $num_datasets, $num_global_attrs );
     die "$sub: ** sdFileInfo **\n" 
-        if($res == PDL::IO::HDF->FAIL);
+        if($res == PDLA::IO::HDF->FAIL);
     
     foreach my $i ( 0 .. $num_global_attrs-1 )
     {
         print "$sub: Loading Global Attribute #$i\n"
             if $debug;
     
-        my $attrname = " "x(PDL::IO::HDF->MAX_NC_NAME+1);
+        my $attrname = " "x(PDLA::IO::HDF->MAX_NC_NAME+1);
         my $type = 0;
         my $count = 0;
         
         $res = _SDattrinfo( $self->{SDID}, $i, $attrname, $type, $count );
         die "$sub: ** sdAttrInfo **\n"
-            if($res == PDL::IO::HDF->FAIL);
+            if($res == PDLA::IO::HDF->FAIL);
         
         print "$sub: \$attrname = \'$attrname\'\n"
             if $debug;
 
-        $self->{GLOBATTR}->{$attrname} = zeroes( $PDL::IO::HDF::SDinvtypeTMAP2->{$type}, $count );
+        $self->{GLOBATTR}->{$attrname} = zeroes( $PDLA::IO::HDF::SDinvtypeTMAP2->{$type}, $count );
         $res = _SDreadattr( $self->{SDID}, $i, $self->{GLOBATTR}->{$attrname} );
         die "$sub: ** sdReadAttr **\n"
-            if($res == PDL::IO::HDF->FAIL);
+            if($res == PDLA::IO::HDF->FAIL);
         
-        if( $type == PDL::IO::HDF->DFNT_CHAR ) 
+        if( $type == PDLA::IO::HDF->DFNT_CHAR ) 
         { 
             $self->{GLOBATTR}->{$attrname} = Byte2Char( $self->{GLOBATTR}->{$attrname} );
         }
@@ -487,17 +487,17 @@ sub new
     
         my $sds_id = _SDselect( $self->{SDID}, $i );
         die "$sub: ** sdSelect **\n"
-            if($sds_id == PDL::IO::HDF->FAIL);
+            if($sds_id == PDLA::IO::HDF->FAIL);
 
-        my $name = " "x(PDL::IO::HDF->MAX_NC_NAME+1);
+        my $name = " "x(PDLA::IO::HDF->MAX_NC_NAME+1);
         my $rank = 0;
-        my $dimsize = " "x( (4 * PDL::IO::HDF->MAX_VAR_DIMS) + 1 );
+        my $dimsize = " "x( (4 * PDLA::IO::HDF->MAX_VAR_DIMS) + 1 );
         my $numtype = 0;
         my $num_attrs = 0;
         
         $res = _SDgetinfo($sds_id, $name, $rank, $dimsize, $numtype, $num_attrs);
         die "$sub: ** sdGetInfo **\n"
-            if($res == PDL::IO::HDF->FAIL);
+            if($res == PDLA::IO::HDF->FAIL);
             
         print "$sub: \$name = \'$name\'\n"
             if $debug;
@@ -517,16 +517,16 @@ sub new
                 
             my $dim_id = _SDgetdimid( $sds_id, $j );
             die "$sub: ** sdGetDimId **\n"
-                if($dim_id == PDL::IO::HDF->FAIL);
+                if($dim_id == PDLA::IO::HDF->FAIL);
             
-            my $dimname = " "x(PDL::IO::HDF->MAX_NC_NAME+1);
+            my $dimname = " "x(PDLA::IO::HDF->MAX_NC_NAME+1);
             my $size = 0;
             my $num_type = 0;
             my $num_dim_attrs = 0;
             
             $res = _SDdiminfo( $dim_id, $dimname, $size, $num_type, $num_dim_attrs );
             die "$sub: ** sdDimInfo **\n"
-                if($res == PDL::IO::HDF->FAIL);
+                if($res == PDLA::IO::HDF->FAIL);
                 
             print "$sub: \$dimname = \'$dimname\'\n"
                 if $debug;
@@ -550,26 +550,26 @@ sub new
             print "$sub: Loading SDS($i) Attribute #$j\n"
                 if $debug;
         
-            my $attrname = " "x(PDL::IO::HDF->MAX_NC_NAME+1);
+            my $attrname = " "x(PDLA::IO::HDF->MAX_NC_NAME+1);
             my $type = 0;
             my $count = 0;
             
             $res = _SDattrinfo( $sds_id, $j, $attrname, $type, $count);
             die "$sub: ** sdAttrInfo **\n"
-                if($res == PDL::IO::HDF->FAIL);
+                if($res == PDLA::IO::HDF->FAIL);
             
             print "$sub: \$attrname = \'$attrname\'\n"
                 if $debug;
 
             $self->{DATASET}->{$name}->{ATTRS}->{$attrname} = 
-                zeroes( $PDL::IO::HDF::SDinvtypeTMAP2->{$type}, $count );
+                zeroes( $PDLA::IO::HDF::SDinvtypeTMAP2->{$type}, $count );
             
             $res = _SDreadattr( $sds_id, $j, $self->{DATASET}->{$name}->{ATTRS}->{$attrname} );
             die "$sub: ** sdReadAttr **\n"
-                if($res == PDL::IO::HDF->FAIL);
+                if($res == PDLA::IO::HDF->FAIL);
 
             # FIXME: This should be a constant
-            if( $type == PDL::IO::HDF->DFNT_CHAR ) 
+            if( $type == PDLA::IO::HDF->DFNT_CHAR ) 
             { 
                 $self->{DATASET}->{$name}->{ATTRS}->{$attrname} = 
                     Byte2Char( $self->{DATASET}->{$name}->{ATTRS}->{$attrname} );
@@ -1028,12 +1028,12 @@ sub SDgetcal
         3 (optional): The size array ref of the slice (HDF calls this the 'edge').
         4 (optional): The stride array ref of the slice.
     
-    Returns a PDL of data if ok, PDL::null on error.
+    Returns a PDLA of data if ok, PDLA::null on error.
     
     If the slice arguements are not given, this function will read the entire
         SDS from the file.
     
-    The type of the returned PDL variable is the PDL equivalent of what was
+    The type of the returned PDLA variable is the PDLA equivalent of what was
         stored in the HDF file.
 
 =for example
@@ -1080,10 +1080,10 @@ sub SDget
     #    ."]=>$c_start end:[".join(',',@$end)
     #    ."]=>$c_end stride:[".join(',',@$stride)."]=>$c_stride\n";
 
-    my $buff = zeroes( $PDL::IO::HDF::SDinvtypeTMAP2->{$self->{DATASET}->{$name}->{TYPE}}, reverse @$end );
+    my $buff = zeroes( $PDLA::IO::HDF::SDinvtypeTMAP2->{$self->{DATASET}->{$name}->{TYPE}}, reverse @$end );
 
     my $res = _SDreaddata( $self->{DATASET}->{$name}->{SDSID}, $c_start, $c_stride, $c_end, $buff );
-    if($res == PDL::IO::HDF->FAIL)
+    if($res == PDLA::IO::HDF->FAIL)
     {
         $buff = null;
         print "$sub: Error returned from _SDreaddata()!\n";
@@ -1120,7 +1120,7 @@ sub SDsetfillvalue
     return( undef )
         unless defined( $self->{DATASET}->{$name} );
     
-    $value = &{$PDL::IO::HDF::SDinvtypeTMAP->{$self->{DATASET}->{$name}->{TYPE}}}($value);
+    $value = &{$PDLA::IO::HDF::SDinvtypeTMAP->{$self->{DATASET}->{$name}->{TYPE}}}($value);
     $self->{DATASET}->{$name}->{ATTRS}->{_FillValue} = $value;
 
     return( _SDsetfillvalue($self->{DATASET}->{$name}->{SDSID}, $value) + 1 );
@@ -1154,9 +1154,9 @@ sub SDsetrange
     return undef
         unless defined( $self->{DATASET}->{$name} );
 
-    my $min = &{$PDL::IO::HDF::SDinvtypeTMAP->{$self->{DATASET}->{$name}->{TYPE}}}($$range[0]);
-    my $max = &{$PDL::IO::HDF::SDinvtypeTMAP->{$self->{DATASET}->{$name}->{TYPE}}}($$range[1]);
-    $range = &{$PDL::IO::HDF::SDinvtypeTMAP->{$self->{DATASET}->{$name}->{TYPE}}}($range);
+    my $min = &{$PDLA::IO::HDF::SDinvtypeTMAP->{$self->{DATASET}->{$name}->{TYPE}}}($$range[0]);
+    my $max = &{$PDLA::IO::HDF::SDinvtypeTMAP->{$self->{DATASET}->{$name}->{TYPE}}}($$range[1]);
+    $range = &{$PDLA::IO::HDF::SDinvtypeTMAP->{$self->{DATASET}->{$name}->{TYPE}}}($range);
     $self->{DATASET}->{$name}->{ATTRS}->{valid_range} = $range;
     
     return( _SDsetrange($self->{DATASET}->{$name}->{SDSID}, $max, $min) + 1 );
@@ -1213,7 +1213,7 @@ sub SDsetcal
     $self->{DATASET}->{$name}->{ATTRS}->{scale_factor_err} = shift || 0;
     $self->{DATASET}->{$name}->{ATTRS}->{add_offset} = shift || 0;
     $self->{DATASET}->{$name}->{ATTRS}->{add_offset_err} = shift || 0;
-    # PDL_Double is the default type:
+    # PDLA_Double is the default type:
     $self->{DATASET}->{$name}->{ATTRS}->{calibrated_nt} = shift || 6; 
 
     return( 
@@ -1354,13 +1354,13 @@ sub SDsetvalueattr
         $self->{DATASET}->{$dataset}->{ATTRS}->{$name} = $values;
         return( _SDsetattr_values( 
                     $self->{DATASET}->{$dataset}->{SDSID}, $name, $values, 
-                    $values->nelem(), $PDL::IO::HDF::SDtypeTMAP->{$values->get_datatype()} ) + 1); 
+                    $values->nelem(), $PDLA::IO::HDF::SDtypeTMAP->{$values->get_datatype()} ) + 1); 
     }
     # Implied else it's a global attribute:
     $self->{GLOBATTR}->{$name} = $values;
     return( _SDsetattr_values( 
                 $self->{SDID}, $name, $values, 
-                $values->nelem(), $PDL::IO::HDF::SDtypeTMAP->{$values->get_datatype()} ) + 1);
+                $values->nelem(), $PDLA::IO::HDF::SDtypeTMAP->{$values->get_datatype()} ) + 1);
 } # End of SDsetvalueattr()...
 
 =head2 SDsetdimname
@@ -1431,7 +1431,7 @@ sub SDsetdimname
 
     Returns true on success, undef on failure.
     
-    The datatype of the SDS in the HDF file will match the PDL equivalent as 
+    The datatype of the SDS in the HDF file will match the PDLA equivalent as 
         much as possible.
 
 =for example
@@ -1464,11 +1464,11 @@ sub SDput
     #
     unless ( defined( $self->{DATASET}->{$name} ) )
     {
-        my $hdf_type = $PDL::IO::HDF::SDtypeTMAP->{$data->get_datatype()};
+        my $hdf_type = $PDLA::IO::HDF::SDtypeTMAP->{$data->get_datatype()};
         
         my $res = _SDcreate( $self->{SDID}, $name, $hdf_type, $rank, $dimsize );
         return( undef )
-            if ($res == PDL::IO::HDF->FAIL);
+            if ($res == PDLA::IO::HDF->FAIL);
         
         $self->{DATASET}->{$name}->{SDSID} = $res;
         $self->{DATASET}->{$name}->{TYPE} = $hdf_type;
@@ -1498,11 +1498,11 @@ sub SDput
             
             $res = _SDsetchunk( $self->{DATASET}->{$name}->{SDSID}, $rank, $chunk_lengths );
             return( undef )
-                if ($res == PDL::IO::HDF->FAIL);
+                if ($res == PDLA::IO::HDF->FAIL);
         
             $res = _SDsetchunkcache( $self->{DATASET}->{$name}->{SDSID}, $total_chunks, 0);
             return( undef )
-                if ($res == PDL::IO::HDF->FAIL);
+                if ($res == PDLA::IO::HDF->FAIL);
         } # End of chunking section...
     } # End of dataset creation...
 
@@ -1528,29 +1528,29 @@ sub SDput
 
     $res = _SDwritedata( $self->{DATASET}->{$name}->{SDSID}, $start, $stride, $dimsize, $data );
     return( undef )
-        if ($res == PDL::IO::HDF->FAIL);
+        if ($res == PDLA::IO::HDF->FAIL);
 
     foreach my $j ( 0 .. $rank-1 )
     {
         # Probably not a good way to bail:
         my $dim_id = _SDgetdimid( $self->{DATASET}->{$name}->{SDSID}, $j );
         return( undef )
-            if( $dim_id == PDL::IO::HDF->FAIL);
+            if( $dim_id == PDLA::IO::HDF->FAIL);
 
         if( defined( @$dimname_p[$j] ) )
         {
             $res = _SDsetdimname( $dim_id, @$dimname_p[$j] ); 
             return( undef )
-                if( $res == PDL::IO::HDF->FAIL );
+                if( $res == PDLA::IO::HDF->FAIL );
         }
         
-        my $dimname = " "x(PDL::IO::HDF->MAX_NC_NAME);
+        my $dimname = " "x(PDLA::IO::HDF->MAX_NC_NAME);
         my $size = 0;
         my $num_dim_attrs = 0;
         $res = _SDdiminfo( $dim_id, $dimname, $size, $numtype=0, $num_dim_attrs);
         
         return( undef )
-            if ($res == PDL::IO::HDF->FAIL);
+            if ($res == PDLA::IO::HDF->FAIL);
         $self->{DATASET}->{$name}->{DIMS}->{$j}->{NAME} = $dimname;
         $self->{DATASET}->{$name}->{DIMS}->{$j}->{SIZE} = $size;
         $self->{DATASET}->{$name}->{DIMS}->{$j}->{DIMID} = $dim_id;
@@ -1609,7 +1609,7 @@ contribs of Olivier Archer olivier.archer@ifremer.fr
 
 =head1 SEE ALSO
 
-perl(1), PDL(1), PDL::IO::HDF(1).
+perl(1), PDLA(1), PDLA::IO::HDF(1).
 
 =cut
 

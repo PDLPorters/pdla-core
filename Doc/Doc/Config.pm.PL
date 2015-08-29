@@ -28,15 +28,15 @@ chmod 0775, $file;
 print OUT "# automatically built from ".basename($0)."\n";
 print OUT "# don't modify, all changes will be lost !!!!\n";
 print OUT <<'!NO!SUBS!';
-package PDL::Doc::Config;
+package PDLA::Doc::Config;
 
 !NO!SUBS!
 
 print OUT <<"EOC";
-\$PDL::Doc::pager = \'$Config{'pager'}\';
-\$PDL::Doc::pager = \$ENV{PAGER} if defined \$ENV{PAGER};
-\$PDL::Doc::pager = \$ENV{PERLDOC_PAGER} if defined \$ENV{PERLDOC_PAGER};
-\$PDL::Doc::DefaultFile = \'$Config{'man1direxp'}\';
+\$PDLA::Doc::pager = \'$Config{'pager'}\';
+\$PDLA::Doc::pager = \$ENV{PAGER} if defined \$ENV{PAGER};
+\$PDLA::Doc::pager = \$ENV{PERLDOC_PAGER} if defined \$ENV{PERLDOC_PAGER};
+\$PDLA::Doc::DefaultFile = \'$Config{'man1direxp'}\';
 
 1;
 

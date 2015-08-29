@@ -1,5 +1,5 @@
 This file has some information on how to get
-access to the latest PDL sources (mainly of
+access to the latest PDLA sources (mainly of
 interest for potential developers). This should
 not be confused with the latest public release
 which will always be available from CPAN (if you
@@ -8,7 +8,7 @@ don't know what that is check the FAQ).
 Public Git repository at sourceforge.net
 --------------------------------------------
 
-From version PDL-2.4.4 onwards the source
+From version PDLA-2.4.4 onwards the source
 distribution is in a publicly accessible Git
 repository. The project is hosted at the
 sourceforge site at
@@ -19,7 +19,7 @@ Starting from the above URL you will find
 directions on how to check out the current
 sources, browse the Git repository online, etc.
 
-If you would like to actively contribute to PDL
+If you would like to actively contribute to PDLA
 development don't hesitate to contact one of the
 project admins (listed at the above URL) to apply
 for write access to the repository. We strongly
@@ -43,11 +43,11 @@ and Git Magic at
   http://www-cs-students.stanford.edu/~blynn/gitmagic/
 
 
-PDL Developer Guidelines:
+PDLA Developer Guidelines:
 -------------------------
 
 The following guidelines are for any developer that has
-access to the PDL Git repository.
+access to the PDLA Git repository.
 
 1) Before committing a change with new files to the repository
    you should update:
@@ -56,7 +56,7 @@ access to the PDL Git repository.
     - MANIFEST.SKIP (if applicable)
 
 2) Make sure you add a test case in the 't' directory for any
-   significant additional capability you add to PDL.  Please
+   significant additional capability you add to PDLA.  Please
    use Test::More or one the of the Test modules available via
    perl modules rather than doing-it-yourself!
    
@@ -66,9 +66,9 @@ access to the PDL Git repository.
     - See Basic/Core/Core.pm for an example of including POD
       documentation in .pm files. 
     - See Basic/Core/Primitive/Primitive.pd for an example of 
-      including POD documentation in PDL .pd files.
-    - read the documentation in PDL::Doc for a detailed description of
-      the PDL documentation conventions.
+      including POD documentation in PDLA .pd files.
+    - read the documentation in PDLA::Doc for a detailed description of
+      the PDLA documentation conventions.
 
 4) Don't commit before you successfully built and passed 'make test'.
  
@@ -78,11 +78,11 @@ access to the PDL Git repository.
    should be able to help.)
   
 
-PDL Developer Notes:
+PDLA Developer Notes:
 --------------------
 
 A (small) collection of random musings to note if you feel the need to
-improve or add to PDL (please do):
+improve or add to PDLA (please do):
 
 *) git supports file-by-file commits so it is helpful to commit
    your changes to git a little at a time where each commit
@@ -93,37 +93,37 @@ improve or add to PDL (please do):
 *) Need help?
 
 See the pdl-devel email list; details for subscription and access to
-the archives can be found on the PDL web page at:
+the archives can be found on the PDLA web page at:
 
   http://pdl.perl.org/?page=mailing-lists
  
-*) Access to PDL's configuration
+*) Access to PDLA's configuration
 
-If you need to access the configuration for PDL then use the
-%PDL::Config variable. Prior to 2.4.1 this was a mess since you
-had to use %PDL_CONFIG within Makefile.PL and PDL::Config from
+If you need to access the configuration for PDLA then use the
+%PDLA::Config variable. Prior to 2.4.1 this was a mess since you
+had to use %PDLA_CONFIG within Makefile.PL and PDLA::Config from
 *.pm/tests. The build process has been changed (I hesitate to say
-"cleaned up" ;) to just use %PDL::Config consistently throughout.
+"cleaned up" ;) to just use %PDLA::Config consistently throughout.
 
-- %PDL::Config is automatically available to you when you are in a
-  Makefile.PL within the PDL distribution. You can change the hash
-  and these changes will be stored in the PDL::Config module. You
+- %PDLA::Config is automatically available to you when you are in a
+  Makefile.PL within the PDLA distribution. You can change the hash
+  and these changes will be stored in the PDLA::Config module. You
   should only change values when it makes sense (e.g. if the user
   has specified that a module should be built but you find out this
   is not possible).
 
-- use PDL; now loads PDL::Config by default
+- use PDLA; now loads PDLA::Config by default
 
-- Otherwise you can say 'use PDL::Config;' or - perhaps something like
+- Otherwise you can say 'use PDLA::Config;' or - perhaps something like
     eval 'require "' . whereami_any() . '/Core/Config.pm";';
-  where whereami_any() is from PDL::Core::Dev;
+  where whereami_any() is from PDLA::Core::Dev;
 
 *) Location of temporary files
 
-Please use $PDL::Config{TEMPDIR} for the directory in which to
+Please use $PDLA::Config{TEMPDIR} for the directory in which to
 place temporary files (e.g. when IO::File::new_tmpfile() is not
 appropriate). This will make it easier for distributions to package
-PDL since there will only be one place they need to change if the
+PDLA since there will only be one place they need to change if the
 default value causes problems.
 
 This *includes* test cases as well as for Makefile.PL's!
@@ -131,21 +131,21 @@ This *includes* test cases as well as for Makefile.PL's!
   
 
 -------------------------------------------------------------
-Notes on transferring an external PDL module to the PDL
-        source tree for distribution with PDL.
+Notes on transferring an external PDLA module to the PDLA
+        source tree for distribution with PDLA.
 -------------------------------------------------------------
 
-Suppose you have developed a PDL module that resides in a
-standalone source tree. You typically will need to have PDL
+Suppose you have developed a PDLA module that resides in a
+standalone source tree. You typically will need to have PDLA
 installed on your system before you can build this module.
 
-If you wish to migrate the module into the PDL distribution
+If you wish to migrate the module into the PDLA distribution
 you will need to make certain changes to the module source
-in order to built in the PDL distribution. You will need to
-removed dependecies on a pre-existing PDL installation for
+in order to built in the PDLA distribution. You will need to
+removed dependecies on a pre-existing PDLA installation for
 configuration and build of your module. This is because as
-part of the PDL distribution, it is possible that PDL has
-never been installed. Build processes based on PDL will then
+part of the PDLA distribution, it is possible that PDLA has
+never been installed. Build processes based on PDLA will then
 fail.
 
 Following is some specific advice that can help you do this.
@@ -157,38 +157,38 @@ Changes that must be made to files in your module source tree
 if you are building the module from a .pd file :
 
 Makefile.PL:
--- You must remove the line 'use PDL::Core::Dev;'.
+-- You must remove the line 'use PDLA::Core::Dev;'.
 
--- The line 'PDL::Core::Dev->import();' must be present
+-- The line 'PDLA::Core::Dev->import();' must be present
 
 -- You must change the call from 'pdlpp_postamble' to a call to
    'pdlpp_postamble_int' (with the same arguments.)
 
--- It seems that most modules in the PDL source use 
+-- It seems that most modules in the PDLA source use 
    VERSION_FROM => '../../Basic/Core/Version.pm',
    but not all of them in order that their version tracks
-   the PDL release version.  It is possible to maintain
-   separate versioning even within the PDL source tree but
+   the PDLA release version.  It is possible to maintain
+   separate versioning even within the PDLA source tree but
    it may make things confusing.
 
 Make certain that you make these changes to each 'Makefile.PL' in
 your source tree.
 
 
-Changes to the existing PDL source tree:
+Changes to the existing PDLA source tree:
 
 -- Edit the 'Makefile.PL' in the directory above your module source
    to add your module directory name to
    'DIR => [ qw/Module1 AnotherModule / ]'.
 
--- Add your test files (.t files) to the PDL/t directory renaming if
+-- Add your test files (.t files) to the PDLA/t directory renaming if
    required to avoid namespace conflicts.
 
 -- Does your module depend on any libraries or external
    programs ?  If so, doocument the required programs with version
-   numbers in PDL/DEPENDENCIES and add the PREREQ_* option to the
+   numbers in PDLA/DEPENDENCIES and add the PREREQ_* option to the
    main Makefile.PL if required.
 
 -- If your module requires external libraries or header files,
    add a section to perldl.conf.  The hash values with be available
-   in your module's 'Makefile.PL' as $PDL::Config{WITH_MYMODULE},...
+   in your module's 'Makefile.PL' as $PDLA::Config{WITH_MYMODULE},...

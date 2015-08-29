@@ -2,18 +2,18 @@
 
 =head1 NAME
 
-PDL::Func - interpolation, integration, & gradient estimation (differentiation) of functions
+PDLA::Func - interpolation, integration, & gradient estimation (differentiation) of functions
 
 =head1 SYNOPSIS
 
- use PDL::Func;
- use PDL::Math;
+ use PDLA::Func;
+ use PDLA::Math;
 
  # somewhat pointless way to estimate cos and sin,
  # but is shows that you can thread if you want to
  # (and the library lets you)
  #
- my $obj = PDL::Func->init( Interpolate => "Hermite" );
+ my $obj = PDLA::Func->init( Interpolate => "Hermite" );
  # 
  my $x = pdl( 0 .. 45 ) * 4 * 3.14159 / 180;
  my $y = cat( sin($x), cos($x) );
@@ -39,9 +39,9 @@ This module aims to contain useful functions. Honest.
 =head1 INTERPOLATION AND MORE
 
 This module aims to provide a relatively-uniform interface
-to the various interpolation methods available to PDL.
+to the various interpolation methods available to PDLA.
 The idea is that a different interpolation scheme
-can be used just by changing an attribute of a C<PDL::Func>
+can be used just by changing an attribute of a C<PDLA::Func>
 object.
 Some interpolation schemes (as exemplified by the SLATEC
 library) also provide additional functionality, such as 
@@ -60,7 +60,7 @@ required (r) for the method to work.
 =item Interpolate => Linear
 
 An extravagent way of calling the linear interpolation routine
-L<PDL::Primitive::interpolate|PDL::Primitive/interpolate>.
+L<PDLA::Primitive::interpolate|PDLA::Primitive/interpolate>.
 
 The valid attributes are:
 
@@ -73,7 +73,7 @@ The valid attributes are:
 
 Use the piecewice cubic Hermite interpolation routines
 from the SLATEC library.
-Only available if L<PDL::Slatec|PDL::Slatec> is installed.
+Only available if L<PDLA::Slatec|PDLA::Slatec> is installed.
 
 The valid attributes are:
 
@@ -102,7 +102,7 @@ C<interpolate>, C<gradient>, or C<integrate> is used.
 If your data is monotonic, and you are not too bothered about
 edge effects, then the default value of C<bc> of C<simple> is for you.
 Otherwise, take a look at the description of
-L<PDL::Slatec::chic|PDL::Slatec/chic> and use a hash reference
+L<PDLA::Slatec::chic|PDLA::Slatec/chic> and use a hash reference
 for the C<bc> attribute, with the following keys:
 
 =over 3
@@ -122,7 +122,7 @@ Default = B<0>.
 A perl list of one or two elements. The first element defines how the
 boundary condition for the start of the array is to be calculated;
 it has a range of C<-5 .. 5>, as given for the C<ic> parameter
-of L<chic|PDL::Slatec/chic>. 
+of L<chic|PDLA::Slatec/chic>. 
 The second element, only used if options 2, 1, -1, or 2
 are chosen, contains the value of the C<vc> parameter.
 Default = B<[ 0 ]>.
@@ -153,7 +153,7 @@ C<routine> method.
 
 #' fool emacs
 
-package PDL::Func;
+package PDLA::Func;
 
 use strict;
 use Carp;
@@ -164,7 +164,7 @@ use Carp;
 #
 my %modules;
 BEGIN {
-    eval "use PDL::Slatec";
+    eval "use PDLA::Slatec";
     $modules{slatec} = ($@ ? 0 : 1);
 }
 
@@ -174,21 +174,21 @@ BEGIN {
 
 =head1 FUNCTIONS
 
-=head2 PDL::Func::init
+=head2 PDLA::Func::init
 
 =for usage
 
- $obj = PDL::Func->init( Interpolate => "Hermite", x => $x, y => $y );
- $obj = PDL::Func->init( { x => $x, y => $y } );
+ $obj = PDLA::Func->init( Interpolate => "Hermite", x => $x, y => $y );
+ $obj = PDLA::Func->init( { x => $x, y => $y } );
 
 =for ref
 
-Create a PDL::Func object, which can interpolate, and possibly
+Create a PDLA::Func object, which can interpolate, and possibly
 integrate and calculate gradients of a dataset.
 
 If not specified, the value of Interpolate is taken to be 
 C<Linear>, which means the interpolation is performed by
-L<PDL::Primitive::interpolate|PDL::Primitive/interpolate>.
+L<PDLA::Primitive::interpolate|PDLA::Primitive/interpolate>.
 A value of C<Hermite> uses piecewise cubic Hermite functions,
 which also allows the integral and gradient of the data
 to be estimated.
@@ -263,7 +263,7 @@ sub _init_attr {
 
     # fall over if slatec library isn't present
     # and asking for Hermite interpolation
-    croak "ERROR: Hermite interpolation is not available without PDL::Slatec.\n"
+    croak "ERROR: Hermite interpolation is not available without PDLA::Slatec.\n"
         if $interpolate eq "Interpolate" and $modules{slatec} == 0;
 
     # clear out the old data (if it's not the first time through)
@@ -394,7 +394,7 @@ sub _init_hermite {
 	if ( $#$end   == 1 ) { $vc->set( 1, $end->[1] ); }
 
 	my $wk = $x->zeroes( $x->float, 2*$xdim );
-	croak "ERROR: Hermite interpolation is not available without PDL::Slatec.\n"
+	croak "ERROR: Hermite interpolation is not available without PDLA::Slatec.\n"
 	  if $modules{slatec} == 0;
 	( $g, $ierr ) = chic( $ic, $vc, $monotonic, $x, $y, $wk );
 
@@ -402,7 +402,7 @@ sub _init_hermite {
 
     } elsif ( $bc eq "simple" ) {
 	# chim
-	croak "ERROR: Hermite interpolation is not available without PDL::Slatec.\n"
+	croak "ERROR: Hermite interpolation is not available without PDLA::Slatec.\n"
 	  if $modules{slatec} == 0;
 	( $g, $ierr ) = chim( $x, $y );
 
@@ -477,7 +477,7 @@ sub _get_value {
 
 ####################################################################
 
-=head2 PDL::Func::set
+=head2 PDLA::Func::set
 
 =for usage
 
@@ -486,7 +486,7 @@ sub _get_value {
 
 =for ref
 
-Set attributes for a PDL::Func object.
+Set attributes for a PDLA::Func object.
 
 The return value gives the number of the supplied attributes
 which were actually set. 
@@ -528,7 +528,7 @@ sub set {
 
 ####################################################################
 
-=head2 PDL::Func::get
+=head2 PDLA::Func::get
 
 =for usage
 
@@ -537,7 +537,7 @@ sub set {
 
 =for ref
 
-Get attributes from a PDL::Func object.
+Get attributes from a PDLA::Func object.
 
 Given a list of attribute names, return a list of
 their values; in scalar mode return a scalar value.
@@ -567,7 +567,7 @@ sub get {
 #
 # access to flags - have individual methods for these
 
-=head2 PDL::Func::scheme
+=head2 PDLA::Func::scheme
 
 =for usage
 
@@ -575,7 +575,7 @@ sub get {
 
 =for ref
 
-Return the type of interpolation of a PDL::Func object.
+Return the type of interpolation of a PDLA::Func object.
 
 Returns either C<Linear> or C<Hermite>.
 
@@ -583,7 +583,7 @@ Returns either C<Linear> or C<Hermite>.
 
 sub scheme { return $_[0]->{flags}{scheme}; }
 
-=head2 PDL::Func::status
+=head2 PDLA::Func::status
 
 =for usage
 
@@ -591,7 +591,7 @@ sub scheme { return $_[0]->{flags}{scheme}; }
 
 =for ref
 
-Returns the status of a PDL::Func object.
+Returns the status of a PDLA::Func object.
 
 This method provides a high-level indication of 
 the success of the last method called
@@ -608,7 +608,7 @@ particular scheme in use.
 
 sub status { return $_[0]->{flags}{status}; }
 
-=head2 PDL::Func::routine
+=head2 PDLA::Func::routine
 
 =for usage
 
@@ -616,7 +616,7 @@ sub status { return $_[0]->{flags}{status}; }
 
 =for ref
 
-Returns the name of the last routine called by a PDL::Func object.
+Returns the name of the last routine called by a PDLA::Func object.
 
 This is mainly useful for decoding the value stored in the
 C<err> attribute.
@@ -625,22 +625,22 @@ C<err> attribute.
 
 sub routine { return $_[0]->{flags}{routine}; }
 
-=head2 PDL::Func::attributes
+=head2 PDLA::Func::attributes
 
 =for usage
 
  $obj->attributes;
- PDL::Func->attributes;
+ PDLA::Func->attributes;
 
 =for ref
 
-Print out the flags for the attributes of a PDL::Func object. 
+Print out the flags for the attributes of a PDLA::Func object. 
 
 Useful in case the documentation is just too opaque!
 
 =for example
 
- PDL::Func->attributes;
+ PDLA::Func->attributes;
  Flags  Attribute
   SGR    x
   SGR    y
@@ -679,7 +679,7 @@ sub attributes {
 
 ####################################################################
 
-=head2 PDL::Func::interpolate
+=head2 PDLA::Func::interpolate
 
 =for usage
 
@@ -688,7 +688,7 @@ sub attributes {
 =for ref
 
 Returns the interpolated function at a given set of points
-(PDL::Func).
+(PDLA::Func).
 
 A status value of -1, as returned by the C<status> method, 
 means that some of the C<$xi> points lay outside the 
@@ -724,7 +724,7 @@ sub interpolate {
 sub _interp_linear {
     my ( $self, $xi, $x, $y ) = ( @_ );
 
-    my ( $yi, $err ) = PDL::Primitive::interpolate( $xi, $x, $y );
+    my ( $yi, $err ) = PDLA::Primitive::interpolate( $xi, $x, $y );
 
     $self->{flags}{status} = (any $err) ? -1 : 1;
     $self->_set_value( err => $err );
@@ -757,7 +757,7 @@ sub _interp_hermite {
     return $yi;
 } # sub: _interp_linear()
 
-=head2 PDL::Func::gradient
+=head2 PDLA::Func::gradient
 
 =for usage
 
@@ -768,7 +768,7 @@ sub _interp_hermite {
 
 Returns the derivative and, optionally,
 the interpolated function for the C<Hermite>
-scheme (PDL::Func).
+scheme (PDLA::Func).
 
 =cut
 
@@ -808,7 +808,7 @@ sub gradient {
 
 } # sub: gradient
 
-=head2 PDL::Func::integrate
+=head2 PDLA::Func::integrate
 
 =for usage
 
@@ -817,7 +817,7 @@ sub gradient {
 
 =for ref
 
-Integrate the function stored in the PDL::Func
+Integrate the function stored in the PDLA::Func
 object, if the scheme is C<Hermite>.
 
 The integration can either be between points of
@@ -922,14 +922,14 @@ interpolation routines, such as those provided by the
 Gnu Scientific Library (GSL), or the B-spline routines
 in the SLATEC library.
 
-In the documentation, the methods are preceeded by C<PDL::Func::>
+In the documentation, the methods are preceeded by C<PDLA::Func::>
 to avoid clashes with functions such as C<set> when using
 the C<help> or C<apropos> commands within I<perldl> or I<pdl2>.
 
 =head1 HISTORY
 
-Amalgamated C<PDL::Interpolate> and C<PDL::Interpolate::Slatec>
-to form C<PDL::Func>. Comments greatly appreciated on the
+Amalgamated C<PDLA::Interpolate> and C<PDLA::Interpolate::Slatec>
+to form C<PDLA::Func>. Comments greatly appreciated on the
 current implementation, as it is not too sensible.
 
 Thanks to Robin Williams, Halldór Olafsson, and Vince McIntyre.
@@ -939,7 +939,7 @@ Thanks to Robin Williams, Halldór Olafsson, and Vince McIntyre.
 Copyright (C) 2000,2001 Doug Burke (dburke@cfa.harvard.edu).
 All rights reserved. There is no warranty. 
 You are allowed to redistribute this software / documentation as 
-described in the file COPYING in the PDL distribution.
+described in the file COPYING in the PDLA distribution.
 
 =cut
 

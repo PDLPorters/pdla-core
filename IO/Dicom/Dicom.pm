@@ -2,20 +2,20 @@
 
 =head1 NAME
 
-PDL::IO::Dicom - a module for reading DICOM images.
+PDLA::IO::Dicom - a module for reading DICOM images.
 
 =head1 DESCRIPTION
 
-The PDL::IO::Dicom module enables reading 16-bit gray level Dicom
-images into PDL. As Dicom is an extremely complex format, this module
+The PDLA::IO::Dicom module enables reading 16-bit gray level Dicom
+images into PDLA. As Dicom is an extremely complex format, this module
 can unfortunately not handle all different image types included in the
 DICOM standard. One common format that is currently not supported is
 the Papyrus format.
 
 =head1 USAGE
 
-    use PDL;
-    use PDL::IO::Dicom;
+    use PDLA;
+    use PDLA::IO::Dicom;
 
     $img = rdcm("image.dcm");
 
@@ -24,17 +24,17 @@ the Papyrus format.
 Copyright (C) Dov Grobgeld <dov@imagic.weizmann.ac.il> 2002.
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =cut
 
-package PDL::IO::Dicom;
+package PDLA::IO::Dicom;
 
-use PDL;
-use PDL::Core;
-use PDL::IO::Misc;
+use PDLA;
+use PDLA::Core;
+use PDLA::IO::Misc;
 
 use Exporter;
 @ISA = qw( Exporter ); 
@@ -342,7 +342,7 @@ sub rdcm {
 	    $pdl = 1.0*($pdl * $rescale_slope) + $rescale_intercept;
 	}
     } else {
-	die "Sorry! PDL::IO::Dicom currently only supported DICOM with bs=2. bs = $bs\n";
+	die "Sorry! PDLA::IO::Dicom currently only supported DICOM with bs=2. bs = $bs\n";
     }
 
     # Store the info in the pdl header
@@ -379,8 +379,8 @@ sub clean_date {
 Copyright (C) Dov Grobgeld <dov@imagic.weizmann.ac.il> 1997.
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =cut

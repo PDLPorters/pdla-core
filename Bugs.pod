@@ -1,6 +1,6 @@
-package PDL::Bugs;
+package PDLA::Bugs;
 
-# How to get help diagnosing PDL problems and
+# How to get help diagnosing PDLA problems and
 # how to make and submit a useful bug report
 
 __END__
@@ -9,7 +9,7 @@ __END__
 
 =head1 NAME
 
-PDL::Bugs - How to diagnose and report PDL problems
+PDLA::Bugs - How to diagnose and report PDLA problems
 
 =head1 VERSION
 
@@ -17,36 +17,36 @@ version 1.0000
 
 =head1 DESCRIPTION
 
-This module explains how to get help with a PDL problem
+This module explains how to get help with a PDLA problem
 and how, when, and where to submit a bug report.  In the
 future it may be extended to provide some sort of automated
 bug reporting capability.
 
-=head1 IF YOU HAVE A PDL PROBLEM
+=head1 IF YOU HAVE A PDLA PROBLEM
 
 The primary resource for support for the Perl Data Language
-is via the PDL mailing lists.  The pdl-general list is for general
+is via the PDLA mailing lists.  The pdl-general list is for general
 use and discussions and is the one to use for questions about
-problems with PDL or PDL use for computation.  This
-I<is almost always> the list to post to for PDL problems.
+problems with PDLA or PDLA use for computation.  This
+I<is almost always> the list to post to for PDLA problems.
 
-The pdl-devel list is I<specifically> for PDL development
+The pdl-devel list is I<specifically> for PDLA development
 and often contains discussions of a rather technical nature
-relating to PDL internals.  This is I<not> the list for
-general PDL discussion or questions.
+relating to PDLA internals.  This is I<not> the list for
+general PDLA discussion or questions.
 
    http://pdl.perl.org/?page=mailing-lists
 
-B<NOTE>: Both pdl-general and pdl-devel are read by the PDL
+B<NOTE>: Both pdl-general and pdl-devel are read by the PDLA
 developers so you don't save time or increase the probability
 of response by posting to pdl-devel or by cross-posting
 to pdl-devel.  Please stick to pdl-general list posts unless
-you want to talk PDL implementation and development.
+you want to talk PDLA implementation and development.
 
-B<NOTE>: There is also a PDL IRC channel which can be useful
+B<NOTE>: There is also a PDLA IRC channel which can be useful
 for immediate questions if populated.  However, it has the
 big disadvantage of not being easily searched or routinely
-read by all PDL developers and users.  As a result, if you
+read by all PDLA developers and users.  As a result, if you
 get an answer there, it may be incorrect or incomplete
 depending on who happens to be chatting at the time.  It
 is definitely not readily searchable.
@@ -65,7 +65,7 @@ get one to submit the report:
 
    http://sourceforge.net/account/registration/
 
-Please provide a way for the PDL developers to contact you
+Please provide a way for the PDLA developers to contact you
 regarding the problem.
 
 Try to include any information you think might help someone
@@ -77,7 +77,7 @@ At a I<minimum>, include the following information:
 
 =item *
 
-PDL version number (e.g. PDL-2.007)
+PDLA version number (e.g. PDLA-2.007)
 
 =item *
 
@@ -91,15 +91,15 @@ Your operating System.  You can run the C<uname -a> command on many unix systems
 
 The full output of C<perldl -V> 
 
-If you are reporting a bug with an already installed PDL.  If the PDL
+If you are reporting a bug with an already installed PDLA.  If the PDLA
 has compiled and built but not been installed, you may run
-C<perl -Mblib perldl -V> from the top level of the PDL build directory.
+C<perl -Mblib perldl -V> from the top level of the PDLA build directory.
 
 =item *
 
 The bug description and how to reproduce it.
 
-Short examples using the PDL shells, C<pdl2> or C<perldl>, are excellent!
+Short examples using the PDLA shells, C<pdl2> or C<perldl>, are excellent!
 Don't forget to include needed input data (as small as possible) so that
 the code can be run with a cut and paste.
 
@@ -139,14 +139,14 @@ for info on how to subscribe to this list.
 =head1 BEFORE YOU SEND A REPORT
 
 BEFORE you report a bug make sure you got the latest
-release version of PDL, always available from CPAN,
+release version of PDLA, always available from CPAN,
 check
 
-   http://search.cpan.org/search?dist=PDL
+   http://search.cpan.org/search?dist=PDLA
 
 Also, you can check the FAQ at
 
-   http://pdl.perl.org/?docs=FAQ&title=PDL::FAQ
+   http://pdl.perl.org/?docs=FAQ&title=PDLA::FAQ
 
 and the mailing list archives for hints. You can find links to the
 searchable archives at 
@@ -166,12 +166,12 @@ patch manager
    http://sourceforge.net/p/pdl/patches/
 
 Patches should be made against the latest released
-PDL or, ideally, against the current git sources
+PDLA or, ideally, against the current git sources
 which you can browse and check out at
 
    git://git.code.sf.net/p/pdl/code
 
 Thanks,
-The PDL developers.
+The PDLA developers.
 
 =cut

@@ -1,6 +1,6 @@
-use PDL;
-use PDL::ImageND;
-use PDL::NiceSlice;
+use PDLA;
+use PDLA::ImageND;
+use PDLA::NiceSlice;
 
 use Test::More tests => 7;
 use strict;
@@ -22,7 +22,7 @@ my $eps = 1e-15;
 	my $pa = xvals zeroes 10,3;
 	my $pb = pdl [1,2],[2,1];
 	my $pc = convolve ($pa, $pb);
-	ok(all PDL::approx( $pc, $ans, $eps ) );
+	ok(all PDLA::approx( $pc, $ans, $eps ) );
 }
 
 
@@ -52,10 +52,10 @@ my $pb = pdl( [-1,0],[0,1] );
 		     [ 0,  0,  0, -1,  0,  0]
 		);
 	$pc = convolveND($pa,$pb,{m=>'d',b=>'e'});
-	ok( all PDL::approx($pc,$ans_e, $eps) );
+	ok( all PDLA::approx($pc,$ans_e, $eps) );
 
 	$pc = convolveND($pa,$pb,{m=>'f',b=>'e'});
-	ok( all PDL::approx($pc,$ans_e, $eps) );
+	ok( all PDLA::approx($pc,$ans_e, $eps) );
 }
 
 {
@@ -70,10 +70,10 @@ my $pb = pdl( [-1,0],[0,1] );
 		);
 
 	$pc = convolveND($pa,$pb,{m=>'d',b=>'p'});
-	ok( all( PDL::approx($pc, $ans_p, $eps) ) );
+	ok( all( PDLA::approx($pc, $ans_p, $eps) ) );
 
 	$pc = convolveND($pa,$pb,{m=>'f',b=>'p'});
-	ok(all PDL::approx($pc, $ans_p, $eps) );
+	ok(all PDLA::approx($pc, $ans_p, $eps) );
 }
 
 
@@ -88,10 +88,10 @@ my $pb = pdl( [-1,0],[0,1] );
 		     [ 0,  0,  0,  0,  1,  1]
 		);
 	$pc = convolveND($pa,$pb,{m=>'d',b=>'t'});
-	ok(all PDL::approx($pc,$ans_t, $eps) );
+	ok(all PDLA::approx($pc,$ans_t, $eps) );
 
 	$pc = convolveND($pa,$pb,{m=>'f',b=>'t'});
-	ok( all( PDL::approx($pc, $ans_t, $eps) ) );
+	ok( all( PDLA::approx($pc, $ans_t, $eps) ) );
 }
 
 done_testing;

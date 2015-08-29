@@ -60,7 +60,7 @@ pdl (1:2.4.7+dfsg-2) unstable; urgency=low
   * remove left-over file 'test.log', which slipped into the 1:2.4.7+dfsg-1
     debian diff
   * include upstream release notes in deb
-  * fix Pod of PDL::IO::FastRaw
+  * fix Pod of PDLA::IO::FastRaw
   * add lintian override: it is OK to have dpatch dependency with an empty
     patch list. Usually I am adding fixes as dpatch patches, and it is useless
     to add/remove the dpatch support in case there are no patches for one
@@ -130,7 +130,7 @@ pdl (1:2.4.5+dfsg-1) unstable; urgency=low
   * bump standards-version to 3.8.3
   * bump debhelper compatibility level to 7
   * generate html docs and doc index in /var/lib/pdl
-  * put symlink to files in /var/lib/pdl into /usr/lib/perl5/PDL
+  * put symlink to files in /var/lib/pdl into /usr/lib/perl5/PDLA
 
  -- Henning Glawe <glaweh@debian.org>  Fri, 06 Nov 2009 21:45:44 +0000
 
@@ -139,7 +139,7 @@ pdl (1:2.4.3-8) unstable; urgency=low
   * add proper description to the dpatch pathes (6 lintian warnings)
   * backport documentation 'apropos' search function from upstream cvs
     (closes: #499758)
-  * remove empty manpage /usr/share/man/man3/PDL::PP.3pm (lintian warning)
+  * remove empty manpage /usr/share/man/man3/PDLA::PP.3pm (lintian warning)
   * update standarts version to 3.8.0 (lintian warning)
   * build-depend on x11proto-core-dev instead of x-dev (lintian error)
   * remove libgl1 from Suggests; there is no 3d support presently
@@ -154,8 +154,8 @@ pdl (1:2.4.3-7) unstable; urgency=low
 
   * patch upstream IO/Makefile.PL to also install Dicom IO module
     (closes: #474751)
-  * disable opengl based PDL::Graphics::TriD, it is not working
-    with perl 5.10. this considerably lowers PDL's dependencies,
+  * disable opengl based PDLA::Graphics::TriD, it is not working
+    with perl 5.10. this considerably lowers PDLA's dependencies,
     upstream does not yet have a solution for this problem
     (closes: #495379) 
   * apply upstream patch for the pct() problem (closes: #488092)
@@ -176,7 +176,7 @@ pdl (1:2.4.3-4) unstable; urgency=low
 
   * clean up leftover files not caught by pdl's distclean target
     (closes: #424345)
-  * clearly state in PDL::Fit::Gaussian synopsis that PDL has to be loaded
+  * clearly state in PDLA::Fit::Gaussian synopsis that PDLA has to be loaded
     first (closes: #379932)
   * apply patch for uniqvec/qsortvec from upstream BTS (closes: #415426)
   * encode Latin1 characters in POD documentation as roff
@@ -196,7 +196,7 @@ pdl (1:2.4.3-4) unstable; urgency=low
 pdl (1:2.4.3-3) unstable; urgency=low
 
   * add -DGLvoid=void in the cpp call for setting up the OpenGL typemaps in
-    order to make PDL build with newer mesa versions (closes: #390122)
+    order to make PDLA build with newer mesa versions (closes: #390122)
 
  -- Henning Glawe <glaweh@debian.org>  Mon,  9 Oct 2006 18:07:41 +0200
 
@@ -240,7 +240,7 @@ pdl (1:2.4.2-4) unstable; urgency=low
   * make the xlibs-dev transition for x.org 6.9 (closes: #346926):
     - build-depending on x-dev should be enough according to 
       http://www.inutil.org/jmm/xlibs/xlibs-split-2005-11-15.tar-bz2
-  * Suggest libplplot-dev and tell about the PDL::Graphics::PLplot 
+  * Suggest libplplot-dev and tell about the PDLA::Graphics::PLplot 
     examples it contains in pdl's README.Debian
 
  -- Henning Glawe <glaweh@debian.org>  Mon,  9 Jan 2006 09:15:31 +0100
@@ -259,7 +259,7 @@ pdl (1:2.4.2-2) unstable; urgency=low
   * split out Makefile clean target patch
   * split out patch preventing the generation of an empty manpage pdl.1p
   * get fix for transform.pd from cvs (problem reported on pdl mailing list)
-  * fix a second problem with PDL_Double used not in C code in transform.pd
+  * fix a second problem with PDLA_Double used not in C code in transform.pd
   * patch mkhtmldoc.pl to generate relative links instead of absolute ones;
     absolute pathnames confused dhelp sometimes.
   * move debhelper template in prerm up, so the doc-base remove call is done
@@ -282,7 +282,7 @@ pdl (1:2.4.2-1) unstable; urgency=low
   * fix description+synopsis
   * remove references to obsolete websites from README
   * rework packaging with debhelper
-  * build html docs in /usr/share/doc/pdl/html/PDL and install doc-base 
+  * build html docs in /usr/share/doc/pdl/html/PDLA and install doc-base 
     entry for this
   * remove lintian override, slatec is now built with -fPIC
   * disable building of pdl.1p from pdl.PL, so the correct pdl.1p from
@@ -296,7 +296,7 @@ pdl (1:2.4.1-1) unstable; urgency=low
   * don't print debug info in preinst (Closes: #69978)
   * enable bad value support, the impact should be minimal on modern
     hardware (Closes: #113607)
-  * took plplot from PDL HEAD
+  * took plplot from PDLA HEAD
   * clean up doc index and html docs in prerm (Closes: #160034)
 
  -- Henning Glawe <glaweh@debian.org>  Thu, 22 Jul 2004 19:16:24 +0200
@@ -309,7 +309,7 @@ pdl (1:2.4.0-1) unstable; urgency=low
   * enable plplot support (Closes: #196185)
   * enable gsl support
   * enable fftw support
-  * swap out m51.fits and COPYING, taken from PDL CVS HEAD (Closes: #223793)
+  * swap out m51.fits and COPYING, taken from PDLA CVS HEAD (Closes: #223793)
 
  -- Henning Glawe <glaweh@debian.org>  Sat, 13 Dec 2003 22:25:41 +0100
 
@@ -344,10 +344,10 @@ pdl (1:2.3.2-0.1) unstable; urgency=low
     segfaults on alpha otherwise).
   * Use F77CONF=debian/f77conf.pl, signify hppa needed changes in
     there instead of hacking Lib/Slatec/Makefile.PL .
-  * Include small patch to change $(INST_LIBDIR)/PDL to
+  * Include small patch to change $(INST_LIBDIR)/PDLA to
     $(INST_LIBDIR) in Basic/Gen/Makefile.PL (debian/rules has
     a very long, strange find command that barfs if there are
-    multiple directories named PDL, and this looks like a typo
+    multiple directories named PDLA, and this looks like a typo
     anyway)
   * debian/rules was writing to file called "substvers", and
     was missing a $ anyway when writing Perl depends substvars.
@@ -399,7 +399,7 @@ pdl (1:2.2.1-3) unstable; urgency=low
     for the new perl policy, changed Build-Depends to match.
     (fixes #95423)
   * made other changes to debian/rules and debian/control as indicated
-    by this new policy.  I hope the OPTIMIZE attribute doesn't hose PDL...
+    by this new policy.  I hope the OPTIMIZE attribute doesn't hose PDLA...
   * FIXME: I've backed out compliance with 3.4.2 of the new perl policy:
     "Binary modules must specify a dependency on either perl or
      perl-base with a minimum version of the perl package used to
@@ -416,7 +416,7 @@ pdl (1:2.2.1-2) unstable; urgency=low
   * replaced mesag-dev with xlibmesa-dev in build depends.  (fixes #97508)
     replaced mesag3 with libgl1 in depends.
   * Rant: [None of this rant is immediately relevant to this version
-    of PDL, except through examining the implications of bug #97508.]
+    of PDLA, except through examining the implications of bug #97508.]
     This whole "trash the old i/o-library interface" thing strikes
     me as *really bad*.  Interfaces should be treated as sacred,
     and maintaining backwards compatibility is important for long term
@@ -435,7 +435,7 @@ pdl (1:2.2.1-2) unstable; urgency=low
 
 pdl (1:2.2.1-1) unstable; urgency=low
 
-  * renamed directory from PDL-2.2.1 to pdl-2.2.1, and chmod +x debian/rules
+  * renamed directory from PDLA-2.2.1 to pdl-2.2.1, and chmod +x debian/rules
     (required so that dpkg-buildpackage works).  
   * changed Source-Depends: to Build-Depends: in control file, and restored
     build dependency for libncurses-dev.
@@ -447,7 +447,7 @@ pdl (1:2.2.1-0) unstable; urgency=low
 
   * new upstream release
 
- -- PDL Porters <pdl-porters@jach.hawaii.edu>  Tue, 24 Apr 2001 15:01:23 -0400
+ -- PDLA Porters <pdl-porters@jach.hawaii.edu>  Tue, 24 Apr 2001 15:01:23 -0400
 
 pdl (1:2.2-2) unstable; urgency=low
 
@@ -519,7 +519,7 @@ pdl (2.003-1) unstable; urgency=low
 pdl (2.002-3) unstable; urgency=low
 
   * new maintainer
-  * recreated source package, unpack in pdl-2.002 instead of PDL-2.002
+  * recreated source package, unpack in pdl-2.002 instead of PDLA-2.002
     [this oddity in source package accounts for earlier diff problems].  
     (Fixes #45771).
   * do "make test" at build time

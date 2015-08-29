@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-use PDL;
+use PDLA;
 my $MB;
 my @data;
 my $chunk = (scalar @ARGV) ? $ARGV[0] : 1;

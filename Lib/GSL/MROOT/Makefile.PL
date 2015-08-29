@@ -73,11 +73,11 @@ EOI
 EOB
 }
 
-if (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==0) {
-  $msg = "\n   Will skip build of PDL::GSL::MROOT on this system   \n";
+if (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==0) {
+  $msg = "\n   Will skip build of PDLA::GSL::MROOT on this system   \n";
   $skip = 1;
-} elsif (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==1) {
-  print "\n   Will forcibly try and build PDL::GSL::MROOT on this system   \n\n";
+} elsif (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==1) {
+  print "\n   Will forcibly try and build PDLA::GSL::MROOT on this system   \n\n";
   $forcebuild=1;
 }
 
@@ -86,15 +86,15 @@ if (($skip && !$forcebuild) ||
   warn "trying to force GSL build but link test failed\n".
     "\t -- aborting GSL build\n" if $forcebuild;
   $msg ||=
-    "\n GSL Libraries not found... Skipping build of PDL::GSL::MROOT.\n";
+    "\n GSL Libraries not found... Skipping build of PDLA::GSL::MROOT.\n";
   write_dummy_make( $msg );
   return;
 } else {
-  print "\n   Building PDL::GSL::MROOT.", 
+  print "\n   Building PDLA::GSL::MROOT.", 
     "Turn off WITH_GSL if there are any problems\n\n";
 }
 
-my @pack = (["gsl_mroot.pd", qw(MROOT PDL::GSL::MROOT)]);
+my @pack = (["gsl_mroot.pd", qw(MROOT PDLA::GSL::MROOT)]);
 my %hash = pdlpp_stdargs_int(@pack);
 
 $hash{INC} .= " $GSL_includes";

@@ -1,18 +1,18 @@
 =head1 NAME
 
-PDL::Indexing - Introduction to indexing and slicing piddles.
+PDLA::Indexing - Introduction to indexing and slicing piddles.
 
 =head1 OVERVIEW
 
 This man page should serve as a first tutorial on the indexing and
-threading features of I<PDL>.
+threading features of I<PDLA>.
 
-Like all vectorized languages, PDL automates looping over arrays using
+Like all vectorized languages, PDLA automates looping over arrays using
 a variant of mathematical vector notation.  The automatic looping is called
-"threading", in part because ultimately PDL will implement parallel processing
+"threading", in part because ultimately PDLA will implement parallel processing
 to speed up the loops.
 
-A lot of the flexibility and power of PDL relies on the indexing and threading
+A lot of the flexibility and power of PDLA relies on the indexing and threading
 features of the Perl extension.  Indexing allows access to the data of a piddle
 in a very flexible way.  Threading provides efficient vectorization of simple
 operations.  
@@ -21,12 +21,12 @@ The values of a piddle are stored compactly as typed values in a single block of
 not (as in a normal Perl list-of-lists) as individual Perl scalars.
 
 In the sections that follow many "methods" are called out -- these are Perl operators
-that apply to PDLs.  From the L<perldl|perldl> (or L<pdl2|PDL::Perldl2>) shell, you
+that apply to PDLAs.  From the L<perldl|perldl> (or L<pdl2|PDLA::Perldl2>) shell, you
 can find out more about each method by typing "?" followed by the method name.
 
 =head2 Dimension lists 
 
-A piddle (PDL variable), in general, is an N-dimensional array where N can be 
+A piddle (PDLA variable), in general, is an N-dimensional array where N can be 
 0 (for a scalar), 1 (e.g. for a sound sample), or higher values for images 
 and more complex structures.  Each dimension of the piddle has a positive 
 integer size.  The C<perl> interpreter treats each piddle as a special type of 
@@ -38,19 +38,19 @@ the size of a piddle with several methods.  The important ones are:
 
 =over 3
 
-=item nelem - the total number of elements in a PDL
+=item nelem - the total number of elements in a PDLA
 
-=item ndims - returns the number of dimensions in a PDL
+=item ndims - returns the number of dimensions in a PDLA
 
-=item dims - returns the dimension list of a PDL as a Perl list
+=item dims - returns the dimension list of a PDLA as a Perl list
 
-=item dim - returns the size of a particular dimension of a PDL
+=item dim - returns the size of a particular dimension of a PDLA
 
 =back
 
 =head2 Indexing and Dataflow
 
-PDL maintains a notion of "dataflow" between a piddle and indexed subfields of 
+PDLA maintains a notion of "dataflow" between a piddle and indexed subfields of 
 that piddle.  When you produce an indexed subfield or single element of a parent
 piddle, the child and parent remain attached until you manually disconnect them.
 This lets you represent the same data different ways within your code -- for example,
@@ -60,25 +60,25 @@ different variables.  Modifying any of the variables changes the underlying memo
 the changes are reflected in all representations of the data.
 
 There are two important methods that let you control dataflow connections between a 
-child and parent PDL:
+child and parent PDLA:
 
 =over 3
 
-=item copy - forces an explicit copy of a PDL
+=item copy - forces an explicit copy of a PDLA
 
-=item sever - breaks the dataflow connection between a PDL and its parents (if any)
+=item sever - breaks the dataflow connection between a PDLA and its parents (if any)
 
 =back
 
 =head2 Threading and Dimension Order
 
-Most PDL operations act on the first few dimensions of their piddle arguments.  For
+Most PDLA operations act on the first few dimensions of their piddle arguments.  For
 example, C<sumover> sums all elements along the first dimension in the list (dimension 0).
 If you feed in a three-dimensional piddle, then the first dimension is considered the 
 "active" dimension and the later dimensions are "thread" dimensions because they are simply
-looped over.  There are several ways to transpose or re-order the dimension list of a PDL.
+looped over.  There are several ways to transpose or re-order the dimension list of a PDLA.
 Those techniques are very fast since they don't touch the underlying data, only change the
-way that PDL accesses the data.  The main dimension ordering functions are:
+way that PDLA accesses the data.  The main dimension ordering functions are:
 
 =over 3
 
@@ -127,9 +127,9 @@ reworking of paragraph on explicit threading
 
 =back
 
-=head1 Indexing and threading with PDL
+=head1 Indexing and threading with PDLA
 
-A lot of the flexibility and power of PDL relies on the indexing and
+A lot of the flexibility and power of PDLA relies on the indexing and
 looping features of the Perl extension. Indexing allows access to the
 data of a pdl object in a very flexible way. Threading provides
 efficient implicit looping functionality (since the loops are
@@ -144,7 +144,7 @@ etc) on pdls.
 
 =head2 pdls can have children
 
-Central to many of the indexing capabilities of PDL are the relation of
+Central to many of the indexing capabilities of PDLA are the relation of
 "parent" and "child" between pdls. Many of the indexing commands
 create a new pdl from an existing pdl. The new pdl is the "child"
 and the old one is the "parent". The data of the new pdl is defined by a
@@ -166,7 +166,7 @@ through this "pointer". After these introductory remarks that
 hopefully prepared you for what is coming (rather than confuse you too
 much) we are going to dive right in and start with a description of
 the indexing commands and some typical examples how they might be used
-in PDL programs. We will further illustrate the pointer/dataflow
+in PDLA programs. We will further illustrate the pointer/dataflow
 analogies in the context of some of the examples later on.
 
 There are two different implementations of this ``smart pointer''
@@ -177,7 +177,7 @@ a ``virtual'' piddle, which only stores a pointer to the parent
 and access information so that routines which use the child piddle
 actually directly access the data in the parent.
 If the virtual piddle is given to a routine which cannot use it,
-PDL transparently physicalizes the virtual piddle before letting
+PDLA transparently physicalizes the virtual piddle before letting
 the routine use it.
 
 Currently (1.94_01) all transformations which are ``affine'',
@@ -218,7 +218,7 @@ several screens full of digits ;).
  ]                                                                                
 
  pdl> help vars
- PDL variables in package main::
+ PDLA variables in package main::
 
  Name         Type   Dimension       Flow  State          Mem
  ----------------------------------------------------------------
@@ -227,7 +227,7 @@ several screens full of digits ;).
 [ here it might be appropriate to quickly talk about the 
 C<help vars> command
 that provides information about pdls in the interactive
-C<perldl> or C<pdl2> shell that comes with PDL.
+C<perldl> or C<pdl2> shell that comes with PDLA.
 ]
 
 Now suppose we want to create a 1-D pdl that just references
@@ -242,8 +242,8 @@ easily achieved with the powerful slice function:
  pdl> $line = $im->slice(':,(2)')
  pdl> $even = $im->slice(':,1:-1:2')
  pdl> $area = $im->slice('3:4,3:1')
- pdl> help vars  # or just PDL->vars
- PDL variables in package main::
+ pdl> help vars  # or just PDLA->vars
+ PDLA variables in package main::
 
  Name         Type   Dimension       Flow  State          Mem
  ----------------------------------------------------------------
@@ -295,10 +295,10 @@ C-pointer. But in contrast to a C-pointer they carry a lot more
 information. Firstly, they specify the structure of the data they
 represent (the dimensionality of the new pdl) and secondly, specify
 how to create this structure from its parents data (the way this works
-is buried in the internals of PDL and not important for you to know
+is buried in the internals of PDLA and not important for you to know
 anyway (unless you want to hack the core in the future or would like
-to become a PDL guru in general (for a definition of this strange
-creature see L<PDL::Internals|PDL::Internals>)).
+to become a PDLA guru in general (for a definition of this strange
+creature see L<PDLA::Internals|PDLA::Internals>)).
 
 The previous examples have demonstrated typical usage of the slice
 function. Since the slicing functionality is so important here is an
@@ -391,7 +391,7 @@ you can identify a vector (with C<m> elements) with an C<(1,m)> or C<(m,1)>
 matrix. The same holds obviously for higher dimensional objects. More
 interesting is the case of a dummy dimensions of size greater than one
 (e.g. C<slice('*5,:')>). This works in the same way as a call to the
-L<dummy|PDL::Core/dummy> function creates a new dummy dimension. 
+L<dummy|PDLA::Core/dummy> function creates a new dummy dimension. 
 So read on and check
 its explanation below.
 
@@ -432,7 +432,7 @@ in way we can express as:
 
 [ work in the new index function: C<$b = $a-E<gt>index($c);> ???? ]
 
-=head2 There are different kinds of assignments in PDL
+=head2 There are different kinds of assignments in PDLA
 
 The previous examples have already shown that virtual pdls can be used
 to operate on or access portions of data of a parent pdl. They can
@@ -451,7 +451,7 @@ the variable representing the virtual pdl (a reference to a
 blessed thingy) would after the assignment just contain the reference
 to another blessed thingy which would behave to future assignments as
 a "physical" copy of the original rvalue [this is actually not yet
-clear and subject of discussions in the PDL developers mailing
+clear and subject of discussions in the PDLA developers mailing
 list]. In that sense it would break the connection of the pdl to the
 parent [ isn't this behaviour in a sense the opposite of what happens in
 dataflow, where C<.=> breaks the connection to the parent? ]. 
@@ -501,14 +501,14 @@ with no dimensions so it can be assigned to any piddle).
 
 A nice feature in recent perl versions is lvalue subroutines
 (i.e., versions 5.6.x and higher including all perls currently
-supported by PDL).  That allows one to use the slicing syntax
+supported by PDLA).  That allows one to use the slicing syntax
 on both sides of the assignment:
 
  pdl> $im->slice(':,(2)') .= zeroes(5)->xvals->float
 
 Related to the lvalue sub assignment feature is a little trap
 for the unwary: recent perls introduced a "feature" which breaks
-PDL's use of lvalue subs for slice assignments when running under
+PDLA's use of lvalue subs for slice assignments when running under
 the perl debugger, C<perl -d>.  Under the debugger, the above
 usage gives an error like:
 C< Can't return a temporary from lvalue subroutine... >
@@ -545,8 +545,8 @@ to its parent.
 =head2 Other functions that manipulate dimensions
 
 Having talked extensively about the 
-L<slice|PDL::Slices/slice> function it should be
-noted that this is not the only PDL indexing function. There
+L<slice|PDLA::Slices/slice> function it should be
+noted that this is not the only PDLA indexing function. There
 are additional indexing functions which are also useful
 (especially in the context of threading which we will talk about
 later). Here are a list and some examples how to use them.
@@ -566,7 +566,7 @@ This example calculates the x coordinate of the centroid of an
 image (later we will learn that we didn't actually need the dummy
 dimension thanks to the magic of implicit threading; but using dummy
 dimensions the code would also work in a thread-less world; though once
-you have worked with PDL threads you wouldn't want to live without
+you have worked with PDLA threads you wouldn't want to live without
 them again).
 
  # centroid
@@ -640,7 +640,7 @@ the trace of a matrix:
 
 =item C<xchg> and C<mv>
 
-L<xchg|PDL::Slices/xchg> exchanges or "transposes" the two  specified dimensions. 
+L<xchg|PDLA::Slices/xchg> exchanges or "transposes" the two  specified dimensions. 
 A straightforward example:
 
  # transpose a matrix (without explicitly reshuffling data and
@@ -651,7 +651,7 @@ C<$prod> should now be pretty close to the unity matrix if C<$a> is an
 orthogonal matrix. Often C<xchg> will be used in the context of threading
 but more about that later.
 
-L<mv|PDL::Slices/mv> works in a similar fashion. It moves a dimension (specified by
+L<mv|PDLA::Slices/mv> works in a similar fashion. It moves a dimension (specified by
 its number in the parent) to a new position in the new child pdl:
 
  $b = $a->mv(4,0);  # make the 5th dimension of $a the first in the
@@ -675,7 +675,7 @@ sequences you say
 
  pdl> $seqs = $stack->clump(2)
  pdl> help vars
- PDL variables in package main::
+ PDLA variables in package main::
 
  Name         Type   Dimension       Flow  State          Mem
  ----------------------------------------------------------------
@@ -718,7 +718,7 @@ an assignment like this:
  $b .= yvals(zeroes(3,4));
 
 can produce unexpected results and the results are explicitly
-B<undefined> by PDL because when PDL gets parallel computing
+B<undefined> by PDLA because when PDLA gets parallel computing
 features, the current result may well change.
 
 From the point of view of dataflow the introduction of
@@ -754,17 +754,17 @@ dummy dimensions are created implicitly during the thread loop (see below).
 In the previous paragraph on indexing we have already mentioned the
 term occasionally but now its really time to talk explicitly about
 "threading" with pdls. The term threading has many different meanings in
-different fields of computing. Within the framework of PDL it could
+different fields of computing. Within the framework of PDLA it could
 probably be loosely defined as an implicit looping
 facility. It is implicit because you don't specify anything like
 enclosing for-loops but rather the loops are automatically (or
-'magically') generated by PDL based on the dimensions of the pdls
+'magically') generated by PDLA based on the dimensions of the pdls
 involved. This should give you a first idea why the index/dimension
 manipulating functions you have met in the previous paragraphs are
 especially important and useful in the context of threading.
 The other ingredient for threading (apart from the pdls involved) is
 a function that is threading aware (generally, these are 
-L<PDL::PP|PDL::PP> compiled functions) and that the pdls are "threaded" over. 
+L<PDLA::PP|PDLA::PP> compiled functions) and that the pdls are "threaded" over. 
 So much about the terminology and now let's try to shed some light on what it
 all means.
 
@@ -806,14 +806,14 @@ following to process the whole image:
  }
 
 Now we write the same using threading (noting that C<inner> is a threading
-aware function defined in the L<PDL::Primitive|PDL::Primitive> package)
+aware function defined in the L<PDLA::Primitive|PDLA::Primitive> package)
 
  $grey = inner($im,pdl([77,150,29]/256));
 
 We have ended up with a one-liner that automatically
 creates the pdl C<$grey> with the right number and size of dimensions and
 performs the loops automatically (these loops are implemented as fast C code
-in the internals of PDL).
+in the internals of PDLA).
 Well, we
 still owe you an explanation how this 'magic' is achieved.
 
@@ -821,9 +821,9 @@ still owe you an explanation how this 'magic' is achieved.
 
 The first thing to note is that every function that is threading aware
 (these are without exception functions compiled from concise
-descriptions by L<PDL::PP|PDL::PP>, later just called PP-functions) expects a
+descriptions by L<PDLA::PP|PDLA::PP>, later just called PP-functions) expects a
 defined (minimum) number of dimensions (we call them core dimensions)
-from each of its pdl arguments. The L<inner|PDL::Primitive/inner> function 
+from each of its pdl arguments. The L<inner|PDLA::Primitive/inner> function 
 expects two one-dimensional (input) parameters from which it calculates a
 zero-dimensional (output) parameter. We write that symbolically as
 C<inner((n),(n),[o]())> and call it C<inner>'s I<signature>, where n
@@ -871,7 +871,7 @@ write that symbolically as
  $grey(x-2,y-1) = f($w,$im(:,(x-2),(y-1)))
  $grey(x-1,y-1) = f($w,$im(:,(x-1),(y-1)))
 
-But this is done automatically by PDL without writing any explicit
+But this is done automatically by PDLA without writing any explicit
 Perl loops.  We see that the command really creates an output pdl with
 the right dimensions and sets the elements indeed to the result of the
 computation for each pixel of the input image.
@@ -919,7 +919,7 @@ There are a couple of rules that allow you to figure out number and
 size of loop dimensions (and if the size of your input pdls comply
 with the threading rules). Dimensions of any pdl argument are broken
 down into two groups in the following: Core dimensions (as defined by
-the PP-function, see B<Appendix B> for a list of PDL primitives) and
+the PP-function, see B<Appendix B> for a list of PDLA primitives) and
 extra dimensions which comprises all remaining dimensions of that
 pdl. For example calling a function C<func> with the signature
 C<func((n,m),[o](n))> with a pdl C<a(2,4,7,1,3)> as C<f($a,($o = null))>
@@ -964,7 +964,7 @@ size of that loop dimension.
 =item R5
 
 If output auto-creation is used (by setting the relevant pdl to
-C<PDL-E<gt>null> before invocation) the number of dimensions of the created
+C<PDLA-E<gt>null> before invocation) the number of dimensions of the created
 pdl is equal to the sum of the number of core output dimensions +
 number of loop dimensions. The size of the core output dimensions is
 derived from the relevant dimension of input pdls (as specified in the
@@ -1038,7 +1038,7 @@ dimensional. If C<$im> is one-dimensional it's just an ordinary product
 respective element of C<xvals(...)>), if C<$im> has more dimensions further
 threading is done by adding appropriate dummy dimensions to C<xvals(...)>
 according to R4.  
-More importantly, the two L<sumover|PDL::Ufunc/sumover> operations show
+More importantly, the two L<sumover|PDLA::Ufunc/sumover> operations show
 a first example of how to make use of the dimension manipulating
 commands. A quick look at sumover's signature will remind you that
 it will only "gobble up" the first dimension of a given input pdl. But
@@ -1059,9 +1059,9 @@ x-coordinates (of size t) in return.
 Another set of common operations are what one could call "projection
 operations". These operations take a N-D pdl as input and return a
 (N-1)-D "projected" pdl. These operations are often performed with
-functions like L<sumover|PDL::Ufunc/sumover>, 
-L<prodover|PDL::Ufunc/prodover>, L<minimum|PDL::Ufunc/minimum> and
-L<maximum|PDL::Ufunc/maximum>. 
+functions like L<sumover|PDLA::Ufunc/sumover>, 
+L<prodover|PDLA::Ufunc/prodover>, L<minimum|PDLA::Ufunc/minimum> and
+L<maximum|PDLA::Ufunc/maximum>. 
 Using again images as examples we might want to calculate
 the maximum pixel value for each line of an image or image stack. We
 know how to do that
@@ -1092,7 +1092,7 @@ the pdl in question C<clump> comes in handy. As an example look at the
 definition of C<sum> (as defined in C<Ufunc.pm>):
 
  sub sum {
-   PDL::Ufunc::sumover($name->clump(-1),($tmp=null));
+   PDLA::Ufunc::sumover($name->clump(-1),($tmp=null));
    return $tmp->at(); # return a Perl number, not a 0D pdl
  }
 
@@ -1113,7 +1113,7 @@ an RGB image from what is called a palette image. The palette image
 consists of two parts: an image of indices into a color lookup table
 and the color lookup table itself. [ describe how it works ] We
 are going to use a PP-function we haven't encoutered yet in the previous
-examples. It is the aptly named L<index|PDL::Slices/index> function, signature
+examples. It is the aptly named L<index|PDLA::Slices/index> function, signature
 C<((n),(),[o]())> (see B<Appendix B>) with the core functionality that
 C<index(pdl (0,2,4,5),2,($ret=null))> will return the element with index
 2 of the first input pdl. In this case, C<$ret> will contain the value 4.
@@ -1191,9 +1191,9 @@ and
  func($a,$b,$result);
 
 If you are only using implicit threading then the output variable can
-be automatically created by PDL. You flag that to the PP-function by
+be automatically created by PDLA. You flag that to the PP-function by
 setting the output argument to a special kind of pdl that is returned
-from a call to the function C<PDL-E<gt>null> that returns an essentially
+from a call to the function C<PDLA-E<gt>null> that returns an essentially
 "empty" pdl (for those interested in details there is a flag
 in the C pdl structure for this). The dimensions
 of the created pdl are determined by the rules of implicit
@@ -1202,7 +1202,7 @@ which the threading dimensions are appended (which are in turn
 determined by the dimensions of the input pdls as described above).
 So you can say
 
- func($a,$b,($result=PDL->null));
+ func($a,$b,($result=PDLA->null));
 
 or
 
@@ -1243,8 +1243,8 @@ either I<implicit> or I<explicit>; the two flavours do mix. But more
 about that later.
 
 The two most used functions with explicit threading are 
-L<thread|PDL::Core/PDL::thread>
-and L<unthread|PDL::Slices/unthread>. 
+L<thread|PDLA::Core/PDLA::thread>
+and L<unthread|PDLA::Slices/unthread>. 
 We start with an example that illustrates typical
 usage of the former:
 
@@ -1256,7 +1256,7 @@ usage of the former:
  pdl> $line = pdl (3.1416,2,-2)
  pdl> ($tmp = $mat->thread(0)) += $line
 
-In this example, C<$mat-E<gt>thread(0)> tells PDL that you want the second
+In this example, C<$mat-E<gt>thread(0)> tells PDLA that you want the second
 dimension of this pdl to be threaded over first leading to a thread
 loop that can be expressed as
 
@@ -1413,12 +1413,12 @@ Example 1:
  $tmp .= $evecs;    # initialise, no back-propagation
  ($tmp2 = $tmp->thread(0)) /= $evals;    #  threaded division
  # and now a matrix multiplication in disguise
- PDL::Primitive::inner($evecs->xchg(0,1)->thread(-1,1),
+ PDLA::Primitive::inner($evecs->xchg(0,1)->thread(-1,1),
                        $tmp->thread(0,-1),
                        $inv->thread(0,1));
  # alternative for matrix mult using implicit threading,
  # first xchg only for transpose
- PDL::Primitive::inner($evecs->xchg(0,1)->dummy(1),
+ PDLA::Primitive::inner($evecs->xchg(0,1)->dummy(1),
                        $tmp->xchg(0,1)->dummy(2),
                        ($inv=null));
 
@@ -1486,11 +1486,11 @@ we have been going on about for a couple of pages: why threading ?
 Well, code that uses threading should be (considerably) faster than
 code that uses explicit for-loops (or similar Perl constructs) to achieve
 the same functionality. Especially on supercomputers (with vector
-computing facilities/parallel processing) PDL threading will be
+computing facilities/parallel processing) PDLA threading will be
 implemented in a way that takes advantage of the additional facilities
 of these machines. Furthermore, it is a conceptually simply
 construct (though technical details might get involved at times) and
-can I<greatly> reduce the syntactical complexity of PDL code (but keep
+can I<greatly> reduce the syntactical complexity of PDLA code (but keep
 the admonition for documentation in mind). Once you
 are comfortable with the I<threading> way of thinking (and coding) it
 shouldn't be too difficult to understand code that somebody else
@@ -1502,31 +1502,31 @@ threading to perform the loop (as with anything there are exceptions
 to this rule of thumb; but the authors of this document tend to
 think that these are rare cases ;).
 
-=head1 PDL::PP
+=head1 PDLA::PP
 
 =head2 An easy way to define functions that are aware of indexing and threading (and the universe and everything)
 
-PDL:PP is part of the PDL distribution. It is used to generate
+PDLA:PP is part of the PDLA distribution. It is used to generate
 functions that are aware of indexing and threading rules from very
 concise descriptions. It can be useful for you if you want to write
 your own functions or if you want to interface functions from an
 external library so  that they support indexing and threading (and
-maybe dataflow as well, see L<PDL::Dataflow>). For further details
-check L<PDL::PP>.
+maybe dataflow as well, see L<PDLA::Dataflow>). For further details
+check L<PDLA::PP>.
 
 =head1 Appendix A
 
 =head2 Affine transformations - a special class of simple and powerful transformations
 
 [ This is also something to be added in future releases. Do we already
-have the general make_affine routine in PDL ? It is possible that we
+have the general make_affine routine in PDLA ? It is possible that we
 will reference another appropriate man page from here ]
 
 =head1 Appendix B
 
-=head2 signatures of standard PDL::PP compiled functions
+=head2 signatures of standard PDLA::PP compiled functions
 
-A selection of signatures of PDL primitives to show how many
+A selection of signatures of PDLA primitives to show how many
 dimensions PP compiled functions gobble up (and therefore you can
 figure out what will be threaded over). Most of those functions are
 the basic ones defined in C<primitive.pd>
@@ -1555,7 +1555,7 @@ the basic ones defined in C<primitive.pd>
 
 Copyright (C) 1997 Christian Soeller (c.soeller@auckland.ac.nz) & Tuomas
 J. Lukka (lukka@fas.harvard.edu). All rights reserved. Although destined for
-release as a man page with the standard PDL distribution, it is not
+release as a man page with the standard PDLA distribution, it is not
 public domain. Permission is granted to freely distribute verbatim
 copies of this document provided that no modifications outside of
 formatting be made, and that this notice remain intact.  You are

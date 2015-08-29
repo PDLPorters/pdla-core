@@ -4,16 +4,16 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  eval "use PDL::Slatec;";
+  eval "use PDLA::Slatec;";
   if ( !$@ ) {
-    eval "use PDL::Graphics::Limits;";
+    eval "use PDLA::Graphics::Limits;";
     plan tests => 12;
   } else {
-    plan skip_all => 'PDL::Slatec not available';
+    plan skip_all => 'PDLA::Slatec not available';
   }
 };
 
-*parse_vecspec = \&PDL::Graphics::Limits::parse_vecspec;
+*parse_vecspec = \&PDLA::Graphics::Limits::parse_vecspec;
 
 #################################################################
 

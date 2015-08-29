@@ -3,10 +3,10 @@ use Carp;
 
  $SIG{__DIE__} = sub {die Carp::longmess(@_);};
 
-use PDL;
-use PDL::Graphics::TriD;
-use PDL::Opt::Simplex;
-use PDL::Dbg;
+use PDLA;
+use PDLA::Graphics::TriD;
+use PDLA::Opt::Simplex;
+use PDLA::Dbg;
 
 my $asize = 5000;
 my $follow = zeroes(3,4,$asize);
@@ -33,7 +33,7 @@ sub func {
 die << "EOD";
 
 This example is disabled since the required
-'foomethod' has been disabled in recent versions of PDL.
+'foomethod' has been disabled in recent versions of PDLA.
 
 Contact pdl-porters if you feel you need this functionality.
 
@@ -45,14 +45,14 @@ $a -= 0.5; $a *= 30;
 $mf = d2c(func($a));
 points3d($a,[$mf]);
 
-PDL::Graphics::OpenGL::glShadeModel (&PDL::Graphics::OpenGL::GL_SMOOTH);
+PDLA::Graphics::OpenGL::glShadeModel (&PDLA::Graphics::OpenGL::GL_SMOOTH);
 
-$PDL::debug = 1;
-my $win = PDL::Graphics::TriD::get_current_window();
-my $g = PDL::Graphics::TriD::get_current_graph();
+$PDLA::debug = 1;
+my $win = PDLA::Graphics::TriD::get_current_window();
+my $g = PDLA::Graphics::TriD::get_current_graph();
 $fcc = [$followcs,pdl(0.2),$followcs];
-PDL::Graphics::TriD::Rout::combcoords(@$fcc,(my $fccs = PDL->null));
-my $line = new PDL::Graphics::TriD::LineStrip($follows->px,$fccs->px);
+PDLA::Graphics::TriD::Rout::combcoords(@$fcc,(my $fccs = PDLA->null));
+my $line = new PDLA::Graphics::TriD::LineStrip($follows->px,$fccs->px);
 
 # $win->add_object($line);
 

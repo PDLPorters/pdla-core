@@ -15,7 +15,7 @@ package   # have to break this up so the
 # we put the modified function into its own little file
 # to keep the runtime impact at a minimum
 #
-# use as follows in modules containing inlined PDL::PP code:
+# use as follows in modules containing inlined PDLA::PP code:
 #
 #   use Inline::MakePdlppInstallable;
 #   use Inline Pdlpp => ....
@@ -33,7 +33,7 @@ sub install {
     # print STDERR "in redefined Inline::install\n";
     croak M64_install_not_c($o->{API}{language_id})
       unless uc($o->{API}{language_id}) eq 'C' ||
-	uc($o->{API}{language_id}) eq 'PDLPP'; # also allow Pdlpp !
+	uc($o->{API}{language_id}) eq 'PDLAPP'; # also allow Pdlpp !
     croak M36_usage_install_main()
       if ($o->{API}{pkg} eq 'main');
     croak M37_usage_install_auto()

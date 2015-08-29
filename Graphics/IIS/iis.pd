@@ -3,11 +3,11 @@ pp_addpm({At=>Top},<<'EOD');
 
 =head1 NAME
 
-PDL::Graphics::IIS - Display PDL images on IIS devices (saoimage/ximtool)
+PDLA::Graphics::IIS - Display PDLA images on IIS devices (saoimage/ximtool)
 
 =head1 SYNOPSIS
 
- use PDL::Graphics::IIS;
+ use PDLA::Graphics::IIS;
  saoimage ( -geometry => '800x800' );
  iis rvals(100,100);
 
@@ -82,8 +82,8 @@ pp_add_exported('','iis iiscur iiscirc $stdimage $iisframe saoimage ximtool');
 
 pp_addpm(<<'ENDOFPM');
 
-use PDL::Core '';
-use PDL::Basic '';
+use PDLA::Core '';
+use PDLA::Basic '';
 use Carp;
 
 $iisframe      = 1;                # Starting defaults
@@ -114,7 +114,7 @@ Displays an image on a IIS device (e.g. SAOimage/Ximtool)
  (image(m,n),[\%options]) or (image(m,n),[min(),max()])
 
 Displays image on a IIS device. If C<min()> or C<max()> are omitted they
-are autoscaled. A good demonstration of PDL threading can be had
+are autoscaled. A good demonstration of PDLA threading can be had
 by giving C<iis()> a data *cube* - C<iis()> will be repeatedly called
 for each plane of the cube resulting in a poor man's movie!
 
@@ -147,7 +147,7 @@ sub iis {
     elsif ( $#_ == 0 ) {
       barf $usage unless ref($_[0]) eq "HASH";
 
-      my $opt = new PDL::Options( { MIN => undef, MAX => undef, TITLE => $title, FRAME => $frame } );
+      my $opt = new PDLA::Options( { MIN => undef, MAX => undef, TITLE => $title, FRAME => $frame } );
       $opt->options( shift );
       my $options = $opt->current;
 
@@ -161,8 +161,8 @@ sub iis {
     fbconfig($stdimage) if $stdimage ne $last_stdimage;
     $min = $image->min unless defined $min;
     $max = $image->max unless defined $max;
-    print "Displaying $nx x $ny image in frame $iisframe from $min to $max ...\n" if $PDL::verbose;
-    PDL::_iis($image,$min,$max,$title);
+    print "Displaying $nx x $ny image in frame $iisframe from $min to $max ...\n" if $PDLA::verbose;
+    PDLA::_iis($image,$min,$max,$title);
     $iisframe = $frame; # restore value
     1;
 }
@@ -206,10 +206,10 @@ Draws a circle on a IIS device (e.g. SAOimage/Ximtool)
 
 Draws circles on the IIS device with specied points and colours. Because
 this module uses 
-L<PDL::PP|PDL::PP> threading you can supply lists of points via
+L<PDLA::PP|PDLA::PP> threading you can supply lists of points via
 1D arrays, etc.
 
-An amusing PDL idiom is:
+An amusing PDLA idiom is:
 
  pdl> iiscirc iiscur
 
@@ -241,7 +241,7 @@ sub iiscirc {
    fbconfig($stdimage) if $stdimage ne $last_stdimage;
    $radius = 10 unless defined $radius;
    $colour = 204 unless defined $colour;
-   PDL::_iiscirc($x, $y, $radius, $colour);
+   PDLA::_iiscirc($x, $y, $radius, $colour);
    1;
 }
 
@@ -321,7 +321,7 @@ sub fbconfig {
     barf 'No frame buffer configuration "'.$name.'" found'."\n"
        unless defined $imtoolrc{$name};
     ($fbconfig, $fb_x, $fb_y ) = @{ $imtoolrc{$name} };
-    print "Using $stdimage - fbconfig=$fbconfig (${fb_x}x$fb_y)\n" if $PDL::verbose;;
+    print "Using $stdimage - fbconfig=$fbconfig (${fb_x}x$fb_y)\n" if $PDLA::verbose;;
     $last_stdimage = $stdimage;
 1;}
 
@@ -382,7 +382,7 @@ sub findfifo {
        $fifi = "$HOME/dev/imt1i"; $fifo = "$HOME/dev/imt1o";
    }
    print "Using FIFO devices in:  $fifi\n".
-         "                   out: $fifo\n" if $PDL::verbose;
+         "                   out: $fifo\n" if $PDLA::verbose;
    for $pipe ($fifi, $fifo) {
       if (!-p $pipe) {
          print "FIFO $pipe does not exist - try and create now? "; my $ans = <STDIN>;
@@ -425,7 +425,7 @@ EOD
 
 pp_addxs('',<<'EOD');
 
-MODULE = PDL::Graphics::IIS PACKAGE = PDL::Graphics::IIS
+MODULE = PDLA::Graphics::IIS PACKAGE = PDLA::Graphics::IIS
 
 void
 _iiscur_int()
@@ -453,7 +453,7 @@ EOD
 
 # Internal routine for iis()
 
-pp_bless('PDL::Graphics::IIS');
+pp_bless('PDLA::Graphics::IIS');
 
 pp_def('_iis',
         Pars => 'image(m,n); min(); max();',
@@ -510,7 +510,7 @@ pp_def('_iis',
 
       /* Send WCS info */
 
-      hdr[TRANSFER_ID] = PDL_IIS_IWRITE | PACKED;
+      hdr[TRANSFER_ID] = PDLA_IIS_IWRITE | PACKED;
       hdr[THING_COUNT] = -SZ_WCSTEXT;
       hdr[SUB_UNIT]   = WCS;
       hdr[CHECK_SUM]  = 0;
@@ -568,7 +568,7 @@ pp_def('_iis',
                  nlines = ny2 - y;
 
               /* create header */
-              hdr[TRANSFER_ID] = PDL_IIS_IWRITE | PACKED | BLOCKXFER;
+              hdr[TRANSFER_ID] = PDLA_IIS_IWRITE | PACKED | BLOCKXFER;
               hdr[THING_COUNT] = -nlines*frameX;
               hdr[SUB_UNIT] = REFRESH;
               hdr[CHECK_SUM] = 0;
@@ -642,8 +642,8 @@ None known
 Copyright (C) Karl Glazebrook 1997.
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =cut

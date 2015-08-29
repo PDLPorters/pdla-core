@@ -7,20 +7,20 @@ Last saved: Tue 11 Oct 2011 12:53:55 PM
                         GENERAL NOTES
 =================================================================
 NOTE: These install notes have been partially reviewed
-for the PDL-2.4.9 release.  It is recommended that you
-build and install PDL based on a full cygwin 1.7.17 or
+for the PDLA-2.4.9 release.  It is recommended that you
+build and install PDLA based on a full cygwin 1.7.17 or
 later install.  Please post to the perldl mailing list
 for help or questions regarding a cygwin install.
 
 By default, Cygwin has an ~300MB process memory limit.
 If you work with large data sets, you may wish to
-use the native win32 PDL with either ActiveState Perl
+use the native win32 PDLA with either ActiveState Perl
 or Strawberry Perl.  Otherwise, you'll want to set the
 value of heap_chunk_in_mb to allow for bigger data as
 described in the Cygwin Users Guide:
 http://www.cygwin.com/cygwin-ug-net/setup-maxmem.html
 
-Work is underway to improve the native win32 perl PDL 
+Work is underway to improve the native win32 perl PDLA 
 support for external dependencies so that it may be
 used, feature for feature, instead of the cygwin port.
 
@@ -39,7 +39,7 @@ this problem.
                  Installing with CPAN on Cygwin
 =================================================================
 If you already have a full cygwin install on your PC, the
-simplest way to get a basic PDL is to use the cpan shell.
+simplest way to get a basic PDLA is to use the cpan shell.
 
 This will get you all the functionality that is supported
 by existing cygwin package functionality (i.e. available
@@ -55,7 +55,7 @@ Just start up an xterm and run cpan from the bash prompt:
   cpan> install ExtUtils::F77
   cpan> install OpenGL
   cpan> force install Inline
-  cpan> install PDL
+  cpan> install PDLA
 
 This installs the Perl OpenGL (a.k.a POGL) module, ExtUtils::F77,
 and Inline (the force here is necessary to work around a taint
@@ -75,17 +75,17 @@ in installs for the following dependencies:
 
 if they are not already installed or of a recent enough version.
 
-You should finish with a PDL having the following functionality:
+You should finish with a PDLA having the following functionality:
 
-  - base PDL modules
+  - base PDLA modules
 
-  - PDL::IO::GD
-  - PDL::GIS::Proj
-  - PDL::Graphics::TriD
-  - PDL::GSL::*
-  - PDL::Minuit
-  - PDL::Slatec
-  - PDL::Transform::Proj4
+  - PDLA::IO::GD
+  - PDLA::GIS::Proj
+  - PDLA::Graphics::TriD
+  - PDLA::GSL::*
+  - PDLA::Minuit
+  - PDLA::Slatec
+  - PDLA::Transform::Proj4
 
 
 
@@ -94,11 +94,11 @@ You should finish with a PDL having the following functionality:
 =================================================================
 In general, the standard install process for perl modules
 should work on cygwin.  If you don't want to accept the
-default build options for PDL, edit the perldl.conf file.
-You'll find that file in the top level PDL folder/directory.
+default build options for PDLA, edit the perldl.conf file.
+You'll find that file in the top level PDLA folder/directory.
 
-The remaining PDL functionality depends on external libraries
-and packages that must be pre-installed before installing PDL.
+The remaining PDLA functionality depends on external libraries
+and packages that must be pre-installed before installing PDLA.
 
 If you want to use other modules with external dependencies
 not available through the Setup.exe from http://www.cygwin.com
@@ -107,9 +107,9 @@ libraries yourself (see the HOW-TO notes below).
 
 The manual configure/build/install process is:
 
- Edit the PDL/perldl.conf file as desired
+ Edit the PDLA/perldl.conf file as desired
 
- From the bash$ prompt in the top level PDL/ directory:
+ From the bash$ prompt in the top level PDLA/ directory:
 
   perl Makefile.PL	# configures all the Makefile
   
@@ -127,7 +127,7 @@ The manual configure/build/install process is:
 
    perl -Mblib t/plplot.t 
    1..27
-   ok 1 - use PDL::Graphics::PLplot;
+   ok 1 - use PDLA::Graphics::PLplot;
    # Looks like you planned 27 tests but only ran 1.
 
    perl -Mblib t/proj_transform.t 
@@ -141,14 +141,14 @@ The manual configure/build/install process is:
    REBASEALL below.
 
 
- If PDL built ok and passed tests, you can test the interactive
- PDL shell before actually installing PDL by running from the
- PDL/ top level directory:
+ If PDLA built ok and passed tests, you can test the interactive
+ PDLA shell before actually installing PDLA by running from the
+ PDLA/ top level directory:
 
-  perl -Mblib Perldl2/pdl2   # type quit to exit the PDL shell
+  perl -Mblib Perldl2/pdl2   # type quit to exit the PDLA shell
 
 
- To finally install the PDL into your system run:
+ To finally install the PDLA into your system run:
 
   make install
 
@@ -157,8 +157,8 @@ The manual configure/build/install process is:
 =================================================================
                               FFTW
 =================================================================
-!! You'll need to build *version 2* of the FFTW library for PDL.
-!! Version 3 has a new API and is not compatible with this PDL.
+!! You'll need to build *version 2* of the FFTW library for PDLA.
+!! Version 3 has a new API and is not compatible with this PDLA.
 
   # download the source code if needed, I used wget
   wget http://www.fftw.org/fftw-2.1.5.tar.gz
@@ -177,7 +177,7 @@ The manual configure/build/install process is:
 
 The FFTW library built without a hitch and installed in
 /usr/local as the default (/usr/local/lib, /usr/local/include,
-and /usr/local/info). A clean build of PDL should pick it up.
+and /usr/local/info). A clean build of PDLA should pick it up.
 
 NOTE: if problems see REBASEALL below.
  
@@ -206,7 +206,7 @@ NOTE: cygwin 1.7.9 has new include locations so the following
   
   Edit drivers.list to enable the drivers you wish but
   uncommenting desired drivers by removing the leading ! on the
-  line. Here are the ones I used (see PDL/cygwin/driver.list):
+  line. Here are the ones I used (see PDLA/cygwin/driver.list):
 
   $ grep -v '^!' drivers.list
     LXDRIV 0 /LATEX     LaTeX picture environment
@@ -226,7 +226,7 @@ NOTE: cygwin 1.7.9 has new include locations so the following
   Edit the sys_cygwin configuration file to work with the
   current version of cygwin. (TBD, update this file and pass on
   to pgplot distribution for inclusion, for now see
-  PDL/cygwin/g77_gcc.conf)
+  PDLA/cygwin/g77_gcc.conf)
 
   $ vi sys_cygwin/g77_gcc.conf 
 
@@ -260,7 +260,7 @@ NOTE: cygwin 1.7.9 has new include locations so the following
   perl. Download from www.cpan.org if needed.
 
 2. Now install the PGPLOT perl module. This is used by
-   PDL::Graphics::PGPLOT.
+   PDLA::Graphics::PGPLOT.
 
   $ tar xzf PGPLOT-2.19.tar.gz
   $ cd PGPLOT-2.19
@@ -298,7 +298,7 @@ NOTE: cygwin 1.7.9 has new include locations so the following
   pgplot library is installed and working. PGPLOT module is
   installed and working.
 
-3. Build PDL configured to use PGPLOT (in perldl.conf file).
+3. Build PDLA configured to use PGPLOT (in perldl.conf file).
    If your pgplot installation worked, it should be picked up
    automatically.
 
@@ -344,7 +344,7 @@ successfully.  A full cygwin install should work.
       ffmpeg is /usr/local/bin/ffmpeg
 
 (4) Now you should be able to run the wmpeg.pl demo
-    in Example/IO of the PDL source distribution
+    in Example/IO of the PDLA source distribution
     directory.  If the check install does not work,
     check that /usr/local/bin (or wherever the ffmpeg
     installed) is in the PATH.

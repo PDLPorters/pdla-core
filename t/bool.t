@@ -1,10 +1,10 @@
 use Test::More tests => 6;
 use Test::Exception;
-use PDL::LiteF;
+use PDLA::LiteF;
 use strict;
 use warnings;
 
-#  PDL::Core::set_debugging(1);
+#  PDLA::Core::set_debugging(1);
 kill 'INT',$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 {
@@ -28,4 +28,4 @@ ok any $a > 0;
 
 $a = ones 3;
 $b = $a + 1e-4;
-ok all PDL::approx $a, $b, 1e-3;
+ok all PDLA::approx $a, $b, 1e-3;

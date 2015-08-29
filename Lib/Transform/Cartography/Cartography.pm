@@ -1,11 +1,11 @@
 =head1 NAME
 
-PDL::Transform::Cartography - Useful cartographic projections
+PDLA::Transform::Cartography - Useful cartographic projections
 
 =head1 SYNOPSIS
 
  # make a Mercator map of Earth
- use PDL::Transform::Cartography;
+ use PDLA::Transform::Cartography;
  $a = earth_coast();
  $a = graticule(10,2)->glue(1,$a);
  $t = t_mercator;
@@ -14,9 +14,9 @@ PDL::Transform::Cartography - Useful cartographic projections
 
 =head1 DESCRIPTION
 
-PDL::Transform::Cartography includes a variety of useful cartographic
+PDLA::Transform::Cartography includes a variety of useful cartographic
 and observing projections (mappings of the surface of a sphere),
-including reprojected observer coordinates.  See L<PDL::Transform>
+including reprojected observer coordinates.  See L<PDLA::Transform>
 for more information about image transforms in general.
 
 Cartographic transformations are used for projecting not just
@@ -107,7 +107,7 @@ considerably but introducing L<"equidistant azimuthal"|/t_az_eqd> distortion --
 there's no such thing as a free lunch!
 
 Because many solar-system objects are spherical,
-PDL::Transform::Cartography includes perspective projections for
+PDLA::Transform::Cartography includes perspective projections for
 producing maps of spherical bodies from perspective views.  Those
 projections are L<"t_vertical"|/t_vertical> and
 L<"t_perspective"|/t_perspective>.  They map between (lat,lon) on the
@@ -205,10 +205,10 @@ for example, earth_coast could return a graticule if asked, instead of
 needing one to be glued on.
 
 The class structure is somewhat messy because of the varying needs of
-the different transformations.  PDL::Transform::Cartography is a base
+the different transformations.  PDLA::Transform::Cartography is a base
 class that interprets the origin options and sets up the basic
 machinery of the Transform.  The conic projections have their
-own subclass, PDL::Transform::Conic, that interprets the standard
+own subclass, PDLA::Transform::Conic, that interprets the standard
 parallels.  Since the cylindrical and azimuthal projections are pretty
 simple, they are not subclassed.
 
@@ -219,15 +219,15 @@ merely for the sake of pedantry.
 =head1 AUTHOR
 
 Copyright 2002, Craig DeForest (deforest@boulder.swri.edu).  This
-module may be modified and distributed under the same terms as PDL
+module may be modified and distributed under the same terms as PDLA
 itself.  The module comes with NO WARRANTY.
 
 The included digital world map is derived from the 1987 CIA World Map,
 translated to ASCII in 1988 by Joe Dellinger (geojoe@freeusp.org) and
 simplified in 1995 by Kirk Johnson (tuna@indra.com) for the program
 XEarth.  The map comes with NO WARRANTY.  An ASCII version of the map,
-and a sample PDL function to read it, may be found in the Demos
-subdirectory of the PDL source distribution.
+and a sample PDLA function to read it, may be found in the Demos
+subdirectory of the PDLA source distribution.
 
 =head1 FUNCTIONS
 
@@ -236,14 +236,14 @@ auxiliary functions (no leading 't_').
 
 =cut
 
-# Import PDL::Transform into the calling package -- the cartography
+# Import PDLA::Transform into the calling package -- the cartography
 # stuff isn't much use without it.
-use PDL::Transform;
+use PDLA::Transform;
 
-package PDL::Transform::Cartography;
-use PDL::Core ':Internal'; # Load 'topdl' (internal routine)
+package PDLA::Transform::Cartography;
+use PDLA::Core ':Internal'; # Load 'topdl' (internal routine)
 
-@ISA = ( 'Exporter','PDL::Transform' );
+@ISA = ( 'Exporter','PDLA::Transform' );
 our $VERSION = "0.6";
 $VERSION = eval $VERSION;
 
@@ -254,24 +254,24 @@ BEGIN {
   %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 }
 
-use PDL;
-use PDL::Transform;
-use PDL::MatrixOps;
-use PDL::NiceSlice;
+use PDLA;
+use PDLA::Transform;
+use PDLA::MatrixOps;
+use PDLA::NiceSlice;
 
 use Carp;
 
 
 ##############################
-# Steal _opt from PDL::Transform.
-*PDL::Transform::Cartography::_opt = \&PDL::Transform::_opt;
+# Steal _opt from PDLA::Transform.
+*PDLA::Transform::Cartography::_opt = \&PDLA::Transform::_opt;
 use overload '""' => \&_strval;
 
 use strict;
 
-our $PI = $PDL::Transform::PI;
-our $DEG2RAD = $PDL::Transform::DEG2RAD;
-our $RAD2DEG = $PDL::Transform::RAD2DEG;
+our $PI = $PDLA::Transform::PI;
+our $DEG2RAD = $PDLA::Transform::DEG2RAD;
+our $RAD2DEG = $PDLA::Transform::RAD2DEG;
 
 sub _strval {
   my($me) = shift;
@@ -289,11 +289,11 @@ sub _strval {
 
 =for ref
 
-(Cartography) PDL constructor - generate a lat/lon grid.
+(Cartography) PDLA constructor - generate a lat/lon grid.
 
 Returns a grid of meridians and parallels as a list of vectors suitable
 for sending to
-L<PDL::Graphics::PGPLOT::Window::lines|PDL::Graphics::PGPLOT::Window/lines>
+L<PDLA::Graphics::PGPLOT::Window::lines|PDLA::Graphics::PGPLOT::Window/lines>
 for plotting.
 The grid is in degrees in (theta, phi) coordinates -- this is (E lon, N lat) 
 for terrestrial grids or (RA, dec) for celestial ones.  You must then 
@@ -306,11 +306,11 @@ You can attach the graticule to a vector map using the syntax:
 In array context you get back a 2-element list containing a piddle of
 the (theta,phi) pairs and a piddle of the pen values (1 or 0) suitable for
 calling
-L<PDL::Graphics::PGPLOT::Window::lines|PDL::Graphics::PGPLOT::Window/lines>.
+L<PDLA::Graphics::PGPLOT::Window::lines|PDLA::Graphics::PGPLOT::Window/lines>.
 In scalar context the two elements are combined into a single piddle.
 
 The pen values associated with the graticule are negative, which will cause
-L<PDL::Graphics::PGPLOT::Window::lines|PDL::Graphics::PGPLOT::Window/lines>
+L<PDLA::Graphics::PGPLOT::Window::lines|PDLA::Graphics::PGPLOT::Window/lines>
 to plot them as hairlines.
 
 If a third argument is given, it is a hash of options, which can be:
@@ -336,10 +336,10 @@ sub graticule {
     my $dup = $hash->{dup} || 0;
 
     $grid = 10 unless defined($grid);
-    $grid = $grid->at(0) if(ref($grid) eq 'PDL');
+    $grid = $grid->at(0) if(ref($grid) eq 'PDLA');
     
     $step = $grid/2 unless defined($step);
-    $step = $step->at(0) if(ref($step) eq 'PDL');
+    $step = $step->at(0) if(ref($step) eq 'PDLA');
 
     # Figure number of parallels and meridians
     my $np = 2 * int(90/$grid);
@@ -389,14 +389,14 @@ sub graticule {
 
 =for ref
 
-(Cartography) PDL constructor - coastline map of Earth
+(Cartography) PDLA constructor - coastline map of Earth
 
 Returns a vector coastline map based on the 1987 CIA World Coastline
 database (see author information).  The vector coastline data are in
 plate caree format so they can be converted to other projections via
-the L<apply|PDL::Transform/apply> method and cartographic transforms,
+the L<apply|PDLA::Transform/apply> method and cartographic transforms,
 and are suitable for plotting with the
-L<lines|PDL::Graphics::PGPLOT::Window/lines>
+L<lines|PDLA::Graphics::PGPLOT::Window/lines>
 method in the PGPLOT
 output library:  the first dimension is (X,Y,pen) with breaks having 
 a pen value of 0 and hairlines having negative pen values.  The second 
@@ -416,7 +416,7 @@ C<earth_coast> is just a quick-and-dirty way of loading the file
 =cut
 
 sub earth_coast {
-    my $fn = "PDL/Transform/Cartography/earth_coast.vec.fits";
+    my $fn = "PDLA/Transform/Cartography/earth_coast.vec.fits";
     local $_;
     foreach(@INC) {
 	my $file = "$_/$fn";
@@ -433,24 +433,24 @@ sub earth_coast {
 
 =for ref
 
-(Cartography) PDL constructor - RGB pixel map of Earth 
+(Cartography) PDLA constructor - RGB pixel map of Earth 
 
 Returns an RGB image of Earth based on data from the MODIS instrument
 on the NASA EOS/Terra satellite.  (You can get a full-resolution
 image from L<http://earthobservatory.nasa.gov/Newsroom/BlueMarble/>).
 The image is a plate caree map, so you can convert it to other
-projections via the L<map|PDL::Transform/map> method and cartographic
+projections via the L<map|PDLA::Transform/map> method and cartographic
 transforms.
 
 This is just a quick-and-dirty way of loading the earth-image files that
-are distributed along with PDL.
+are distributed along with PDLA.
 
 =cut
 
 sub earth_image {
   my($nd) = shift;
   my $f;
-  my $dir = "PDL/Transform/Cartography/earth_";
+  my $dir = "PDLA/Transform/Cartography/earth_";
   $f = ($nd =~ m/^n/i) ? "${dir}night.jpg" : "${dir}day.jpg";
   
   local $_;
@@ -481,7 +481,7 @@ sub earth_image {
   $h->{CTYPE2}='Latitude';    $h->{CUNIT2}='degrees'; $h->{CDELT2}=180/1024.0;
   $h->{CTYPE3}='RGB';         $h->{CUNIT3}='index';   $h->{CDELT3}=1.0;
   $h->{COMMENT}='Plate Caree Projection';
-  $h->{HISTORY}='PDL Distribution Image, derived from NASA/MODIS data',
+  $h->{HISTORY}='PDLA Distribution Image, derived from NASA/MODIS data',
   
   $im->hdrcpy(1);
   $im;
@@ -497,14 +497,14 @@ sub earth_image {
 
 =for ref
 
-(Cartography) PDL method - remove projection irregularities
+(Cartography) PDLA method - remove projection irregularities
 
 C<clean_lines> massages vector data to remove jumps due to singularities
 in the transform.
 
 In the first (scalar) form, C<$line_pen> contains both (X,Y) points and pen 
 values suitable to be fed to
-L<lines|PDL::Graphics::PGPLOT::Window/lines>:
+L<lines|PDLA::Graphics::PGPLOT::Window/lines>:
 in the second (list) form, C<$lines> contains the (X,Y) points and C<$pen>
 contains the pen values.  
 
@@ -526,7 +526,7 @@ it is probably not worth the computational overhead.
 
 =cut
 
-*PDL::clean_lines = \&clean_lines;
+*PDLA::clean_lines = \&clean_lines;
 sub clean_lines {
     my($lines) = shift;
     my($a) = shift;
@@ -545,7 +545,7 @@ sub clean_lines {
 	    # duplex case no thresh
 	    $l = $lines->(0:1);
 	    $p = $lines->is_inplace ? $lines->((2)) : $lines->((2))->sever;
-	} elsif(UNIVERSAL::isa($a,'PDL') && 
+	} elsif(UNIVERSAL::isa($a,'PDLA') && 
 		$lines->((0))->nelem == $a->nelem) {
 	    # Separate case no thresh
 	    $l = $lines;
@@ -611,7 +611,7 @@ sub _uconv{
       undef
       );
   print STDERR "Cartography: unrecognized unit '$_'\n"    
-    if( (!defined $a) && !$silent && ($PDL::debug || $PDL::verbose));
+    if( (!defined $a) && !$silent && ($PDLA::debug || $PDLA::verbose));
   $a;
 }
 
@@ -627,7 +627,7 @@ sub _uconv{
 #
 
 
-sub _new { new('PDL::Transform::Cartography',@_); } # not exported
+sub _new { new('PDLA::Transform::Cartography',@_); } # not exported
 sub new {
     my($class) = shift;
     my($name) = pop;
@@ -636,7 +636,7 @@ sub new {
     $o = {@_}
       unless(ref $o eq 'HASH');
 
-    my($me) = PDL::Transform::new($class);
+    my($me) = PDLA::Transform::new($class);
     $me->{idim} = $me->{odim} = 2;
     $me->{name} = $name;
  
@@ -645,7 +645,7 @@ sub new {
     # 
     my $or = _opt($o,['o','origin','Origin'],zeroes(2));
     if($or->nelem != 2) {
-	croak("PDL::Transform::Cartography: origin must have 2 elements\n");
+	croak("PDLA::Transform::Cartography: origin must have 2 elements\n");
     }
 
     my($l) = _opt($o,['l','L']);
@@ -697,7 +697,7 @@ sub new {
 # Compose self with t_rot_sphere if necessary -- useful for 
 # finishing off the transformations that accept the origin and roll 
 # options.
-sub PDL::Transform::Cartography::_finish {
+sub PDLA::Transform::Cartography::_finish {
   my($me) = shift;
   if( ($me->{params}->{o}->(0) != 0) || 
       ($me->{params}->{o}->(1) != 0) ||
@@ -729,7 +729,7 @@ sub PDL::Transform::Cartography::_finish {
 (Cartography) 3-D globe projection (conformal; authalic)
 
 This is similar to the inverse of
-L<t_spherical|PDL::Transform/t_spherical>,
+L<t_spherical|PDLA::Transform/t_spherical>,
 but the
 inverse transform projects 3-D coordinates onto the unit sphere,
 yielding only a 2-D (lon/lat) output.  Similarly, the forward
@@ -754,8 +754,8 @@ There is no oblique transform for t_unit_sphere, largely because
 it's so easy to rotate the output using t_linear once it's out into 
 Cartesian space.  In fact, the other projections implement oblique
 transforms by
-L<wrapping|PDL::Transform/t_wrap>
-L<t_linear|PDL::Transform/t_linear> with
+L<wrapping|PDLA::Transform/t_wrap>
+L<t_linear|PDLA::Transform/t_linear> with
 L<t_unit_sphere|/t_unit_sphere>.
 
 OPTIONS:
@@ -943,7 +943,7 @@ OPTIONS
 
 =item m, mask, Mask, h, hemisphere, Hemisphere [default 'near']
 
-The hemisphere to keep in the projection (see L<PDL::Transform::Cartography>).
+The hemisphere to keep in the projection (see L<PDLA::Transform::Cartography>).
 
 =back 
 
@@ -1009,7 +1009,7 @@ sub t_orthographic {
 		if($o->{m} == 1);
 	    $idx = whichND($out->((2)) > 0)
 		if($o->{m} == 2);
-	    if(defined $idx && ref $idx eq 'PDL' && $idx->nelem){
+	    if(defined $idx && ref $idx eq 'PDLA' && $idx->nelem){
 	      $out->((0))->range($idx) .= $o->{bad};
 	      $out->((1))->range($idx) .= $o->{bad};
 	    }
@@ -1075,7 +1075,7 @@ vertical scale (which is correct everywhere).
 
 =cut
 
-@PDL::Transform::Cartography::Caree::ISA = ('PDL::Transform::Cartography');
+@PDLA::Transform::Cartography::Caree::ISA = ('PDLA::Transform::Cartography');
 
 sub t_caree {
     my($me) = _new(@_,'Plate Caree Projection');
@@ -1151,7 +1151,7 @@ is also correct at the parallel of opposite sign.
 =cut
 
 
-@PDL::Transform::Cartography::Mercator::ISA = ('PDL::Transform::Cartography');
+@PDLA::Transform::Cartography::Mercator::ISA = ('PDLA::Transform::Cartography');
 
 sub t_mercator {
     my($me) = _new(@_,'Mercator Projection');
@@ -1264,7 +1264,7 @@ many Europeans prefer the "Gauss-Kruger" system, which is virtually
 identical to UTM but with a normal tangent Mercator (standard parallel
 on the prime meridian).  To get this behavior, set "gk=>1".
 
-Like the rest of the PDL::Transform::Cartography package, t_utm uses a
+Like the rest of the PDLA::Transform::Cartography package, t_utm uses a
 spherical datum rather than the "official" ellipsoidal datums for the
 UTM system.
 
@@ -1376,7 +1376,7 @@ vertical stretching and horizontal squishing (to achieve constant area).
 
 =cut
 
-@PDL::Transform::Cartography::SinLat::ISA = ('PDL::Transform::Cartography');
+@PDLA::Transform::Cartography::SinLat::ISA = ('PDLA::Transform::Cartography');
 sub t_sin_lat {
     my($me) = _new(@_,"Sine-Latitude Projection");
 
@@ -1490,10 +1490,10 @@ sub t_sinusoidal {
 # rather than method calling, and it puts its own class name on the
 # front of the argument list.  But, hey, it works...
 #
-@PDL::Transform::Cartography::Conic::ISA = ('PDL::Transform::Cartography');
+@PDLA::Transform::Cartography::Conic::ISA = ('PDLA::Transform::Cartography');
 sub _c_new {
     my($def_std) = pop;
-    my($me) = new('PDL::Transform::Cartography::Conic',@_); 
+    my($me) = new('PDLA::Transform::Cartography::Conic',@_); 
 
     my($p) = $me->{params};
     $p->{std} = _opt($me->{options},['s','std','standard','Standard'],
@@ -1508,7 +1508,7 @@ sub _c_new {
     $me;
 }
 
-sub PDL::Transform::Cartography::Conic::stringify {
+sub PDLA::Transform::Cartography::Conic::stringify {
     my($me) = shift;
     my($out) = $me->SUPER::stringify;
 
@@ -1564,7 +1564,7 @@ sub t_conic {
 
     if($p->{cylindrical}) {
 	print STDERR "Simple conic: degenerate case; using Plate Caree\n"
-	    if($PDL::verbose);
+	    if($PDLA::verbose);
 	return t_caree($me->{options});
     }
 
@@ -1681,7 +1681,7 @@ sub t_albers  {
 
     if($p->{cylindrical}) {
 	print STDERR "Albers equal-area conic: degenerate case; using equal-area cylindrical\n"
-	    if($PDL::verbose);
+	    if($PDLA::verbose);
 	return t_sin_lat($me->{options});
     }
 
@@ -1783,7 +1783,7 @@ sub t_lambert {
 
     if($p->{cylindrical}){
 	print STDERR "Lambert conformal conic: std parallels are opposite & equal; using Mercator\n" 
-	    if($PDL::verbose);
+	    if($PDLA::verbose);
 	return t_mercator($me->{options});
     }
     
@@ -2332,7 +2332,7 @@ OPTIONS
 
 =item m, mask, Mask, h, hemisphere, Hemisphere [default 'near']
 
-The hemisphere to keep in the projection (see L<PDL::Transform::Cartography>).
+The hemisphere to keep in the projection (see L<PDLA::Transform::Cartography>).
 
 =item r0, R0, radius, d, dist, distance [default 2.0]
 
@@ -2386,13 +2386,13 @@ sub t_vertical {
     
     if($p->{r0} == 0) {
       print "t_vertical: r0 = 0; using t_gnomonic instead\n"
-	if($PDL::verbose);
+	if($PDLA::verbose);
       return t_gnomonic($me->{options});
     }
     
     if($p->{r0} == 1) {
       print "t_vertical: r0 = 1; using t_stereographic instead\n"
-	if($PDL::verbose);
+	if($PDLA::verbose);
       return t_stereographic($me->{options});
     }
     
@@ -2450,7 +2450,7 @@ sub t_vertical {
 	    $idx = whichND($cos_c > 1.0/$o->{r0})
 		if($o->{m} == 2);
 
-	    if(defined $idx && ref $idx eq 'PDL' && $idx->nelem){
+	    if(defined $idx && ref $idx eq 'PDLA' && $idx->nelem){
 	      $out->((0))->range($idx) .= $o->{bad};
 	      $out->((1))->range($idx) .= $o->{bad};
 	    }
@@ -2816,7 +2816,7 @@ sub t_perspective {
       if( $o->{mag} == 1.0 ) {
 	  $rscale = - 1.0 / $dc->((0));
       } else {
-	  print "(using magnification...)\n" if $PDL::verbose;
+	  print "(using magnification...)\n" if $PDLA::verbose;
 	  $rscale = - tan( $o->{mag} * atan( $r / $dc->((0)) ) ) / $r;
       }
       $r *= $rscale;

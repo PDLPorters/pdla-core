@@ -6,16 +6,16 @@ use strict;
 use Config;
 use File::Basename qw(&basename &dirname);
 
-require 'Dev.pm'; PDL::Core::Dev->import;
-use vars qw( %PDL_DATATYPES );
+require 'Dev.pm'; PDLA::Core::Dev->import;
+use vars qw( %PDLA_DATATYPES );
 
 # check for bad value support
-require './Config.pm'; # to load the PDL not the Perl one
-die "No PDL::Config found" unless %PDL::Config;
-my $bvalflag = $PDL::Config{WITH_BADVAL};
-my $usenan = $PDL::Config{BADVAL_USENAN};
+require './Config.pm'; # to load the PDLA not the Perl one
+die "No PDLA::Config found" unless %PDLA::Config;
+my $bvalflag = $PDLA::Config{WITH_BADVAL};
+my $usenan = $PDLA::Config{BADVAL_USENAN};
 require 'Types.pm';
-PDL::Types->import(':All');
+PDLA::Types->import(':All');
 
 
 
@@ -50,7 +50,7 @@ print OUT <<"!WITH!SUBS!";
 
 print OUT <<'!HEADER!';
 #undef FOODEB
-#define PDL_CORE      /* For certain ifdefs */
+#define PDLA_CORE      /* For certain ifdefs */
 #include "pdl.h"      /* Data structure declarations */
 #include "pdlcore.h"  /* Core declarations */
 
@@ -108,14 +108,14 @@ FOO
 
 
 ##############################
-# PDL handling stuff starts here
+# PDLA handling stuff starts here
 #
 print OUT <<'!NO!SUBS!'
 static SV *getref_pdl(pdl *it) {
         SV *newref;
         if(!it->sv) {
                 SV *ref;
-                HV *stash = gv_stashpv("PDL",TRUE);
+                HV *stash = gv_stashpv("PDLA",TRUE);
                 SV *psv = newSViv(PTR2IV(it));
                 it->sv = psv;
                 newref = newRV_noinc(it->sv);
@@ -127,7 +127,7 @@ static SV *getref_pdl(pdl *it) {
         return newref;
 }
 
-void SetSV_PDL ( SV *sv, pdl *it ) {
+void SetSV_PDLA ( SV *sv, pdl *it ) {
         SV *newref = getref_pdl(it); /* YUCK!!!! */
         sv_setsv(sv,newref);
         SvREFCNT_dec(newref);
@@ -172,7 +172,7 @@ print OUT <<'!NO!SUBS!';
 #if defined _MSC_VER && _MSC_VER < 1400
 #pragma optimize("", off)
 #endif
-int pdl_whichdatatype (PDL_Anyval nv) {
+int pdl_whichdatatype (PDLA_Anyval nv) {
 !NO!SUBS!
 
 # generate the cases for the various types
@@ -186,7 +186,7 @@ for my $type (typesrtkeys()) {
 
 print OUT <<'!NO!SUBS!';
 
-        if( !finite(nv) ) { return PDL_D; }
+        if( !finite(nv) ) { return PDLA_D; }
 
         croak("Something's gone wrong: %lf cannot be converted by whichdatatype",
                 nv);
@@ -194,11 +194,11 @@ print OUT <<'!NO!SUBS!';
 
 /* Check minimum, at least float, datatype required to represent number */
 
-int pdl_whichdatatype_double (PDL_Anyval nv) {
-        TESTTYPE(PDL_F,PDL_Float)
-        TESTTYPE(PDL_D,PDL_Double)
+int pdl_whichdatatype_double (PDLA_Anyval nv) {
+        TESTTYPE(PDLA_F,PDLA_Float)
+        TESTTYPE(PDLA_D,PDLA_Double)
 
-        if( !finite(nv) ) { return PDL_D; }
+        if( !finite(nv) ) { return PDLA_D; }
         croak("Something's gone wrong: %lf cannot be converted by whichdatatype_double",
                 nv);
 }
@@ -213,10 +213,10 @@ int pdl_whichdatatype_double (PDL_Anyval nv) {
 
 /* Make a scratch dataspace for a scalar pdl */
 
-void pdl_makescratchhash(pdl *ret, PDL_Anyval data, int datatype) {
+void pdl_makescratchhash(pdl *ret, PDLA_Anyval data, int datatype) {
   STRLEN n_a;
   HV *hash;
-  SV *dat; PDL_Indx fake[1];
+  SV *dat; PDLA_Indx fake[1];
   
   /* Compress to smallest available type.  */
   ret->datatype = datatype;
@@ -246,20 +246,20 @@ void pdl_makescratchhash(pdl *ret, PDL_Anyval data, int datatype) {
 /*
   "Convert" a perl SV into a pdl (alright more like a mapping as
    the data block is not actually copied in the most common case
-   of a single scalar) scalars are automatically converted to PDLs.
+   of a single scalar) scalars are automatically converted to PDLAs.
 */
 
-pdl* SvPDLV ( SV* sv ) {
+pdl* SvPDLAV ( SV* sv ) {
 
    pdl* ret;
-   PDL_Indx fake[1];
+   PDLA_Indx fake[1];
    SV *sv2;
 
    if ( !SvROK(sv) ) {  
       /* The scalar is not a ref, so we can use direct conversion. */
 
       SV *dat;
-      PDL_Anyval data;
+      PDLA_Anyval data;
       int datatype;
 
       ret = pdl_new();  /* Scratch pdl */
@@ -268,9 +268,9 @@ pdl* SvPDLV ( SV* sv ) {
 
       /* handle undefined values */
       if( sv_undef(sv) ) {
-          sv = get_sv("PDL::undefval",1);
-          if(SvIV(get_sv("PDL::debug",1))){
-            fprintf(stderr,"Warning: SvPDLV converted undef to $PDL::undefval (%g).\n",SvNV(sv));
+          sv = get_sv("PDLA::undefval",1);
+          if(SvIV(get_sv("PDLA::debug",1))){
+            fprintf(stderr,"Warning: SvPDLAV converted undef to $PDLA::undefval (%g).\n",SvNV(sv));
           }
       }
 
@@ -289,7 +289,7 @@ if ( $bvalflag and $usenan ) {
        *
        */
       if ( finite(data) == 0 ) {
-        datatype = PDL_D;
+        datatype = PDLA_D;
       } else {
         datatype = pdl_whichdatatype_double(data);
       }
@@ -322,20 +322,20 @@ print OUT <<'!NO!SUBS!';
 
    if(SvTYPE(SvRV(sv)) == SVt_PVHV) {
         HV *hash = (HV*)SvRV(sv);
-        SV **svp = hv_fetchs(hash,"PDL",0);
+        SV **svp = hv_fetchs(hash,"PDLA",0);
         if(svp == NULL) {
-                croak("Hash given as a pdl - but not {PDL} key!");
+                croak("Hash given as a pdl - but not {PDLA} key!");
         }
         if(*svp == NULL) {
-                croak("Hash given as a pdl - but not {PDL} key (*svp)!");
+                croak("Hash given as a pdl - but not {PDLA} key (*svp)!");
         }
 
-        /* This is the magic hook which checks to see if {PDL}
+        /* This is the magic hook which checks to see if {PDLA}
         is a code ref, and if so executes it. It should
         return a standard piddle. This allows
-        all kinds of funky objects to be derived from PDL,
-        and allow normal PDL functions to still work so long
-        as the {PDL} code returns a standard piddle on
+        all kinds of funky objects to be derived from PDLA,
+        and allow normal PDLA functions to still work so long
+        as the {PDLA} code returns a standard piddle on
         demand - KGB */
 
         if (SvROK(*svp) && SvTYPE(SvRV(*svp)) == SVt_PVCV) {
@@ -350,7 +350,7 @@ print OUT <<'!NO!SUBS!';
            SPAGAIN ;
 
            if (count != 1)
-              croak("Execution of PDL structure failed to return one value\n") ;
+              croak("Execution of PDLA structure failed to return one value\n") ;
 
            sv=newSVsv(POPs);
 
@@ -367,7 +367,7 @@ print OUT <<'!NO!SUBS!';
         }
 
         if ( !SvROK(sv) ) {   /* Got something from a hash but not a ref */
-                croak("Hash given as pdl - but PDL key is not a ref!");
+                croak("Hash given as pdl - but PDLA key is not a ref!");
         }
     }
       
@@ -385,14 +385,14 @@ print OUT <<'!NO!SUBS!';
         /* Pull sizes using av_ndcheck */
         depth = 1 + av_ndcheck(av,dims,0,&datalevel);
 
-        return pdl_from_array(av,dims,PDL_D,NULL);
+        return pdl_from_array(av,dims,PDLA_D,NULL);
 
     } /* end of AV code */
     
     if (SvTYPE(SvRV(sv)) != SVt_PVMG)
-      croak("Error - tried to use an unknown data structure as a PDL");
-    else if( !( sv_derived_from( sv, "PDL") ) )
-      croak("Error - tried to use an unknown Perl object type as a PDL");
+      croak("Error - tried to use an unknown data structure as a PDLA");
+    else if( !( sv_derived_from( sv, "PDLA") ) )
+      croak("Error - tried to use an unknown Perl object type as a PDLA");
 
     sv2 = (SV*) SvRV(sv);
 
@@ -400,7 +400,7 @@ print OUT <<'!NO!SUBS!';
     ret = INT2PTR(pdl *, SvIV(sv2));
 
     /* Final check -- make sure it has the right magic number */
-    if(ret->magicno != PDL_MAGICNO) {
+    if(ret->magicno != PDLA_MAGICNO) {
         croak("Fatal error: argument is probably not a piddle, or\
  magic no overwritten. You're in trouble, guv: %p %p %lu\n",sv2,ret,ret->magicno);
    }
@@ -433,7 +433,7 @@ SV* pdl_copy( pdl* a, char* option ) {
 #ifdef FOOBAR
    }
    else{
-       XPUSHs(perl_get_sv("PDL::name",FALSE)); /* Default object */
+       XPUSHs(perl_get_sv("PDLA::name",FALSE)); /* Default object */
        XPUSHs(sv_2mortal(getref_pdl(a)));
        strcpy(meth,"new");
    }
@@ -459,12 +459,12 @@ SV* pdl_copy( pdl* a, char* option ) {
 
 /* Pack dims array - returns dims[] (pdl_malloced) and ndims */
 
-PDL_Indx* pdl_packdims ( SV* sv, int *ndims ) {
+PDLA_Indx* pdl_packdims ( SV* sv, int *ndims ) {
 
    SV*  bar;
    AV*  array;
    int i;
-   PDL_Indx *dims;
+   PDLA_Indx *dims;
 
    if (!(SvROK(sv) && SvTYPE(SvRV(sv))==SVt_PVAV))  /* Test */
        return NULL;
@@ -473,20 +473,20 @@ PDL_Indx* pdl_packdims ( SV* sv, int *ndims ) {
 
    *ndims = (int) av_len(array) + 1;  /* Number of dimensions */
 
-   dims = (PDL_Indx *) pdl_malloc( (*ndims) * sizeof(*dims) ); /* Array space */
+   dims = (PDLA_Indx *) pdl_malloc( (*ndims) * sizeof(*dims) ); /* Array space */
    if (dims == NULL)
       croak("Out of memory");
 
    for(i=0; i<(*ndims); i++) {
       bar = *(av_fetch( array, i, 0 )); /* Fetch */
-      dims[i] = (PDL_Indx) SvIV(bar);
+      dims[i] = (PDLA_Indx) SvIV(bar);
    }
    return dims;
 }
 
-/* unpack dims array into PDL SV* */
+/* unpack dims array into PDLA SV* */
 
-void pdl_unpackdims ( SV* sv, PDL_Indx *dims, int ndims ) {
+void pdl_unpackdims ( SV* sv, PDLA_Indx *dims, int ndims ) {
 
    AV*  array;
    HV* hash;
@@ -503,7 +503,7 @@ void pdl_unpackdims ( SV* sv, PDL_Indx *dims, int ndims ) {
          av_store( array, i, newSViv( (IV)dims[i] ) );
 }
 
-PDL_Indx pdl_safe_indterm( PDL_Indx dsz, PDL_Indx at, char *file, int lineno)
+PDLA_Indx pdl_safe_indterm( PDLA_Indx dsz, PDLA_Indx at, char *file, int lineno)
 {
   if (at >= 0 && at < dsz) return at;
   pdl_barf("access [%d] out of range [0..%d] (inclusive) at %s line %d",
@@ -546,7 +546,7 @@ static void pdl_barf_or_warn(const char* pat, int iswarn, va_list* args)
         return;
 
     /* ... otherwise we fall through and barf by calling
-     * the perl-level PDL::barf() or PDL::cluck()
+     * the perl-level PDLA::barf() or PDLA::cluck()
      */
 
     { /* scope block for C89 compatibility */
@@ -566,15 +566,15 @@ static void pdl_barf_or_warn(const char* pat, int iswarn, va_list* args)
 
         PUTBACK;
 
-        if(iswarn) call_pv("PDL::cluck", G_DISCARD);
-        else       call_pv("PDL::barf",  G_DISCARD);
+        if(iswarn) call_pv("PDLA::cluck", G_DISCARD);
+        else       call_pv("PDLA::barf",  G_DISCARD);
 
         FREETMPS;
         LEAVE;
     } /* end C89 compatibility scope block */
 }
 
-#define GEN_PDL_BARF_OR_WARN_I_STDARG(type, iswarn)     \
+#define GEN_PDLA_BARF_OR_WARN_I_STDARG(type, iswarn)     \
     void pdl_##type(const char* pat, ...)               \
     {                                                   \
         va_list args;                                   \
@@ -582,7 +582,7 @@ static void pdl_barf_or_warn(const char* pat, int iswarn, va_list* args)
         pdl_barf_or_warn(pat, iswarn, &args);           \
     }
 
-#define GEN_PDL_BARF_OR_WARN_LEGACY(type, iswarn)       \
+#define GEN_PDLA_BARF_OR_WARN_LEGACY(type, iswarn)       \
     void pdl_##type(pat, va_alist)                      \
         char *pat;                                      \
         va_dcl                                          \
@@ -593,11 +593,11 @@ static void pdl_barf_or_warn(const char* pat, int iswarn, va_list* args)
     }
 
 #ifdef I_STDARG
-GEN_PDL_BARF_OR_WARN_I_STDARG(barf, 0)
-GEN_PDL_BARF_OR_WARN_I_STDARG(warn, 1)
+GEN_PDLA_BARF_OR_WARN_I_STDARG(barf, 0)
+GEN_PDLA_BARF_OR_WARN_I_STDARG(warn, 1)
 #else
-GEN_PDL_BARF_OR_WARN_LEGACY(barf, 0)
-GEN_PDL_BARF_OR_WARN_LEGACY(warn, 1)
+GEN_PDLA_BARF_OR_WARN_LEGACY(barf, 0)
+GEN_PDLA_BARF_OR_WARN_LEGACY(warn, 1)
 #endif
 
 
@@ -606,35 +606,35 @@ GEN_PDL_BARF_OR_WARN_LEGACY(warn, 1)
  * CONSTRUCTOR/INGESTION HELPERS
  *
  * The following routines assist with the permissive constructor,
- * which is designed to build a PDL out of basically anything thrown at it.
+ * which is designed to build a PDLA out of basically anything thrown at it.
  *
  * They are all called by pdl_avref in Core.xs, which in turn is called by the constructors
  * in Core.pm.PL.  The main entry point is pdl_from_array(), which calls 
- * av_ndcheck() to identify the necessary size of the output PDL, and then dispatches
- * the copy into pdl_setav_<type> according to the type of the output PDL.
+ * av_ndcheck() to identify the necessary size of the output PDLA, and then dispatches
+ * the copy into pdl_setav_<type> according to the type of the output PDLA.
  *
  */
 
 /******************************
  * av_ndcheck -
  *  traverse a Perl array ref recursively, following down any number of
- *  levels of references, and generate a minimal PDL dim list that can
+ *  levels of references, and generate a minimal PDLA dim list that can
  *  encompass them all according to permissive-constructor rules.
  *
- *  Scalars, array refs, and PDLs may be mixed in the incoming AV.
+ *  Scalars, array refs, and PDLAs may be mixed in the incoming AV.
  *
  *  The routine works out the dimensions of a corresponding
- *  piddle (in the AV dims) in reverse notation (vs PDL conventions).
+ *  piddle (in the AV dims) in reverse notation (vs PDLA conventions).
  *
  *  It does not enforce a rectangular array on the input, the idea being that
  *  omitted values will be set to zero or the undefval in the resulting piddle,
  *  i.e. we can make piddles from 'sparse' array refs.
  *
- *  Empty PDLs are treated like any other dimension -- i.e. their 
+ *  Empty PDLAs are treated like any other dimension -- i.e. their 
  *  0-length dimensions are thrown into the mix just like nonzero 
  *  dimensions would be.
  *
- *  The possible presence of empty PDLs forces us to pad out dimensions
+ *  The possible presence of empty PDLAs forces us to pad out dimensions
  *  to unity explicitly in cases like
  *         [ Empty[2x0x2], 5 ]
  *  where simple parsing would yield a dimlist of 
@@ -642,16 +642,16 @@ GEN_PDL_BARF_OR_WARN_LEGACY(warn, 1)
  *  which is still Empty.
  */
 
-PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
+PDLA_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
 {
-  PDL_Indx i, len, oldlen;
+  PDLA_Indx i, len, oldlen;
   int newdepth, depth = 0;
   int n_scalars = 0;
   SV *el, **elp;
-  pdl *pdl;           /* Stores PDL argument */
+  pdl *pdl;           /* Stores PDLA argument */
 
   if(dims==NULL) {
-    pdl_barf("av_ndcheck - got a null dim array! This is a bug in PDL.");
+    pdl_barf("av_ndcheck - got a null dim array! This is a bug in PDLA.");
   }
 
   /* Start with a clean slate */
@@ -672,15 +672,15 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
         /* Recurse to find depth inside the array reference */
         newdepth = 1 + av_ndcheck((AV *) SvRV(el), dims, level+1, datalevel);
         
-      } else if ( (pdl = SvPDLV(el)) ) {
-        /* It is a PDL - walk down its dimension list, exactly as if it
+      } else if ( (pdl = SvPDLAV(el)) ) {
+        /* It is a PDLA - walk down its dimension list, exactly as if it
          * were a bunch of nested array refs.  We pull the ndims and dims
          * fields out to local variables so that nulls can be treated specially.
          */
         int j;
         short pndims;
-        PDL_Indx *pdims;
-        PDL_Indx pnvals;
+        PDLA_Indx *pdims;
+        PDLA_Indx pnvals;
         
         pdl_make_physdims(pdl);
         
@@ -691,7 +691,7 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
         for(j=0;j<pndims;j++) {
           int jl = pndims-j+level;
           
-          PDL_Indx siz = pdims[j];
+          PDLA_Indx siz = pdims[j];
           
           if(  av_len(dims) >= jl &&
                av_fetch(dims,jl,0) != NULL &&
@@ -699,7 +699,7 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
             
             /* We have already found something that specifies this dimension -- so */ 
             /* we keep the size if possible, or enlarge if necessary.              */
-            oldlen=(PDL_Indx)SvIV(*(av_fetch(dims,jl,0)));
+            oldlen=(PDLA_Indx)SvIV(*(av_fetch(dims,jl,0)));
             if(siz > oldlen) {
               sv_setiv(*(av_fetch(dims,jl,0)),(IV)(pdims[j]));
             }
@@ -713,7 +713,7 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
           }
         }
         
-        /* We have specified all the dims in this PDL.  Now pad out the implicit */
+        /* We have specified all the dims in this PDLA.  Now pad out the implicit */
         /* dims of size unity, to wipe out any dims of size zero we have already */
         /* marked. */
         
@@ -730,7 +730,7 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
         newdepth= pndims;
         
       } else {
-        croak("av_ndcheck: non-array, non-PDL ref in structure\n\t(this is usually a problem with a pdl() call)");
+        croak("av_ndcheck: non-array, non-PDLA ref in structure\n\t(this is usually a problem with a pdl() call)");
       }
 
     } else { 
@@ -747,7 +747,7 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
   
     if (av_len(dims) >= level && av_fetch(dims, level, 0) != NULL
       && SvIOK(*(av_fetch(dims, level, 0)))) {
-    oldlen = (PDL_Indx) SvIV(*(av_fetch(dims, level, 0)));
+    oldlen = (PDLA_Indx) SvIV(*(av_fetch(dims, level, 0)));
     
     if (len > oldlen)
       sv_setiv(*(av_fetch(dims, level, 0)), (IV) len);
@@ -761,7 +761,7 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
       SV **svp = av_fetch(dims, i, 0);
       if(!svp) {
         av_store(dims, i, newSViv((IV)1));
-      } else if( (PDL_Indx)SvIV(*svp) == 0) {
+      } else if( (PDLA_Indx)SvIV(*svp) == 0) {
         sv_setiv(*svp, (IV)1);
       }
     }
@@ -770,7 +770,7 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
       SV **svp = av_fetch(dims, i, 0);
       if(!svp) {
         av_store(dims, i, newSViv((IV)1));
-      } else if( (PDL_Indx)SvIV(*svp) == 0) {
+      } else if( (PDLA_Indx)SvIV(*svp) == 0) {
         sv_setiv(*svp, (IV)1);
       }
     }
@@ -783,16 +783,16 @@ PDL_Indx av_ndcheck(AV* av, AV* dims, int level, int *datalevel)
 /**********************************************************************
  * pdl_from_array - dispatcher gets called only by pdl_avref (defined in
  * Core.xs) - it breaks out to pdl_setav_<type>, below, based on the 
- * type of the destination PDL.
+ * type of the destination PDLA.
  */
 pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
 {
   int ndims, i, level=0;
-  PDL_Indx *pdims;
-     PDL_Anyval undefval;
+  PDLA_Indx *pdims;
+     PDLA_Anyval undefval;
 
   ndims = av_len(dims)+1;
-  pdims = (PDL_Indx *) pdl_malloc( (ndims) * sizeof(*pdims) );
+  pdims = (PDLA_Indx *) pdl_malloc( (ndims) * sizeof(*pdims) );
   for (i=0; i<ndims; i++) {
      pdims[i] = SvIV(*(av_fetch(dims, ndims-1-i, 0))); /* reverse order */
   }
@@ -808,8 +808,8 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
     /******
      * Copy the undefval to fill empty spots in the piddle...
      */
-    SV *sv = get_sv("PDL::undefval",0);
-    undefval = ((!sv) || (sv==&PL_sv_undef)) ? 0 : (PDL_Anyval)SvNV(sv);
+    SV *sv = get_sv("PDLA::undefval",0);
+    undefval = ((!sv) || (sv==&PL_sv_undef)) ? 0 : (PDLA_Anyval)SvNV(sv);
   }
 
   switch (type) {
@@ -819,9 +819,9 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
 # Perl snippet autogenerates switch statement to distribute
 # pdl_setav calls...
 #
-  for my $type(sort keys %PDL_DATATYPES){
-    my $t2 = $PDL_DATATYPES{$type};
-    $t2 =~ s/PDL_//;
+  for my $type(sort keys %PDLA_DATATYPES){
+    my $t2 = $PDLA_DATATYPES{$type};
+    $t2 =~ s/PDLA_//;
     print OUT <<"!WITH!SUBS!";
   case $type:
     pdl_setav_$t2(p->data,av,pdims,ndims,level, undefval);
@@ -839,13 +839,13 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
     croak("pdl_from_array: internal error: got type %d",type);
     break;
   }
-  p->state &= ~PDL_NOMYDIMS;
+  p->state &= ~PDLA_NOMYDIMS;
   return p;
 }
 
 /*
- * pdl_kludge_copy_<type>  - copy a PDL into a part of a being-formed PDL.
- * It is only used by pdl_setav_<type>, to handle the case where a PDL is part
+ * pdl_kludge_copy_<type>  - copy a PDLA into a part of a being-formed PDLA.
+ * It is only used by pdl_setav_<type>, to handle the case where a PDLA is part
  * of the argument list. 
  *
  * kludge_copy recursively walks down the dim list of both the source and dest
@@ -859,17 +859,17 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
  *
  * Arguments:
  * poff  is an integer indicating which element along the current direction is being treated (for padding accounting)
- * pdata is a pointer into the destination PDL's data;
- * pdims is a pointer to the destination PDL's dim list;
- * ndims is the size of the destination PDL's dimlist;
+ * pdata is a pointer into the destination PDLA's data;
+ * pdims is a pointer to the destination PDLA's dim list;
+ * ndims is the size of the destination PDLA's dimlist;
  * level is the conjugate dimension along which copying is happening (indexes pdims).
  *    "conjugate" means that it counts backward through the dimension array.
  * stride is the increment in the data array corresponding to this dimension;
  *
- * pdl is the input PDL.
- * plevel is the dim number for the input PDL, which works in the same sense as level.
+ * pdl is the input PDLA.
+ * plevel is the dim number for the input PDLA, which works in the same sense as level.
  *   It is offset to account for the difference in dimensionality between the input and
- *   output PDLs. It is allowed to be negative (which is equivalent to the "permissive
+ *   output PDLAs. It is allowed to be negative (which is equivalent to the "permissive
  *   slicing" that treats missing dimensions as present and having size 1), but should
  *   not match or exceed pdl->ndims. 
  * pptr is the current offset data pointer into pdl->data.
@@ -880,36 +880,36 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
  */
 !NO!SUBS!
 
-for my $in ( keys %PDL_DATATYPES ) {
+for my $in ( keys %PDLA_DATATYPES ) {
 
-  (my $type = $PDL_DATATYPES{$in}) =~ s/^PDL_//;
+  (my $type = $PDLA_DATATYPES{$in}) =~ s/^PDLA_//;
 
 print OUT <<"!WITH!SUBS!";
 
-PDL_Indx pdl_kludge_copy_$type(PDL_Indx poff, // Offset into the dest data array
-                           PDL_$type* pdata,  // Data pointer in the dest data array
-                           PDL_Indx* pdims,   // Pointer to the dimlist for the dest pdl
-                           PDL_Indx ndims,         // Number of dimensions in the dest pdl
+PDLA_Indx pdl_kludge_copy_$type(PDLA_Indx poff, // Offset into the dest data array
+                           PDLA_$type* pdata,  // Data pointer in the dest data array
+                           PDLA_Indx* pdims,   // Pointer to the dimlist for the dest pdl
+                           PDLA_Indx ndims,         // Number of dimensions in the dest pdl
                            int level,         // Recursion level
-                           PDL_Indx stride,   // Stride through memory for the current dim
+                           PDLA_Indx stride,   // Stride through memory for the current dim
                            pdl* pdl,          // pointer to the source pdl
                            int plevel,        // level within the source pdl
                            void* pptr,        // Data pointer in the source pdl
-                           PDL_Anyval undefval    // undefval for the dest pdl
+                           PDLA_Anyval undefval    // undefval for the dest pdl
                            ) {
-  PDL_Indx i;
-  PDL_Indx undef_count = 0;
+  PDLA_Indx i;
+  PDLA_Indx undef_count = 0;
 
-  /* Can't copy into a level deeper than the number of dims in the output PDL */
+  /* Can't copy into a level deeper than the number of dims in the output PDLA */
   if(level > ndims ) {
     fprintf(stderr,"pdl_kludge_copy: level=%d; ndims=%"IND_FLAG"\\n",level,ndims);
     croak("Internal error - please submit a bug report at http://sourceforge.net/projects/pdl/:\\n  pdl_kludge_copy: Assertion failed; ndims-1-level (%"IND_FLAG") < 0!.",ndims-1-level);
   }
 
   if(level >= ndims - 1) {
-    /* We are in as far as we can go in the destination PDL, so direct copying is in order. */
-    int pdldim = pdl->ndims - 1 - plevel;  // which dim are we working in the source PDL?
-    PDL_Indx pdlsiz;
+    /* We are in as far as we can go in the destination PDLA, so direct copying is in order. */
+    int pdldim = pdl->ndims - 1 - plevel;  // which dim are we working in the source PDLA?
+    PDLA_Indx pdlsiz;
     int oob = (ndims-1-level < 0);         // out-of-bounds flag
 
     /* Do bounds checking on the source dimension -- if we wander off the end of the 
@@ -925,16 +925,16 @@ PDL_Indx pdl_kludge_copy_$type(PDL_Indx poff, // Offset into the dest data array
     }
 
     /* This is the actual data-copying code. It is generated with a Perl loop, to
-     * ensure that all current PDL types get treated. */
+     * ensure that all current PDLA types get treated. */
 
     switch(pdl->datatype) {
 !WITH!SUBS!
 
-        # perl loop to emit code for all the PDL types
+        # perl loop to emit code for all the PDLA types
         #
-        foreach my $switch_type (keys %PDL::Types::typehash) {
+        foreach my $switch_type (keys %PDLA::Types::typehash) {
 
-        my $ctype = $PDL::Types::typehash{$switch_type}{ctype};
+        my $ctype = $PDLA::Types::typehash{$switch_type}{ctype};
 
         print OUT <<"!WITH!SUBS!";
 
@@ -943,7 +943,7 @@ PDL_Indx pdl_kludge_copy_$type(PDL_Indx poff, // Offset into the dest data array
       i=0;
       if(pptr && pdata && pdlsiz) {
         for(; i<pdlsiz; i++)
-          pdata[i] = (PDL_$type) ((${ctype} *)pptr)[i];
+          pdata[i] = (PDLA_$type) ((${ctype} *)pptr)[i];
       } else {
         if(pdata) 
           pdata[i] = undefval;
@@ -977,7 +977,7 @@ PDL_Indx pdl_kludge_copy_$type(PDL_Indx poff, // Offset into the dest data array
    *  ternary expression for every loop iteration.
    */
   {
-      PDL_Indx limit =  (   
+      PDLA_Indx limit =  (   
           (plevel >= 0 && 
            (pdl->ndims - 1 - plevel >= 0) && 
            (pdl->ndims - 1 - plevel < pdl->ndims)
@@ -993,13 +993,13 @@ PDL_Indx pdl_kludge_copy_$type(PDL_Indx poff, // Offset into the dest data array
                                                stride / ((pdims[ndims-2-level]) ? (pdims[ndims-2-level]) : 1),
                                                pdl,
                                                plevel+1,
-                                               ((PDL_Byte *) pptr) + pdl->dimincs[pdl->ndims-1-plevel] * i * pdl_howbig(pdl->datatype),
+                                               ((PDLA_Byte *) pptr) + pdl->dimincs[pdl->ndims-1-plevel] * i * pdl_howbig(pdl->datatype),
                                                undefval
               );
       } /* end of kludge_copy recursion loop */
   } /* end of recursion convenience block */
 
-  /* pad the rest of this dim to zero if there are not enough elements in the source PDL... */
+  /* pad the rest of this dim to zero if there are not enough elements in the source PDLA... */
   if(i < pdims[ndims - 1 - level]) {
       int cursor, target;
 
@@ -1019,31 +1019,31 @@ PDL_Indx pdl_kludge_copy_$type(PDL_Indx poff, // Offset into the dest data array
 }
 
 /*
- * pdl_setav_<type> loads a new PDL with values from a Perl AV, another PDL, or
- * a mix of both.  Heterogeneous sizes are handled by padding the new PDLs
+ * pdl_setav_<type> loads a new PDLA with values from a Perl AV, another PDLA, or
+ * a mix of both.  Heterogeneous sizes are handled by padding the new PDLAs
  * values out to size with the undefval.  It is only called by pdl_setav in Core.XS,
  * via the trampoline pdl_from_array just above. pdl_from_array dispatches execution
- * to pdl_setav_<type> according to the type of the destination PDL. 
+ * to pdl_setav_<type> according to the type of the destination PDLA. 
  *
  * The code is complicated by the "bag-of-stuff" nature of AVs.  We handle 
- * Perl scalars, AVs, *and* PDLs (via pdl_kludge_copy).
+ * Perl scalars, AVs, *and* PDLAs (via pdl_kludge_copy).
  * 
- *   -  pdata is the data pointer from a PDL
- *   -  av is the array ref (or PDL) to use to fill the data with,
+ *   -  pdata is the data pointer from a PDLA
+ *   -  av is the array ref (or PDLA) to use to fill the data with,
  *   -  pdims is the dimlist
  *   -  ndims is the size of the dimlist
  *   -  level is the recursion level, which is also the dimension that we are filling
  */
 
-PDL_Indx pdl_setav_$type(PDL_$type* pdata, AV* av,
-                     PDL_Indx* pdims, int ndims, int level, PDL_Anyval undefval)
+PDLA_Indx pdl_setav_$type(PDLA_$type* pdata, AV* av,
+                     PDLA_Indx* pdims, int ndims, int level, PDLA_Anyval undefval)
 {
-  PDL_Indx cursz = pdims[ndims-1-level]; /* we go from the highest dim inward */
-  PDL_Indx len = av_len(av);
-  PDL_Indx i,stride=1;
+  PDLA_Indx cursz = pdims[ndims-1-level]; /* we go from the highest dim inward */
+  PDLA_Indx len = av_len(av);
+  PDLA_Indx i,stride=1;
 
   SV *el, **elp;
-  PDL_Indx undef_count = 0;
+  PDLA_Indx undef_count = 0;
 
   for (i=0;i<ndims-1-level;i++) {
     stride *= pdims[i];
@@ -1064,11 +1064,11 @@ PDL_Indx pdl_setav_$type(PDL_$type* pdata, AV* av,
 
     } else if( el && SvROK(el) ) {
 
-      /* If the element was a ref but not an AV, then it should be a PDL */
+      /* If the element was a ref but not an AV, then it should be a PDLA */
       pdl *pdl;
-      if( (pdl = SvPDLV(el)) ) {
-          /* The element was a PDL - use pdl_kludge_copy to copy it into the destination */
-          PDL_Indx pd;
+      if( (pdl = SvPDLAV(el)) ) {
+          /* The element was a PDLA - use pdl_kludge_copy to copy it into the destination */
+          PDLA_Indx pd;
           int pddex;
           
           pdl_make_physical(pdl);
@@ -1080,26 +1080,26 @@ PDL_Indx pdl_setav_$type(PDL_$type* pdata, AV* av,
           undef_count += pdl_kludge_copy_$type(0, pdata,pdims,ndims, level+1, stride / pd , pdl, 0, pdl->data,undefval);
 
       } else {
-        /* The element is a non-PDL, non-AV ref.  Not allowed. */
-        croak("Non-array, non-PDL element in list");
+        /* The element is a non-PDLA, non-AV ref.  Not allowed. */
+        croak("Non-array, non-PDLA element in list");
       }
     } else { /* el==0 || SvROK(el)==0: this is a scalar or undef element */
       if( sv_undef(el) ) {  /* undef case */
-        *pdata = (PDL_$type) undefval; 
+        *pdata = (PDLA_$type) undefval; 
         undef_count++;
 
       } else {              /* scalar case */
-        *pdata = (PDL_$type) SvNV(el);
+        *pdata = (PDLA_$type) SvNV(el);
 
       }
 
       /* Pad dim if we are not deep enough */
       if(level < ndims-1) {
-        PDL_$type *cursor = pdata;
-        PDL_$type *target = pdata + stride;
+        PDLA_$type *cursor = pdata;
+        PDLA_$type *target = pdata + stride;
 
         for( cursor++;  cursor < target; cursor++ ) {
-          *cursor = (PDL_$type)undefval;
+          *cursor = (PDLA_$type)undefval;
           undef_count++;
         }
       }
@@ -1110,27 +1110,27 @@ PDL_Indx pdl_setav_$type(PDL_$type* pdata, AV* av,
   /* in case this dim is incomplete set any remaining elements to the undefval */
 
   if(len < cursz-1 ) {
-    PDL_$type *target = pdata + stride * (cursz - 1 - len);
+    PDLA_$type *target = pdata + stride * (cursz - 1 - len);
     for( ;
          pdata < target;
          pdata++
          ) {
 
-      *pdata = (PDL_$type) undefval;
+      *pdata = (PDLA_$type) undefval;
       undef_count++;
     }
   }
 
-  /* If the Perl scalar PDL::debug is set, announce padding */
+  /* If the Perl scalar PDLA::debug is set, announce padding */
   if(level==0 && undef_count) {
     char debug_flag;
     SV *sv;
-    sv = get_sv("PDL::debug",0);
+    sv = get_sv("PDLA::debug",0);
     debug_flag = (sv_undef(sv)) ? 0 : (char)SvIV(sv);
 
     if(debug_flag) {
       fflush(stdout);
-      fprintf(stderr,"Warning: pdl_setav_$type converted undef to $PDL::undefval (%g) %ld time%s\\n",undefval,undef_count,undef_count==1?"":"s");
+      fprintf(stderr,"Warning: pdl_setav_$type converted undef to $PDLA::undefval (%g) %ld time%s\\n",undefval,undef_count,undef_count==1?"":"s");
       fflush(stderr);
     }
   }

@@ -1,10 +1,10 @@
 use blib ".";
 use blib "../..";
-use PDL;
-# use PDL::Bench;
+use PDLA;
+# use PDLA::Bench;
 BEGIN{
 require "Bench.pm";
-PDL::Bench->import();
+PDLA::Bench->import();
 }
 
 

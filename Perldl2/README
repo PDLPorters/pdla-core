@@ -57,12 +57,12 @@ capabilities.
 |                           USE                             |
 +-----------------------------------------------------------+
 
-  To use the Perldl2 shell, from the PDL build directory
+  To use the Perldl2 shell, from the PDLA build directory
   run the following:
 
     perl -Mblib Perldl2/pdl2
 
-  If you have installed the just built PDL, you should
+  If you have installed the just built PDLA, you should
   be able to run:
 
     pdl2
@@ -76,22 +76,22 @@ capabilities.
 
   The idea is that one just uses pdl2 where you used to
   use perldl.  At some point, the development will be
-  complete and there will be only one PDL shell.
+  complete and there will be only one PDLA shell.
 
 
 +-----------------------------------------------------------+
 |                          NOTES                            |
 +-----------------------------------------------------------+
 
- Supported functionality from Devel::REPL and PDL:
+ Supported functionality from Devel::REPL and PDLA:
   * DDS (pretty prints output using Data::Dump::Streamer)
   * History (redo commands with !-1 and !<num> syntax)
   * Interrupt (interrupt with Ctrl-C; not on MSWin32)
   * LexEnv (e.g., my $a = zeros(10) works)
   * MultiLine::PPI (handles multiline input like perldl)
-  * NiceSlice (PDL::NiceSlice works too!)
+  * NiceSlice (PDLA::NiceSlice works too!)
   * Packages (keeps track of current user package)
-  * PDLCommands (perldl shell v1 convenience routines)
+  * PDLACommands (perldl shell v1 convenience routines)
   * ReadLineHistory
     * Save and restore command history to file
   * CompletionDrivers
@@ -101,15 +101,15 @@ capabilities.
     * LexEnv   (completion for lexical vars)
     * Methods  (completion of method names)
 
- Default PDL modules loaded:
-  * PDL
-  * PDL::Dbg
-  * PDL::Doc::Perldl
-  * PDL::IO::Dumper
-  * PDL::IO::FlexRaw
-  * PDL::IO::Pic
-  * PDL::Image2D
-  * PDL::AutoLoader
+ Default PDLA modules loaded:
+  * PDLA
+  * PDLA::Dbg
+  * PDLA::Doc::Perldl
+  * PDLA::IO::Dumper
+  * PDLA::IO::FlexRaw
+  * PDLA::IO::Pic
+  * PDLA::Image2D
+  * PDLA::AutoLoader
 
  ? and ?? are aliases for help and apropos
  

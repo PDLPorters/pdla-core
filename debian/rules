@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
-# PDL debian/rules that uses debhelper.
+# PDLA debian/rules that uses debhelper.
 # much of it is based on the original debmake-based one.
 # This file was originally written by Joey Hess and Craig Small.
 # As a special exception, when this file is copied by dh-make into a
@@ -24,13 +24,13 @@ export DEB_LDFLAGS_MAINT_APPEND:=-Wl,--as-needed
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
 
-subst_pdlapi  = -Vpdlapi:Provides="`perl -Mblib -MPDL::Config::Debian -e 'print \"pdlapi-$$PDL::Config::Debian::pdl_core_version\n\"'`"
+subst_pdlapi  = -Vpdlapi:Provides="`perl -Mblib -MPDLA::Config::Debian -e 'print \"pdlapi-$$PDLA::Config::Debian::pdl_core_version\n\"'`"
 
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package
-	dh_auto_configure -- F77CONF=debian/f77conf.pl PDLCONF=debian/perldl.conf
+	dh_auto_configure -- F77CONF=debian/f77conf.pl PDLACONF=debian/perldl.conf
 
 	touch configure-stamp
 
@@ -45,8 +45,8 @@ build-stamp: configure-stamp
 
 	# Add here commands to compile the package.
 	$(MAKE) LD_RUN_PATH=""
-	mkdir -p blib/lib/PDL/Config
-	perl -Mblib debian/write_config_debian.pl > blib/lib/PDL/Config/Debian.pm
+	mkdir -p blib/lib/PDLA/Config
+	perl -Mblib debian/write_config_debian.pl > blib/lib/PDLA/Config/Debian.pm
 	pod2man debian/dh_pdl > debian/dh_pdl.1
 
 	touch build-stamp
@@ -82,9 +82,9 @@ install: build test
 
 	# Add here commands to install the package into debian/pdl.
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/pdl
-	cd debian/pdl/usr/share/man/man3 ; mv PDL\:\:Reduce.3pm old.3pm ; sed -f $(CURDIR)/debian/fix_man_name.sed old.3pm > PDL\:\:Reduce.3pm ; rm old.3pm
-	cd debian/pdl/usr/share/man/man3 ; mv PDL\:\:Func.3pm old.3pm ; sed -f $(CURDIR)/debian/fix_man_encoding.sed old.3pm > PDL\:\:Func.3pm ; rm old.3pm
-	cd debian/pdl/usr/share/man/man3 ; mv PDL\:\:Complex.3pm old.3pm ; sed -f $(CURDIR)/debian/fix_man_encoding.sed old.3pm > PDL\:\:Complex.3pm ; rm old.3pm
+	cd debian/pdl/usr/share/man/man3 ; mv PDLA\:\:Reduce.3pm old.3pm ; sed -f $(CURDIR)/debian/fix_man_name.sed old.3pm > PDLA\:\:Reduce.3pm ; rm old.3pm
+	cd debian/pdl/usr/share/man/man3 ; mv PDLA\:\:Func.3pm old.3pm ; sed -f $(CURDIR)/debian/fix_man_encoding.sed old.3pm > PDLA\:\:Func.3pm ; rm old.3pm
+	cd debian/pdl/usr/share/man/man3 ; mv PDLA\:\:Complex.3pm old.3pm ; sed -f $(CURDIR)/debian/fix_man_encoding.sed old.3pm > PDLA\:\:Complex.3pm ; rm old.3pm
 	cd debian/pdl; while read f ; do rm -f "$$f" ; done < ../pdl.remove
 
 

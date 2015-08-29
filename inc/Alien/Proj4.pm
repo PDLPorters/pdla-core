@@ -93,7 +93,7 @@ sub installed {
   return 1;
 }
 
-# dup of code currently in PDL::GIS::Proj
+# dup of code currently in PDLA::GIS::Proj
 sub load_projection_descriptions {
   my ($class) = @_;
   my $libflags = $class->libflags;
@@ -115,7 +115,7 @@ EOF
   list_projections();
 }
 
-# dup of code currently in PDL::GIS::Proj
+# dup of code currently in PDLA::GIS::Proj
 sub load_projection_information {
     my ($class) = @_;
     my $descriptions = $class->load_projection_descriptions();
@@ -187,7 +187,7 @@ In Makefile.PL:
   my $proj4_lib = Alien::Proj4->libflags;
   my $proj4_inc = Alien::Proj4->incflags;
 
-In a module like L<PDL::Transform::Proj4> that wants available proj4
+In a module like L<PDLA::Transform::Proj4> that wants available proj4
 projections:
 
   my @projections = Alien::Proj4->projections;

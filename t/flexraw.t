@@ -2,29 +2,29 @@
 # There are still many tests to write; see the notes at the bottom
 # of this document.
 
-use PDL::LiteF;
-# PDL::Core::set_debugging(1);
+use PDLA::LiteF;
+# PDLA::Core::set_debugging(1);
 kill INT,$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 use strict;
 use warnings;
 
-# Load the testing harness and PDL
+# Load the testing harness and PDLA
 use Test::More tests => 12;
-use PDL;
+use PDLA;
 use File::Temp qw(tempdir);
 
-$PDL::debug = 0;
+$PDLA::debug = 0;
 
 # Get a temporary directory and file name, which obviously we'll need for testing
 # saving and reading of data.
-use PDL::Config;
+use PDLA::Config;
 my $tmpdir = tempdir( CLEANUP=>1 );
 my $name = $tmpdir . "/tmp0";
 unlink $name, $name . '.hdr';	# just to be absolutely sure
 
 # **TEST 1** make sure FastRaw loads
-BEGIN { use_ok( 'PDL::IO::FlexRaw' ); }
+BEGIN { use_ok( 'PDLA::IO::FlexRaw' ); }
 
 # Set up the working filename and make sure we're working with a clean slate:
 
@@ -107,7 +107,7 @@ SKIP: {
    # Load it back up and see if the values are what we expect
    $b = readflex($name);
    # **TEST 11**
-   ok(all(approx($b, PDL->pdl([[0,1,2],[0.1,1.1,2.1]]))),
+   ok(all(approx($b, PDLA->pdl([[0,1,2],[0.1,1.1,2.1]]))),
       "mapfraw should be able to create new piddles");
 
    # **TEST 12** test the created type

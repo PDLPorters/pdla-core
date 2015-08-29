@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::Graphics::TriD::MathGraph -- Mathematical Graph objects for PDL
+PDLA::Graphics::TriD::MathGraph -- Mathematical Graph objects for PDLA
 
 =head1 SYNOPSIS
 
-see the file Demos/TriD/tmathgraph.p in the PDL distribution.
+see the file Demos/TriD/tmathgraph.p in the PDLA distribution.
 
 =head1 WARNING
 
@@ -22,23 +22,23 @@ Copyright (C) 1997 Tuomas J. Lukka (lukka@husc.harvard.edu).
 
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 
 =cut
-package PDL::Graphics::TriD::MathGraph;
-use base qw/PDL::Graphics::TriD::GObject/;
+package PDLA::Graphics::TriD::MathGraph;
+use base qw/PDLA::Graphics::TriD::GObject/;
 use fields qw/ArrowLen ArrowWidth/;
 
 BEGIN {
-   use PDL::Config;
-   if ( $PDL::Config{USE_POGL} ) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw(:all)";
-      eval 'use PDL::Graphics::OpenGL::Perl::OpenGL';
+   use PDLA::Config;
+   if ( $PDLA::Config{USE_POGL} ) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw(:all)";
+      eval 'use PDLA::Graphics::OpenGL::Perl::OpenGL';
    } else {
-      eval 'use PDL::Graphics::OpenGL';
+      eval 'use PDLA::Graphics::OpenGL';
    }
 }
 
@@ -48,7 +48,7 @@ sub gdraw {
 	glDisable(&GL_LIGHTING);
 # 	print "Color: $this->{Color} @{$this->{Color}}\n";
 	glColor3d(@{$this->{Options}{Color}});
-	PDL::Graphics::OpenGLQ::gl_arrows($points,$this->{Options}{From},
+	PDLA::Graphics::OpenGLQ::gl_arrows($points,$this->{Options}{From},
 		$this->{Options}{To},$this->{ArrowLen},$this->{ArrowWidth});
 	glEnable(&GL_LIGHTING);
 }
@@ -58,20 +58,20 @@ sub get_valid_options {
 		ArrowWidth => 0.05, ArrowLen => 0.1}
 }
 
-package PDL::GraphEvolverOLD;
-use PDL::LiteF;
+package PDLA::GraphEvolverOLD;
+use PDLA::LiteF;
 
 sub new {
 	my($type,$nnodes) = @_;
-       bless {NNodes => $nnodes,Coords => 500*PDL::random(PDL->zeroes(3,$nnodes))},
+       bless {NNodes => $nnodes,Coords => 500*PDLA::random(PDLA->zeroes(3,$nnodes))},
          $type;
 }
 
 sub set_links {
 	my($this,$from,$to,$strength) = @_;
 	my $cd = $this->{NNodes};
-	$this->{DistMult} = PDL->zeroes($cd,$cd);
-	$distmult = PDL->zeroes($cd,$cd);
+	$this->{DistMult} = PDLA->zeroes($cd,$cd);
+	$distmult = PDLA->zeroes($cd,$cd);
 	(my $t1 = $this->{DistMult}->index2d($from,$to)) += $strength;
 	(my $t2 = $this->{DistMult}->index2d($to,$from)) += $strength;
 	print "DM: $distmult\n" if $verbose;
@@ -113,13 +113,13 @@ sub step {
 
 sub getcoords {return $_[0]{Coords}}
 
-package PDL::GraphEvolver;
-use PDL::Lite;
-use PDL::Graphics::TriD::Rout ":Func";
+package PDLA::GraphEvolver;
+use PDLA::Lite;
+use PDLA::Graphics::TriD::Rout ":Func";
 
 sub new {
 	my($type,$nnodes) = @_;
-       bless {NNodes => $nnodes,Coords => PDL::random(PDL->zeroes(3,$nnodes)),
+       bless {NNodes => $nnodes,Coords => PDLA::random(PDLA->zeroes(3,$nnodes)),
 		BoxSize => 3, DMult => 5000,
 		A => -100.0, B => -5, C => -0.1, D => 0.01,
 		M => 30, MS => 1,

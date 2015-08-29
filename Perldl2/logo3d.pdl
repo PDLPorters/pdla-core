@@ -3,14 +3,14 @@
 # Created on: Tue 20 Jul 2010 08:50:58 AM 
 # Last saved: Mon 13 Sep 2010 03:47:39 PM 
 #
-# This is a test script to generate the 3D PDL sphere
+# This is a test script to generate the 3D PDLA sphere
 # logo using TriD.  I think it would be very cool to
 # have a logo3d routine to generate the image as an
 # animated splash screen for example....
 
-use PDL;
-use PDL::NiceSlice;
-use PDL::Graphics::TriD;
+use PDLA;
+use PDLA::NiceSlice;
+use PDLA::Graphics::TriD;
 
 $scale = 0.3;
 $alpha = 0.5;

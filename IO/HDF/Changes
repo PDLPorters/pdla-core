@@ -1,4 +1,4 @@
-Revision history for Perl extension PDL::HDF
+Revision history for Perl extension PDLA::HDF
 0.01  13/02/01
 	- original version
 
@@ -55,8 +55,8 @@ Revision history for Perl extension PDL::HDF
         change those values at a later point, so they should be read directly from the HDF system
         headers, rather than hard coded in this module.
         
-    - I moved the constants over to 'use constant', so instead of using '$PDL::IO::HDF:DFACC_CREATE', 
-        you now would use : 'PDL::IO::HDF->DFACC_CREATE'. This is how constants work in Perl, so get
+    - I moved the constants over to 'use constant', so instead of using '$PDLA::IO::HDF:DFACC_CREATE', 
+        you now would use : 'PDLA::IO::HDF->DFACC_CREATE'. This is how constants work in Perl, so get
         over it and fix your old code that uses things the old way.
         
     - I added a couple of constants (all only usefull for allocating memory internally):

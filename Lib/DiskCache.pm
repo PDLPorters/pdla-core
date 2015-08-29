@@ -1,25 +1,25 @@
 =head1 NAME
 
-PDL::DiskCache -- Non-memory-resident array object
+PDLA::DiskCache -- Non-memory-resident array object
 
 =head1 SYNOPSIS
 
 NON-OO:
 
-   use PDL::DiskCache;
-   tie @a,'PDL::DiskCache', \@files, \%options;
+   use PDLA::DiskCache;
+   tie @a,'PDLA::DiskCache', \@files, \%options;
    imag $a[3];
 
 OO:
 
-   use PDL::DiskCache;
+   use PDLA::DiskCache;
    $a = diskcache(\@files,\%options);
    imag $a->[3];
 
 or
 
-   use PDL::DiskCache;
-   $a = new PDL::DiskCache(\@files,\%options);
+   use PDLA::DiskCache;
+   $a = new PDLA::DiskCache(\@files,\%options);
    imag $a->[4];
 
 =over 3
@@ -30,27 +30,27 @@ an array ref containing a list of file names
 
 =item \%options 
 
-a hash ref containing options for the PDL::DiskCache object (see "TIEARRAY"
+a hash ref containing options for the PDLA::DiskCache object (see "TIEARRAY"
 below for details)
 
 =back
 
 =head1 DESCRIPTION
 
-A PDL::DiskCache object is a perl L<"tied array"|perltie> that is useful
-for operations where you have to look at a large collection of PDLs  one
+A PDLA::DiskCache object is a perl L<"tied array"|perltie> that is useful
+for operations where you have to look at a large collection of PDLAs  one
 or a few at a time (such as tracking features through an image sequence).  
-You can write prototype code that uses a perl list of a few PDLs, then 
-scale up to to millions of PDLs simply by handing the prototype code
+You can write prototype code that uses a perl list of a few PDLAs, then 
+scale up to to millions of PDLAs simply by handing the prototype code
 a DiskCache tied array instead of a native perl array.  The individual
-PDLs are stored on disk and a few of them are swapped into memory on a
+PDLAs are stored on disk and a few of them are swapped into memory on a
 FIFO basis.  You can set whether the data are read-only or writeable.
 
-By default, PDL::DiskCache uses FITS files to represent the PDLs, but
+By default, PDLA::DiskCache uses FITS files to represent the PDLAs, but
 you can use any sort of file at all -- the read/write routines are the
 only place where it examines the underlying data, and you can specify 
 the routines to use at construction time (or, of course, subclass 
-PDL::DiskCache).
+PDLA::DiskCache).
 
 Items are swapped out on a FIFO basis, so if you have 10 slots
 and an expression with 10 items in it then you're OK (but you probably
@@ -67,8 +67,8 @@ these things going at once on the same files.
 
 Since this is a tied array, things like Dumper traverse it transparently.
 That is sort-of good but also sort-of dangerous.  You wouldn't want to
-PDL::Dumper::sdump() a large PDL::DiskCache, for example -- that would defeat
-the purpose of using a PDL::DiskCache in the first place.
+PDLA::Dumper::sdump() a large PDLA::DiskCache, for example -- that would defeat
+the purpose of using a PDLA::DiskCache in the first place.
 
 
 
@@ -92,7 +92,7 @@ This package comes with NO WARRANTY.
 
 ######################################################################
 # Package initialization
-$PDL::DiskCache::VERSION = 1.1;
+$PDLA::DiskCache::VERSION = 1.1;
  
 use strict;
 use Carp;
@@ -119,10 +119,10 @@ See the TIEARRAY options,below.
 
 sub diskcache {
   my($f,$opt) = @_;
-  return PDL::DiskCache::new('PDL::DiskCache',$f,$opt);
+  return PDLA::DiskCache::new('PDLA::DiskCache',$f,$opt);
 }
 
-sub PDL::DiskCache::new {
+sub PDLA::DiskCache::new {
   my($class,$f,$opt) = @_;
   my($a)=[];
 
@@ -138,7 +138,7 @@ sub PDL::DiskCache::new {
   }
 }
 
-*PDL::DiskCache::diskcache = *diskcache;
+*PDLA::DiskCache::diskcache = *diskcache;
 
 =head2 TIEARRAY
 
@@ -163,7 +163,7 @@ swapped out)
 =item rw (default 1)
 
 If set, allow reading and writing to the files.
-Because there's currently no way to determine reliably whether a PDL
+Because there's currently no way to determine reliably whether a PDLA
 has been modified, rw files are always written to disk when they're
 swapped out -- this causes a slight performance hit.
 
@@ -189,7 +189,7 @@ If set to a nonzero value, then the array ref gets
 blessed into the DiskCache class for for easier access to the "purge"
 and "sync" methods.  This means that you can say C<< $a->sync >> instead
 of the more complex C<< (%{tied @$a})->sync >>, but C<ref $a> will return
-"PDL::DiskCache" instead of "ARRAY", which could break some code.
+"PDLA::DiskCache" instead of "ARRAY", which could break some code.
 
 =item verbose (default 0)
 
@@ -199,10 +199,10 @@ Get chatty.
 
 =cut
 
-sub PDL::DiskCache::TIEARRAY { 
+sub PDLA::DiskCache::TIEARRAY { 
   my($class,$f,$opt) = @_;
 
-  croak "PDL::DiskCache needs array ref as 2nd arg (did you pass an array instead?)\n"
+  croak "PDLA::DiskCache needs array ref as 2nd arg (did you pass an array instead?)\n"
     if(ref $f ne 'ARRAY');
   my($new) = {files   => $f                                # File list
 	      , n       => scalar(@{$f})                     # no. of el.
@@ -230,15 +230,15 @@ You also send in how many slots to purge (default 1; sending in -1 purges
 everything.)
 
 For most uses, a nice MODIFIED flag in the data structure could save
-some hassle here.  But PDLs can get modified out from under us 
+some hassle here.  But PDLAs can get modified out from under us 
 with slicing and .= -- so for now we always assume everything is tainted
 and must be written to disk.
 
 =cut
 
-sub PDL::DiskCache::purge {
+sub PDLA::DiskCache::purge {
   my($me,$n) = @_,1;
-  $me = (tied @{$me}) if("$me" =~ m/^PDL\:\:DiskCache\=ARRAY/);
+  $me = (tied @{$me}) if("$me" =~ m/^PDLA\:\:DiskCache\=ARRAY/);
 
   $n = $me->{mem} if($n<0);
   
@@ -256,7 +256,7 @@ sub PDL::DiskCache::purge {
       eval {&{$me->{write}}($me->{cache}->[$dex],
 			    $me->{files}->[$me->{fdex}->[$dex]]);
 	  };
-      print "WARNING: PDL::DiskCache::purge: problems with write of ".$me->{files}->[$me->{fdex}->[$dex]].", item $me->{fdex}->[$dex] from slot $dex: `$@' (".$me->{opt}->{varname}.") \n" if($@);
+      print "WARNING: PDLA::DiskCache::purge: problems with write of ".$me->{files}->[$me->{fdex}->[$dex]].", item $me->{fdex}->[$dex] from slot $dex: `$@' (".$me->{opt}->{varname}.") \n" if($@);
       $@ = 0;
 
       print "ok.\n" if($me->{opt}->{verbose});
@@ -274,11 +274,11 @@ sub PDL::DiskCache::purge {
   print "...done with purge.\n" if($me->{opt}->{verbose});
 }
 
-sub PDL::DiskCache::FETCH {
+sub PDLA::DiskCache::FETCH {
   my($me,$i) = @_;
 
   if($i < 0 || $i >= $me->{n}) {
-    carp("PDL::DiskCache: Element $i is outside range of 0-",$me->{n}-1,"\n");
+    carp("PDLA::DiskCache: Element $i is outside range of 0-",$me->{n}-1,"\n");
     return undef;
   }
 
@@ -313,7 +313,7 @@ sub PDL::DiskCache::FETCH {
   $me->{cache}->[$a];
 }
 
-sub PDL::DiskCache::STORE {
+sub PDLA::DiskCache::STORE {
   my($me, $i, $val) = @_;
 
   if( $me->{slot}->[$i] ) {
@@ -340,17 +340,17 @@ sub PDL::DiskCache::STORE {
 
 }
  
-sub PDL::DiskCache::FETCHSIZE { 
+sub PDLA::DiskCache::FETCHSIZE { 
   my($me) = shift;
 
   $me->{n};
 }
 
-sub PDL::DiskCache::STORESIZE { 
+sub PDLA::DiskCache::STORESIZE { 
   my($me,$newsize) = @_;
 
   if($newsize > $me->{n}) {
-    croak("PDL::DiskCache:  Can't augment array size (yet)!\n");
+    croak("PDLA::DiskCache:  Can't augment array size (yet)!\n");
   }
   
   for( my($i) = $newsize-1; $i<$me->{n}; $i++ )  {
@@ -383,12 +383,12 @@ For ro caches, this is a not-too-slow (but safe) no-op.
 
 =cut
 
-sub PDL::DiskCache::sync {
+sub PDLA::DiskCache::sync {
   my($me) = shift;
-  $me = (tied @{$me}) if("$me" =~ m/^PDL\:\:DiskCache\=ARRAY/);
+  $me = (tied @{$me}) if("$me" =~ m/^PDLA\:\:DiskCache\=ARRAY/);
   my($syncn) = shift;
   $syncn = -1 unless defined $syncn;
-  print "PDL::DiskCache::sync\n" if($me->{opt}->{verbose});
+  print "PDLA::DiskCache::sync\n" if($me->{opt}->{verbose});
   
   my @list = $syncn==-1 ? (0..$me->{mem}-1) : ($syncn);
 
@@ -417,7 +417,7 @@ ensure that the files get flushed out, e.g. to use 'em somewhere else.
 
 =cut
 
-sub PDL::DiskCache::DESTROY {
+sub PDLA::DiskCache::DESTROY {
   my($me) = shift;
 
   $me->sync;

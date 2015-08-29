@@ -1,4 +1,4 @@
-package PDL::Graphics::TriD::Control3D;
+package PDLA::Graphics::TriD::Control3D;
 
 # Mustn't have empty package in some perl versions.
 
@@ -12,7 +12,7 @@ package PDL::Graphics::TriD::Control3D;
 #   4. camera "rotation" after that (not always usable).
 
 
-package PDL::Graphics::TriD::SimpleController;
+package PDLA::Graphics::TriD::SimpleController;
 use strict;
 use fields qw/WOrigin WRotation CDistance CRotation/;
 
@@ -33,14 +33,14 @@ sub normalize { my($this) = @_;
 sub reset { 
   my($this) = @_;
   $this->{WOrigin}   = [0,0,0];
-  $this->{WRotation} = PDL::Graphics::TriD::Quaternion->new(1,0,0,0);
-#	$this->{WRotation} = PDL::Graphics::TriD::Quaternion->new(
+  $this->{WRotation} = PDLA::Graphics::TriD::Quaternion->new(1,0,0,0);
+#	$this->{WRotation} = PDLA::Graphics::TriD::Quaternion->new(
 #		0.847, -0.458, -0.161, -0.216);
-#	$this->{WRotation} = PDL::Graphics::TriD::Quaternion->new(
+#	$this->{WRotation} = PDLA::Graphics::TriD::Quaternion->new(
 #		0.347, -0.458, -0.161, -0.216);
 
   $this->{CDistance} = 5;
-  $this->{CRotation} = PDL::Graphics::TriD::Quaternion->new(1,0,0,0);
+  $this->{CRotation} = PDLA::Graphics::TriD::Quaternion->new(1,0,0,0);
 }
 
 sub set {

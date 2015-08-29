@@ -3,12 +3,12 @@ use warnings;
 use ExtUtils::MakeMaker;
 use Config;
 
-my @pack = (["primitive.pd", qw(Primitive PDL::Primitive)]);
+my @pack = (["primitive.pd", qw(Primitive PDLA::Primitive)]);
 
 if ($^O eq 'dec_osf') {
        require Config;
        if ($Config::Config{cc} =~ /^cc/) {
-               my $no_optimize = ($::PDL_OPTIONS{OPTIMIZE} && $::PDL_OPTIONS{OPTIMIZE})
+               my $no_optimize = ($::PDLA_OPTIONS{OPTIMIZE} && $::PDLA_OPTIONS{OPTIMIZE})
                                 || $Config::Config{optimize}
                                 || '-g2';
                $no_optimize =~ s/(\s|^)(-O)\d/$1${2}0/;

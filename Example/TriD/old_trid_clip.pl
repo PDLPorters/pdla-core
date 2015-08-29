@@ -28,7 +28,7 @@
 #        i.e. elements of a list are put on the call stack
 # 
 
-use PDL::Graphics::OpenGL::Perl::OpenGL;
+use PDLA::Graphics::OpenGL::Perl::OpenGL;
 use OpenGL qw(:all);
 
 sub tacky_cube {

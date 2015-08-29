@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::Graphics::TriD::Labels -- Text tools
+PDLA::Graphics::TriD::Labels -- Text tools
 
 =head1 SYNOPSIS
 
-  my $l = new PDL::Graphics::TriD::Labels($lablepoints,
+  my $l = new PDLA::Graphics::TriD::Labels($lablepoints,
 					  {Strings=>$strlist
 					   ,Font=>$font});
 
@@ -23,38 +23,38 @@ Copyright (C) 1997 Tuomas J. Lukka (lukka@husc.harvard.edu).
               2000 James P.  Edwards (jedwards@inmet.gov.br)
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 
 =cut
-package PDL::Graphics::TriD::Labels;
+package PDLA::Graphics::TriD::Labels;
 
 BEGIN {
-   use PDL::Config;
-   if ( $PDL::Config{USE_POGL} ) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw(:all)";
-      eval 'use PDL::Graphics::OpenGL::Perl::OpenGL';
+   use PDLA::Config;
+   if ( $PDLA::Config{USE_POGL} ) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw(:all)";
+      eval 'use PDLA::Graphics::OpenGL::Perl::OpenGL';
    } else {
-      eval 'use PDL::Graphics::OpenGL';
+      eval 'use PDLA::Graphics::OpenGL';
    }
 }
 
 
-use PDL::Graphics::OpenGLQ;
-use base qw/PDL::Graphics::TriD::GObject/;
+use PDLA::Graphics::OpenGLQ;
+use base qw/PDLA::Graphics::TriD::GObject/;
 
 sub gdraw {
 	my($this,$points) = @_;
 	glDisable(&GL_LIGHTING);
 	glColor3d(1,1,1);
-	PDL::Graphics::OpenGLQ::gl_texts($points,$this->{Options}{Font},$this->{Options}{Strings});
+	PDLA::Graphics::OpenGLQ::gl_texts($points,$this->{Options}{Font},$this->{Options}{Strings});
 	glEnable(&GL_LIGHTING);
 }
 
 sub get_valid_options {
-  return {UseDefcols => 0, Font=>$PDL::Graphics::TriD::GL::fontbase, Strings => [] }
+  return {UseDefcols => 0, Font=>$PDLA::Graphics::TriD::GL::fontbase, Strings => [] }
 }
 
 

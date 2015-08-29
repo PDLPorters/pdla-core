@@ -1,20 +1,20 @@
 
-use PDL;
-use PDL::Config;
+use PDLA;
+use PDLA::Config;
 use Test::More;
         
 BEGIN{
-   unless ($PDL::Config{WITH_MINUIT}) {
-      plan skip_all => 'PDL not built WITH_MINUIT';
+   unless ($PDLA::Config{WITH_MINUIT}) {
+      plan skip_all => 'PDLA not built WITH_MINUIT';
       exit;
    }
-   eval " use PDL::Minuit; ";
+   eval " use PDLA::Minuit; ";
    unless ($@){
       plan tests => 5;
    }
    else {
       diag "$@\n";
-      plan skip_all => 'PDL::Minuit not available';
+      plan skip_all => 'PDLA::Minuit not available';
       exit;
    }
 }

@@ -1,9 +1,9 @@
-package PDL::Graphics::OpenGL::Perl::OpenGL;
+package PDLA::Graphics::OpenGL::Perl::OpenGL;
 
 BEGIN {
-   use PDL::Config;
-   if ($PDL::Config{USE_POGL}) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw()";
+   use PDLA::Config;
+   if ($PDLA::Config{USE_POGL}) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw()";
       use OpenGL::Config;
    }
 }
@@ -50,7 +50,7 @@ use strict;
 
 =head1 NAME
 
-PDL::Graphics::OpenGL::Perl::OpenGL - PDL TriD OpenGL interface using POGL
+PDLA::Graphics::OpenGL::Perl::OpenGL - PDLA TriD OpenGL interface using POGL
 
 =head1 VERSION
 
@@ -66,15 +66,15 @@ $VERSION = eval $VERSION;
 
 This module provides the glue between the Perl
 OpenGL functions and the API defined by the internal
-PDL::Graphics::OpenGL one. It also supports any
+PDLA::Graphics::OpenGL one. It also supports any
 miscellaneous OpenGL or GUI related functionality to
-support PDL::Graphics::TriD refactoring.
+support PDLA::Graphics::TriD refactoring.
 
 You should eventually be able to replace:
 
-    use PDL::Graphics::OpenGL
+    use PDLA::Graphics::OpenGL
 by
-    use PDL::Graphics::OpenGL::Perl::OpenGL;
+    use PDLA::Graphics::OpenGL::Perl::OpenGL;
 
 This module also includes support for FreeGLUT and
 GLUT instead of X11+GLX as mechanism for creating
@@ -101,9 +101,9 @@ interface and build environment matures
 
 =cut
 
-package PDL::Graphics::OpenGL::OO;
-use PDL::Graphics::TriD::Window qw();
-use PDL::Options;
+package PDLA::Graphics::OpenGL::OO;
+use PDLA::Graphics::TriD::Window qw();
+use PDLA::Options;
 use strict;
 my $debug = 0;
 my (@fakeXEvents) = ();
@@ -145,14 +145,14 @@ sub new {
    if($isref and defined $class_or_hash->{Options}){
       $p = $class_or_hash->{Options};
    }else{
-      my $opt = new PDL::Options(default_options());
+      my $opt = new PDLA::Options(default_options());
       $opt->incremental(1);
       $opt->options($options) if(defined $options);
       $p = $opt->options;
    }
 
    # Use GLUT windows and event handling as the TriD default
-   $window_type ||= $PDL::Config{POGL_WINDOW_TYPE};
+   $window_type ||= $PDLA::Config{POGL_WINDOW_TYPE};
    # $window_type ||= 'x11';       # use X11 default until glut code is ready
 
    my $self;
@@ -223,7 +223,7 @@ sub new {
 =head2 default GLUT callbacks
 
 These routines are set as the default GLUT callbacks for when GLUT windows
-are used for PDL/POGL.  Their only function at the moment is to drive an
+are used for PDLA/POGL.  Their only function at the moment is to drive an
 fake XEvent queue to feed the existing TriD GUI controls.  At some point,
 the X11 stuff will the deprecated and we can rewrite this more cleanly.
 
@@ -403,15 +403,15 @@ Chris Marshall, C<< <devel dot chm dot 01 at gmail.com> >>
 
 =head1 BUGS
 
-Bugs and feature requests may be submitted through the PDL sourceforge
+Bugs and feature requests may be submitted through the PDLA sourceforge
 project page at L<http://sourceforge.net/tracker/?group_id=612> .
 
 
 =head1 SUPPORT
 
-PDL uses a mailing list support model.  The Perldl mailing list
+PDLA uses a mailing list support model.  The Perldl mailing list
 is the best for questions, problems, and feature discussions with
-other PDL users and PDL developers.
+other PDLA users and PDLA developers.
 
 To subscribe see the page at L<http://pdl.perl.org/?page=mailing-lists>
 
@@ -419,7 +419,7 @@ To subscribe see the page at L<http://pdl.perl.org/?page=mailing-lists>
 
 =head1 ACKNOWLEDGEMENTS
 
-TBD including PDL TriD developers and POGL developers...thanks to all.
+TBD including PDLA TriD developers and POGL developers...thanks to all.
 
 =head1 COPYRIGHT & LICENSE
 
@@ -434,4 +434,4 @@ See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
-1; # End of PDL::Graphics::OpenGL::Perl::OpenGL
+1; # End of PDLA::Graphics::OpenGL::Perl::OpenGL

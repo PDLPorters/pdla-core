@@ -1,26 +1,26 @@
 
-# Test Script for the PDL interface to the GSL library
+# Test Script for the PDLA interface to the GSL library
 #  This tests mainly that the interface is working, i.e. that the
 #   functions can be called. 
 #  The GSL library already has a extensive test suite, and we
 #  do not want to duplicate that effort here.
 
-use PDL;
+use PDLA;
 use Test::More;
 
 BEGIN
 {
-   use PDL::Config;
-   if ( $PDL::Config{WITH_GSL} ) {
-      eval " use PDL::GSL::MROOT; ";
+   use PDLA::Config;
+   if ( $PDLA::Config{WITH_GSL} ) {
+      eval " use PDLA::GSL::MROOT; ";
       unless ($@) {
          ## plan tests => 2;
-         plan skip_all => "PDL::GSL::MROOT doesn't work with PDL_Index, yet";
+         plan skip_all => "PDLA::GSL::MROOT doesn't work with PDLA_Index, yet";
       } else {
-         plan skip_all => "PDL::GSL::MROOT not installed";
+         plan skip_all => "PDLA::GSL::MROOT not installed";
       }
    } else {
-      plan skip_all => "PDL::GSL::MROOT not compiled.";
+      plan skip_all => "PDLA::GSL::MROOT not compiled.";
    }
 }
 

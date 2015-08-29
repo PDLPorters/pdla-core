@@ -1,4 +1,4 @@
-NOTE: The PDL::Graphics::TriD window controls are based on
+NOTE: The PDLA::Graphics::TriD window controls are based on
 having a mouse with 2 or more buttons.
 
 For Macs with one button, you can use Ctrl+Click to generate

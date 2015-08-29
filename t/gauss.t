@@ -1,7 +1,7 @@
-# Test routine for PDL::Fit::Gaussian module
+# Test routine for PDLA::Fit::Gaussian module
 
-use PDL;
-use PDL::Fit::Gaussian;
+use PDLA;
+use PDLA::Fit::Gaussian;
 
 use Test::More tests => 2;
 

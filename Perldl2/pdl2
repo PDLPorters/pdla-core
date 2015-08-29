@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 BEGIN {
-   $ENV{DEVEL_REPL_PROFILE} = 'PDL::Perldl2::Profile::Perldl2';
+   $ENV{DEVEL_REPL_PROFILE} = 'PDLA::Perldl2::Profile::Perldl2';
 
    # This should be based on 
    $HOME = $ENV{HOME};             # Useful in shell
@@ -31,21 +31,21 @@ BEGIN {
    }
 }
 
-use PDL::Perldl2::Script 'run';
+use PDLA::Perldl2::Script 'run';
 
 __END__
 
 =head1 NAME
 
-pdl2 - Simple shell (version 2) for PDL
+pdl2 - Simple shell (version 2) for PDLA
 
 =head1 SYNOPSIS
 
-Use PDL interactively:
+Use PDLA interactively:
 
   %> pdl2
 
-  pdl> $a = sequence(10)  # or any other perl or PDL command
+  pdl> $a = sequence(10)  # or any other perl or PDLA command
   
   pdl> print "\$a = $a\n"; 
   $a = [0 1 2 3 4 5 6 7 8 9]
@@ -53,7 +53,7 @@ Use PDL interactively:
 =head1 DESCRIPTION
 
 The C<pdl2> program, also known as the Perldl2 shell, is a second
-generation version of the original C<perldl> interactive PDL shell.
+generation version of the original C<perldl> interactive PDLA shell.
 It attempts to be backward compatible in usage while providing
 improved features, better support for Perl syntax, and an more
 easily extended framework based on the L<Devel::REPL|Devel::REPL> shell.
@@ -64,11 +64,11 @@ installed or found then C<pdl2> will print a warning and run
 the legacy C<perldl> shell command instead.
 
 By default, command lines beginning with the default prompt
-of either C<pdl2> or C<perldl> (one of 'pdl> ', 'PDL> ', or
+of either C<pdl2> or C<perldl> (one of 'pdl> ', 'PDLA> ', or
 'perldl> ') will have the prefix string and surrounding
 whitespace stripped.  This allows for easy cut-and-paste
-from sample PDL shell sessions or other examples into another
-PDL shell session.
+from sample PDLA shell sessions or other examples into another
+PDLA shell session.
 
 =head1 FUNCTIONS
 
@@ -93,7 +93,7 @@ C<do_print> routine allows you to toggle between the default
   pdl> do_print
   1
   pdl> $a = pdl(3,2)
-  $PDL1 = [3 2];
+  $PDLA1 = [3 2];
   pdl> do_print
 
   pdl> $a = pdl(3,2)
@@ -102,7 +102,7 @@ C<do_print> routine allows you to toggle between the default
 
 =over 4
 
-=item $PDL::toolongtoprint
+=item $PDLA::toolongtoprint
 
 The maximal size pdls to print (defaults to 10000 elements).
 This is not just a C<perldl> or C<pdl2> variable but it is

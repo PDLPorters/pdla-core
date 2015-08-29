@@ -2,14 +2,14 @@
 # nasty test cases
 
 use Test::More tests => 3;
-use PDL::LiteF;
+use PDLA::LiteF;
 
 use strict;
 use warnings;
 
 $|=1;
 
-#  PDL::Core::set_debugging(1);
+#  PDLA::Core::set_debugging(1);
 kill 'INT',$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 #$a = zeroes(4,4) * zeroes(4,4);
@@ -34,12 +34,12 @@ if(0) {
 {
 	# TODO no test here
 	my $pa0 = zeroes(3,3);
-	#my $pa = $pa0->PDL::Core::new_or_inplace($a0);
+	#my $pa = $pa0->PDLA::Core::new_or_inplace($a0);
 	my $pa = $pa0->copy;
 	my $pb = $pa->xchg(0,1);
 	note $pa;
 
-	# PDL::Primitive::axisvalues($pb);
+	# PDLA::Primitive::axisvalues($pb);
 	# note $pa;
 }
 
@@ -66,7 +66,7 @@ if(0) {
 
 	note $pb;
 
-	ok(all PDL::approx($pb,pdl([0,1,2,10,11,12,20,21,22]), $eps));
+	ok(all PDLA::approx($pb,pdl([0,1,2,10,11,12,20,21,22]), $eps));
 
 	# note $b;
 
@@ -84,7 +84,7 @@ if(0) {
 	# ok(2,$@ =~ /^clump: Increments do not match/);
 	# Clump supports this now.
 
-	ok(all PDL::approx($pd,pdl([0,2,10,12,20,22]), $eps));
+	ok(all PDLA::approx($pd,pdl([0,2,10,12,20,22]), $eps));
 
-	ok(all PDL::approx($pe,pdl([10,12,20]), $eps));
+	ok(all PDLA::approx($pe,pdl([10,12,20]), $eps));
 }

@@ -2,7 +2,7 @@ pp_addpm({At=>Top},<<'EOD');
 
 =head1 NAME
 
-PDL::IO::Browser -- 2D data browser for PDL
+PDLA::IO::Browser -- 2D data browser for PDLA
 
 =head1 DESCRIPTION
 
@@ -10,20 +10,20 @@ cursor terminal browser for piddles.
 
 =head1 SYNOPSIS
 
- use PDL::IO::Browser;
+ use PDLA::IO::Browser;
 
 =cut
 
 
 EOD
 
-use PDL::Types;
+use PDLA::Types;
 
 pp_def(
 	'browse',
 	Pars => 'a(n,m);',
 	Code => "
-	browse(\$TBSULQFD($PDL_B,$PDL_S,$PDL_US,$PDL_L,$PDL_LL,$PDL_F,$PDL_D),
+	browse(\$TBSULQFD($PDLA_B,$PDLA_S,$PDLA_US,$PDLA_L,$PDLA_LL,$PDLA_F,$PDLA_D),
 	       \$SIZE(n),\$SIZE(m),\$P(a));
 	",
 	GenericTypes => [qw(B S U L Q F D)],
@@ -39,7 +39,7 @@ browse a 2D array using terminal cursor keys
  browse $data
 
 This uses the CURSES library to allow one to scroll
-around a PDL array using the cursor keys.
+around a PDLA array using the cursor keys.
 
 
 
@@ -54,8 +54,8 @@ pp_addpm({At=>Bot},<<'EOD');
 Copyright (C) Robin Williams 1997 (rjrw@ast.leeds.ac.uk).
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 

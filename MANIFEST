@@ -39,7 +39,7 @@ Basic/Gen/Makefile.PL
 Basic/Gen/PP.pm
 Basic/Gen/PP/CType.pm
 Basic/Gen/PP/Dims.pm
-Basic/Gen/PP/PDLCode.pm
+Basic/Gen/PP/PDLACode.pm
 Basic/Gen/PP/PdlParObj.pm
 Basic/Gen/PP/Signature.pm
 Basic/Gen/PP/Struct.pm
@@ -95,7 +95,7 @@ Basic/MatrixOps/svd.c
 Basic/Ops/Makefile.PL
 Basic/Ops/ops.pd
 Basic/Options.pm
-Basic/PDL.pm
+Basic/PDLA.pm
 Basic/Pod/API.pod
 Basic/Pod/BadValues.pod
 Basic/Pod/Course.pod
@@ -620,7 +620,7 @@ Perldl2/Makefile.PL
 Perldl2/Plugin/CleanErrors.pm
 Perldl2/Plugin/Makefile.PL
 Perldl2/Plugin/NiceSlice.pm
-Perldl2/Plugin/PDLCommands.pm
+Perldl2/Plugin/PDLACommands.pm
 Perldl2/Plugin/PrintControl.pm
 Perldl2/Profile/Makefile.PL
 Perldl2/Profile/Perldl2.pm

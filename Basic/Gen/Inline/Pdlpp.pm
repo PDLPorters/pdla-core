@@ -7,7 +7,7 @@ use Config;
 use Data::Dumper;
 use Carp;
 use Cwd qw(cwd abs_path);
-use PDL::Core::Dev;
+use PDLA::Core::Dev;
 
 $Inline::Pdlpp::VERSION = '0.4';
 use base qw(Inline::C);
@@ -18,7 +18,7 @@ use base qw(Inline::C);
 sub register {
     return {
 	    language => 'Pdlpp',
-	    aliases => ['pdlpp','PDLPP'],
+	    aliases => ['pdlpp','PDLAPP'],
 	    type => 'compiled',
 	    suffix => $Config{dlext},
 	   };
@@ -33,7 +33,7 @@ sub validate {
     $o->{ILSM}{INTERNAL} = 0 unless defined $o->{ILSM}{INTERNAL};
     $o->{ILSM}{MAKEFILE} ||= {};
     if (not $o->UNTAINT) {
-      my $w = abs_path(PDL::Core::Dev::whereami_any());
+      my $w = abs_path(PDLA::Core::Dev::whereami_any());
       $o->{ILSM}{MAKEFILE}{INC} = qq{"-I$w/Core"};
     }
     $o->{ILSM}{AUTO_INCLUDE} ||= ' '; # not '' as Inline::C does ||=
@@ -91,7 +91,7 @@ sub config {
 }
 
 #==============================================================================
-# Write the PDL::PP code into a PD file
+# Write the PDLA::PP code into a PD file
 #==============================================================================
 sub write_PD {
     my $o = shift;
@@ -104,7 +104,7 @@ sub write_PD {
 }
 
 #==============================================================================
-# Generate the PDL::PP code (piece together a few snippets)
+# Generate the PDLA::PP code (piece together a few snippets)
 #==============================================================================
 sub pd_generate {
     my $o = shift;
@@ -167,7 +167,7 @@ END
 sub get_maps {
     my $o = shift;
     $o->SUPER::get_maps;
-    my $w = abs_path(PDL::Core::Dev::whereami_any());
+    my $w = abs_path(PDLA::Core::Dev::whereami_any());
     push @{$o->{ILSM}{MAKEFILE}{TYPEMAPS}}, "$w/Core/typemap.pdl";
 }
 
@@ -199,7 +199,7 @@ sub write_Makefile_PL {
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-use PDL::Core::Dev;
+use PDLA::Core::Dev;
 my \@pack = [ "$modfname.pd", "$modfname", "$module" ];
 my %options = %\{
 END
@@ -232,17 +232,17 @@ __END__
 
 =head1 NAME
 
-Inline::Pdlpp - Write PDL Subroutines inline with PDL::PP
+Inline::Pdlpp - Write PDLA Subroutines inline with PDLA::PP
 
 =head1 DESCRIPTION
 
-C<Inline::Pdlpp> is a module that allows you to write PDL subroutines
-in the PDL::PP style. The big benefit compared to plain C<PDL::PP> is
+C<Inline::Pdlpp> is a module that allows you to write PDLA subroutines
+in the PDLA::PP style. The big benefit compared to plain C<PDLA::PP> is
 that you can write these definitions inline in any old perl script
 (without the normal hassle of creating Makefiles, building, etc).
 Since version 0.30 the Inline module supports multiple programming
 languages and each language has its own support module. This document
-describes how to use Inline with PDL::PP (or rather, it will once
+describes how to use Inline with PDLA::PP (or rather, it will once
 these docs are complete C<;)>.
 
 For more information on Inline in general, see L<Inline>.
@@ -256,7 +256,7 @@ C<Inline::Pdlpp> is a subclass of L<Inline::C>. Most Kudos goes to Brian I.
 =head1 Usage
 
 You never actually use C<Inline::Pdlpp> directly. It is just a support module
-for using C<Inline.pm> with C<PDL::PP>. So the usage is always:
+for using C<Inline.pm> with C<PDLA::PP>. So the usage is always:
 
     use Inline Pdlpp => ...;
 
@@ -272,7 +272,7 @@ that illustrate typical usage.
 =head2 A simple example
 
    # example script inlpp.pl
-   use PDL; # must be called before (!) 'use Inline Pdlpp' calls
+   use PDLA; # must be called before (!) 'use Inline Pdlpp' calls
 
    use Inline Pdlpp; # the actual code is in the __Pdlpp__ block below
 
@@ -301,7 +301,7 @@ that illustrate typical usage.
 If you call this script it should generate output similar to this:
 
    prompt> perl inlpp.pl
-   Inline running PDL::PP version 2.2...
+   Inline running PDLA::PP version 2.2...
    [1 2 3 4 5 6 7 8 9 10]
    [3628800 3628800 3628800 3628800 3628800 3628800 3628800 3628800 3628800 3628800]
 
@@ -321,7 +321,7 @@ keywords are largely equivalent to those used with C<Inline::C>. Please
 see below for further details on the usage of C<INC>,
 C<LIBS>, C<AUTO_INCLUDE> and C<BOOT>.
 
-   use PDL; # this must be called before (!) 'use Inline Pdlpp' calls
+   use PDLA; # this must be called before (!) 'use Inline Pdlpp' calls
 
    use Inline Pdlpp => Config =>
      INC => "-I$ENV{HOME}/include",
@@ -378,9 +378,9 @@ bits of code C<AUTO_INCLUDE> is probably syntactically nicer.
 
 Same as C<pp_bless> command. Specifies the package (i.e. class)
 to which your new I<pp_def>ed methods will be added. Defaults
-to C<PDL> if omitted.
+to C<PDLA> if omitted.
 
-    use Inline Pdlpp => Config => BLESS => 'PDL::Complex';
+    use Inline Pdlpp => Config => BLESS => 'PDLA::Complex';
 
 =head2 BOOT
 
@@ -471,7 +471,7 @@ want to C<do> your script containing inlined code. For example
 According to Brian Ingerson (of Inline fame) the workaround is
 to include an C<Inline-E<gt>init> call in your script, e.g.
 
-  use PDL;
+  use PDLA;
   use Inline Pdlpp;
   Inline->init;
 
@@ -482,26 +482,26 @@ to include an C<Inline-E<gt>init> call in your script, e.g.
 
   # pp code
 
-=head2 C<PDL::NiceSlice> and C<Inline::Pdlpp>
+=head2 C<PDLA::NiceSlice> and C<Inline::Pdlpp>
 
 There is currently an undesired interaction between
-L<PDL::NiceSlice|PDL::NiceSlice> and C<Inline::Pdlpp>.
+L<PDLA::NiceSlice|PDLA::NiceSlice> and C<Inline::Pdlpp>.
 Since PP code generally contains expressions
 of the type C<$var()> (to access piddles, etc)
-L<PDL::NiceSlice|PDL::NiceSlice> recognizes those incorrectly as
+L<PDLA::NiceSlice|PDLA::NiceSlice> recognizes those incorrectly as
 slice expressions and does its substitutions. For the moment
 (until hopefully the parser can deal with that) it is best to
-explicitly switch L<PDL::NiceSlice|PDL::NiceSlice> off before
+explicitly switch L<PDLA::NiceSlice|PDLA::NiceSlice> off before
 the section of inlined Pdlpp code. For example:
 
-  use PDL::NiceSlice;
+  use PDLA::NiceSlice;
   use Inline::Pdlpp;
 
   $a = sequence 10;
   $a(0:3)++;
   $a->inc;
 
-  no PDL::NiceSlice;
+  no PDLA::NiceSlice;
 
   __DATA__
 
@@ -519,9 +519,9 @@ Christian Soeller <soellermail@excite.com>
 
 =head1 SEE ALSO
 
-L<PDL>
+L<PDLA>
 
-L<PDL::PP>
+L<PDLA::PP>
 
 L<Inline>
 
@@ -532,7 +532,7 @@ L<Inline::C>
 Copyright (c) 2001. Christian Soeller. All rights reserved.
 
 This program is free software; you can redistribute it and/or
-modify it under the same terms as PDL itself.
+modify it under the same terms as PDLA itself.
 
 See http://pdl.perl.org
 

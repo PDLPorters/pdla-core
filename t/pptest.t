@@ -15,8 +15,8 @@ my %PPTESTFILES = (
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-use PDL::Core::Dev;
-my @pack = (["tests.pd", qw(Tests PDL::Tests)]);
+use PDLA::Core::Dev;
+my @pack = (["tests.pd", qw(Tests PDLA::Tests)]);
 sub MY::postamble {
 	pdlpp_postamble(@pack);
 };  # Add genpp rule
@@ -25,7 +25,7 @@ EOF
 
     'tests.pd' => <<'EOF',
 # make sure the deprecation mechanism throws warnings
-pp_deprecate_module( infavor => "PDL::Test::Fancy" );
+pp_deprecate_module( infavor => "PDLA::Test::Fancy" );
 
 sub pp_deft {
     my ($name,%hash) = @_;
@@ -37,7 +37,7 @@ sub pp_deft {
 
 pp_addhdr('
 /* to test the $P vaffining */
-void ppcp(PDL_Byte *dst, PDL_Byte *src, int len)
+void ppcp(PDLA_Byte *dst, PDLA_Byte *src, int len)
 {
   int i;
 
@@ -59,7 +59,7 @@ pp_deft('foop',
 pp_deft(
 	'fsumover',
 	Pars => 'a1(n); float [o]b();',
-	Code => 'PDL_Float tmp = 0;
+	Code => 'PDLA_Float tmp = 0;
 	 loop(n) %{ tmp += $a1(); %}
 	 $b() = tmp;'
 );
@@ -88,7 +88,7 @@ pp_deft('fooseg',
 
 pp_addhdr << 'EOH';
 
-void tinplace_c1(int n, PDL_Float* data)
+void tinplace_c1(int n, PDLA_Float* data)
 {
   int i;
   for (i=0;i<n;i++) {
@@ -96,7 +96,7 @@ void tinplace_c1(int n, PDL_Float* data)
   }
 }
 
-void tinplace_c2(int n, PDL_Float* data1, PDL_Float* data2)
+void tinplace_c2(int n, PDLA_Float* data1, PDLA_Float* data2)
 {
   int i;
   for (i=0;i<n;i++) {
@@ -105,7 +105,7 @@ void tinplace_c2(int n, PDL_Float* data1, PDL_Float* data2)
   }
 }
 
-void tinplace_c3(int n, PDL_Float* data1, PDL_Float* data2, PDL_Float* data3)
+void tinplace_c3(int n, PDLA_Float* data1, PDLA_Float* data2, PDLA_Float* data3)
 {
   int i;
   for (i=0;i<n;i++) {
@@ -157,17 +157,17 @@ use strict;
 use warnings;
 use Test::More tests => 25;
 use Test::Warn;
-use PDL::LiteF;
-use PDL::Types;
-use PDL::Dbg;
+use PDLA::LiteF;
+use PDLA::Types;
+use PDLA::Dbg;
 
 BEGIN {
-  warning_like{ require PDL::Tests; PDL::Tests->import; }
-    qr/deprecated.*PDL::Test::Fancy/,
+  warning_like{ require PDLA::Tests; PDLA::Tests->import; }
+    qr/deprecated.*PDLA::Test::Fancy/,
     "PP deprecation should emit warnings";
 }
 
-# Is there any good reason we don't use PDL's approx function?
+# Is there any good reason we don't use PDLA's approx function?
 sub tapprox {
     my($a,$b) = @_;
     my $c = abs($a-$b);
@@ -194,14 +194,14 @@ ok( tapprox($vaff,$b) )
 # float qualifier
 $a = ones(byte,3000);
 test_fsumover($a,($b=null));
-is( $b->get_datatype, $PDL_F );
+is( $b->get_datatype, $PDLA_F );
 is( $b->at, 3000 );
 
 # int+ qualifier
 for (byte,short,ushort,long,float,double) {
   $a = ones($_,3000);
   test_nsumover($a,($b=null));
-  is( $b->get_datatype, (($PDL_L > $_->[0]) ? $PDL_L : $_->[0]) );
+  is( $b->get_datatype, (($PDLA_L > $_->[0]) ? $PDLA_L : $_->[0]) );
   is( $b->at, 3000 );
 }
 
@@ -256,8 +256,8 @@ my %OTHERPARSFILES = (
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-use PDL::Core::Dev;
-my @pack = (["otherpars.pd", qw(Otherpars PDL::Otherpars)]);
+use PDLA::Core::Dev;
+my @pack = (["otherpars.pd", qw(Otherpars PDLA::Otherpars)]);
 sub MY::postamble {
 	pdlpp_postamble(@pack);
 };  # Add genpp rule
@@ -270,10 +270,10 @@ pp_core_importList( '()' );
 pp_def( "myexternalfunc",
   Pars => " p(m);  x(n);  [o] y(); [t] work(wn); ",
     RedoDimsCode => '
-    int im = $PDL(p)->dims[0];
-    int in = $PDL(x)->dims[0];
+    int im = $PDLA(p)->dims[0];
+    int in = $PDLA(x)->dims[0];
     int min = in + im * im;
-    int inw = $PDL(work)->dims[0];
+    int inw = $PDLA(work)->dims[0];
     $SIZE(wn) = inw >= min ? inw : min;',
 	OtherPars => 'int flags;',
     Code => 'int foo = 1;  ');
@@ -285,8 +285,8 @@ EOF
 use strict;
 use warnings;
 use Test::More tests => 1;
-use PDL::LiteF;
-use_ok 'PDL::Otherpars';
+use PDLA::LiteF;
+use_ok 'PDLA::Otherpars';
 EOF
 
 );

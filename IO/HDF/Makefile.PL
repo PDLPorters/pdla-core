@@ -8,13 +8,13 @@ our ($hdf_include_path, $hdf_lib_path, $hdf_libs, $szip);
 my $msg = "";
 my $forcebuild=0;  # Note: forcebuild not used
 
-if (defined $PDL::Config{WITH_HDF} && $PDL::Config{WITH_HDF}==0) {
-    $msg = "\n   Will skip build of PDL::IO::HDF on this system   \n";
+if (defined $PDLA::Config{WITH_HDF} && $PDLA::Config{WITH_HDF}==0) {
+    $msg = "\n   Will skip build of PDLA::IO::HDF on this system   \n";
     goto skip;
 }
 
-if (defined $PDL::Config{WITH_HDF} && $PDL::Config{WITH_HDF}==1) {
-    print "\n   Will forcibly try and build PDL::IO::HDF on this system   \n\n";
+if (defined $PDLA::Config{WITH_HDF} && $PDLA::Config{WITH_HDF}==1) {
+    print "\n   Will forcibly try and build PDLA::IO::HDF on this system   \n\n";
     $forcebuild=1;
 }
 
@@ -43,10 +43,10 @@ my @HDF_inc_locations = (
 );
 
 # get locations from perldl.conf, if specified there:
-@HDF_lib_locations = @{$PDL::Config{HDF_LIBS}}
-    if( defined $PDL::Config{HDF_LIBS} );
-@HDF_inc_locations = @{$PDL::Config{HDF_INC}}
-    if( defined $PDL::Config{HDF_INC} );
+@HDF_lib_locations = @{$PDLA::Config{HDF_LIBS}}
+    if( defined $PDLA::Config{HDF_LIBS} );
+@HDF_inc_locations = @{$PDLA::Config{HDF_INC}}
+    if( defined $PDLA::Config{HDF_INC} );
 
 #
 # Do the search:
@@ -113,7 +113,7 @@ unless( defined( $hdf_include_path ) ) {
 }
 
 # Set up architecture dependant stuff:
-# NOTE TO SELF: The main PDL developers may not like this...
+# NOTE TO SELF: The main PDLA developers may not like this...
 my $cpu = `uname -m`;
 chomp $cpu;
 my $hdf_defs;
@@ -134,7 +134,7 @@ if( defined( $hdf_include_path ) && defined( $hdf_lib_path ) ) {
 }
 
 if ( $donot ) {
-    $msg .= "\n Skipping build of PDL::IO::HDF.\n";
+    $msg .= "\n Skipping build of PDLA::IO::HDF.\n";
 }
 
 skip:
@@ -142,24 +142,24 @@ skip:
 if ($msg ne "" && $forcebuild==0) {
     write_dummy_make( $msg );
     $donot = 1;
-    $PDL::Config{WITH_HDF}=0;
+    $PDLA::Config{WITH_HDF}=0;
 } else {
-    $PDL::Config{WITH_HDF}=1;
-    print "\n   Building PDL::IO::HDF. Turn off WITH_HDF if there are any problems\n\n";
+    $PDLA::Config{WITH_HDF}=1;
+    print "\n   Building PDLA::IO::HDF. Turn off WITH_HDF if there are any problems\n\n";
 }
 
 return if $donot;
 
 WriteMakefile(
-    NAME => 'PDL::IO::HDF',
+    NAME => 'PDLA::IO::HDF',
     DEFINE => $hdf_defs,
     #OPTIMIZE => "$hdf_defs",
     VERSION_FROM => 'HDF.pm',
-    TYPEMAPS => [ &PDL_TYPEMAP() ],
+    TYPEMAPS => [ &PDLA_TYPEMAP() ],
     PM => {
         'HDF.pm' => '$(INST_LIBDIR)/HDF.pm',
     },
-    INC => &PDL_INCLUDE() . " -I$hdf_include_path",
+    INC => &PDLA_INCLUDE() . " -I$hdf_include_path",
     LIBS => [ "-L$hdf_lib_path $hdf_libs -ljpeg -lz $szip" ],
     dist => {
         COMPRESS => 'gzip',

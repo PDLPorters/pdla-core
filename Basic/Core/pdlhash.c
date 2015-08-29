@@ -2,7 +2,7 @@
 /* pdlhash.c - functions for manipulating pdl hashes */
 
 
-#define PDL_CORE      /* For certain ifdefs */
+#define PDLA_CORE      /* For certain ifdefs */
 #include "pdl.h"      /* Data structure declarations */
 #include "pdlcore.h"  /* Core declarations */
 
@@ -26,7 +26,7 @@ void pdl_freedata (pdl *a) {
 
 /*  Utility to change the size of the data compt of a pdl */
 
-void pdl_grow (pdl* a, PDL_Indx newsize) {
+void pdl_grow (pdl* a, PDLA_Indx newsize) {
 
    SV* foo;
    HV* hash;
@@ -34,7 +34,7 @@ void pdl_grow (pdl* a, PDL_Indx newsize) {
    STRLEN ncurr;
    STRLEN len;
 
-   if(a->state & PDL_DONTTOUCHDATA) {
+   if(a->state & PDLA_DONTTOUCHDATA) {
    	die("Trying to touch data of an untouchable (mmapped?) pdl");
    }
 
@@ -55,9 +55,9 @@ void pdl_grow (pdl* a, PDL_Indx newsize) {
       sv_setpvn(foo,"",0);
 #endif
    if(nbytes > (1024*1024*1024)) {
-     SV *sv = get_sv("PDL::BIGPDL",0);
+     SV *sv = get_sv("PDLA::BIGPDLA",0);
      if(sv == NULL || !(SvTRUE(sv)))
-   	die("Probably false alloc of over 1Gb PDL! (set $PDL::BIGPDL = 1 to enable)");
+   	die("Probably false alloc of over 1Gb PDLA! (set $PDLA::BIGPDLA = 1 to enable)");
      fflush(stdout);
    }
    
@@ -70,7 +70,7 @@ void pdl_grow (pdl* a, PDL_Indx newsize) {
 
 /* unpack dims array into Hash */
 
-void pdl_unpackarray ( HV* hash, char *key, PDL_Indx *dims, int ndims ) {
+void pdl_unpackarray ( HV* hash, char *key, PDLA_Indx *dims, int ndims ) {
 
    AV*  array;
    int i;

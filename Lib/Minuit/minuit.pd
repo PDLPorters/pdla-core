@@ -1,4 +1,4 @@
-pp_bless('PDL::Minuit');
+pp_bless('PDLA::Minuit');
 
 pp_add_exported('','mn_init mn_def_pars mn_excm mn_pout mn_stat mn_err mn_contour mn_emat');
 
@@ -25,7 +25,7 @@ extern void CIERRA(int*);
 pp_addpm({At=>Top},<<'EOD');       # add perl code to the perl module that PP will create
 =head1 NAME
 
-PDL::Minuit -- a PDL interface to the Minuit library
+PDLA::Minuit -- a PDLA interface to the Minuit library
 
 =head1 DESCRIPTION
 
@@ -79,15 +79,15 @@ sub mn_init{
            
   if (defined (my $logfile = $mn_options->{Log})){ 
     if (-e $logfile) { unlink $logfile; }   
-    PDL::Minuit::mn_abre($mn_options->{Unit},$logfile,\'new\');
+    PDLA::Minuit::mn_abre($mn_options->{Unit},$logfile,\'new\');
     print STDERR "# Opening file $logfile....\n";
   }
  			
-  PDL::Minuit::mninit(5,$mn_options->{Unit},$mn_options->{Unit});
-  PDL::Minuit::mnseti($mn_options->{Title});
+  PDLA::Minuit::mninit(5,$mn_options->{Unit},$mn_options->{Unit});
+  PDLA::Minuit::mnseti($mn_options->{Title});
 
   if (defined (my $logfile = $mn_options->{Log})){
-    PDL::Minuit::mn_cierra($mn_options->{Unit});
+    PDLA::Minuit::mn_cierra($mn_options->{Unit});
   }
 
 }
@@ -156,12 +156,12 @@ sub mn_def_pars{
   my $iflag = 0;
 
   if (defined (my $logfile = $mn_options->{Log})){
-    PDL::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
+    PDLA::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
   }
 
   foreach my $i ( 0..(nelem($pars)-1) ){
      my $ii = $i + 1;
-     $iflag = PDL::Minuit::mnparm($ii,$pars->slice("($i)"),
+     $iflag = PDLA::Minuit::mnparm($ii,$pars->slice("($i)"),
 		       $steps->slice("($i)"),
 		       $lo_bounds->slice("($i)"),
 		       $up_bounds->slice("($i)"),
@@ -170,7 +170,7 @@ sub mn_def_pars{
   }
   
   if (defined (my $logfile = $mn_options->{Log})){
-     PDL::Minuit::mn_cierra($mn_options->{Unit});
+     PDLA::Minuit::mn_cierra($mn_options->{Unit});
   }
 }
 ');
@@ -196,17 +196,17 @@ sub mn_excm{
   if ( @_ ) { barf "Usage : mn_excm($command, [$arglis]) \n"; }
 
   if (defined (my $logfile = $mn_options->{Log})){
-    PDL::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
+    PDLA::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
   }
 
   my $iflag = pdl(0);
 
 
-  $iflag = PDL::Minuit::mnexcm($arglis, $narg, $command, $fun_ref,$mn_options->{N});
+  $iflag = PDLA::Minuit::mnexcm($arglis, $narg, $command, $fun_ref,$mn_options->{N});
   warn "Problem executing command \'$command\' " unless ($iflag == 0);
 
   if (defined (my $logfile = $mn_options->{Log})){
-    PDL::Minuit::mn_cierra($mn_options->{Unit});
+    PDLA::Minuit::mn_cierra($mn_options->{Unit});
   }
 
   return $iflag;
@@ -232,7 +232,7 @@ pp_addpm('
     if (($par_num < 1) || ($par_num > $n)) { barf "Parameter numbers range from 1 to $n "; }
 
     if (defined (my $logfile = $mn_options->{Log})){
-      PDL::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
+      PDLA::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
     }
 
     my $val = pdl(0);
@@ -241,10 +241,10 @@ pp_addpm('
     my $bnd2 = pdl(0);
     my $ivarbl = pdl(0);
     my $par_name = "          ";
-    PDL::Minuit::mnpout($par_num,$val,$err,$bnd1,$bnd2,$ivarbl,\$par_name);
+    PDLA::Minuit::mnpout($par_num,$val,$err,$bnd1,$bnd2,$ivarbl,\$par_name);
 
     if (defined (my $logfile = $mn_options->{Log})){
-      PDL::Minuit::mn_cierra($mn_options->{Unit});
+      PDLA::Minuit::mn_cierra($mn_options->{Unit});
     }
 
     return ($val,$err,$bnd1,$bnd2,$ivarbl,$par_name);    
@@ -264,14 +264,14 @@ pp_def('mnpout',
 pp_addpm('
   sub mn_stat{
      if (defined (my $logfile = $mn_options->{Log})){
-       PDL::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
+       PDLA::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
      }
 
 
-     my ($fmin,$fedm,$errdef,$npari,$nparx,$istat) = PDL::Minuit::mnstat();
+     my ($fmin,$fedm,$errdef,$npari,$nparx,$istat) = PDLA::Minuit::mnstat();
 
      if (defined (my $logfile = $mn_options->{Log})){
-       PDL::Minuit::mn_cierra($mn_options->{Unit});
+       PDLA::Minuit::mn_cierra($mn_options->{Unit});
      }
 
      return ($fmin,$fedm,$errdef,$npari,$nparx,$istat);
@@ -287,17 +287,17 @@ pp_addpm('
   sub mn_emat{
    
     if (defined (my $logfile = $mn_options->{Log})){
-      PDL::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
+      PDLA::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
     }
 
-    my ($fmin,$fedm,$errdef,$npari,$nparx,$istat) = PDL::Minuit::mnstat();
+    my ($fmin,$fedm,$errdef,$npari,$nparx,$istat) = PDLA::Minuit::mnstat();
     my $n = $npari->sum;
     my $mat = zeroes($n,$n);
 
-    PDL::Minuit::mnemat($mat);
+    PDLA::Minuit::mnemat($mat);
 
     if (defined (my $logfile = $mn_options->{Log})){
-      PDL::Minuit::mn_cierra($mn_options->{Unit});
+      PDLA::Minuit::mn_cierra($mn_options->{Unit});
     }
     
     return $mat;
@@ -321,13 +321,13 @@ pp_addpm('
     if (($par_num < 1) || ($par_num > $n)) { barf "Parameter numbers range from 1 to $n "; }
 
     if (defined (my $logfile = $mn_options->{Log})){
-      PDL::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
+      PDLA::Minuit::mn_abre($mn_options->{Unit},$logfile,\'old\');
     }
 
-    my ($eplus,$eminus,$eparab,$globcc) = PDL::Minuit::mnerrs($par_num);
+    my ($eplus,$eminus,$eparab,$globcc) = PDLA::Minuit::mnerrs($par_num);
 
     if (defined (my $logfile = $mn_options->{Log})){
-      PDL::Minuit::mn_cierra($mn_options->{Unit});
+      PDLA::Minuit::mn_cierra($mn_options->{Unit});
     }
 
     return ($eplus,$eminus,$eparab,$globcc);
@@ -357,10 +357,10 @@ pp_addpm('
     my $ypt = zeroes($npt);
     my $nfound = pdl->new;
 
-    PDL::Minuit::mncont($par_num_1,$par_num_2,$npt,$xpt,$ypt,$nfound,$fun_ref,$n);
+    PDLA::Minuit::mncont($par_num_1,$par_num_2,$npt,$xpt,$ypt,$nfound,$fun_ref,$n);
 
     if (defined (my $logfile = $mn_options->{Log})){
-      PDL::Minuit::mn_cierra($mn_options->{Unit});
+      PDLA::Minuit::mn_cierra($mn_options->{Unit});
     }
 
     return ($xpt,$ypt,$nfound);
@@ -632,7 +632,7 @@ Usage:
 
 =head1 SEE ALSO
 
-L<PDL>
+L<PDLA>
 
 The Minuit documentation is online at
 
@@ -644,8 +644,8 @@ The Minuit documentation is online at
 This file copyright (C) 2007 Andres Jordan <ajordan@eso.org>.
 All rights reserved. There is no warranty. You are allowed to redistribute this 
 software/documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 =cut
 

@@ -1,8 +1,8 @@
 
 use strict;
 
-use PDL;
-use PDL::Config;
+use PDLA;
+use PDLA::Config;
 use File::Temp 'tempdir';
 use File::Spec;
 
@@ -15,7 +15,7 @@ BEGIN { plan tests => 4; }
 
 ##1 Make sure the library loads
 
-eval 'use PDL::DiskCache;';
+eval 'use PDLA::DiskCache;';
 if($@) {print $@,"\n";}
 ok( !$@ );
 

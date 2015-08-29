@@ -1,33 +1,33 @@
 =head1 NAME
 
-PDL::IO::Dumper -- data dumping for structs with PDLs
+PDLA::IO::Dumper -- data dumping for structs with PDLAs
 
 =head1 DESCRIPTION
 
 This package allows you cleanly to save and restore complex data structures
-which include PDLs, as ASCII strings and/or transportable ASCII files.  It
+which include PDLAs, as ASCII strings and/or transportable ASCII files.  It
 exports four functions into your namespace: sdump, fdump, frestore, and
 deep_copy.
 
-PDL::IO::Dumper traverses the same types of structure that Data::Dumper
+PDLA::IO::Dumper traverses the same types of structure that Data::Dumper
 knows about, because it uses a call to Data::Dumper.  Unlike Data::Dumper
-it doesn't crash when accessing PDLs.
+it doesn't crash when accessing PDLAs.
 
-The PDL::IO::Dumper routines have a slightly different syntax than
+The PDLA::IO::Dumper routines have a slightly different syntax than
 Data::Dumper does: you may only dump a single scalar perl expression
 rather than an arbitrary one.  Of course, the scalar may be a ref to
 whatever humongous pile of spaghetti you want, so that's no big loss.
 
 The output string is intended to be about as readable as Dumper's
-output is for non-PDL expressions. To that end, small PDLs (up to 8
-elements) are stored as inline perl expressions, midsized PDLs (up to
+output is for non-PDLA expressions. To that end, small PDLAs (up to 8
+elements) are stored as inline perl expressions, midsized PDLAs (up to
 200 elements) are stored as perl expressions above the main data
-structure, and large PDLs are stored as FITS files that are uuencoded
+structure, and large PDLAs are stored as FITS files that are uuencoded
 and included in the dump string. (You have to have access to either 
 uuencode(1) or the CPAN module Convert::UU for this to work).
 
 No attempt is made to shrink the output string -- for example, inlined
-PDL expressions all include explicit reshape() and typecast commands,
+PDLA expressions all include explicit reshape() and typecast commands,
 and uuencoding expands stuff by a factor of about 1.5.  So your data
 structures will grow when you dump them. 
 
@@ -42,9 +42,9 @@ are actually external, and (B) most everyday objects are quite safe.
 
 Another shortfall of Data::Dumper is that it doesn't recognize tied objects.
 This might be a Good Thing or a Bad Thing depending on your point of view, 
-but it means that PDL::IO::Dumper includes a kludge to handle the tied
+but it means that PDLA::IO::Dumper includes a kludge to handle the tied
 Astro::FITS::Header objects associated with FITS headers (see the rfits 
-documentation in PDL::IO::Misc for details).
+documentation in PDLA::IO::Misc for details).
 
 There's currently no reference recursion detection, so a non-treelike
 reference topology will cause Dumper to buzz forever.  That will
@@ -70,7 +70,7 @@ This package comes with NO WARRANTY.
 
 =item * 1.0: initial release
 
-=item * 1.1 (26-Feb-2002): Shorter form for short PDLs; more readability
+=item * 1.1 (26-Feb-2002): Shorter form for short PDLAs; more readability
 
 =item * 1.2 (28-Feb-2002): Added deep_copy() -- exported convenience function
   for "eval sdump"
@@ -87,26 +87,26 @@ This package comes with NO WARRANTY.
 
 =cut
 
-# use PDL::NiceSlice;
+# use PDLA::NiceSlice;
 
-package PDL::IO::Dumper;
+package PDLA::IO::Dumper;
 use File::Temp;
 
 
 BEGIN{
   use Exporter ();
 
-  package PDL::IO::Dumper;
+  package PDLA::IO::Dumper;
 
-  $PDL::IO::Dumper::VERSION = '1.3.2';
+  $PDLA::IO::Dumper::VERSION = '1.3.2';
   
-  @PDL::IO::Dumper::ISA = ( Exporter ) ;
-  @PDL::IO::Dumper::EXPORT_OK = qw( fdump sdump frestore deep_copy);
-  @PDL::IO::Dumper::EXPORT = @EXPORT_OK;
-  %PDL::IO::Dumper::EXPORT_TAGS = ( Func=>[@EXPORT_OK]);
+  @PDLA::IO::Dumper::ISA = ( Exporter ) ;
+  @PDLA::IO::Dumper::EXPORT_OK = qw( fdump sdump frestore deep_copy);
+  @PDLA::IO::Dumper::EXPORT = @EXPORT_OK;
+  %PDLA::IO::Dumper::EXPORT_TAGS = ( Func=>[@EXPORT_OK]);
 
   eval "use Convert::UU;";
-  $PDL::IO::Dumper::convert_ok = !$@;
+  $PDLA::IO::Dumper::convert_ok = !$@;
 
   my $checkprog = sub {
       my($prog) = $_[0];
@@ -119,12 +119,12 @@ BEGIN{
   # on MSWin32 systems (it doesn't work)
   # Force Convert::UU for BSD systems to see if that fixes uudecode problem
   if ($^O !~ /(MSWin32|bsd)$/) {
-     $PDL::IO::Dumper::uudecode_ok = &$checkprog('uudecode') and &$checkprog('uuencode') and ($^O !~ /MSWin32/);
+     $PDLA::IO::Dumper::uudecode_ok = &$checkprog('uudecode') and &$checkprog('uuencode') and ($^O !~ /MSWin32/);
   }
 
-  use PDL;
-  use PDL::Exporter;
-  use PDL::Config;
+  use PDLA;
+  use PDLA::Exporter;
+  use PDLA::Config;
   use Data::Dumper 2.121;
   use Carp;
   use IO::File;
@@ -140,7 +140,7 @@ Dump a data structure to a string.
 
 =for usage
 
-  use PDL::IO::Dumper;
+  use PDLA::IO::Dumper;
   $s = sdump(<VAR>);
   ...
   <VAR> = eval $s;
@@ -153,12 +153,12 @@ convenience routine exists to use it.
 
 =cut
 
-sub PDL::IO::Dumper::sdump {
+sub PDLA::IO::Dumper::sdump {
 # Make an initial dump...
   my($s) = Data::Dumper->Dump([@_]);
   my(%pdls);
-# Find the bless(...,'PDL') lines
-  while($s =~ s/bless\( do\{\\\(my \$o \= '?(-?\d+)'?\)\}\, \'PDL\' \)/sprintf('$PDL_%u',$1)/e) {
+# Find the bless(...,'PDLA') lines
+  while($s =~ s/bless\( do\{\\\(my \$o \= '?(-?\d+)'?\)\}\, \'PDLA\' \)/sprintf('$PDLA_%u',$1)/e) {
     $pdls{$1}++;
   }
 
@@ -168,12 +168,12 @@ sub PDL::IO::Dumper::sdump {
   foreach $v(keys %pdls) {
     $dups++ if($pdls{$v} >1);
   }
-  print STDERR "Warning: duplicated PDL ref.  If sdump hangs, you have a circular reference.\n"  if($dups);
+  print STDERR "Warning: duplicated PDLA ref.  If sdump hangs, you have a circular reference.\n"  if($dups);
 
   # This next is broken into two parts to ensure $s is evaluated *after* the 
-  # find_PDLs call (which modifies $s using the s/// operator).
+  # find_PDLAs call (which modifies $s using the s/// operator).
 
-  my($s2) =  "{my(\$VAR1);\n".&PDL::IO::Dumper::find_PDLs(\$s,@_)."\n\n";
+  my($s2) =  "{my(\$VAR1);\n".&PDLA::IO::Dumper::find_PDLAs(\$s,@_)."\n\n";
   return $s2.$s."\n}";
 
 #
@@ -189,7 +189,7 @@ Dump a data structure to a file
 
 =for usage
 
-  use PDL::IO::Dumper;
+  use PDLA::IO::Dumper;
   fdump(<VAR>,$filename);
   ...
   <VAR> = frestore($filename);
@@ -209,14 +209,14 @@ structure and exit.
 
 =cut
 
-sub PDL::IO::Dumper::fdump { 
+sub PDLA::IO::Dumper::fdump { 
   my($struct,$file) = @_;
   my $fh = IO::File->new( ">$file" );
   unless ( defined $fh ) {
       Carp::cluck ("fdump: couldn't open '$file'\n");
       return undef;
   }
-  $fh->print( "####################\n## PDL::IO::Dumper dump file -- eval this in perl/PDL.\n\n" );
+  $fh->print( "####################\n## PDLA::IO::Dumper dump file -- eval this in perl/PDLA.\n\n" );
   $fh->print( sdump($struct) );
   $fh->close();
   return $struct;
@@ -232,7 +232,7 @@ Restore a dumped file
 
 =for usage
 
-  use PDL::IO::Dumper;
+  use PDLA::IO::Dumper;
   fdump(<VAR>,$filename);
   ...
   <VAR> = frestore($filename);
@@ -244,7 +244,7 @@ file and executes it in an eval.  It's paired with fdump().
 
 =cut
 
-sub PDL::IO::Dumper::frestore {
+sub PDLA::IO::Dumper::frestore {
   local($_);
   my($fname) = shift;
 
@@ -272,43 +272,43 @@ brute force method of "eval sdump".
 
 =cut
 
-sub PDL::IO::Dumper::deep_copy {
+sub PDLA::IO::Dumper::deep_copy {
   return eval sdump @_;
 }
 
 ######################################################################
 
-=head2 PDL::IO::Dumper::big_PDL
+=head2 PDLA::IO::Dumper::big_PDLA
 
 =for ref
 
-Identify whether a PDL is ``big'' [Internal routine]
+Identify whether a PDLA is ``big'' [Internal routine]
 
-Internal routine takes a PDL and returns a boolean indicating whether
+Internal routine takes a PDLA and returns a boolean indicating whether
 it's small enough for direct insertion into the dump string.  If 0, 
-it can be inserted.  Larger numbers yield larger scopes of PDL.  
+it can be inserted.  Larger numbers yield larger scopes of PDLA.  
 1 implies that it should be broken out but can be handled with a couple
 of perl commands; 2 implies full uudecode treatment.
 
-PDLs with Astro::FITS::Header objects as headers are taken to be FITS
+PDLAs with Astro::FITS::Header objects as headers are taken to be FITS
 files and are always treated as huge, regardless of size.
 
 =cut
 
-$PDL::IO::Dumper::small_thresh = 8;   # Smaller than this gets inlined
-$PDL::IO::Dumper::med_thresh   = 400; # Smaller than this gets eval'ed
+$PDLA::IO::Dumper::small_thresh = 8;   # Smaller than this gets inlined
+$PDLA::IO::Dumper::med_thresh   = 400; # Smaller than this gets eval'ed
                                       # Any bigger gets uuencoded
 
-sub PDL::IO::Dumper::big_PDL {
+sub PDLA::IO::Dumper::big_PDLA {
   my($a) = shift;
   
   return 0 
-    if($a->nelem <= $PDL::IO::Dumper::small_thresh 
+    if($a->nelem <= $PDLA::IO::Dumper::small_thresh 
        && !(keys %{$a->hdr()})
        );
   
   return 1
-    if($a->nelem <= $PDL::IO::Dumper::med_thresh
+    if($a->nelem <= $PDLA::IO::Dumper::med_thresh
        && ( !( ( (tied %{$a->hdr()}) || '' ) =~ m/^Astro::FITS::Header\=/)  )
        );
 
@@ -317,14 +317,14 @@ sub PDL::IO::Dumper::big_PDL {
 
 ######################################################################
 
-=head2 PDL::IO::Dumper::stringify_PDL
+=head2 PDLA::IO::Dumper::stringify_PDLA
 
 =for ref
 
-Turn a PDL into a 1-part perl expr [Internal routine]
+Turn a PDLA into a 1-part perl expr [Internal routine]
 
-Internal routine that takes a PDL and returns a perl string that evals to the
-PDL.  It should be used with care because it doesn't dump headers and 
+Internal routine that takes a PDLA and returns a perl string that evals to the
+PDLA.  It should be used with care because it doesn't dump headers and 
 it doesn't check number of elements.  The point here is that numbers are
 dumped with the correct precision for their storage class.  Things we
 don't know about get stringified element-by-element by their builtin class,
@@ -332,7 +332,7 @@ which is probably not a bad guess.
 
 =cut
 
-%PDL::IO::Dumper::stringify_formats = (
+%PDLA::IO::Dumper::stringify_formats = (
    "byte"=>"%d",
    "short"=>"%d",
    "long"=>"%d",
@@ -341,15 +341,15 @@ which is probably not a bad guess.
   );
 
 
-sub PDL::IO::Dumper::stringify_PDL{
+sub PDLA::IO::Dumper::stringify_PDLA{
   my($pdl) = shift;
   
   if(!ref $pdl) {
-    confess "PDL::IO::Dumper::stringify -- got a non-pdl value!\n";
+    confess "PDLA::IO::Dumper::stringify -- got a non-pdl value!\n";
     die;
   }
 
-  ## Special case: empty PDL
+  ## Special case: empty PDLA
   if($pdl->nelem == 0) {
     return "which(pdl(0))";
   }
@@ -364,12 +364,12 @@ sub PDL::IO::Dumper::stringify_PDL{
   my(@s);
   my($dmp_elt);
 
-  if(defined $PDL::IO::Dumper::stringify_formats{$t}) {
-    $dmp_elt = eval "sub { sprintf '$PDL::IO::Dumper::stringify_formats{$t}',shift }";
+  if(defined $PDLA::IO::Dumper::stringify_formats{$t}) {
+    $dmp_elt = eval "sub { sprintf '$PDLA::IO::Dumper::stringify_formats{$t}',shift }";
   } else {
-    if(!$PDL::IO::Dumper::stringify_warned) {
-      print STDERR "PDL::IO::Dumper:  Warning, stringifying a '$t' PDL using default method\n\t(Will be silent after this)\n";
-      $PDL::IO::Dumper::stringify_warned = 1;
+    if(!$PDLA::IO::Dumper::stringify_warned) {
+      print STDERR "PDLA::IO::Dumper:  Warning, stringifying a '$t' PDLA using default method\n\t(Will be silent after this)\n";
+      $PDLA::IO::Dumper::stringify_warned = 1;
     }
     $dmp_elt = sub { my($a) = shift; "$a"; };
   }
@@ -383,7 +383,7 @@ sub PDL::IO::Dumper::stringify_PDL{
  
   ## Assemble all the strings and bracket with a pdl() call.
   
-  $s = ($PDL::IO::Dumper::stringify_formats{$t}?$t:'pdl').
+  $s = ($PDLA::IO::Dumper::stringify_formats{$t}?$t:'pdl').
        "(" . join(   "," , @s  ) .   ")".
        (($_->getndims > 1) && ("->reshape(" . join(",",$pdl->dims) . ")"));
 
@@ -393,11 +393,11 @@ sub PDL::IO::Dumper::stringify_PDL{
 
 ######################################################################
 
-=head2 PDL::IO::Dumper::uudecode_PDL
+=head2 PDLA::IO::Dumper::uudecode_PDLA
 
 =for ref
 
-Recover a PDL from a uuencoded string [Internal routine]
+Recover a PDLA from a uuencoded string [Internal routine]
 
 This routine encapsulates uudecoding of the dumped string for large piddles. 
 It's separate to encapsulate the decision about which method of uudecoding
@@ -414,7 +414,7 @@ sub _make_tmpname () {
     return File::Temp::tmpnam() . ".fits";
 }
 
-# For uudecode_PDL:
+# For uudecode_PDLA:
 #
 # uudecode on OS-X needs the -s option otherwise it strips off the
 # path of the data file - which messes things up. We could change the
@@ -426,24 +426,24 @@ sub _make_tmpname () {
 my $uudecode_string = "|uudecode";
 $uudecode_string .= " -s" if $^O =~ m/darwin|((free|open)bsd)|dragonfly/;
 
-sub PDL::IO::Dumper::uudecode_PDL {
+sub PDLA::IO::Dumper::uudecode_PDLA {
     my $lines = shift;
     my $out;
     my $fname = _make_tmpname();
-    if($PDL::IO::Dumper::uudecode_ok) {
+    if($PDLA::IO::Dumper::uudecode_ok) {
         local $SIG{PIPE}= sub {}; # Prevent crashing if uudecode exits
 	my $fh = IO::File->new( $uudecode_string );
 	$lines =~ s/^[^\n]*\n/begin 664 $fname\n/o;
 	$fh->print( $lines );
 	$fh->close;
     }
-    elsif($PDL::IO::Dumper::convert_ok) {
+    elsif($PDLA::IO::Dumper::convert_ok) {
 	my $fh = IO::File->new(">$fname");
 	my $fits = Convert::UU::uudecode($lines);
 	$fh->print( $fits );
 	$fh->close();
     } else {
-      barf("Need either uudecode(1) or Convert::UU to decode dumped PDL.\n");
+      barf("Need either uudecode(1) or Convert::UU to decode dumped PDLA.\n");
   }
 
   $out = rfits($fname);
@@ -452,31 +452,31 @@ sub PDL::IO::Dumper::uudecode_PDL {
   $out;
 }
  
-=head2 PDL::IO::Dumper::dump_PDL
+=head2 PDLA::IO::Dumper::dump_PDLA
 
 =for ref
 
-Generate 1- or 2-part expr for a PDL [Internal routine]
+Generate 1- or 2-part expr for a PDLA [Internal routine]
 
-Internal routine that produces commands defining a PDL.  You supply
-(<PDL>, <name>) and get back two strings: a prepended command string and an
-expr that evaluates to the final PDL.  PDL is the PDL you want to dump.  
-<inline> is a flag whether dump_PDL is being called inline or before
+Internal routine that produces commands defining a PDLA.  You supply
+(<PDLA>, <name>) and get back two strings: a prepended command string and an
+expr that evaluates to the final PDLA.  PDLA is the PDLA you want to dump.  
+<inline> is a flag whether dump_PDLA is being called inline or before
 the inline dump string (0 for before; 1 for in).  <name> is the
-name of the variable to be assigned (for medium and large PDLs,
+name of the variable to be assigned (for medium and large PDLAs,
 which are defined before the dump string and assigned unique IDs).
 
 =cut
 
-sub PDL::IO::Dumper::dump_PDL {
+sub PDLA::IO::Dumper::dump_PDLA {
   local($_) = shift;
   my($pdlid) = @_;
   my(@out);
 
-  my($style) = &PDL::IO::Dumper::big_PDL($_);
+  my($style) = &PDLA::IO::Dumper::big_PDLA($_);
 
   if($style==0) {
-    @out = ("", "( ". &PDL::IO::Dumper::stringify_PDL($_). " )");
+    @out = ("", "( ". &PDLA::IO::Dumper::stringify_PDLA($_). " )");
   }
 
   else {
@@ -485,7 +485,7 @@ sub PDL::IO::Dumper::dump_PDL {
     ## midsized case
     if($style==1){
       @s = ("my(\$$pdlid) = (",
-	    &PDL::IO::Dumper::stringify_PDL($_),
+	    &PDLA::IO::Dumper::stringify_PDLA($_),
 	    ");\n");
     }
 
@@ -500,25 +500,25 @@ sub PDL::IO::Dumper::dump_PDL {
       wfits($_,$fname);
       my(@uulines);
 
-      if($PDL::IO::Dumper::uudecode_ok) {
+      if($PDLA::IO::Dumper::uudecode_ok) {
 	  my $fh = IO::File->new( "uuencode $fname $fname |" );
 	  @uulines = <$fh>;
 	  $fh->close;
-    } elsif($PDL::IO::Dumper::convert_ok) {
+    } elsif($PDLA::IO::Dumper::convert_ok) {
 	# Convert::UU::uuencode does not accept IO::File handles
         # (at least in version 0.52 of the module)
 	#
 	open(FITSFILE,"<$fname");
 	@uulines = ( Convert::UU::uuencode(*FITSFILE) );
     } else {
-	barf("dump_PDL: Requires either uuencode or Convert:UU");
+	barf("dump_PDLA: Requires either uuencode or Convert:UU");
     }
       unlink $fname;
       
       ## 
       ## Generate commands to uudecode the FITS file and resnarf it
       ##
-      @s = ("my(\$$pdlid) = PDL::IO::Dumper::uudecode_PDL(<<'DuMPERFILE'\n",
+      @s = ("my(\$$pdlid) = PDLA::IO::Dumper::uudecode_PDLA(<<'DuMPERFILE'\n",
 	    @uulines,
 	    "\nDuMPERFILE\n);\n",
 	    "\$$pdlid->hdrcpy(".$_->hdrcpy().");\n"
@@ -536,13 +536,13 @@ sub PDL::IO::Dumper::dump_PDL {
 
     ## 
     ## Generate commands to reconstitute the header
-    ## information in the PDL -- common to midsized and huge case.
+    ## information in the PDLA -- common to midsized and huge case.
     ##
     ## We normally want to reconstitute, because FITS headers mangle
     ## arbitrary hashes and we can reconsitute efficiently with a private 
     ## sdump().  The one known exception to this is when there's a FITS
     ## header object (Astro::FITS::Header) tied to the original 
-    ## PDL's header.  Other types of tied object will get handled just
+    ## PDLA's header.  Other types of tied object will get handled just
     ## like normal hashes.
     ##
     ## Ultimately, Data::Dumper will get fixed to handle tied objects, 
@@ -554,7 +554,7 @@ sub PDL::IO::Dumper::dump_PDL {
 	push(@s,"# (Header restored from FITS file)\n");
       } else {
 	push(@s,"\$$pdlid->sethdr( eval <<'EndOfHeader_${pdlid}'\n",
-	     &PDL::IO::Dumper::sdump($_->hdr()),
+	     &PDLA::IO::Dumper::sdump($_->hdr()),
 	     "\nEndOfHeader_${pdlid}\n);\n",
 	     "\$$pdlid->hdrcpy(".$_->hdrcpy().");\n"
 	     );
@@ -569,20 +569,20 @@ sub PDL::IO::Dumper::dump_PDL {
   
 ######################################################################
 
-=head2 PDL::IO::Dumper::find_PDLs
+=head2 PDLA::IO::Dumper::find_PDLAs
 
 =for ref
 
-Walk a data structure and dump PDLs [Internal routine]
+Walk a data structure and dump PDLAs [Internal routine]
 
 Walks the original data structure and generates appropriate exprs
-for each PDL.  The exprs are inserted into the Data::Dumper output
+for each PDLA.  The exprs are inserted into the Data::Dumper output
 string.  You shouldn't call this unless you know what you're doing.
 (see sdump, above).
 
 =cut
 
-sub PDL::IO::Dumper::find_PDLs {
+sub PDLA::IO::Dumper::find_PDLAs {
   local($_);
   my($out)="";
   my($sp) = shift;
@@ -593,34 +593,34 @@ sub PDL::IO::Dumper::find_PDLs {
     if(UNIVERSAL::isa($_,'ARRAY')) {
       my($a);
       foreach $a(@{$_}) {
-	$out .= find_PDLs($sp,$a);
+	$out .= find_PDLAs($sp,$a);
       }
     } 
     elsif(UNIVERSAL::isa($_,'HASH')) {
       my($a);
       foreach $a(values %{$_}) {
-	$out .= find_PDLs($sp,$a)
+	$out .= find_PDLAs($sp,$a)
 	}
-    } elsif(UNIVERSAL::isa($_,'PDL')) {
+    } elsif(UNIVERSAL::isa($_,'PDLA')) {
 
-      # In addition to straight PDLs, 
-      # this gets subclasses of PDL, but NOT magic-hash subclasses of
-      # PDL (because they'd be gotten by the previous clause).
-      # So if you subclass PDL but your actual data structure is still
-      # just a straight PDL (and not a hash with PDL field), you end up here.
+      # In addition to straight PDLAs, 
+      # this gets subclasses of PDLA, but NOT magic-hash subclasses of
+      # PDLA (because they'd be gotten by the previous clause).
+      # So if you subclass PDLA but your actual data structure is still
+      # just a straight PDLA (and not a hash with PDLA field), you end up here.
       #
 
-      my($pdlid) = sprintf('PDL_%u',$$_);
-      my(@strings) = &PDL::IO::Dumper::dump_PDL($_,$pdlid);
+      my($pdlid) = sprintf('PDLA_%u',$$_);
+      my(@strings) = &PDLA::IO::Dumper::dump_PDLA($_,$pdlid);
       
       $out .= $strings[0];
       $$sp =~ s/\$$pdlid/$strings[1]/g if(defined($strings[1]));  
     }
     elsif(UNIVERSAL::isa($_,'SCALAR')) {
-      # This gets other kinds of refs -- PDLs have already been gotten.
-      # Naked PDLs are themselves SCALARs, so the SCALAR case has to come 
-      # last to let the PDL case run.
-      $out .= find_PDLs( $sp, ${$_} );
+      # This gets other kinds of refs -- PDLAs have already been gotten.
+      # Naked PDLAs are themselves SCALARs, so the SCALAR case has to come 
+      # last to let the PDLA case run.
+      $out .= find_PDLAs( $sp, ${$_} );
     }
   
   }

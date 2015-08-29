@@ -6,9 +6,9 @@ use Test::More;
 
 plan tests => 89;
     ;
-use PDL::LiteF;
+use PDLA::LiteF;
 
-# PDL::Core::set_debugging(1);
+# PDLA::Core::set_debugging(1);
 
 # Useful for debugging. Removed by DJB whilst cleaning up the
 # tests
@@ -132,7 +132,7 @@ $e = $c-$d;
 
 is(max(abs($e)), 0);
 
-use PDL::Dbg;
+use PDLA::Dbg;
 
 my ($im, $im1, $im2, $lut, $in);
 
@@ -173,7 +173,7 @@ is("$in", "
 ok(tapprox($lut,pdl([[1,0],[1,1]])));
 
 # can we catch indices which are too negative?
-$a = PDL->sequence(10);
+$a = PDLA->sequence(10);
 $b = $a->slice('0:-10');
 is("$b", "[0]", "slice 0:-n picks first element");
 
@@ -376,9 +376,9 @@ $z .= 2;
 ok(1);            # should *not* segfault!
 ok(all($a==5));   # should *not* change $a!
 
-### Check slicing of a null PDL
+### Check slicing of a null PDLA
 
-$a = PDL->null;
+$a = PDLA->null;
 
 eval '$b = $a->slice("")->nelem';
 ok(!$@);

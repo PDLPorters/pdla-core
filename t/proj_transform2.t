@@ -2,20 +2,20 @@
 
 use strict;
 use warnings;
-use PDL;
+use PDLA;
 use Test::More;
 
-use PDL::Config;
-plan skip_all => "PDL::Transform::Proj4 module not compiled."
-    unless $PDL::Config{WITH_PROJ};
-eval { require PDL::Transform::Proj4; PDL::Transform::Proj4->import; };
-plan skip_all => "PDL::Transform::Proj4 module compiled, but not available."
+use PDLA::Config;
+plan skip_all => "PDLA::Transform::Proj4 module not compiled."
+    unless $PDLA::Config{WITH_PROJ};
+eval { require PDLA::Transform::Proj4; PDLA::Transform::Proj4->import; };
+plan skip_all => "PDLA::Transform::Proj4 module compiled, but not available."
     if $@;
-plan skip_all => "PDL::Transform::Proj4 module requires the PDL::Bad module!"
-    unless $PDL::Bad::Status;
+plan skip_all => "PDLA::Transform::Proj4 module requires the PDLA::Bad module!"
+    unless $PDLA::Bad::Status;
 plan tests => 20;
 
-# Test integration with PDL::Transform
+# Test integration with PDLA::Transform
 
 my $im = sequence(2048,1024)/2048/1024*255.99;
 $im = $im->byte;
@@ -30,7 +30,7 @@ $h->{CTYPE1}='Longitude';   $h->{CUNIT1}='degrees'; $h->{CDELT1}=180/1024.0;
 $h->{CTYPE2}='Latitude';    $h->{CUNIT2}='degrees'; $h->{CDELT2}=180/1024.0;
 $h->{CTYPE3}='RGB';         $h->{CUNIT3}='index';   $h->{CDELT3}=1.0;
 $h->{COMMENT}='Plate Caree Projection';
-$h->{HISTORY}='PDL Distribution Image, derived from NASA/MODIS data',
+$h->{HISTORY}='PDLA Distribution Image, derived from NASA/MODIS data',
 
 $im->hdrcpy(1);
 $im->badflag(1);

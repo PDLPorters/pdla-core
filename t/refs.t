@@ -1,8 +1,8 @@
 # This test case points out a problem in the freeing
 # of used memory in 1.90_01
 use Test::More tests => 2;
-use PDL::LiteF;
-# PDL::Core::set_debugging(1);
+use PDLA::LiteF;
+# PDLA::Core::set_debugging(1);
 kill INT,$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 {

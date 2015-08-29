@@ -13,7 +13,7 @@ README: README.head NiceSlice.pm
 };
 
 WriteMakefile(
-   NAME	=> 'PDL::NiceSlice',
+   NAME	=> 'PDLA::NiceSlice',
    VERSION_FROM => 'NiceSlice.pm',
    PM => {
       'NiceSlice.pm' => '$(INST_LIBDIR)/NiceSlice.pm',
@@ -24,6 +24,6 @@ WriteMakefile(
    PREREQ_PM => {
       'Filter::Util::Call' => 0,
       'Text::Balanced' => 0,
-      'PDL' => 2.003000,
+      'PDLA' => 2.003000,
    },
 );

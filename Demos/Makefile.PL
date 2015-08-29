@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 # For the lazy people
 undef &MY::postamble; # suppress warning
 *MY::postamble = sub {
-PDL::Core::Dev::postamble().
+PDLA::Core::Dev::postamble().
 q~
 
 test_tjl :
@@ -18,7 +18,7 @@ test_tjl :
 #   we hijack m51.fits from the parent directory and 
 #   install that into the demos directory
 WriteMakefile(
-     'NAME'	=> 'PDL::Demos',
+     'NAME'	=> 'PDLA::Demos',
      'VERSION_FROM' => '../Basic/Core/Version.pm',
      'PM'       => {'General.pm'     => '$(INST_LIBDIR)/Demos/General.pm',
                     'Screen.pm'    => '$(INST_LIBDIR)/Demos/Screen.pm',

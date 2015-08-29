@@ -12,7 +12,7 @@ sub tapprox {
         $d < 0.01;
 }
 
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test::More;
 use strict;
 
@@ -20,7 +20,7 @@ plan tests => 30;
 
 ###### Testing Begins #########
 
-my $im = new PDL [
+my $im = new PDLA [
   [ 1, 2,  3,  3 , 5],
   [ 2,  3,  4,  5,  6],
   [13, 13, 13, 13, 13],
@@ -75,9 +75,9 @@ ok(tapprox($statsRes[4],13), "stats: trivial weights max" );
 ok(tapprox($statsRes[6],4.462), "stats: trivial weights rms");
 
 # which ND test
-my $a= PDL->sequence(10,10,3,4);  
+my $a= PDLA->sequence(10,10,3,4);  
 
-# $PDL::whichND_no_warning = 1;
+# $PDLA::whichND_no_warning = 1;
 # ($x, $y, $z, $w)=whichND($a == 203);
 my ($x, $y, $z, $w) = whichND($a == 203)->mv(0,-1)->dog;  # quiet deprecation warning
 

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-use PDL;
-use PDL::IO::Pic;
+use PDLA;
+use PDLA::IO::Pic;
 use Test::More tests => 3;
 use File::Temp qw(tempdir);
 use File::Spec;
@@ -31,7 +31,7 @@ my $out1 = rim($file, {FORMAT => $fmt});
 my $out2 = sequence($cols, $rows);
 rim($out2, $file, {FORMAT => $fmt});
 
-my $out3 = PDL->rpic($file, {FORMAT => $fmt});
+my $out3 = PDLA->rpic($file, {FORMAT => $fmt});
 
 # Test 1
 ok(sum(abs($out1 - $out2)) == 0, "\$out1 & \$out2 are the same");

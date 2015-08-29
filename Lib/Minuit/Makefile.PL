@@ -15,64 +15,64 @@ my $forcebuild = 0;
 my $f77;
 my @minuitfiles;
 
-if (defined $PDL::Config{WITH_MINUIT} && $PDL::Config{WITH_MINUIT}==0) {
-  $msg = "\n   Will skip build of PDL::Minuit on this system   \n";
+if (defined $PDLA::Config{WITH_MINUIT} && $PDLA::Config{WITH_MINUIT}==0) {
+  $msg = "\n   Will skip build of PDLA::Minuit on this system   \n";
   goto skip;
 }
 
-if (defined $PDL::Config{WITH_MINUIT} && $PDL::Config{WITH_MINUIT}==1) {
-  print "\n   Will forcibly try and build PDL::Minuit on this system   \n\n";
+if (defined $PDLA::Config{WITH_MINUIT} && $PDLA::Config{WITH_MINUIT}==1) {
+  print "\n   Will forcibly try and build PDLA::Minuit on this system   \n\n";
   $forcebuild = 1;
 }
 
-if (exists $PDL::Config{F77CONF} && -f $PDL::Config{F77CONF}) {
-  print "loading F77 configuration from $PDL::Config{F77CONF}...\n";
-  eval { require $PDL::Config{F77CONF} };
+if (exists $PDLA::Config{F77CONF} && -f $PDLA::Config{F77CONF}) {
+  print "loading F77 configuration from $PDLA::Config{F77CONF}...\n";
+  eval { require $PDLA::Config{F77CONF} };
   if ($@ ne "") {
-    $msg = "F77CONF file not loaded: $@\nOught not build PDL::Minuit\n" ;
+    $msg = "F77CONF file not loaded: $@\nOught not build PDLA::Minuit\n" ;
     goto skip unless $forcebuild;
   }
   $f77 = 'F77Conf';
 } else {
   eval { require ExtUtils::F77; ExtUtils::F77->import; };  # Might want "ExtUtils::F77->import(qw(generic f2c))"
   if ($@ ne "") {
-    $msg = "ExtUtils::F77 module not found. Ought not build PDL::Minuit";
+    $msg = "ExtUtils::F77 module not found. Ought not build PDLA::Minuit";
     goto skip unless $forcebuild;
   } else {
     $f77 = 'ExtUtils::F77';
     print "(ExtUtils Version $ExtUtils::F77::VERSION)\n";
     if ($ExtUtils::F77::VERSION < 1.03 ) {
-      $msg = "Need a version of ExtUtils::F77 >= 1.03. Ought not build PDL::Minuit\n" ;
+      $msg = "Need a version of ExtUtils::F77 >= 1.03. Ought not build PDLA::Minuit\n" ;
       goto skip unless $forcebuild;
     }
   }  # end if ($@ ne "")
-} # if (exists $PDL::Config{F77CONF}...
+} # if (exists $PDLA::Config{F77CONF}...
 
 if (!$f77->testcompiler) {
-  $msg = "No f77 compiler found. Ought to skip PDL::Minuit on this system";
-  $PDL::Config{WITH_MINUIT} = 0;
+  $msg = "No f77 compiler found. Ought to skip PDLA::Minuit on this system";
+  $PDLA::Config{WITH_MINUIT} = 0;
 } else {
-  $PDL::Config{WITH_MINUIT} = 1;
+  $PDLA::Config{WITH_MINUIT} = 1;
 }
 
 skip:
 
 if ($msg ne "" && !$forcebuild) {
   write_dummy_make( $msg );
-  $PDL::Config{WITH_MINUIT} = 0;
+  $PDLA::Config{WITH_MINUIT} = 0;
   $donot = 1;
 } else {
-  print "Building PDL::Minuit. Turn off WITH_MINUIT if there are any problems\n";
-  $PDL::Config{WITH_MINUIT} = 1;
+  print "Building PDLA::Minuit. Turn off WITH_MINUIT if there are any problems\n";
+  $PDLA::Config{WITH_MINUIT} = 1;
 }
 
 return if $donot;
 
-my @pack = (["minuit.pd", qw(Minuit PDL::Minuit)]);
+my @pack = (["minuit.pd", qw(Minuit PDLA::Minuit)]);
 
-if (defined($PDL::Config{MINUIT_LIB})){
+if (defined($PDLA::Config{MINUIT_LIB})){
     # If libraries are specified, just need to build futils
-    print "Using compiled CERN library: ".$PDL::Config{MINUIT_LIB}."...\n";
+    print "Using compiled CERN library: ".$PDLA::Config{MINUIT_LIB}."...\n";
     @minuitfiles = ("futils");
 }
 else{
@@ -120,8 +120,8 @@ $g2cbased = ($f77->runtime =~ /-lg2c/) unless $f2cbased;
 $hash{DEFINE} .= $f77->trail_ ? "" : "-DNO_TRAILING_USCORE";
 
 ### unless($^O =~ /mswin32/i) {
-###   if (defined($PDL::Config{MINUIT_LIB})){
-###       $hash{MYEXTLIB} .= (" ".$PDL::Config{MINUIT_LIB}." ");
+###   if (defined($PDLA::Config{MINUIT_LIB})){
+###       $hash{MYEXTLIB} .= (" ".$PDLA::Config{MINUIT_LIB}." ");
 ###   }
 ###   else{
 ###       $hash{MYEXTLIB} .= " ./minuitlib/libminuit$Config::Config{lib_ext} ";
@@ -144,7 +144,7 @@ minuitlib/$_\$(OBJ_EXT): minuitlib/$_.f
 	$mycompiler -c $hack_64bit -o minuitlib/$_\$(OBJ_EXT) $mycflags minuitlib/$_.f
 " )} @minuitfiles;
 
-	if (!defined($PDL::Config{MINUIT_LIB})){
+	if (!defined($PDLA::Config{MINUIT_LIB})){
           my $libbuild;
           if($Config::Config{cc} eq 'cl') {
             $libbuild = "

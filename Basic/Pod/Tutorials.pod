@@ -1,6 +1,6 @@
 =head1 NAME
 
-PDL::Tutorials - A guide to PDL's tutorial documentation.
+PDLA::Tutorials - A guide to PDLA's tutorial documentation.
 
 =head1 MIGRATION
 
@@ -9,15 +9,15 @@ of numerical analysis software.
 
 =over 5
 
-=item L<PDL::MATLAB|PDL::MATLAB>
+=item L<PDLA::MATLAB|PDLA::MATLAB>
 
 Migration guide for MATLAB users. This page explains the key differences
-between MATLAB and PDL from the point of view of a MATLAB user.
+between MATLAB and PDLA from the point of view of a MATLAB user.
 
-=item L<PDL::Scilab|PDL::Scilab>
+=item L<PDLA::Scilab|PDLA::Scilab>
 
 Migration guide for Scilab users. This page explains the key differences
-between Scilab and PDL from the point of view of a Scilab user.
+between Scilab and PDLA from the point of view of a Scilab user.
 
 =back
 
@@ -27,24 +27,24 @@ between Scilab and PDL from the point of view of a Scilab user.
 
 =over 5
 
-=item L<PDL::Philosophy|PDL::Philosophy>
+=item L<PDLA::Philosophy|PDLA::Philosophy>
 
-Why did we write PDL? This document explains some of the history and
+Why did we write PDLA? This document explains some of the history and
 motivation behind the Perl Data Language. It is an attempt to answer
-the question "Why PDL?".
+the question "Why PDLA?".
 
-=item L<PDL::QuickStart|PDL::QuickStart>
+=item L<PDLA::QuickStart|PDLA::QuickStart>
 
-Quick introduction to PDL features. A hands-on guide suitable for
+Quick introduction to PDLA features. A hands-on guide suitable for
 complete beginners. This page assumes no previous knowledge of Perl
-or PDL.
+or PDLA.
 
-=item L<PDL::Indexing|PDL::Indexing>
+=item L<PDLA::Indexing|PDLA::Indexing>
 
 After you have read the QuickStart guide, you should follow up with
 this document. This guide goes more deeply into the concepts of
 "indexing" and "slicing" and how they form the core of numerical
-analysis with PDL.
+analysis with PDLA.
 
 
 =back
@@ -55,31 +55,31 @@ analysis with PDL.
 
 =over 5
 
-=item L<PDL::Threading|PDL::Threading>
+=item L<PDLA::Threading|PDLA::Threading>
 
-B<Threading> is one of PDL's most powerful features. If you know MATLAB,
+B<Threading> is one of PDLA's most powerful features. If you know MATLAB,
 you've heard of "vectorizing". Well, B<threading> is like "vectorizing on
 steroids". It lets you make very fast and compact code by avoiding
-nested loops. All vector-based languages do this, but PDL generalizes
+nested loops. All vector-based languages do this, but PDLA generalizes
 the technique to all sorts of applications.
 
-This tutorial introduces PDL's threading feature, and it shows an example
+This tutorial introduces PDLA's threading feature, and it shows an example
 implementing Conway's Game of Life in 10 lines and 80 times faster than
 a classical implementation.
 
-=item L<PDL::BadValues|PDL::BadValues>
+=item L<PDLA::BadValues|PDLA::BadValues>
 
 Sometimes it is useful to specify that a certain value is "bad" or
 "missing". Scientific instruments some times include portions of
 invalid data. For example, a CCD camera might produce an image with
-over-exposed pixels. PDL's "bad values" feature gives you an easy way
+over-exposed pixels. PDLA's "bad values" feature gives you an easy way
 to deal with this sort of imperfect data.
 
 
-=item L<PDL::Tips|PDL::Tips>
+=item L<PDLA::Tips|PDLA::Tips>
 
-Tips and suggestions for using PDL. This page is an assorted collection
-of programming tidbits that some PDL users have found useful. Some of
+Tips and suggestions for using PDLA. This page is an assorted collection
+of programming tidbits that some PDLA users have found useful. Some of
 these tips might be of help when you write your programs.
 
 =back
@@ -90,30 +90,30 @@ these tips might be of help when you write your programs.
 
 =over 5
 
-=item L<PDL::PP|PDL::PP>
+=item L<PDLA::PP|PDLA::PP>
 
-PDL's Pre-Processor is one of PDL's most powerful features. You
+PDLA's Pre-Processor is one of PDLA's most powerful features. You
 write a function definition in special markup and the preprocessor
-generates real C code which can be compiled. With PDL:PP you get the
+generates real C code which can be compiled. With PDLA:PP you get the
 full speed of native C code without having to deal with the full
 complexity of the C language.
 
-=item L<PDL::API|PDL::API>
+=item L<PDLA::API|PDLA::API>
 
 A simple cookbook explaining how to create piddle manually, either
-from Perl or from C/XS code. This page covers the PDL core routines
-that comprise the PDL API. If you need to access piddles from C/XS,
+from Perl or from C/XS code. This page covers the PDLA core routines
+that comprise the PDLA API. If you need to access piddles from C/XS,
 this is the document for you.
 
 
-=item L<PDL::Internals|PDL::Internals>
+=item L<PDLA::Internals|PDLA::Internals>
 
-Description of the inner workings of the PDL module. Very few people
-need to see this. This page is mainly for PDL developers, or people
-interested in debugging PDL or changing the internals of PDL. If you
+Description of the inner workings of the PDLA module. Very few people
+need to see this. This page is mainly for PDLA developers, or people
+interested in debugging PDLA or changing the internals of PDLA. If you
 can read this document and understand all of it, and you additionally
-understand L<PDL::PP|PDL::PP>, you will be awarded the title of
-"PDL Guru".
+understand L<PDLA::PP|PDLA::PP>, you will be awarded the title of
+"PDLA Guru".
 
 
 =back

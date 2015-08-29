@@ -1,5 +1,5 @@
 use blib;
-use PDL; # this must be called before (!) 'use Inline Pdlpp' calls
+use PDLA; # this must be called before (!) 'use Inline Pdlpp' calls
 use Inline Pdlpp; # the actual code is in the __Pdlpp__ block below
 
 $a = sequence 10;

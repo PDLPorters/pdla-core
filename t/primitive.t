@@ -2,12 +2,12 @@
 # Test ->slice(). This is not yet good enough: we need
 # nasty test cases,
 
-use PDL::LiteF;
-use PDL::Types;
+use PDLA::LiteF;
+use PDLA::Types;
 
 # kill INT,$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
-# PDL::Core::set_debugging(1);
+# PDLA::Core::set_debugging(1);
 
 use strict;
 use Test::More;
@@ -29,33 +29,33 @@ sub tapprox {
     $d < 0.01;
 }
 
-my $a = PDL->pdl([[5,4,3],[2,3,1.5]]);
+my $a = PDLA->pdl([[5,4,3],[2,3,1.5]]);
 
-ok(tapprox($a->average(), PDL->pdl([4, 2.16666])), "average"); # 1
-ok(tapprox($a->sumover(), PDL->pdl([12, 6.5])), "sumover");    # 2
-ok(tapprox($a->prodover(), PDL->pdl([60, 9])), "prodover");    # 3
+ok(tapprox($a->average(), PDLA->pdl([4, 2.16666])), "average"); # 1
+ok(tapprox($a->sumover(), PDLA->pdl([12, 6.5])), "sumover");    # 2
+ok(tapprox($a->prodover(), PDLA->pdl([60, 9])), "prodover");    # 3
 
-my $b = PDL->pdl(4,3,1,0,0,0,0,5,2,0,3,6);
+my $b = PDLA->pdl(4,3,1,0,0,0,0,5,2,0,3,6);
 # diag "B: $b\n";
 my $c = ($b->xvals) + 10;
 # diag "C: $c\n";
 
 # diag "BW: ", $b->where, "\n";
-ok(tapprox($b->where($b>4), PDL->pdl(5,6)), "where with >");   # 4
-ok(tapprox($b->which, PDL->pdl(0,1,2,7,8,10,11)), "which");    # 5
+ok(tapprox($b->where($b>4), PDLA->pdl(5,6)), "where with >");   # 4
+ok(tapprox($b->which, PDLA->pdl(0,1,2,7,8,10,11)), "which");    # 5
 
 # diag "B, ",$b->which();
 # diag "C: $c\n";
 # diag "\nCI, ", $c->index($b->which());
 # diag "D\n";
 
-ok(tapprox($c->where($b), PDL->pdl(10,11,12,17,18,20,21)), "where with mask");  # 6
+ok(tapprox($c->where($b), PDLA->pdl(10,11,12,17,18,20,21)), "where with mask");  # 6
 
 ##############################
 # originally in pptest
 $a = ones(byte,3000);
 dsumover($a,($b=null));
-is($b->get_datatype, $PDL_D, "get_datatype" );                 # 7
+is($b->get_datatype, $PDLA_D, "get_datatype" );                 # 7
 is($b->at, 3000, "at" );                                       # 8
 
 my $p = pdl [ 1, 2, 3, 4, 7, 9, 1, 1, 6, 2, 5];
@@ -87,11 +87,11 @@ ok(eval 'sum($a != pdl([0,0],[2,1],[4,2],[6,3],[8,4],[0,6],[2,7],[4,8],[6,9]))==
 
 # Empty case gives matching Empty
 $a = whichND( $r*0 );
-ok($a->nelem==0, "whichND( 0*\$r ) gives an Empty PDL");           #13
+ok($a->nelem==0, "whichND( 0*\$r ) gives an Empty PDLA");           #13
 ok($a->ndims==2, "whichND( 0*\$r ) has 2 dims");                   #14
 ok(($a->dim(0)==2 and $a->dim(1)==0), "whichND( 0*\$r ) is 2x0");  #15
 
-# Scalar PDLs are treated as 1-PDLs
+# Scalar PDLAs are treated as 1-PDLAs
 $a = whichND(pdl(5));
 ok($a->nelem==1 && $a==0, "whichND");                             #16
 
@@ -163,12 +163,12 @@ ok(!$@ && $c && $b->ndims==2, "uniqvec");                      #25
 ##############################
 # Test bad handling in selector
 SKIP: {
-   skip "Bad handling not available", 3 unless $PDL::Bad::Status;
+   skip "Bad handling not available", 3 unless $PDLA::Bad::Status;
 
    $b = xvals(3);
-   ok(tapprox($b->which,PDL->pdl(1,2)), "which");              #26
+   ok(tapprox($b->which,PDLA->pdl(1,2)), "which");              #26
    setbadat $b, 1;
-   ok(tapprox($b->which,PDL->pdl([2])), "which w BAD");        #27
+   ok(tapprox($b->which,PDLA->pdl([2])), "which w BAD");        #27
    setbadat $b, 0;
    setbadat $b, 2;
    is($b->which->nelem,0, "which nelem w BAD");                #28
@@ -202,7 +202,7 @@ ok(!$@ && $c && $b->ndims==1, "uniqind, SF bug 3076570");      #34
 ##############################
 # Test whereND
 SKIP: {
-   skip "have no whereND", 8 unless defined(&PDL::whereND);
+   skip "have no whereND", 8 unless defined(&PDLA::whereND);
 
    $a = sequence(4,3,2);
    $b = pdl(0,1,1,0);

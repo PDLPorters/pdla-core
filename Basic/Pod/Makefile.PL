@@ -10,7 +10,7 @@ if (!$@) {
     push @pods, 'PP-Inline' unless grep {/PP-Inline/} @pods;
 }
 
-my @man1 = map { $_.".pod", '$(INST_MAN1DIR)/PDL::' . $_ . '.$(MAN1EXT)' } @pods;
+my @man1 = map { $_.".pod", '$(INST_MAN1DIR)/PDLA::' . $_ . '.$(MAN1EXT)' } @pods;
 my @pms  = map { $_.".pod", '$(INST_LIBDIR)/' . $_ .".pod"} @pods;
 
 undef &MY::postamble; # suppress warning
@@ -30,7 +30,7 @@ EOPS
 };
 
 WriteMakefile(
- 'NAME' =>      'PDL::pod',
+ 'NAME' =>      'PDLA::pod',
  'MAN1PODS' =>  { @man1 },
  'MAN3PODS' =>  { },
  'PM'    =>     { @pms },

@@ -8,21 +8,21 @@ if ($^O =~ /win32/i) {
   system("copy default.perldlrc $defstartup");
 }
 
-my @pm_names = qw ( PDL.pm Lite.pm LiteF.pm AutoLoader.pm Options.pm
+my @pm_names = qw ( PDLA.pm Lite.pm LiteF.pm AutoLoader.pm Options.pm
 		    Matrix.pm Reduce.pm Lvalue.pm Constants.pm);
 
 my %pm = map { my $h = '$(INST_LIBDIR)/';
-	       $h .= 'PDL/' if $_ !~ /PDL.pm$/;
+	       $h .= 'PDLA/' if $_ !~ /PDLA.pm$/;
 	       ( $_, $h . $_ );
 	   } ( @pm_names, $defstartup );
 
 my %man3pods = map { my $h = '$(INST_MAN3DIR)/';
-		     $h .= 'PDL::' if $_ !~ /PDL.pm$/;
+		     $h .= 'PDLA::' if $_ !~ /PDLA.pm$/;
 		     ( $_, $h . substr($_,0,length($_)-3) . '.$(MAN3EXT)' );
 		 } @pm_names;
 
 WriteMakefile(
-	      'NAME'	=> 'PDL',
+	      'NAME'	=> 'PDLA',
 	      'VERSION_FROM' => 'Core/Version.pm',
 	      'PM'       => \%pm,
 	      'MAN3PODS' => \%man3pods,

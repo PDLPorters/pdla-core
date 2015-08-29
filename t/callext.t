@@ -9,10 +9,10 @@ use strict;
 use warnings;
 use Test::More;
 use Config;
-use PDL;
-use PDL::CallExt;
-use PDL::Core ':Internal'; # For topdl()
-use PDL::Core::Dev;
+use PDLA;
+use PDLA::CallExt;
+use PDLA::Core ':Internal'; # For topdl()
+use PDLA::Core::Dev;
 use Config;
 use File::Spec;
 
@@ -34,11 +34,11 @@ my $out   = File::Spec->catfile('t', 'callext.'.$Config{dlext});
 my @cleanup = ();
 END { unlink @cleanup; }
 push @cleanup, File::Spec->catfile('t', 'callext'.$Config{obj_ext}), $out;
-eval { callext_cc($cfile, PDL_INCLUDE(), '', $out) };
+eval { callext_cc($cfile, PDLA_INCLUDE(), '', $out) };
 
 SKIP: {
 is $@, '', 'callext_cc no error' or skip 'callext_cc failed', 1;
-my $y = sequence(5,4)+2;  # Create PDL
+my $y = sequence(5,4)+2;  # Create PDLA
 my $x = $y*20+100;        # Another
 
 my $try    = loglog($x,$y);

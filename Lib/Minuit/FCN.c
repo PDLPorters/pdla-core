@@ -55,7 +55,7 @@ void FCN(int* npar,double* grad,double* fval,double* xval,int* iflag,double* fut
   SV* pxvalsv;
   
   int ndims;
-  PDL_Indx *pdims;
+  PDLA_Indx *pdims;
 
   dSP;
   ENTER;
@@ -65,41 +65,41 @@ void FCN(int* npar,double* grad,double* fval,double* xval,int* iflag,double* fut
   funname = mnfunname;
 
   ndims = 1;
-  pdims = (PDL_Indx *)  PDL->smalloc( (STRLEN) ((ndims) * sizeof(*pdims)) );
+  pdims = (PDLA_Indx *)  PDLA->smalloc( (STRLEN) ((ndims) * sizeof(*pdims)) );
   
-  pdims[0] = (PDL_Indx) ene;
+  pdims[0] = (PDLA_Indx) ene;
 
   PUSHMARK(SP);
-  XPUSHs(sv_2mortal(newSVpv("PDL", 0)));
+  XPUSHs(sv_2mortal(newSVpv("PDLA", 0)));
   PUTBACK;
   perl_call_method("initialize", G_SCALAR);
   SPAGAIN;
   pxvalsv = POPs;
   PUTBACK;
-  pxval = PDL->SvPDLV(pxvalsv);
+  pxval = PDLA->SvPDLAV(pxvalsv);
  
-  PDL->converttype( &pxval, PDL_D, PDL_PERM );
-  PDL->children_changesoon(pxval,PDL_PARENTDIMSCHANGED|PDL_PARENTDATACHANGED);
-  PDL->setdims (pxval,pdims,ndims);
-  pxval->state &= ~PDL_NOMYDIMS;
-  pxval->state |= PDL_ALLOCATED | PDL_DONTTOUCHDATA;
-  PDL->changed(pxval,PDL_PARENTDIMSCHANGED|PDL_PARENTDATACHANGED,0);
+  PDLA->converttype( &pxval, PDLA_D, PDLA_PERM );
+  PDLA->children_changesoon(pxval,PDLA_PARENTDIMSCHANGED|PDLA_PARENTDATACHANGED);
+  PDLA->setdims (pxval,pdims,ndims);
+  pxval->state &= ~PDLA_NOMYDIMS;
+  pxval->state |= PDLA_ALLOCATED | PDLA_DONTTOUCHDATA;
+  PDLA->changed(pxval,PDLA_PARENTDIMSCHANGED|PDLA_PARENTDATACHANGED,0);
 
   PUSHMARK(SP);
-  XPUSHs(sv_2mortal(newSVpv("PDL", 0)));
+  XPUSHs(sv_2mortal(newSVpv("PDLA", 0)));
   PUTBACK;
   perl_call_method("initialize", G_SCALAR);
   SPAGAIN;
   pgradsv = POPs;
   PUTBACK;
-  pgrad = PDL->SvPDLV(pgradsv);
+  pgrad = PDLA->SvPDLAV(pgradsv);
   
-  PDL->converttype( &pgrad, PDL_D, PDL_PERM );
-  PDL->children_changesoon(pgrad,PDL_PARENTDIMSCHANGED|PDL_PARENTDATACHANGED);
-  PDL->setdims (pgrad,pdims,ndims);
-  pgrad->state &= ~PDL_NOMYDIMS;
-  pgrad->state |= PDL_ALLOCATED | PDL_DONTTOUCHDATA;
-  PDL->changed(pgrad,PDL_PARENTDIMSCHANGED|PDL_PARENTDATACHANGED,0);
+  PDLA->converttype( &pgrad, PDLA_D, PDLA_PERM );
+  PDLA->children_changesoon(pgrad,PDLA_PARENTDIMSCHANGED|PDLA_PARENTDATACHANGED);
+  PDLA->setdims (pgrad,pdims,ndims);
+  pgrad->state &= ~PDLA_NOMYDIMS;
+  pgrad->state |= PDLA_ALLOCATED | PDLA_DONTTOUCHDATA;
+  PDLA->changed(pgrad,PDLA_PARENTDIMSCHANGED|PDLA_PARENTDATACHANGED,0);
 
   pxval->data = (void *) xval;
   pgrad->data = (void *) grad;  
@@ -124,7 +124,7 @@ void FCN(int* npar,double* grad,double* fval,double* xval,int* iflag,double* fut
     croak("error calling perl function\n");
 
   pgradsv = ST(1);
-  pgrad = PDL->SvPDLV(pgradsv);
+  pgrad = PDLA->SvPDLAV(pgradsv);
 
   x = (double *) pgrad->data;
 

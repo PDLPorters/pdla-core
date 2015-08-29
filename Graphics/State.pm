@@ -4,7 +4,7 @@ State - A package to keep track of plotting commands
 
 =head1 SYNOPSIS
 
-  use PDL::Graphics::State;
+  use PDLA::Graphics::State;
 
 =head1 DESCRIPTION
 
@@ -15,7 +15,7 @@ of the current set of plotting commands.
 
 You create a new object by calling the C<new> operator
 
-  $state = PDL::Graphics::State->new();
+  $state = PDLA::Graphics::State->new();
 
 Then for each new command you call C<add> on this object so that for a
 call to C<line> of the form
@@ -50,14 +50,14 @@ Karl Glazebrook.
 
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 
 =cut
 
-package PDL::Graphics::State;
+package PDLA::Graphics::State;
 
 #
 # This is a very simple package to deal with the graphics state.
@@ -131,7 +131,7 @@ sub clear {
 
 sub copy {
   my $self = shift;
-  my $new = PDL::Graphics::State->new();
+  my $new = PDLA::Graphics::State->new();
   foreach my $arg (@{$self->{Commands}}) {
     $new->add(@$arg);
   }

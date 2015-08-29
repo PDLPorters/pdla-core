@@ -1,24 +1,24 @@
 =head1 NAME
 
-PDL::Constants -- basic compile time constants for PDL
+PDLA::Constants -- basic compile time constants for PDLA
 
 =head1 DESCRIPTION
 
 This module is used to define compile time constant
-values for PDL.  It uses the constant module for
+values for PDLA.  It uses the constant module for
 simplicity and availability.  We'll need to sort
 out exactly which constants make sense but PI and
 E seem to be fundamental.
 
 =head1 SYNOPSIS
 
- use PDL::Constants qw(PI E);
+ use PDLA::Constants qw(PI E);
  print 'PI is ' . PI . "\n";
  print 'E  is ' .  E . "\n";
 
 =cut
 
-package PDL::Constants;
+package PDLA::Constants;
 our $VERSION = "0.02";
 $VERSION = eval $VERSION;
 
@@ -26,8 +26,8 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw(PI E I J);  # symbols to export
 
-use PDL::Lite;
-use PDL::Complex qw(i);
+use PDLA::Lite;
+use PDLA::Complex qw(i);
                            
 =head2 PI
 

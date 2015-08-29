@@ -2,11 +2,11 @@
 
 =head1 NAME
 
-PDL::MyInlineMod - a simple PDL module containing inlined Pdlpp code
+PDLA::MyInlineMod - a simple PDLA module containing inlined Pdlpp code
 
 =head1 SYNOPSIS
 
-  use PDL::MyInlineMod;
+  use PDLA::MyInlineMod;
 
   $a = zeroes 10, 10;
   $twos = $a->plus2;  # a simple function
@@ -20,14 +20,14 @@ in a module that can be installed in the usual way.
 
 =cut
 
-package PDL::MyInlineMod;
+package PDLA::MyInlineMod;
 
 # use strict;  # strict results in trouble with barewords when using Inline :(
 # no strict 'vars';
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 
-require PDL::Exporter;
-@ISA = qw(PDL::Exporter);
+require PDLA::Exporter;
+@ISA = qw(PDLA::Exporter);
 # functions you want to export into the caller's name space
 @EXPORT_OK = qw(myinc plus2);
 %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
@@ -39,13 +39,13 @@ $VERSION = '0.60'; # Inline requires this to be a *string* that matches
                    # see Inline-FAQ for more info
 }
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
 # quirk 1 follows
 use Inline::MakePdlppInstallable;  # allow installation of this module
 
 use Inline Pdlpp => DATA => # inlined PP code is below in DATA section
-  NAME => PDL::MyInlineMod,    # required info for module installation
+  NAME => PDLA::MyInlineMod,    # required info for module installation
   VERSION => $VERSION;      # ditto, see Inline-FAQ for more info
 
 # quirk 2 follows
@@ -54,10 +54,10 @@ Inline->init;               # you need this if you want to 'use' your module
                             # resides in the DATA section (as in this example)
 
 # following required to make exported functions work!
-# PDL::PP used to make these automatically but now we have
+# PDLA::PP used to make these automatically but now we have
 # to make them manually since *we* are writing the pm-file
-*myinc = \&PDL::myinc;      # make alias in this module's name space
-*plus2 = \&PDL::plus2;      # ditto
+*myinc = \&PDLA::myinc;      # make alias in this module's name space
+*plus2 = \&PDLA::plus2;      # ditto
 
 1;
 
@@ -104,7 +104,7 @@ pp_def('plus2',
 =head1 AUTHOR
 
 C. Soeller (C) 2002. All rights reserved. This code can be distributed
-under the same terms as PDL itself (see the file COPYING in the PDL
+under the same terms as PDLA itself (see the file COPYING in the PDLA
 distribution).
 
 =head1 SEE ALSO

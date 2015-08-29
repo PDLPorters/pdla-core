@@ -1,8 +1,8 @@
 # This test case is very similar to pthread.t, but it uses the auto pthread
-#  interface, instead of specificaly setting pthread magic on individual PDLs
+#  interface, instead of specificaly setting pthread magic on individual PDLAs
 
 use Test::More;
-use PDL::LiteF;
+use PDLA::LiteF;
 use Benchmark ':hireswallclock';
 
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
@@ -15,14 +15,14 @@ sub tapprox {
        $d < $mdiff;
 }
 
-plan skip_all => 'No threads' if !PDL::Core::pthreads_enabled;
+plan skip_all => 'No threads' if !PDLA::Core::pthreads_enabled;
 plan tests => 26;
 
 $a = zeroes(2000000);
 $b = zeroes(2000000);
 
 # Set target of 10 threads to create, with no lower limit on the size
-#   of the PDL
+#   of the PDLA
 set_autopthread_targ(10);
 set_autopthread_size(0);
   
@@ -69,7 +69,7 @@ foreach (1..20){
 
 
 ### Pthread Indexing Test ####
-###  This checks for a problem seen in the dataflow back to the parent PDL (i.e. writeback xs code)
+###  This checks for a problem seen in the dataflow back to the parent PDLA (i.e. writeback xs code)
 ###    seen when pthreading is present 
 
 my $indexArg = pdl [[1]];
@@ -83,7 +83,7 @@ $in = $lutEx->index($indexArg);
 #   The lazy evaluation of the index operation will occur here first
 $in .= 1;
 
-# Check for writeback to the parent PDL working (should have three ones in the array)
+# Check for writeback to the parent PDLA working (should have three ones in the array)
 my $lutExSum = $lutEx->sum;
 ok( tapprox($lutExSum, pdl(3)) );
 

@@ -1,8 +1,8 @@
 use Test::More;
-use PDL::LiteF;
+use PDLA::LiteF;
 BEGIN {
-        eval " use PDL::Fit::Linfit; ";
-        plan skip_all => "PDL::Fit::Linfit: $@" if $@;
+        eval " use PDLA::Fit::Linfit; ";
+        plan skip_all => "PDLA::Fit::Linfit: $@" if $@;
 }
 
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
@@ -20,7 +20,7 @@ $data = 3*$xvalues + 2*cos($xvalues) + 3*sin($xvalues*2);
 $fitFuncs = cat $xvalues, cos($xvalues), sin($xvalues*2);
 
 # Perform the fit, Coefs should equal 3,2,3
-my ($yfit, $coeffs) = PDL::linfit1d($data,$fitFuncs);
+my ($yfit, $coeffs) = PDLA::linfit1d($data,$fitFuncs);
 
 my @coefs = $coeffs->list;
 
@@ -76,8 +76,8 @@ $pave = $psum/$noPoints;
 # printf("DC Value = %g\n",$pave);
 
 
-# Make PDL from waveform:
-my $data = new PDL( \@Pulse);
+# Make PDLA from waveform:
+my $data = new PDLA( \@Pulse);
 
 
 # setup matrix contains functions to fit
@@ -90,7 +90,7 @@ $functions[3][$i] = sin(2*$pi*$i/($noPoints-1));
 
 }
 
-my $fitFuncs = new PDL( \@functions);
+my $fitFuncs = new PDLA( \@functions);
 
 ($yfit, $coeffs) = linfit1d( $data, $fitFuncs);
 
@@ -106,7 +106,7 @@ ok( tapprox( $coefs[0], $expectedCoefs[0]) &&
 sub tapprox {
         my($a,$b) = @_;
         my $c = abs($a-$b);
-        my $d = ref($c) ? $c->{PDL}->max : $c ;  # don't do a make if were are dealing 
+        my $d = ref($c) ? $c->{PDLA}->max : $c ;  # don't do a make if were are dealing 
 					  # with a scalar
         $d < 0.00001;
 }

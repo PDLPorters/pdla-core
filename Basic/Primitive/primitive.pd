@@ -1,8 +1,8 @@
 use strict;
 
 # check for bad value support
-use PDL::Config;
-my $bvalflag = $PDL::Config{WITH_BADVAL} || 0;
+use PDLA::Config;
+my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
 
 pp_addhdr(<<'EOD');
 
@@ -14,28 +14,28 @@ EOD
 
 pp_addpm({At=>'Top'},<<'EOD');
 
-use PDL::Slices;
+use PDLA::Slices;
 use Carp;
 
 =head1 NAME
 
-PDL::Primitive - primitive operations for pdl
+PDLA::Primitive - primitive operations for pdl
 
 =head1 DESCRIPTION
 
 This module provides some primitive and useful functions defined
-using PDL::PP and able to use the new indexing tricks.
+using PDLA::PP and able to use the new indexing tricks.
 
-See L<PDL::Indexing|PDL::Indexing> for how to use indices creatively.
-For explanation of the signature format, see L<PDL::PP|PDL::PP>.
+See L<PDLA::Indexing|PDLA::Indexing> for how to use indices creatively.
+For explanation of the signature format, see L<PDLA::PP|PDLA::PP>.
 
 =head1 SYNOPSIS
 
- # Pulls in PDL::Primitive, among other modules.
- use PDL;
+ # Pulls in PDLA::Primitive, among other modules.
+ use PDLA;
  
- # Only pull in PDL::Primitive:
- use PDL::Primitive;
+ # Only pull in PDLA::Primitive:
+ use PDLA::Primitive;
 
 =cut
 
@@ -73,7 +73,7 @@ pp_def(
         loop(n) %{ 
            if ( $ISGOOD(a()) && $ISGOOD(b()) ) { tmp += $a() * $b(); } else { badflag = 1; }
         %}
-        if ( badflag ) { $SETBAD(c()); $PDLSTATESETBAD(c); }
+        if ( badflag ) { $SETBAD(c()); $PDLASTATESETBAD(c); }
         else        { $c() = tmp;  }',
        CopyBadStatusCode => '',
        Doc => '
@@ -151,14 +151,14 @@ pp_addpm(<<'EOD');
 
 Matrix multiplication
 
-PDL overloads the C<x> operator (normally the repeat operator) for
+PDLA overloads the C<x> operator (normally the repeat operator) for
 matrix multiplication.  The number of columns (size of the 0
 dimension) in the left-hand argument must normally equal the number of 
 rows (size of the 1 dimension) in the right-hand argument. 
 
-Row vectors are represented as (N x 1) two-dimensional PDLs, or you
-may be sloppy and use a one-dimensional PDL.  Column vectors are 
-represented as (1 x N) two-dimensional PDLs.
+Row vectors are represented as (N x 1) two-dimensional PDLAs, or you
+may be sloppy and use a one-dimensional PDLA.  Column vectors are 
+represented as (1 x N) two-dimensional PDLAs.
 
 Threading occurs in the usual way, but as both the 0 and 1 dimension
 (if present) are included in the operation, you must be sure that 
@@ -182,7 +182,7 @@ matrix-multiply them:
  ]
 
  pdl> print $m x $r                 # matrix x row = ERROR
- PDL: Dim mismatch in matmult of [2x2] x [2x1]: 2 != 1
+ PDLA: Dim mismatch in matmult of [2x2] x [2x1]: 2 != 1
 
  pdl> print $m x $c                 # matrix x column = column
  [
@@ -223,11 +223,11 @@ pp_def('matmult',
 	HandleBad=>0,
 	Pars => 'a(t,h); b(w,t); [o]c(w,h);',
 	PMCode => <<'EOPM',
-sub PDL::matmult {
+sub PDLA::matmult {
     my ($a,$b,$c) = @_;
 
-    $b = pdl($b) unless eval { $b->isa('PDL') };
-    $c = PDL->null unless eval { $c->isa('PDL') };
+    $b = pdl($b) unless eval { $b->isa('PDLA') };
+    $c = PDLA->null unless eval { $c->isa('PDLA') };
 
     while($a->getndims < 2) {$a = $a->dummy(-1)}
     while($b->getndims < 2) {$b = $b->dummy(-1)}
@@ -237,16 +237,16 @@ sub PDL::matmult {
     if($b->dim(1) != $a->dim(0)) {
         barf(sprintf("Dim mismatch in matmult of [%dx%d] x [%dx%d]: %d != %d",$a->dim(0),$a->dim(1),$b->dim(0),$b->dim(1),$a->dim(0),$b->dim(1)));
     }
-    PDL::_matmult_int($a,$b,$c);
+    PDLA::_matmult_int($a,$b,$c);
     $c;
 }
 EOPM
 	Code => <<'EOC',
-	PDL_Indx ih, iw, it, ow, oh, ot, wlim, hlim, tlim;
+	PDLA_Indx ih, iw, it, ow, oh, ot, wlim, hlim, tlim;
         $GENERIC() *ad, *bd, *cd;
-        PDL_Indx atdi, btdi;
-	PDL_Indx resh, resw, rest;
-	PDL_Indx tsiz = 64;
+        PDLA_Indx atdi, btdi;
+	PDLA_Indx resh, resw, rest;
+	PDLA_Indx tsiz = 64;
 
 	// Zero the output
 	loop(w) %{
@@ -257,14 +257,14 @@ EOPM
 
 	// Make sure we're physical
 	// (Not needed if we don't need dimincs, see below)
-	// PDL->make_physdims($PDL(a));
-	// PDL->make_physdims($PDL(b));
+	// PDLA->make_physdims($PDLA(a));
+	// PDLA->make_physdims($PDLA(b));
 
         // Cache the dimincs to avoid constant lookups
 	// These two lines are what I wanted, but they break sometimes (dimincs not set right despite calling physdims?)
 	// I deleted them in favor of explicit offset calculation, which appears more robust.
-	//	atdi = $PDL(a)->dimincs[0];
-	//	btdi = $PDL(b)->dimincs[1];
+	//	atdi = $PDLA(a)->dimincs[0];
+	//	btdi = $PDLA(b)->dimincs[1];
 	atdi = &($a(t=>1, h=>0)) - &($a(t=>0,h=>0));
 	btdi = &($b(t=>1, w=>0)) - &($b(t=>0,w=>0));
 
@@ -630,7 +630,7 @@ pp_def('norm',
 # without it could not be done efficiently or without
 # creating large intermediates (check pdl-porters for
 # discussion)
-# see PDL::ImageND for info about the circ_mean function
+# see PDLA::ImageND for info about the circ_mean function
 
 =head2 indadd
 
@@ -645,15 +645,15 @@ pp_def(
     HandleBad => 1,
     Pars => 'a(); indx ind(); [o] sum(m)',
     Code => 
-    'register PDL_Indx foo = $ind();
+    'register PDLA_Indx foo = $ind();
      if( foo<0 || foo>=$SIZE(m) ) {
-       barf("PDL::indadd: invalid index");
+       barf("PDLA::indadd: invalid index");
      }
      $sum(m => foo) += $a();',
     BadCode => 
-    'register PDL_Indx foo = $ind();
+    'register PDLA_Indx foo = $ind();
      if( $ISBADVAR(foo,ind) || foo<0 || foo>=$SIZE(m) ) {
-       barf("PDL::indadd: invalid index");
+       barf("PDLA::indadd: invalid index");
      }
      if ( $ISBAD(a()) ) { $SETBAD(sum(m => foo)); }
      else               { $sum(m => foo) += $a(); }',
@@ -757,9 +757,9 @@ another dimension use the slicing routines, e.g.
 
 This function is useful for threaded filtering of 1D signals.
 
-Compare also L<conv2d|PDL::Image2D/conv2d>, L<convolve|PDL::ImageND/convolve>,
-L<fftconvolve|PDL::FFT/fftconvolve()>, L<fftwconv|PDL::FFTW/fftwconv>,
-L<rfftwconv|PDL::FFTW/rfftwconv>
+Compare also L<conv2d|PDLA::Image2D/conv2d>, L<convolve|PDLA::ImageND/convolve>,
+L<fftconvolve|PDLA::FFT/fftconvolve()>, L<fftwconv|PDLA::FFTW/fftwconv>,
+L<rfftwconv|PDLA::FFTW/rfftwconv>
 
 =for bad
 
@@ -776,13 +776,13 @@ EOD
         HandleBad => 0,
         PMCode => '
         
-sub PDL::conv1d {
+sub PDLA::conv1d {
    my $opt = pop @_ if ref($_[$#_]) eq \'HASH\';
    die \'Usage: conv1d( a(m), kern(p), [o]b(m), {Options} )\'
       if $#_<1 || $#_>2;
    my($a,$kern) = @_;
-   my $c = $#_ == 2 ? $_[2] : PDL->null;
-   &PDL::_conv1d_int($a,$kern,$c,
+   my $c = $#_ == 2 ? $_[2] : PDLA->null;
+   &PDLA::_conv1d_int($a,$kern,$c,
 		     !(defined $opt && exists $$opt{Boundary}) ? 0 :
 		     lc $$opt{Boundary} eq "reflect");
    return $c;
@@ -843,7 +843,7 @@ test if a is in the set of values b
   [1 0 0 0 1]
 
 C<in> is akin to the I<is an element of> of set theory. In priciple,
-PDL threading could be used to achieve its functionality by using a
+PDLA threading could be used to achieve its functionality by using a
 construct like
 
    $msk = ($labels->dummy(0) == $goodlabels)->orover;
@@ -870,10 +870,10 @@ The unique elements are returned in ascending order.
 
 =for example
 
-  PDL> p pdl(2,2,2,4,0,-1,6,6)->uniq
+  PDLA> p pdl(2,2,2,4,0,-1,6,6)->uniq
   [-1 0 2 4 6]     # 0 is returned 2nd (sorted order) 
 
-  PDL> p pdl(2,2,2,4,nan,-1,6,6)->uniq
+  PDLA> p pdl(2,2,2,4,nan,-1,6,6)->uniq
   [-1 2 4 6 nan]   # NaN value is returned at end
 
 Note: The returned pdl is 1D; any structure of the input
@@ -908,12 +908,12 @@ EOPM
 
 pp_addpm(<<'EOPM');
 
-*uniq = \&PDL::uniq;
+*uniq = \&PDLA::uniq;
 # return unique elements of array
 # find as jumps in the sorted array
 # flattens in the process
-sub PDL::uniq {
-   use PDL::Core 'barf';
+sub PDLA::uniq {
+   use PDLA::Core 'barf';
    my ($arr) = @_;
    return $arr if($arr->nelem == 0); # The null list is unique (CED)
    my $srt  = $arr->clump(-1)->where($arr==$arr)->qsort;  # no NaNs or BADs for qsort
@@ -924,7 +924,7 @@ sub PDL::uniq {
    if ( $uniq->nelem > 0 ) {
       $answ = $uniq->append($answ);
    } else {
-      $answ = ( ($srt->nelem == 0) ?  $srt : PDL::pdl( ref($srt), [$srt->index(0)] ) )->append($answ);
+      $answ = ( ($srt->nelem == 0) ?  $srt : PDLA::pdl( ref($srt), [$srt->index(0)] ) )->append($answ);
    }
    return $answ;
 }
@@ -946,10 +946,10 @@ Matlab usage.
 
 =for example
 
-  PDL> p pdl(2,2,2,4,0,-1,6,6)->uniqind
+  PDLA> p pdl(2,2,2,4,0,-1,6,6)->uniqind
   [5 4 1 3 6]     # the 0 at index 4 is returned 2nd, but...
 
-  PDL> p pdl(2,2,2,4,nan,-1,6,6)->uniqind
+  PDLA> p pdl(2,2,2,4,nan,-1,6,6)->uniqind
   [5 1 3 6 4]     # ...the NaN at index 4 is returned at end
 
 
@@ -977,12 +977,12 @@ EOPM
 
 pp_addpm(<<'EOPM');
 
-*uniqind = \&PDL::uniqind;
+*uniqind = \&PDLA::uniqind;
 # return unique elements of array
 # find as jumps in the sorted array
 # flattens in the process
-sub PDL::uniqind {
-  use PDL::Core 'barf';
+sub PDLA::uniqind {
+  use PDLA::Core 'barf';
   my ($arr) = @_;
   return $arr if($arr->nelem == 0); # The null list is unique (CED)
   # Different from uniq we sort and store the result in an intermediary
@@ -1028,14 +1028,14 @@ Return all unique vectors out of a collection
   containing NaN values.
 
 The unique vectors are returned in lexicographically sorted
-ascending order. The 0th dimension of the input PDL is treated
+ascending order. The 0th dimension of the input PDLA is treated
 as a dimensional index within each vector, and the 1st and any
 higher dimensions are taken to run across vectors. The return
-value is always 2D; any structure of the input PDL (beyond using
+value is always 2D; any structure of the input PDLA (beyond using
 the 0th dimension for vector index) is lost.
 
 See also L<uniq|uniq> for a uniqe list of scalars; and
-L<qsortvec|PDL::Ufunc/qsortvec> for sorting a list of vectors
+L<qsortvec|PDLA::Ufunc/qsortvec> for sorting a list of vectors
 lexicographcally.
 
 =cut
@@ -1061,7 +1061,7 @@ EOPM
 
 pp_addpm(<<'EOPM');
 
-sub PDL::uniqvec {
+sub PDLA::uniqvec {
 
    my($pdl) = shift;
 
@@ -1073,7 +1073,7 @@ sub PDL::uniqvec {
 
    my $ngood = null;
    $ngood = $pdl2d->ones->sumover;
-   $ngood = $pdl2d->ngoodover if  ($PDL::Bad::Status && $pdl->badflag);  # number of good values each vector
+   $ngood = $pdl2d->ngoodover if  ($PDLA::Bad::Status && $pdl->badflag);  # number of good values each vector
    my $ngood2 = null;
    $ngood2 = $ngood->where($ngood);                                      # number of good values with no all-BADs
 
@@ -1097,7 +1097,7 @@ sub PDL::uniqvec {
    $srt = $presrt->qsortvec->mv(0,-1);                                   # BADs are sorted by qsortvec
    my $srtdice = $srt;
    my $somebad = null;
-   if  ($PDL::Bad::Status && $srt->badflag) {
+   if  ($PDLA::Bad::Status && $srt->badflag) {
       $srtdice = $srt->dice($srt->mv(0,-1)->nbadover->not->which);
       $somebad = $srt->dice($srt->mv(0,-1)->nbadover->which);
    }
@@ -1165,13 +1165,13 @@ for my $opt (
 	   Doc =>  'clip (threshold) C<$a> by C<$b> (C<$b> is '.
 	   ($name eq 'hclip' ? 'upper' : 'lower').' bound)',
           PMCode=><<"EOD",
-sub PDL::$name {
+sub PDLA::$name {
    my (\$a,\$b) = \@_;
    my \$c;
    if (\$a->is_inplace) {
        \$a->set_inplace(0); \$c = \$a;
-   } elsif (\$#_ > 1) {\$c=\$_[2]} else {\$c=PDL->nullcreate(\$a)}
-   &PDL::_${name}_int(\$a,\$b,\$c);
+   } elsif (\$#_ > 1) {\$c=\$_[2]} else {\$c=PDLA->nullcreate(\$a)}
+   &PDLA::_${name}_int(\$a,\$b,\$c);
    return \$c;
 }
 EOD
@@ -1226,8 +1226,8 @@ pp_def(
          }
 EOBC
        PMCode => <<'EOPM',
-*clip = \&PDL::clip;
-sub PDL::clip {
+*clip = \&PDLA::clip;
+sub PDLA::clip {
   my($a, $l, $h) = @_;
   my $d; 
   unless(defined($l) || defined($h)) {
@@ -1245,14 +1245,14 @@ sub PDL::clip {
   } elsif ($#_ > 2) {
       $d=$_[3]
   } else {
-      $d = PDL->nullcreate($a);
+      $d = PDLA->nullcreate($a);
   }
   if(defined($l) && defined($h)) {
-      &PDL::_clip_int($a,$l,$h,$d);
+      &PDLA::_clip_int($a,$l,$h,$d);
   } elsif( defined($l) ) {
-      &PDL::_lclip_int($a,$l,$d);
+      &PDLA::_lclip_int($a,$l,$d);
   } elsif( defined($h) ) {
-      &PDL::_hclip_int($a,$h,$d);
+      &PDLA::_hclip_int($a,$h,$d);
   } else {
       die "This can't happen (clip contingency) - file a bug";
   }
@@ -1309,7 +1309,7 @@ pp_def(
            }
         %}
         if ( flag ) { $b() = statsum / wtsum; }
-        else        { $SETBAD(b()); $PDLSTATESETBAD(b); }',
+        else        { $SETBAD(b()); $PDLASTATESETBAD(b); }',
        CopyBadStatusCode => '',
        Doc => '
 
@@ -1415,29 +1415,29 @@ pp_def('statsover',
 	           $SETBAD(prms());
            $adev() = tmp1 / norm ;
          } else       { 
-           $SETBAD(avg());  $PDLSTATESETBAD(avg);
-           $SETBAD(rms());  $PDLSTATESETBAD(rms);
-           $SETBAD(adev()); $PDLSTATESETBAD(adev);
-           $SETBAD(min());  $PDLSTATESETBAD(min);
-           $SETBAD(max());  $PDLSTATESETBAD(max);
-           $SETBAD(prms()); $PDLSTATESETBAD(prms);
+           $SETBAD(avg());  $PDLASTATESETBAD(avg);
+           $SETBAD(rms());  $PDLASTATESETBAD(rms);
+           $SETBAD(adev()); $PDLASTATESETBAD(adev);
+           $SETBAD(min());  $PDLASTATESETBAD(min);
+           $SETBAD(max());  $PDLASTATESETBAD(max);
+           $SETBAD(prms()); $PDLASTATESETBAD(prms);
          }',
       CopyBadStatusCode => '',
       PMCode => '
 
-sub PDL::statsover {
+sub PDLA::statsover {
    barf(\'Usage: ($mean,[$prms, $median, $min, $max, $adev, $rms]) = statsover($data,[$weights])\') if $#_>1;
    my ($data, $weights) = @_;
    $weights = $data->ones() if !defined($weights);
 
    my $median = $data->medover();
-   my $mean = PDL->nullcreate($data);
-   my $rms = PDL->nullcreate($data);
-   my $min = PDL->nullcreate($data);
-   my $max = PDL->nullcreate($data);
-   my $adev = PDL->nullcreate($data);
-   my $prms = PDL->nullcreate($data);
-   &PDL::_statsover_int($data, $weights, $mean, $prms, $median, $min, $max, $adev, $rms);
+   my $mean = PDLA->nullcreate($data);
+   my $rms = PDLA->nullcreate($data);
+   my $min = PDLA->nullcreate($data);
+   my $max = PDLA->nullcreate($data);
+   my $adev = PDLA->nullcreate($data);
+   my $prms = PDLA->nullcreate($data);
+   &PDLA::_statsover_int($data, $weights, $mean, $prms, $median, $min, $max, $adev, $rms);
 
    return $mean unless wantarray;
    return ($mean, $prms, $median, $min, $max, $adev, $rms);
@@ -1475,7 +1475,7 @@ of the population from which a sample is drawn.
 =item * the median
 
 The median is the 50th percentile data value.  Median is found by
-L<medover|PDL::Ufunc/medover>, so WEIGHTING IS IGNORED FOR THE MEDIAN CALCULATION.
+L<medover|PDLA::Ufunc/medover>, so WEIGHTING IS IGNORED FOR THE MEDIAN CALCULATION.
 
 =item * the minimum
 
@@ -1530,7 +1530,7 @@ Calculates useful statistics on a piddle
 
 This utility calculates all the most useful quantities in one call.
 It works the same way as L</statsover>, except that the quantities are
-calculated considering the entire input PDL as a single sample, rather
+calculated considering the entire input PDLA as a single sample, rather
 than as a collection of rows. See L</statsover> for definitions of the
 returned quantities.
 
@@ -1551,15 +1551,15 @@ values are flagged bad.
 EOD
 } # if: bvalflag
 pp_addpm(<<'EOD');
-*stats	  = \&PDL::stats;
-sub PDL::stats {
+*stats	  = \&PDLA::stats;
+sub PDLA::stats {
     barf('Usage: ($mean,[$rms]) = stats($data,[$weights])') if $#_>1;
     my ($data,$weights) = @_;
 
     # Ensure that $weights is properly threaded over; this could be
     # done rather more efficiently...
     if(defined $weights) {
-	$weights = pdl($weights) unless UNIVERSAL::isa($weights,'PDL');
+	$weights = pdl($weights) unless UNIVERSAL::isa($weights,'PDLA');
 	if( ($weights->ndims != $data->ndims) or 
 	    (pdl($weights->dims) != pdl($data->dims))->or
 	  ) {
@@ -1568,7 +1568,7 @@ sub PDL::stats {
 	$weights = $weights->flat;
     } 
 	
-    return PDL::statsover($data->flat,$weights);
+    return PDLA::statsover($data->flat,$weights);
 }
 EOD
 
@@ -1604,7 +1604,7 @@ The output is reset in a different threadloop so that you
 can take a histogram of C<$a(10,12)> into C<$b(15)> and get the result
 you want.
 
-For a higher-level interface, see L<hist|PDL::Basic/hist>.
+For a higher-level interface, see L<hist|PDLA::Basic/hist>.
 
 =for example
 
@@ -1898,16 +1898,16 @@ pp_def('fibonacci',
 	Doc=>'Constructor - a vector with Fibonacci\'s sequence',
 	PMFunc=>'',
 	PMCode=><<'EOD',
-sub fibonacci { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->fibonacci : PDL->fibonacci(@_) }
-sub PDL::fibonacci{
+sub fibonacci { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->fibonacci : PDLA->fibonacci(@_) }
+sub PDLA::fibonacci{
    my $class = shift;
    my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
-   &PDL::_fibonacci_int($x->clump(-1));
+   &PDLA::_fibonacci_int($x->clump(-1));
    return $x;
 }
 EOD
      Code => '
-        PDL_Indx i=0;
+        PDLA_Indx i=0;
         $GENERIC() x1, x2;
 
         x1 = 1; x2 = 0;
@@ -1935,13 +1935,13 @@ pp_def('append',
 # but that requires placing RedoDimsParsedCode *after* assignment of
 # childdims to $SIZE(XXX)!!!  XXXXXmake that workXXXXX
 	RedoDimsCode => '
-		pdl * dpdla = $PDL(a);
-		pdl * dpdlb = $PDL(b);
+		pdl * dpdla = $PDLA(a);
+		pdl * dpdlb = $PDLA(b);
                 $SIZE(mn) = (dpdla->ndims > 0 ? dpdla->dims[0] : 1) + 
                         (dpdlb->ndims > 0 ? dpdlb->dims[0] : 1);
 		',
-	Code => 'register PDL_Indx mnp;
-		 PDL_Indx ns = $SIZE(n);
+	Code => 'register PDLA_Indx mnp;
+		 PDLA_Indx ns = $SIZE(n);
                  threadloop %{
                        loop(n) %{ $c(mn => n) = $a(); %}
 		       loop(m) %{ mnp = m+ns; $c(mn => mnp) = $b(); %}
@@ -1963,7 +1963,7 @@ must be compatible in the threading sense. Resulting size of first dim is
 the sum of the sizes of the first dims of the two argument piddles -
 ie C<n + m>.
 
-Similar functions include L<glue|/glue> (below) and L<cat|PDL::Core/cat>.
+Similar functions include L<glue|/glue> (below) and L<cat|PDLA::Core/cat>.
 
 =cut
 
@@ -1980,34 +1980,34 @@ pp_addpm(<<'EOD')
 
 =for ref
 
-Glue two or more PDLs together along an arbitrary dimension 
+Glue two or more PDLAs together along an arbitrary dimension 
 (N-D L<append|append>).
 
 Sticks $a, $b, and all following arguments together along the
 specified dimension.  All other dimensions must be compatible in the 
 threading sense.  
 
-Glue is permissive, in the sense that every PDL is treated as having an
+Glue is permissive, in the sense that every PDLA is treated as having an
 infinite number of trivial dimensions of order 1 -- so C<< $a->glue(3,$b) >>
 works, even if $a and $b are only one dimensional.
 
-If one of the PDLs has no elements, it is ignored.  Likewise, if one
+If one of the PDLAs has no elements, it is ignored.  Likewise, if one
 of them is actually the undefined value, it is treated as if it had no
 elements.
 
 If the first parameter is a defined perl scalar rather than a pdl,
 then it is taken as a dimension along which to glue everything else,
-so you can say C<$cube = PDL::glue(3,@image_list);> if you like.
+so you can say C<$cube = PDLA::glue(3,@image_list);> if you like.
 
-C<glue> is implemented in pdl, using a combination of L<xchg|PDL::Slices/xchg> and
+C<glue> is implemented in pdl, using a combination of L<xchg|PDLA::Slices/xchg> and
 L<append|append>.  It should probably be updated (one day) to a pure PP
 function.
 
-Similar functions include L<append|/append> (above) and L<cat|PDL::Core/cat>.
+Similar functions include L<append|/append> (above) and L<cat|PDLA::Core/cat>.
 
 =cut
 
-sub PDL::glue{
+sub PDLA::glue{
     my($a) = shift;
     my($dim) = shift;
 
@@ -2021,11 +2021,11 @@ sub PDL::glue{
 	return $a unless(@_);
 	return shift() if(@_<=1);
 	$a=shift;
-	return PDL::glue($a,$dim,@_);
+	return PDLA::glue($a,$dim,@_);
     }
 
     if($dim - $a->dim(0) > 100) {
-	print STDERR "warning:: PDL::glue allocating >100 dimensions!\n";
+	print STDERR "warning:: PDLA::glue allocating >100 dimensions!\n";
     }
     while($dim >= $a->ndims) {
 	$a = $a->dummy(-1,1);
@@ -2069,7 +2069,7 @@ pp_def( 'axisvalues',
 Internal routine
 
 C<axisvalues> is the internal primitive that implements 
-L<axisvals|PDL::Basic/axisvals> 
+L<axisvals|PDLA::Basic/axisvals> 
 and alters its argument.
 
 =cut
@@ -2091,7 +2091,7 @@ Constructor which returns piddle of random numbers
  $a = random([type], $nx, $ny, $nz,...);
  $a = random $b;
 
-etc (see L<zeroes|PDL::Core/zeroes>).
+etc (see L<zeroes|PDLA::Core/zeroes>).
 
 This is the uniform distribution between 0 and 1 (assumedly
 excluding 1 itself). The arguments are the same as C<zeroes>
@@ -2113,7 +2113,7 @@ Constructor which returns piddle of random numbers
  $a = randsym([type], $nx, $ny, $nz,...);
  $a = randsym $b;
 
-etc (see L<zeroes|PDL::Core/zeroes>).
+etc (see L<zeroes|PDLA::Core/zeroes>).
 
 This is the uniform distribution between 0 and 1 (excluding both 0 and
 1, cf L<random|/random>). The arguments are the same as C<zeroes> (q.v.) -
@@ -2144,11 +2144,11 @@ pp_def(
 	'NoPthread' => 1, # random isn't threadsafe
 	Doc=>undef,
 	PMCode=><<'EOD',
-sub random { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->random : PDL->random(@_) }
-sub PDL::random {
+sub random { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->random : PDLA->random(@_) }
+sub PDLA::random {
    my $class = shift;
    my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
-   &PDL::_random_int($x);
+   &PDLA::_random_int($x);
    return $x;
 }
 EOD
@@ -2165,11 +2165,11 @@ pp_def(
          $a() = tmp;',
 	Doc=>undef,
 	PMCode=><<'EOD',
-sub randsym { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->randsym : PDL->randsym(@_) }
-sub PDL::randsym {
+sub randsym { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->randsym : PDLA->randsym(@_) }
+sub PDLA::randsym {
    my $class = shift;
    my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
-   &PDL::_randsym_int($x);
+   &PDLA::_randsym_int($x);
    return $x;
 }
 EOD
@@ -2188,7 +2188,7 @@ Constructor which returns piddle of Gaussian random numbers
  $a = grandom([type], $nx, $ny, $nz,...);
  $a = grandom $b;
 
-etc (see L<zeroes|PDL::Core/zeroes>).
+etc (see L<zeroes|PDLA::Core/zeroes>).
 
 This is generated using the math library routine C<ndtri>.
 
@@ -2201,11 +2201,11 @@ documentation.
 
 =cut
 
-sub grandom { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->grandom : PDL->grandom(@_) }
-sub PDL::grandom {
+sub grandom { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->grandom : PDLA->grandom(@_) }
+sub PDLA::grandom {
    my $class = shift;
    my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
-   use PDL::Math 'ndtri';
+   use PDLA::Math 'ndtri';
    $x .= ndtri(randsym($x));
    return $x;
 }
@@ -2307,7 +2307,7 @@ sub vsearch {
       :                               croak( "unknown vsearch mode: $mode\n" );
 }
 
-*PDL::vsearch = \&vsearch;
+*PDLA::vsearch = \&vsearch;
 
 EOD
 
@@ -2375,7 +2375,7 @@ for my $func ( [
 			   $b = random 20;
 			   $c = %FUNC%($b, $a); # Now, $c will have the appropriate distr.
 
-			  It is possible to use the L<cumusumover|PDL::Ufunc/cumusumover>
+			  It is possible to use the L<cumusumover|PDLA::Ufunc/cumusumover>
 			  function to obtain cumulative probabilities from absolute probabilities.
 			  ----
 			  ],
@@ -2715,10 +2715,10 @@ for my $func ( [
 
 
     my $code = undent q[
-                   PDL_Indx n1 = $SIZE(n)-1;
-                   PDL_Indx low = %LOW%;
-                   PDL_Indx high = %HIGH%;
-                   PDL_Indx mid;
+                   PDLA_Indx n1 = $SIZE(n)-1;
+                   PDLA_Indx low = %LOW%;
+                   PDLA_Indx high = %HIGH%;
+                   PDLA_Indx mid;
 
 		   $GENERIC() value = $vals();
 
@@ -2782,10 +2782,10 @@ pp_def('interpolate',
 	GenericTypes => ['F','D'], # too restrictive ?
 	Code => '
 		 $GENERIC() d;
-		 PDL_Indx n  = $SIZE(n);
-		 PDL_Indx n1 = n-1;
+		 PDLA_Indx n  = $SIZE(n);
+		 PDLA_Indx n1 = n-1;
 		 int up = ($x(n => n1) > $x(n => 0));
-                 PDL_Indx jl, jh, m;
+                 PDLA_Indx jl, jh, m;
                  int carp;
 
                  threadloop %{
@@ -2878,16 +2878,16 @@ sub interpol ($$$;$) {
 
     my $yi;
     if ( $#_ == 0 ) { $yi = $_[0]; }
-    else            { $yi = PDL->null; }
+    else            { $yi = PDLA->null; }
 
-    interpolate( $xi, $x, $y, $yi, my $err = PDL->null );
+    interpolate( $xi, $x, $y, $yi, my $err = PDLA->null );
     print "some values had to be extrapolated\n"
 	if any $err;
 
     return $yi if $#_ == -1;
 
 } # sub: interpol()
-*PDL::interpol = \&interpol;
+*PDLA::interpol = \&interpol;
 
 EOD
 
@@ -2906,7 +2906,7 @@ Interpolate values from an N-D piddle, with switchable method
   $index = pdl([[2.2,3.5],[4.1,5.0]],[[6.0,7.4],[8,9]]);
   print $source->interpND( $index );
 
-InterpND acts like L<indexND|PDL::Slices/indexND>,
+InterpND acts like L<indexND|PDLA::Slices/indexND>,
 collapsing C<$index> by lookup
 into C<$source>; but it does interpolation rather than direct sampling.  
 The interpolation method and boundary condition are switchable via 
@@ -2967,7 +2967,7 @@ they are calculated and put in the stash.
 
 =item b, bound, boundary, Boundary
 
-This option is passed unmodified into L<indexND|PDL::Slices/indexND>, 
+This option is passed unmodified into L<indexND|PDLA::Slices/indexND>, 
 which is used as the indexing engine for the interpolation.
 Some current allowed values are 'extend', 'periodic', 'truncate', and 'mirror'
 (default is 'truncate').
@@ -2985,8 +2985,8 @@ data, for the FFT method.
 
 =cut
 
-*interpND = *PDL::interpND;
-sub PDL::interpND {
+*interpND = *PDLA::interpND;
+sub PDLA::interpND {
   my $source = shift;
   my $index = shift;
   my $options = shift;
@@ -3007,7 +3007,7 @@ sub PDL::interpND {
   my($bad) = $opt->{bad} || $opt->{Bad} || 0.0;
 
   if($method =~ m/^s(am(p(le)?)?)?/i) {
-    return $source->range(PDL::Math::floor($index+0.5),0,$boundary);
+    return $source->range(PDLA::Math::floor($index+0.5),0,$boundary);
   }
 
   elsif (($method eq 1) || $method =~ m/^l(in(ear)?)?/i) {
@@ -3026,7 +3026,7 @@ sub PDL::interpND {
 
     # Enumerate the corners of an n-cube and convert to a list
     # (the 'x' is the normal perl repeat operator)
-    my $crnr = PDL::Basic::ndcoords( (2) x $index->dim(0) ) # (index,cth)
+    my $crnr = PDLA::Basic::ndcoords( (2) x $index->dim(0) ) # (index,cth)
              ->mv(0,-1)->clump($index->dim(0))->mv(-1,0); # (index, clst)
 
     # a & b are the weighting coefficients.
@@ -3034,7 +3034,7 @@ sub PDL::interpND {
     my($indexwhere);
     ($indexwhere = $index->where( 0 * $index )) .= -10; # Change NaN to invalid
     {
-      my $bb = PDL::Math::floor($index);
+      my $bb = PDLA::Math::floor($index);
       $a = ($index - $bb)     -> dummy(1,$crnr->dim(1)); # index, clst, ith
       $b = ($bb + 1 - $index) -> dummy(1,$crnr->dim(1)); # index, clst, ith
     }
@@ -3047,8 +3047,8 @@ sub PDL::interpND {
 
     my $out = ($out0 * $samp)->sumover; # ith, sth
 
-    # Work around BAD-not-being-contagious bug in PDL <= 2.6 bad handling code  --CED 3-April-2013
-    if($PDL::Bad::Status and $source->badflag) {
+    # Work around BAD-not-being-contagious bug in PDLA <= 2.6 bad handling code  --CED 3-April-2013
+    if($PDLA::Bad::Status and $source->badflag) {
 	my $baddies = $samp->isbad->orover;
 	$out = $out->setbadif($baddies);
     }
@@ -3102,7 +3102,7 @@ sub PDL::interpND {
 
   } elsif($method =~ m/^f(ft|ourier)?/i) {
 
-     eval "use PDL::FFT;";
+     eval "use PDLA::FFT;";
      my $fftref = $opt->{fft};
      $fftref = [] unless(ref $fftref eq 'ARRAY');
      if(@$fftref != 2) {
@@ -3114,7 +3114,7 @@ sub PDL::interpND {
      }
 
      my $i;
-     my $c = PDL::Basic::ndcoords($source);               # (dim, source-dims)
+     my $c = PDLA::Basic::ndcoords($source);               # (dim, source-dims)
      for $i(1..$index->ndims-1) {
 	 $c = $c->dummy($i,$index->dim($i)) 
      }
@@ -3164,7 +3164,7 @@ correspond to array C<$a> clumped using C<clump(-1)>. This routine is
 used in the old vector form of L<whichND|/whichND>, but is useful on
 its own occasionally.
 
-Returned piddles have the L<indx|PDL::Core/indx> datatype.  C<$indices> can have
+Returned piddles have the L<indx|PDLA::Core/indx> datatype.  C<$indices> can have
 values larger than C<< $a->nelem >> but negative values in C<$indices>
 will not give the answer you expect.
 
@@ -3180,8 +3180,8 @@ will not give the answer you expect.
 
 =cut
 
-*one2nd = \&PDL::one2nd;
-sub PDL::one2nd {
+*one2nd = \&PDLA::one2nd;
+sub PDLA::one2nd {
   barf "Usage: one2nd \$array \$indices\n" if $#_ != 1;
   my ($a, $ind)=@_;
   my @dimension=$a->dims;
@@ -3209,7 +3209,7 @@ my $doc_which = <<'EOD';
 
 =for ref
 
-Returns indices of non-zero values from a 1-D PDL
+Returns indices of non-zero values from a 1-D PDLA
 
 =for usage
 
@@ -3234,10 +3234,10 @@ SEE ALSO:
 L<which_both|/which_both> returns separately the indices of both
 zero and nonzero values in the mask.
 
-L<where|/where> returns associated values from a data PDL, rather than 
-indices into the mask PDL.
+L<where|/where> returns associated values from a data PDLA, rather than 
+indices into the mask PDLA.
 
-L<whichND|/whichND> returns N-D indices into a multidimensional PDL.
+L<whichND|/whichND> returns N-D indices into a multidimensional PDLA.
 
 =for example
 
@@ -3262,7 +3262,7 @@ my $doc_which_both = <<'EOD';
 
 =for ref
 
-Returns indices of zero and nonzero values in a mask PDL
+Returns indices of zero and nonzero values in a mask PDLA
 
 =for usage
 
@@ -3294,10 +3294,10 @@ EOD
    sub which { my ($this,$out) = @_;
 		$this = $this->flat;
 		$out = $this->nullcreate unless defined $out;
-		PDL::_which_int($this,$out);
+		PDLA::_which_int($this,$out);
 		return $out;
    }
-   *PDL::which = \&which;
+   *PDLA::which = \&which;
 EOD
 	  },
 	 {Name => 'which_both',
@@ -3311,10 +3311,10 @@ EOD
 		$this = $this->flat;
 		$outi = $this->nullcreate unless defined $outi;	
 		$outni = $this->nullcreate unless defined $outni;
-		PDL::_which_both_int($this,$outi,$outni);
+		PDLA::_which_both_int($this,$outi,$outni);
 		return wantarray ? ($outi,$outni) : $outi;
    }
-   *PDL::which_both = \&which_both;
+   *PDLA::which_both = \&which_both;
 EOD
 	  }
 	 )
@@ -3343,20 +3343,20 @@ EOD
 #               this will probably break once dataflow is enabled again
 #               *unless* we have made sure that mask is physical by now!!!
 	   RedoDimsCode => '
-		PDL_Indx sum = 0;
+		PDLA_Indx sum = 0;
 		/* not sure if this is necessary */
-		pdl * dpdl = $PDL(mask);
-		$GENERIC() *m_datap = (($GENERIC() *)(PDL_REPRP(dpdl)));
-		PDL_Indx inc = PDL_REPRINC(dpdl,0);
-		PDL_Indx offs = PDL_REPROFFS(dpdl);
-		PDL_Indx i;
+		pdl * dpdl = $PDLA(mask);
+		$GENERIC() *m_datap = (($GENERIC() *)(PDLA_REPRP(dpdl)));
+		PDLA_Indx inc = PDLA_REPRINC(dpdl,0);
+		PDLA_Indx offs = PDLA_REPROFFS(dpdl);
+		PDLA_Indx i;
 
 		if (dpdl->ndims != 1)
 		  barf("dimflag currently works only with 1D pdls");
 
 '.
 ($bvalflag ? '
-		if(dpdl->state & PDL_BADVAL)
+		if(dpdl->state & PDLA_BADVAL)
 		  for (i=0; i<dpdl->dims[0]; i++) {
 	 	 	$GENERIC() foo = *(m_datap+inc*i+offs);
 	 	        if(foo && $ISGOODVAR(foo,mask) )sum++;
@@ -3379,7 +3379,7 @@ pp_addpm(<<'EOD'
 
 =for ref
 
-Use a mask to select values from one or more data PDLs
+Use a mask to select values from one or more data PDLAs
 
 C<where> accepts one or more data piddles and a mask piddle.  It
 returns a list of output piddles, corresponding to the input data
@@ -3387,10 +3387,10 @@ piddles.  Each output piddle is a 1-dimensional list of values in its
 corresponding data piddle. The values are drawn from locations where
 the mask is nonzero.
 
-The output PDLs are still connected to the original data PDLs, for the
+The output PDLAs are still connected to the original data PDLAs, for the
 purpose of dataflow.
 
-C<where> combines the functionality of L<which|/which> and L<index|PDL::Slices/index>
+C<where> combines the functionality of L<which|/which> and L<index|PDLA::Slices/index>
 into a single operation.
 
 BUGS:
@@ -3421,7 +3421,7 @@ thread over a smaller mask, for example.
 
 =cut
 
-sub PDL::where {
+sub PDLA::where {
     barf "Usage: where( \$pdl1, ..., \$pdlN, \$mask )\n" if $#_ == 0;
 
     if($#_ == 1) {
@@ -3439,7 +3439,7 @@ sub PDL::where {
 	}
     }
 }
-*where = \&PDL::where;
+*where = \&PDLA::where;
 
 EOD
 );
@@ -3464,8 +3464,8 @@ dimensionality is preserved which allows for
 proper threading of the selection operation over
 higher dimensions.
 
-As with C<where> the output PDLs are still connected
-to the original data PDLs, for the purpose of dataflow.
+As with C<where> the output PDLAs are still connected
+to the original data PDLAs, for the purpose of dataflow.
 
 =for usage
 
@@ -3498,18 +3498,18 @@ assignment. That means that both of these examples are valid:
 
 =cut
 
-sub PDL::whereND :lvalue {
+sub PDLA::whereND :lvalue {
    barf "Usage: whereND( \$pdl1, ..., \$pdlN, \$mask )\n" if $#_ == 0;
 
    my $mask = pop @_;  # $mask has 0==false, 1==true
    my @to_return;
 
-   my $n = PDL::sum($mask);
+   my $n = PDLA::sum($mask);
 
    foreach my $arr (@_) {
 
       my $sub_i = $mask * ones($arr);
-      my $where_sub_i = PDL::where($arr, $sub_i);
+      my $where_sub_i = PDLA::where($arr, $sub_i);
 
       # count the number of dims in $mask and $arr
       # $mask = a b c d e f.....
@@ -3528,7 +3528,7 @@ sub PDL::whereND :lvalue {
 
    return (@to_return == 1) ? $to_return[0] : @to_return;
 }
-*whereND = \&PDL::whereND;
+*whereND = \&PDLA::whereND;
 
 EOD
 );
@@ -3546,34 +3546,34 @@ Return the coordinates of non-zero values in a mask.
 =for usage
 
 WhichND returns the N-dimensional coordinates of each nonzero value in
-a mask PDL with any number of dimensions.  The returned values arrive
+a mask PDLA with any number of dimensions.  The returned values arrive
 as an array-of-vectors suitable for use in
-L<indexND|PDL::Slices/indexND> or L<range|PDL::Slices/range>.
+L<indexND|PDLA::Slices/indexND> or L<range|PDLA::Slices/range>.
 
  $coords = whichND($mask);
 
-returns a PDL containing the coordinates of the elements that are non-zero 
+returns a PDLA containing the coordinates of the elements that are non-zero 
 in C<$mask>, suitable for use in indexND.  The 0th dimension contains the
 full coordinate listing of each point; the 1st dimension lists all the points.
 For example, if $mask has rank 4 and 100 matching elements, then $coords has
 dimension 4x100.
 
-If no such elements exist, then whichND returns a structured empty PDL:
-an Nx0 PDL that contains no values (but matches, threading-wise, with 
+If no such elements exist, then whichND returns a structured empty PDLA:
+an Nx0 PDLA that contains no values (but matches, threading-wise, with 
 the vectors that would be produced if such elements existed).
 
 DEPRECATED BEHAVIOR IN LIST CONTEXT:
 
 whichND once delivered different values in list context than in scalar
 context, for historical reasons.  In list context, it returned the 
-coordinates transposed, as a collection of 1-PDLs (one per dimension) 
-in a list.  This usage is deprecated in PDL 2.4.10, and will cause a 
+coordinates transposed, as a collection of 1-PDLAs (one per dimension) 
+in a list.  This usage is deprecated in PDLA 2.4.10, and will cause a 
 warning to be issued every time it is encountered.  To avoid the
-warning, you can set the global variable "$PDL::whichND" to 's' to 
+warning, you can set the global variable "$PDLA::whichND" to 's' to 
 get scalar behavior in all contexts, or to 'l' to get list behavior in
 list context.  
 
-In later versions of PDL, the deprecated behavior will disappear.  Deprecated
+In later versions of PDLA, the deprecated behavior will disappear.  Deprecated
 list context whichND expressions can be replaced with:
 
     @list = $a->whichND->mv(0,-1)->dog;
@@ -3583,8 +3583,8 @@ SEE ALSO:
 
 L<which|/which> finds coordinates of nonzero values in a 1-D mask.
 
-L<where|/where> extracts values from a data PDL that are associated 
-with nonzero values in a mask PDL.
+L<where|/where> extracts values from a data PDLA that are associated 
+with nonzero values in a mask PDLA.
 
 =for example
 
@@ -3596,37 +3596,37 @@ with nonzero values in a mask PDL.
 
 =cut
 
-*whichND = \&PDL::whichND;
-sub PDL::whichND {
+*whichND = \&PDLA::whichND;
+sub PDLA::whichND {
   my $mask = shift;
-  $mask = PDL::pdl('PDL',$mask) unless(UNIVERSAL::isa($mask,'PDL'));
+  $mask = PDLA::pdl('PDLA',$mask) unless(UNIVERSAL::isa($mask,'PDLA'));
 
   # List context: generate a perl list by dimension
   if(wantarray) {
-      if(!defined($PDL::whichND)) {
-	  printf STDERR "whichND: WARNING - list context deprecated. Set \$PDL::whichND. Details in pod.";
-      } elsif($PDL::whichND =~ m/l/i) {
-	  # old list context enabled by setting $PDL::whichND to 'l'
+      if(!defined($PDLA::whichND)) {
+	  printf STDERR "whichND: WARNING - list context deprecated. Set \$PDLA::whichND. Details in pod.";
+      } elsif($PDLA::whichND =~ m/l/i) {
+	  # old list context enabled by setting $PDLA::whichND to 'l'
 	  my $ind=($mask->clump(-1))->which;
 	  return $mask->one2nd($ind);
       }
-      # if $PDL::whichND does not contain 'l' or 'L', fall through to scalar context
+      # if $PDLA::whichND does not contain 'l' or 'L', fall through to scalar context
   }
 
   # Scalar context: generate an N-D index piddle
 
   unless($mask->nelem) {
-      return PDL::new_from_specification('PDL',$mask->ndims,0);
+      return PDLA::new_from_specification('PDLA',$mask->ndims,0);
   }
   
   unless($mask->getndims) {
-    return $mask ? pdl(0) : PDL::new_from_specification('PDL',0);
+    return $mask ? pdl(0) : PDLA::new_from_specification('PDLA',0);
   }
   
   $ind = $mask->flat->which->dummy(0,$mask->getndims)->long->make_physical;
   if($ind->nelem==0) {
       # In the empty case, explicitly return the correct type of structured empty
-      return PDL::new_from_specification('PDL',$mask->ndims, 0);
+      return PDLA::new_from_specification('PDLA',$mask->ndims, 0);
   }
 
   my $mult = ones($mask->getndims)->long;
@@ -3733,7 +3733,7 @@ Then find all squares that are cubes:
 
   pdl> $both = setops($squares, 'AND', $cubes)
 
-And print these (assumes that C<PDL::NiceSlice> is loaded!)
+And print these (assumes that C<PDLA::NiceSlice> is loaded!)
 
   pdl> p $x($both)
    [0 1 64 729 4096]
@@ -3775,9 +3775,9 @@ and this does the final selection:
 
 =cut
 
-*setops = \&PDL::setops;
+*setops = \&PDLA::setops;
 
-sub PDL::setops {
+sub PDLA::setops {
 
   my ($a, $op, $b)=@_;
 
@@ -3874,9 +3874,9 @@ Find all numbers less that 100 that are of the form 2*y and 3*x
 
 =cut
 
-*intersect = \&PDL::intersect;
+*intersect = \&PDLA::intersect;
 
-sub PDL::intersect {
+sub PDLA::intersect {
 
    return setops($_[0], 'AND', $_[1]);
 
@@ -3899,8 +3899,8 @@ by Christian Soeller (c.soeller@auckland.ac.nz), Karl Glazebrook
 and Jarle Brinchmann (jarle@astro.up.pt)
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 Updated for CPAN viewing compatibility by David Mertens.

@@ -2,18 +2,18 @@ pp_addpm({At=>Top},<<'EOD');
 
 =head1 NAME
 
-PDL::Slatec - PDL interface to the slatec numerical programming library
+PDLA::Slatec - PDLA interface to the slatec numerical programming library
 
 =head1 SYNOPSIS
 
- use PDL::Slatec;
+ use PDLA::Slatec;
 
  ($ndeg, $r, $ierr, $a) = polyfit($x, $y, $w, $maxdeg, $eps);
 
 =head1 DESCRIPTION
 
 This module serves the dual purpose of providing an interface to
-parts of the slatec library and showing how to interface PDL
+parts of the slatec library and showing how to interface PDLA
 to an external library.
 Using this library requires a fortran compiler; the source for the routines
 is provided for convenience.
@@ -114,8 +114,8 @@ Separates supplied arguments and return values.
 =for ref
 
 Fit discrete data in a least squares sense by polynomials
-in one variable.  Handles threading correctly--one can pass in a 2D PDL (as C<$y>)
-and it will pass back a 2D PDL, the rows of which are the polynomial regression
+in one variable.  Handles threading correctly--one can pass in a 2D PDLA (as C<$y>)
+and it will pass back a 2D PDLA, the rows of which are the polynomial regression
 results (in C<$r> corresponding to the rows of $y.
 
 =for usage
@@ -180,7 +180,7 @@ Separates supplied arguments and return values.
 
 For multiple input x positions, a corresponding y position is calculated.
 
-The derivatives PDL is one dimensional (of size C<nder>) if a single x
+The derivatives PDLA is one dimensional (of size C<nder>) if a single x
 position is supplied, two dimensional if more than one x position is
 supplied.                                                                     
 
@@ -219,9 +219,9 @@ C<detslatec> computes the determinant of an invertible matrix and barfs if
 the matrix argument provided is non-invertible. The matrix threads as usual.
 
 This routine was previously known as C<det> which clashes now with
-L<det|PDL::MatrixOps/det> which is provided by L<PDL::MatrixOps>.
+L<det|PDLA::MatrixOps/det> which is provided by L<PDLA::MatrixOps>.
 
-=head2 PDL::Slatec::fft
+=head2 PDLA::Slatec::fft
 
 =for ref
 
@@ -230,13 +230,13 @@ Fast Fourier Transform
 =for example
 
   $v_in = pdl(1,0,1,0);
-  ($azero,$a,$b) = PDL::Slatec::fft($v_in);
+  ($azero,$a,$b) = PDLA::Slatec::fft($v_in);
 
-C<PDL::Slatec::fft> is a convenience wrapper for L<ezfftf|ezfftf>, and
+C<PDLA::Slatec::fft> is a convenience wrapper for L<ezfftf|ezfftf>, and
 performs a Fast Fourier Transform on an input vector C<$v_in>. The
 return values are the same as for L<ezfftf|ezfftf>.
 
-=head2 PDL::Slatec::rfft
+=head2 PDLA::Slatec::rfft
 
 =for ref
 
@@ -244,15 +244,15 @@ reverse Fast Fourier Transform
 
 =for example
 
-  $v_out = PDL::Slatec::rfft($azero,$a,$b);
+  $v_out = PDLA::Slatec::rfft($azero,$a,$b);
   print $v_in, $vout
   [1 0 1 0] [1 0 1 0]
 
-C<PDL::Slatec::rfft> is a convenience wrapper for L<ezfftb|ezfftb>,
+C<PDLA::Slatec::rfft> is a convenience wrapper for L<ezfftb|ezfftb>,
 and performs a reverse Fast Fourier Transform. The input is the same
-as the output of L<PDL::Slatec::fft|/PDL::Slatec::fft>, and the output
+as the output of L<PDLA::Slatec::fft|/PDLA::Slatec::fft>, and the output
 of C<rfft> is a data vector, similar to what is input into
-L<PDL::Slatec::fft|/PDL::Slatec::fft>.
+L<PDLA::Slatec::fft|/PDLA::Slatec::fft>.
 
 =cut
 
@@ -262,7 +262,7 @@ use strict;
 
 # for MDim, ld[str] is interpreted as "leading dimension of ..."
 
-# Making the BAD BAD BAD assumption that PDL_Long == int 
+# Making the BAD BAD BAD assumption that PDLA_Long == int 
 # in fortran. BAD BAD BAD XXX (I'm going to regret this)
 
 my %ftypes = (S => 'F', D => 'D');
@@ -300,7 +300,7 @@ open( PROTOS, "> SlatecProtos.h" );
 
 # defslatec( $pdlname, $funcnames, $argstr, $docstring, $funcref )
 #
-# $pdlname is the name of the PDL function to be created
+# $pdlname is the name of the PDLA function to be created
 # $funcnames is a reference to a hash array, whose keys define
 # the single (S), and double precision (D) names of the
 # SLATEC routines to be linked to.
@@ -315,7 +315,7 @@ open( PROTOS, "> SlatecProtos.h" );
 #     - used in the PCHIP functions to specify the INCFD argument
 #       that we force to be 1, so the user never has to specify it
 #       (this allows the PCHIP routines to use 2D data, but as it's
-#        done in FORTRAN array order, and PDL has a much richer way
+#        done in FORTRAN array order, and PDLA has a much richer way
 #        of accessing parts of an array we force the data to be 1D).
 #   CheckFlag
 #     - the PCHIP routined may change the value from 0 to 1 if an
@@ -482,24 +482,24 @@ pp_add_exported('',"eigsys matinv polyfit polycoef polyvalue");
 
 pp_addpm(<<'END');
 
-use PDL::Core;
-use PDL::Basic;
-use PDL::Primitive;
-use PDL::Ufunc;
+use PDLA::Core;
+use PDLA::Basic;
+use PDLA::Primitive;
+use PDLA::Ufunc;
 use strict;
 
 # Note: handles only real symmetric positive-definite.
 
-*eigsys = \&PDL::eigsys;
+*eigsys = \&PDLA::eigsys;
 
-sub PDL::eigsys {
+sub PDLA::eigsys {
 	my($h) = @_;
 	$h = float($h);
 	rs($h, 
-		(my $eigval=PDL->null),
-		(long (pdl (1))),(my $eigmat=PDL->null),
-		(my $fvone = PDL->null),(my $fvtwo = PDL->null),
-		(my $errflag=PDL->null)
+		(my $eigval=PDLA->null),
+		(long (pdl (1))),(my $eigmat=PDLA->null),
+		(my $fvone = PDLA->null),(my $fvtwo = PDLA->null),
+		(my $errflag=PDLA->null)
 	);
 #	print $covar,$eigval,$eigmat,$fvone,$fvtwo,$errflag;
 	if(sum($errflag) > 0) {
@@ -508,9 +508,9 @@ sub PDL::eigsys {
 	return ($eigval,$eigmat);
 }
 
-*matinv = \&PDL::matinv;
+*matinv = \&PDLA::matinv;
 
-sub PDL::matinv {
+sub PDLA::matinv {
 	my($m) = @_;
 	my(@dims) = $m->dims;
 
@@ -527,8 +527,8 @@ sub PDL::matinv {
 	$m;
 }
 
-*detslatec = \&PDL::detslatec;
-sub PDL::detslatec {
+*detslatec = \&PDLA::detslatec;
+sub PDLA::detslatec {
 	my($m) = @_;
 	$m = $m->copy(); # Make sure we don't overwrite :(
 	gefa($m,(my $ipvt=null),(my $info=null));
@@ -542,7 +542,7 @@ sub PDL::detslatec {
 
 sub prepfft {
 	my($n) = @_;
-	my $tmp = PDL->zeroes(float(),$n*3+15);
+	my $tmp = PDLA->zeroes(float(),$n*3+15);
 	$n = pdl $n;
 	ezffti($n,$tmp);
 	return $tmp;
@@ -551,8 +551,8 @@ sub prepfft {
 sub fft (;@) {
 	my($v) = @_;
 	my $ws = prepfft($v->getdim(0));
-	ezfftf($v,(my $az = PDL->null), (my $a = PDL->null),
-		  (my $b = PDL->null), $ws);
+	ezfftf($v,(my $az = PDLA->null), (my $a = PDLA->null),
+		  (my $b = PDLA->null), $ws);
 	return ($az,$a,$b);
 }
 
@@ -567,8 +567,8 @@ sub rfft {
 # polynomial fitting routines
 # simple wrappers around the SLATEC implementations
 
-*polyfit = \&PDL::polyfit;
-sub PDL::polyfit {
+*polyfit = \&PDLA::polyfit;
+sub PDLA::polyfit {
   barf 'Usage: polyfit($x, $y, $w, $maxdeg, [$eps]);'
     unless (@_ == 5 || @_==4 );
 
@@ -579,22 +579,22 @@ sub PDL::polyfit {
   $w_in = $w_in + $y_in->zeros;
 
   # Create the output arrays
-  my $r = PDL->null;
+  my $r = PDLA->null;
 
   # A array needs some work space
   my $sz = ((3 * $x_in->getdim(0)) + (3*$maxdeg_in) + 3); # Buffer size called for by Slatec
   my @otherdims = $_[0]->dims; shift @otherdims;          # Thread dims
-  my $a =      PDL::new_from_specification('PDL',$x_in->type,$sz,@otherdims);
-  my $coeffs = PDL::new_from_specification('PDL',$x_in->type, $maxdeg_in + 1, @otherdims);
+  my $a =      PDLA::new_from_specification('PDLA',$x_in->type,$sz,@otherdims);
+  my $coeffs = PDLA::new_from_specification('PDLA',$x_in->type, $maxdeg_in + 1, @otherdims);
 
-  my $ierr = PDL->null;
-  my $ndeg = PDL->null;
+  my $ierr = PDLA->null;
+  my $ndeg = PDLA->null;
 
   # Now call polfit
   my $rms = pdl($eps_in);                                       
   polfit($x_in, $y_in, $w_in, $maxdeg_in, $ndeg, $rms, $r, $ierr, $a, $coeffs);
   # Preserve historic compatibility by flowing rms error back into the argument
-  if( UNIVERSAL::isa($eps_in,'PDL') ){
+  if( UNIVERSAL::isa($eps_in,'PDLA') ){
       $eps_in .= $rms;
   }
 
@@ -607,16 +607,16 @@ sub PDL::polyfit {
 }
 
 
-*polycoef = \&PDL::polycoef;
-sub PDL::polycoef {
+*polycoef = \&PDLA::polycoef;
+sub PDLA::polycoef {
   barf 'Usage: polycoef($l, $c, $a);'
     unless @_ == 3;
 
-  # Allocate memory for return PDL
+  # Allocate memory for return PDLA
   # Simply l + 1 but cant see how to get PP to do this - TJ
   # Not sure the return type since I do not know
   # where PP will get the information from
-  my $tc = PDL->zeroes( abs($_[0]) + 1 );                                     
+  my $tc = PDLA->zeroes( abs($_[0]) + 1 );                                     
 
   # Run the slatec routine
   pcoef($_[0], $_[1], $tc, $_[2]);
@@ -626,13 +626,13 @@ sub PDL::polycoef {
 
 }
 
-*polyvalue = \&PDL::polyvalue;
-sub PDL::polyvalue {
+*polyvalue = \&PDLA::polyvalue;
+sub PDLA::polyvalue {
   barf 'Usage: polyvalue($l, $nder, $x, $a);'
     unless @_ == 4;
 
   # Two output arrays
-  my $yfit = PDL->null;
+  my $yfit = PDLA->null;
 
   # This one must be preallocated and must take into account
   # the size of $x if greater than 1
@@ -1676,8 +1676,8 @@ Copyright (C) 1997 Tuomas J. Lukka.
 Copyright (C) 2000 Tim Jenness, Doug Burke.            
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL 
-distribution. If this file is separated from the PDL distribution, 
+conditions. For details, see the file COPYING in the PDLA 
+distribution. If this file is separated from the PDLA distribution, 
 the copyright notice should be included in the file.
 
 =cut

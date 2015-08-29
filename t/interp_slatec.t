@@ -1,28 +1,28 @@
 # NOTE: 
 #  currently not in use anymore
-#  - see PDL::Func (in Lib/) and t/func.t
-use Test::More skip_all => 'See PDL::Func';
-use PDL::LiteF;
+#  - see PDLA::Func (in Lib/) and t/func.t
+use Test::More skip_all => 'See PDLA::Func';
+use PDLA::LiteF;
 
 BEGIN {
-    eval "use PDL::Slatec;";
-    plan skip_all => "PDL::Slatec: '$@'" if $@;
+    eval "use PDLA::Slatec;";
+    plan skip_all => "PDLA::Slatec: '$@'" if $@;
 }
 
 plan tests => 11;
 
 use strict;
 
-eval "use PDL::Interpolate::Slatec";
+eval "use PDLA::Interpolate::Slatec";
 
 ########### First test normal subclassing ###########
 
 my $x   = sequence(float,10);
 my $y   = $x*$x + 0.5;
 
-my $obj = new PDL::Interpolate::Slatec( x => $x, y => $y );
+my $obj = new PDLA::Interpolate::Slatec( x => $x, y => $y );
 
-isa_ok $obj, 'PDL::Interpolate';
+isa_ok $obj, 'PDLA::Interpolate';
 is $obj->library, "Slatec";
 is( $obj->status, 1 );
 

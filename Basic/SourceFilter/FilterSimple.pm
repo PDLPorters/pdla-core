@@ -1,4 +1,4 @@
-# This is the new Filter::Simple engine for PDL::NiceSlice
+# This is the new Filter::Simple engine for PDLA::NiceSlice
 #
 use Filter::Simple;
 
@@ -8,10 +8,10 @@ FILTER_ONLY
       sub {
       my ($text1,$text2) = ($_,'');
       ## print STDERR "**************** Input: \n$text1\n";
-      $text2 = perldlpp('PDL::NiceSlice', $text1);
+      $text2 = perldlpp('PDLA::NiceSlice', $text1);
       ## print STDERR "**************** Output: $text2\n";
       $_ = $text2;
    },
-   all => sub { print if $PDL::NiceSlice::debug_filter };
+   all => sub { print if $PDLA::NiceSlice::debug_filter };
 
 1;

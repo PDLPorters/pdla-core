@@ -7,7 +7,7 @@
 use strict;
 use warnings;
 use Test::More;
-use PDL::LiteF;
+use PDLA::LiteF;
 
 # First some Inline administivia.
 BEGIN {
@@ -93,7 +93,7 @@ $b = $a->testinc;
 ok(all ($b == $a+1), 'Sanity check runs correctly');
 
 # Test the inability to comment-out a threadloop. This is documented on the
-# 11th page of the PDL::PP chapter of the PDL book. If somebody ever fixes this
+# 11th page of the PDLA::PP chapter of the PDLA book. If somebody ever fixes this
 # wart, this test will fail, in which case the book's text should be updated.
 $b = $a->testinc2;
 TODO: {

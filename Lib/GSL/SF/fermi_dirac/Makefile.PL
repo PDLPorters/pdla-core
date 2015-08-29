@@ -3,7 +3,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 our ($GSL_includes, $GSL_libs); 
-my @pack = (['gsl_sf_fermi_dirac.pd', qw(FERMI_DIRAC PDL::GSLSF::FERMI_DIRAC)]);
+my @pack = (['gsl_sf_fermi_dirac.pd', qw(FERMI_DIRAC PDLA::GSLSF::FERMI_DIRAC)]);
 my %hash = pdlpp_stdargs_int(@pack);
 $hash{INC} .= ' '.$GSL_includes;
 push @{$hash{LIBS}},$GSL_libs;

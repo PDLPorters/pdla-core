@@ -3,7 +3,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-	      NAME => "PDL::Interpolate",
+	      NAME => "PDLA::Interpolate",
 	      VERSION_FROM => "../../Basic/Core/Version.pm",
               DIR => [ 'Slatec' ],
 );

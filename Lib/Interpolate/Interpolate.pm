@@ -1,31 +1,31 @@
 
 =head1 NAME
 
-PDL::Interpolate - provide a consistent interface to the interpolation routines available in PDL
+PDLA::Interpolate - provide a consistent interface to the interpolation routines available in PDLA
 
 =head1 SYNOPSIS
 
- use PDL::Interpolate;
+ use PDLA::Interpolate;
 
- my $i = new PDL::Interpolate( x => $x, y = $y );
+ my $i = new PDLA::Interpolate( x => $x, y = $y );
  my $y = $i->interpolate( $xi ); 
 
 =head1 DESCRIPTION
 
 This module aims to provide a relatively-uniform interface
-to the various interpolation methods available to PDL.
+to the various interpolation methods available to PDLA.
 The idea is that a different interpolation scheme
 can be used just by changing the C<new> call.
 
-At present, PDL::Interpolate itself just provides
+At present, PDLA::Interpolate itself just provides
 a somewhat-convoluted interface to the C<interpolate>
-function of L<PDL::Primitive|PDL::Primitive/interpolate>. 
+function of L<PDLA::Primitive|PDLA::Primitive/interpolate>. 
 However, it is expected that derived classes,
 such as 
-L<PDL::Interpolate::Slatec|PDL::Interpolate::Slatec>,
+L<PDLA::Interpolate::Slatec|PDLA::Interpolate::Slatec>,
 will actually be used in real-world situations.
 
-To use, create a PDL::Interpolate (or a derived class)
+To use, create a PDLA::Interpolate (or a derived class)
 object, supplying it with its required attributes.
 
 =head1 LIBRARIES
@@ -34,13 +34,13 @@ Currently, the avaliable classes are
 
 =over 4
 
-=item PDL::Interpolate
+=item PDLA::Interpolate
 
-Provides an interface to the interpolation routines of PDL.
+Provides an interface to the interpolation routines of PDLA.
 At present this is the linear interpolation routine
-L<PDL::Primitive::interpol|PDL::Primitive/interpol>.
+L<PDLA::Primitive::interpol|PDLA::Primitive/interpol>.
 
-=item PDL::Interpolate::Slatec
+=item PDLA::Interpolate::Slatec
 
 The SLATEC library contains several approaches to interpolation:
 piecewise cubic Hermite functions and B-splines.
@@ -90,12 +90,12 @@ to be interpolated whilst C<$xi> and C<$yi> are the interpolated values.
 =head1 THREADING
 
 The class will thread properly if the routines it calls do so.
-See the SYNOPSIS section of L<PDL::Interpolate::Slatec>
+See the SYNOPSIS section of L<PDLA::Interpolate::Slatec>
 (if available) for an example.
 
 =cut
 
-package PDL::Interpolate;
+package PDLA::Interpolate;
 
 use Carp;
 use strict;
@@ -108,17 +108,17 @@ use strict;
 
 =for usage
 
- $obj = new PDL::Interpolate( x => $x, y => $y );
+ $obj = new PDLA::Interpolate( x => $x, y => $y );
 
 =for ref
 
-Create a PDL::Interpolate object.
+Create a PDLA::Interpolate object.
 
 The required L<attributes|/attributes> are 
 C<x> and C<y>.
 At present the only available interpolation method 
 is C<"linear"> - which just uses
-L<PDL::Primitive::interpolate|PDL::Primitive::interpolate> - and
+L<PDLA::Primitive::interpolate|PDLA::Primitive::interpolate> - and
 there are no options for boundary conditions, which is why
 the C<type> and C<bc> attributes can not be changed.
 
@@ -138,7 +138,7 @@ sub new {
 	attributes => {},
 	values     => {},
 	types      => { required => 0, settable => 0, gettable => 0 },
-	flags      => { library => "PDL", status => 1, routine => "none", changed => 1 },
+	flags      => { library => "PDLA", status => 1, routine => "none", changed => 1 },
     };
 
     # make $self into an object
@@ -260,7 +260,7 @@ sub _add_attr_type {
 ####################################################################
 
 # if an attribute has changed, check all required attributes
-# still exist and re-initialise the object (for PDL::Interpolate
+# still exist and re-initialise the object (for PDLA::Interpolate
 # this is a nop)
 #
 sub _check_attr {
@@ -288,7 +288,7 @@ sub _check_attr {
 #
 # method to be over-ridden by sub-classes
 
-# PDL::Interpolate needs no initialisation
+# PDLA::Interpolate needs no initialisation
 #
 sub _initialise {}
 
@@ -343,7 +343,7 @@ sub _get_value {
 
 =for ref
 
-Set attributes for a PDL::Interpolate object.
+Set attributes for a PDLA::Interpolate object.
 
 The return value gives the number of the supplied attributes
 which were actually set. 
@@ -378,7 +378,7 @@ sub set {
 
 =for ref
 
-Get attributes from a PDL::Interpolate object.
+Get attributes from a PDLA::Interpolate object.
 
 Given a list of attribute names, return a list of
 their values; in scalar mode return a scalar value.
@@ -436,7 +436,7 @@ sub interpolate {
     # get values in one go
     my ( $x, $y ) = $self->_get_value( qw( x y ) );
 
-    my ( $yi, $err ) = PDL::Primitive::interpolate( $xi, $x, $y );
+    my ( $yi, $err ) = PDLA::Primitive::interpolate( $xi, $x, $y );
 
     if ( any $err ) {
 	$self->{flags}->{status} = -1;
@@ -462,7 +462,7 @@ sub interpolate {
 
 =for ref
 
-Returns the status of a PDL::Interpolate object
+Returns the status of a PDLA::Interpolate object
 
 Returns B<1> if everything is okay, B<0> if 
 there has been a serious error since the last time
@@ -484,9 +484,9 @@ sub status { my $self = shift; return $self->{flags}->{status}; }
 
 =for ref
 
-Returns the name of the library used by a PDL::Interpolate object
+Returns the name of the library used by a PDLA::Interpolate object
 
-For PDL::Interpolate, the library name is C<"PDL">.
+For PDLA::Interpolate, the library name is C<"PDLA">.
 
 =cut
 
@@ -500,9 +500,9 @@ sub library { my $self = shift; return $self->{flags}->{library}; }
 
 =for ref
 
-Returns the name of the last routine called by a PDL::Interpolate object.
+Returns the name of the last routine called by a PDLA::Interpolate object.
 
-For PDL::Interpolate, the only routine used is C<"interpolate">.
+For PDLA::Interpolate, the only routine used is C<"interpolate">.
 This will be more useful when calling derived classes,
 in particular when trying to decode the values stored in the
 C<err> attribute.
@@ -516,7 +516,7 @@ sub routine { my $self = shift; return $self->{flags}->{routine}; }
 =for usage
 
  $obj->attributes;
- PDL::Interpolate::attributes;
+ PDLA::Interpolate::attributes;
 
 =for ref
 
@@ -525,7 +525,7 @@ Useful in case the documentation is just too opaque!
 
 =for example
 
- PDL::Interpolate->attributes;
+ PDLA::Interpolate->attributes;
  Flags  Attribute
   SGR    x
   SGR    y
@@ -567,11 +567,11 @@ sub attributes {
 Copyright (C) 2000 Doug Burke (burke@ifa.hawaii.edu).
 All rights reserved. There is no warranty. 
 You are allowed to redistribute this software / documentation as 
-described in the file COPYING in the PDL distribution.                                    
+described in the file COPYING in the PDLA distribution.                                    
 
 =head1 SEE ALSO
 
-L<PDL>, perltoot(1).
+L<PDLA>, perltoot(1).
 
 =cut
 

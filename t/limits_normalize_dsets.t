@@ -1,13 +1,13 @@
-use PDL;
+use PDLA;
 
 print "1..21\n";
 
 my $got = 0;
-eval{require PDL::Slatec;};
+eval{require PDLA::Slatec;};
 if(!$@) {$got = 1}
 
 if($got) {
-  eval{require PDL::Graphics::Limits;};
+  eval{require PDLA::Graphics::Limits;};
   if($@) {$got = 0}
   }
 
@@ -16,8 +16,8 @@ unless($got) {
   exit;
   }
 
-*normalize_dsets = \&PDL::Graphics::Limits::normalize_dsets;
-*parse_vecspecs = \&PDL::Graphics::Limits::parse_vecspecs;
+*normalize_dsets = \&PDLA::Graphics::Limits::normalize_dsets;
+*parse_vecspecs = \&PDLA::Graphics::Limits::parse_vecspecs;
 
 # temporarily disable warnings to turn off Perl's
 # redefinition warning
@@ -29,8 +29,8 @@ BEGIN {
 
 # so can use _eq_array w/ piddles. 
 {
-  package PDL;
-  use overload 'eq' => \&PDL::eq,
+  package PDLA;
+  use overload 'eq' => \&PDLA::eq,
     'bool' => sub { $_[0]->and } ;
 }
 

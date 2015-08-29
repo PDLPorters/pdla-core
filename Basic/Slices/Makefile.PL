@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-my @pack = (["slices.pd", qw(Slices PDL::Slices)]);
+my @pack = (["slices.pd", qw(Slices PDLA::Slices)]);
 
 my %hash =pdlpp_stdargs_int(@pack);
 

@@ -4,7 +4,7 @@ $^W = 0;
 
 # Five tests for each of two types:
 use Test::More tests => 10;
-use PDL::PP qw(foo::bar foo::bar foobar);
+use PDLA::PP qw(foo::bar foo::bar foobar);
 
 # Add some tests for pp_line_numbers:
 pp_def(test1 =>

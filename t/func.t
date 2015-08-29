@@ -1,17 +1,17 @@
 # -*-perl-*-
 #
 use Test;
-use PDL::LiteF;
+use PDLA::LiteF;
 
 BEGIN {
     $loaded = 0; $slatec = 0;
     # Must load slatec before Func since Func loads slatec itself
     # and this line will be a no-op (and so we will not be able to
     # spot that Slatec has failed)
-    eval "use PDL::Slatec";
+    eval "use PDLA::Slatec";
     $slatec = ($@ ? 0 : 1);
 
-    eval "use PDL::Func;";
+    eval "use PDLA::Func;";
     $loaded = ($@ ? 0 : 1);
 
     plan tests => $slatec ? 16 : 5;
@@ -22,7 +22,7 @@ BEGIN {
 my $x = float( 1, 2, 3, 4, 5, 6, 8, 10 );
 my $y = ($x * 3) * ($x - 2);
 
-my $obj = init PDL::Func ( x => $x, y => $y );
+my $obj = init PDLA::Func ( x => $x, y => $y );
 ok( $obj->scheme() eq "Linear" );  # 1
 
 my $xi = $x - 0.5;
@@ -30,7 +30,7 @@ my $yi = $obj->interpolate( $xi );
 ok( $obj->status == -1 );
 
 # compare to direct version
-my ( $ans, $err ) = PDL::Primitive::interpolate( $xi, $x, $y );
+my ( $ans, $err ) = PDLA::Primitive::interpolate( $xi, $x, $y );
 my $d = abs( $ans - $yi ); 
 ok( all $d < 1.0e-5 );
 

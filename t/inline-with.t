@@ -1,10 +1,10 @@
-# This test checks this works: use Inline with => 'PDL';
-# Also that the XS code in PDL::API works.
+# This test checks this works: use Inline with => 'PDLA';
+# Also that the XS code in PDLA::API works.
 
 use strict;
 use warnings;
 use Test::More;
-use PDL::LiteF;
+use PDLA::LiteF;
 
 my $inline_test_dir;
 # First some Inline administrivia.
@@ -40,24 +40,24 @@ END {
 
 SKIP: {
   #use Inline 'INFO'; # use to generate lots of info
-  use_ok 'Inline', with => 'PDL' or skip 'with PDL failed', 3;
+  use_ok 'Inline', with => 'PDLA' or skip 'with PDLA failed', 3;
   eval { Inline->bind(C => <<'EOF') };
-static pdl* new_pdl(int datatype, PDL_Indx dims[], int ndims)
+static pdl* new_pdl(int datatype, PDLA_Indx dims[], int ndims)
 {
-  pdl *p = PDL->pdlnew();
-  PDL->setdims (p, dims, ndims);  /* set dims */
+  pdl *p = PDLA->pdlnew();
+  PDLA->setdims (p, dims, ndims);  /* set dims */
   p->datatype = datatype;         /* and data type */
-  PDL->allocdata (p);             /* allocate the data chunk */
+  PDLA->allocdata (p);             /* allocate the data chunk */
 
   return p;
 }
 
 pdl* myfloatseq()
 {
-  PDL_Indx dims[] = {5,5,5};
-  pdl *p = new_pdl(PDL_F,dims,3);
-  PDL_Float *dataf = (PDL_Float *) p->data;
-  PDL_Indx i; /* dimensions might be 64bits */
+  PDLA_Indx dims[] = {5,5,5};
+  pdl *p = new_pdl(PDLA_F,dims,3);
+  PDLA_Float *dataf = (PDLA_Float *) p->data;
+  PDLA_Indx i; /* dimensions might be 64bits */
 
   for (i=0;i<5*5*5;i++)
     dataf[i] = i; /* the data must be initialized ! */

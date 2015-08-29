@@ -1,14 +1,14 @@
 =head1 NAME
 
-PDL::Filter::Linear - linear filtering for PDL
+PDLA::Filter::Linear - linear filtering for PDLA
 
 =head1 SYNOPSIS
 
-	$a = new PDL::Filter::Linear(
+	$a = new PDLA::Filter::Linear(
 		{Weights => $v,
 		 Point => 10});
 
-	$b = new PDL::Filter::Gaussian(15,2); # 15 points, 2 std devn.
+	$b = new PDLA::Filter::Gaussian(15,2); # 15 points, 2 std devn.
 
 	($pred,$corrslic) = $a->predict($dat);
 
@@ -22,11 +22,11 @@ useful.
 
 =cut
 
-package PDL::Filter::Linear;
-use PDL;
-use PDL::Basic;
-use PDL::Slices;
-use PDL::Primitive;
+package PDLA::Filter::Linear;
+use PDLA;
+use PDLA::Basic;
+use PDLA::Slices;
+use PDLA::Primitive;
 use strict;
 
 sub new($$) {
@@ -43,47 +43,47 @@ sub predict($$) {
 	my($this,$data) = @_;
 	my $ldata = $data->lags(0,1,$this->{Weights}->getdim(0));
 	inner($ldata->xchg(0,1),$this->{Weights},
-		(my $pred = PDL->null));
+		(my $pred = PDLA->null));
 	return wantarray ?  ($pred,$ldata->slice(":,($this->{Point})")) :
 		$pred ;
 }
 
-package PDL::Filter::Gaussian;
-use PDL; use PDL::Basic; use PDL::Slices; use PDL::Primitive;
+package PDLA::Filter::Gaussian;
+use PDLA; use PDLA::Basic; use PDLA::Slices; use PDLA::Primitive;
 use strict;
 
-@PDL::Filter::Gaussian::ISA = qw/PDL::Filter::Linear/;
+@PDLA::Filter::Gaussian::ISA = qw/PDLA::Filter::Linear/;
 
 sub new($$) {
 	my($type,$npoints,$sigma) = @_;
 	my $cent = int($npoints/2);
-	my $x = ((PDL->zeroes($npoints )->xvals) - $cent)->float;
+	my $x = ((PDLA->zeroes($npoints )->xvals) - $cent)->float;
 	my $y = exp(-($x**2)/(2*$sigma**2));
 # Normalize to unit total
 	$y /= sum($y);
-	return PDL::Filter::Linear::new($type,{Weights => $y,
+	return PDLA::Filter::Linear::new($type,{Weights => $y,
 			Point => $cent});
 }
 
 # Savitzky-Golay (see Numerical Recipes)
-package PDL::Filter::SavGol;
-use PDL; use PDL::Basic; use PDL::Slices; use PDL::Primitive;
+package PDLA::Filter::SavGol;
+use PDLA; use PDLA::Basic; use PDLA::Slices; use PDLA::Primitive;
 use strict;
 
-@PDL::Filter::Gaussian::ISA = qw/PDL::Filter::Linear/;
+@PDLA::Filter::Gaussian::ISA = qw/PDLA::Filter::Linear/;
 
 # XXX Doesn't work
 sub new($$) {
 	my($type,$deg,$nleft,$nright) = @_;
 	my $npoints = $nright + $nleft + 1;
-	my $x = ((PDL->zeroes($npoints )->xvals) - $nleft)->float;
-	my $mat1 = ((PDL->zeroes($npoints,$deg+1)->xvals))->float;
+	my $x = ((PDLA->zeroes($npoints )->xvals) - $nleft)->float;
+	my $mat1 = ((PDLA->zeroes($npoints,$deg+1)->xvals))->float;
 	for(0..$deg-1) {
 		(my $tmp = $mat1->slice(":,($_)")) .= ($x ** $_);
 	}
 	my $y;
 # Normalize to unit total
-	return PDL::Filter::Linear::new($type,{Weights => $y,
+	return PDLA::Filter::Linear::new($type,{Weights => $y,
 			Point => $nleft});
 }
 

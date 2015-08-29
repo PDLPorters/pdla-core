@@ -3,7 +3,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    'NAME'         => 'PDL::Doc',
+    'NAME'         => 'PDLA::Doc',
     'VERSION_FROM' => '../Basic/Core/Version.pm',
     'LIBS'         => [''],   # e.g., '-lm'
     'DEFINE'       => '',     # e.g., '-DHAVE_SOMETHING'

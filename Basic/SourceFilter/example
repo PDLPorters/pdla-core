@@ -1,5 +1,5 @@
-use PDL::LiteF;
-use PDL::NiceSlice;
+use PDLA::LiteF;
+use PDLA::NiceSlice;
    
 $a = sequence(10);
 
@@ -27,14 +27,14 @@ print '$a'.'(1:end(0,22)) -> $a(1:end(0,22))',"\n\n";
 print "recursive invocation is also supported:\n";
 print '$a'.'(1,$b'.'(0:22)) -> $a(1,$b(0:22))',"\n\n";
 
-no PDL::NiceSlice;
+no PDLA::NiceSlice;
 
 
 print << 'EOP';
 
 Now we have switched off source filtering by issuing
 
-     no PDL::NiceSlice;
+     no PDLA::NiceSlice;
 
 Therefore, the next slice expression should not be touched:
 

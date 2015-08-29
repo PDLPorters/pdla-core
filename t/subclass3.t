@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test::More tests => 7;
 
 
@@ -10,10 +10,10 @@ use Test::More tests => 7;
 $main::OVERRIDEWORKED = 0;
 
 
-##  First define a PDL-derived object:
-package PDL::Derived;
+##  First define a PDLA-derived object:
+package PDLA::Derived;
 
-@PDL::Derived::ISA = qw/PDL/;
+@PDLA::Derived::ISA = qw/PDLA/;
 
 
 sub new {
@@ -22,9 +22,9 @@ sub new {
    my $data = $_[0];
 
    my $self;
-   if(ref($data) eq 'PDL' ){ # if $data is an object (a pdl)
+   if(ref($data) eq 'PDLA' ){ # if $data is an object (a pdl)
 	   $self = $class->initialize;
-	   $self->{PDL} = $data;
+	   $self->{PDLA} = $data;
    }
    else{	# if $data not an object call inherited constructor
 	   $self = $class->SUPER::new($data);
@@ -34,11 +34,11 @@ sub new {
    return $self;
 }
 
-####### Initialize function. This over-ridden function is called by the PDL constructors
+####### Initialize function. This over-ridden function is called by the PDLA constructors
 sub initialize {
 	my $class = shift;
         my $self = {
-                PDL => PDL->null, 	# used to store PDL object
+                PDLA => PDLA->null, 	# used to store PDLA object
 		someThingElse => 42,
         };
 	$class = (ref $class ? ref $class : $class );
@@ -52,8 +52,8 @@ sub copy {
 	# setup the object
 	my $new = $self->initialize;
 	
-	# copy the PDL
-	$new->{PDL} = $self->{PDL}->SUPER::copy;
+	# copy the PDLA
+	$new->{PDLA} = $self->{PDLA}->SUPER::copy;
 
 	# copy the other stuff:
 	$new->{someThingElse} = $self->{someThingElse};
@@ -63,7 +63,7 @@ sub copy {
 }
 
 ### Check of over-riding sumover
-### This sumover should be called from PDL->sum. 
+### This sumover should be called from PDLA->sum. 
 ###  If the result is different from the normal sumover by $self->{SomethingElse} (42) then
 ###   we will know that it has been called.
 sub sumover{
@@ -125,7 +125,7 @@ package main;
 
 ###### Testing Begins #########
 
-$im = new PDL::Derived [
+$im = new PDLA::Derived [
   [ 1, 2,  3,  3 , 5],
   [ 2,  3,  4,  5,  6],
   [13, 13, 13, 13, 13],
@@ -134,8 +134,8 @@ $im = new PDL::Derived [
  ];
 
 
-# Check for PDL::sumover being called by sum
-ok($im->sum == 176, "PDL::sumover is called by sum" ); # result will be = 134 if derived sumover
+# Check for PDLA::sumover being called by sum
+ok($im->sum == 176, "PDLA::sumover is called by sum" ); # result will be = 134 if derived sumover
                                                        # is not called,   176 if it is called.
 
 ### Test over-ride of minmaximum:
@@ -153,14 +153,14 @@ ok($main::OVERRIDEWORKED == 1, "over-ride of inner");
 ### Test over-ride of which, one2nd
 $main::OVERRIDEWORKED = 0;
 # which ND test
-my $a= PDL::Derived->sequence(10,10,3,4);     
-# $PDL::whichND_no_warning = 1;
+my $a= PDLA::Derived->sequence(10,10,3,4);     
+# $PDLA::whichND_no_warning = 1;
 # my ($x, $y, $z, $w)=whichND($a == 203);
 # ok($main::OVERRIDEWORKED == 2, "whichND test");
 my ($x, $y, $z, $w) = whichND($a == 203)->mv(0,-1)->dog;  # quiet deprecation warning
 ok($main::OVERRIDEWORKED == 1, "whichND worked");         # whitebox test condition, uugh!
 
 # Check to see if the clip functions return a derived object:
-ok(ref( $im->clip(5,7) ) eq "PDL::Derived", "clip returns derived object");
-ok(ref( $im->hclip(5) ) eq "PDL::Derived", "hclip returns derived object");
-ok(ref( $im->lclip(5) ) eq "PDL::Derived", "lclip returns derived object");
+ok(ref( $im->clip(5,7) ) eq "PDLA::Derived", "clip returns derived object");
+ok(ref( $im->hclip(5) ) eq "PDLA::Derived", "hclip returns derived object");
+ok(ref( $im->lclip(5) ) eq "PDLA::Derived", "lclip returns derived object");

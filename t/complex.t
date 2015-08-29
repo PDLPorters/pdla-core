@@ -1,6 +1,6 @@
-use PDL::LiteF;
-use PDL::Complex;
-use PDL::Config;
+use PDLA::LiteF;
+use PDLA::Complex;
+use PDLA::Config;
 
 BEGIN {
    use Test::More tests => 17;
@@ -16,11 +16,11 @@ sub tapprox {
 $ref = pdl([[-2,1],[-3,1]]);
 $a = i - pdl(2,3);
 
-ok(ref $a eq PDL::Complex, 'type promotion i - piddle');
+ok(ref $a eq PDLA::Complex, 'type promotion i - piddle');
 ok(tapprox($a->real,$ref), 'value from i - piddle');
 
 $a = pdl(2,3) - i;
-ok(ref $a eq PDL::Complex, 'type promption piddle - i');
+ok(ref $a eq PDLA::Complex, 'type promption piddle - i');
 ok(tapprox($a->real,-$ref), 'value from piddle - i');
 
 # dataflow from complex to real
@@ -34,21 +34,21 @@ $a = cplx($ref);
 my $b = $a->Cr2p()->Cp2r();
 ok(tapprox($a-$b, 0), 'check re/im and mag/ang equivalence');
 
-# to test Cabs, Cabs2, Carg (ref PDL)
+# to test Cabs, Cabs2, Carg (ref PDLA)
 # Catan, Csinh, Ccosh, Catanh, Croots
 
 $cabs = sqrt($a->re**2+$a->im**2);
 
-ok(ref Cabs $a eq 'PDL', 'Cabs type');
-ok(ref Cabs2 $a eq 'PDL', 'Cabs2 type');
-ok(ref Carg $a eq 'PDL', 'Carg type');
+ok(ref Cabs $a eq 'PDLA', 'Cabs type');
+ok(ref Cabs2 $a eq 'PDLA', 'Cabs2 type');
+ok(ref Carg $a eq 'PDLA', 'Carg type');
 ok(tapprox($cabs, Cabs $a), 'Cabs value');
 ok(tapprox($cabs**2, Cabs2 $a), 'Cabs2 value');
 
-# Check cat'ing of PDL::Complex
+# Check cat'ing of PDLA::Complex
 $b = $a->copy + 1;
 my $bigArray = $a->cat($b);
-ok(abs($bigArray->sum() +  8 - 4*i) < .0001, 'check cat for PDL::Complex');
+ok(abs($bigArray->sum() +  8 - 4*i) < .0001, 'check cat for PDLA::Complex');
 
 my $z = pdl(0) + i*pdl(0);
 $z **= 2;
@@ -70,7 +70,7 @@ ok($r->at(0) < 100.000000001 && $r->at(0) > 99.999999999 && $r->at(1) == 0,
   'check that imaginary part is exactly zero'); # Wasn't always so
 
 TODO: {
-   local $TODO = "Known_problems sf.net bug #1176614" if ($PDL::Config{SKIP_KNOWN_PROBLEMS} or exists $ENV{SKIP_KNOWN_PROBLEMS} );
+   local $TODO = "Known_problems sf.net bug #1176614" if ($PDLA::Config{SKIP_KNOWN_PROBLEMS} or exists $ENV{SKIP_KNOWN_PROBLEMS} );
 
 
    # Check stringification of complex piddle

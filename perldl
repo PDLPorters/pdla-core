@@ -3,15 +3,15 @@
 ##########################################################################
 # Here starts the actual script
 
-# Simple shell for PDL
+# Simple shell for PDLA
 
 our ($VERSION, $HOME, $Modules);
 
 $VERSION = '1.357';
 
 print "perlDL shell v$VERSION
- PDL comes with ABSOLUTELY NO WARRANTY. For details, see the file
- 'COPYING' in the PDL distribution. This is free software and you
+ PDLA comes with ABSOLUTELY NO WARRANTY. For details, see the file
+ 'COPYING' in the PDLA distribution. This is free software and you
  are welcome to redistribute it under certain conditions, see
  the same file for details.\n";
 
@@ -44,21 +44,21 @@ $Modules = $Modules = "";	# pacify -w
 
 sub mypdlconfig {
   require Config; # pick up perl version info
-  eval 'require PDL::Version' if not defined $PDL::Version::VERSION;
-  eval 'require PDL::Config';
+  eval 'require PDLA::Version' if not defined $PDLA::Version::VERSION;
+  eval 'require PDLA::Config';
   eval "use Data::Dumper";
   my $hasdumper = $@ eq "" ? 1 : 0;
-  eval "use PDL::Bad;";
-  my $bflag = defined($PDL::Bad::Status) && $PDL::Bad::Status;
+  eval "use PDLA::Bad;";
+  my $bflag = defined($PDLA::Bad::Status) && $PDLA::Bad::Status;
 
-  my $txt = "\nSummary of my PDL configuration\n\n";
-  $txt .= "VERSION: PDL v$PDL::Version::VERSION";
+  my $txt = "\nSummary of my PDLA configuration\n\n";
+  $txt .= "VERSION: PDLA v$PDLA::Version::VERSION";
   $txt .= " (supports bad values)" if $bflag;
   $txt .= "\n\n";
-  if ($hasdumper && %PDL::Config) {
-    $txt .= Data::Dumper->Dump([{%PDL::Config}],['%PDL::Config']);
+  if ($hasdumper && %PDLA::Config) {
+    $txt .= Data::Dumper->Dump([{%PDLA::Config}],['%PDLA::Config']);
   } else {
-    $txt .= "Could not obtain \%PDL::Config\n";
+    $txt .= "Could not obtain \%PDLA::Config\n";
   }
   $txt .= Config::myconfig(); # append perl config info
 }
@@ -176,7 +176,7 @@ Usage: perldl [options]
   -m <module> unload module <module>
   -M <module> load module <module>
   -I <dir>    Add <dir> to include path.
-  -V          print PDL version info (e.g. for a bug report)
+  -V          print PDLA version info (e.g. for a bug report)
   -           Following arguments are files for input.
 
 EOP
@@ -196,7 +196,7 @@ if(!$read_from_file  and  -t STDIN) {
 my @enabled = ();
 push @enabled, "ReadLines" if $readlines;
 
-eval 'use PDL::NiceSlice';
+eval 'use PDLA::NiceSlice';
 unless ($@) {
   my $report = 0;
   sub report {
@@ -205,7 +205,7 @@ unless ($@) {
     return $ret;
   }
   my $preproc = sub { my ($txt) = @_;
-	  my $new = PDL::NiceSlice::perldlpp('main',$txt);
+	  my $new = PDLA::NiceSlice::perldlpp('main',$txt);
 	  print STDERR "processed $new\n" if report && $new ne $txt;
 	  return $new;
   };
@@ -339,8 +339,8 @@ sub endpage {
 
 
 sub startup_def {
-  return "PDL/default.pdl" if $^O =~ /win32/i;
-  return "PDL/default.perldlrc";
+  return "PDLA/default.pdl" if $^O =~ /win32/i;
+  return "PDLA/default.perldlrc";
 }
 
 
@@ -351,31 +351,31 @@ my $startup_file = -e "$HOME/.perldlrc" ? "$HOME/.perldlrc" : startup_def();
 print "Reading $startup_file...\n";
 
 eval 'require "'.$startup_file.'"';
-my $PDL_OK = ($@ eq "");
-if ($PDL_OK) {
-   require PDL::Version if not defined $PDL::Version::VERSION;
+my $PDLA_OK = ($@ eq "");
+if ($PDLA_OK) {
+   require PDLA::Version if not defined $PDLA::Version::VERSION;
    print "Type 'demo' for online demos\n";
-   eval "use PDL::Bad;";
-   my $bflag = defined($PDL::Bad::Status) && $PDL::Bad::Status;
+   eval "use PDLA::Bad;";
+   my $bflag = defined($PDLA::Bad::Status) && $PDLA::Bad::Status;
    if ( $bflag ) {
-      print "Loaded PDL v$PDL::Version::VERSION (supports bad values)\n";
+      print "Loaded PDLA v$PDLA::Version::VERSION (supports bad values)\n";
    } else {
-      print "Loaded PDL v$PDL::Version::VERSION\n";
+      print "Loaded PDLA v$PDLA::Version::VERSION\n";
    }
 }else{
-   warn "WARNING: Error loading PDL: '$@' - trying blib. \n";
+   warn "WARNING: Error loading PDLA: '$@' - trying blib. \n";
    eval "use blib";
    delete $INC{$startup_file};  # so require will try again!
    eval 'require "'.$startup_file.'"';
-   $PDL_OK = ($@ eq "");
-   if ($PDL_OK) {
-      require PDL::Version if not defined $PDL::Version::VERSION;
-      print "Loaded PDL v$PDL::Version::VERSION\n";
+   $PDLA_OK = ($@ eq "");
+   if ($PDLA_OK) {
+      require PDLA::Version if not defined $PDLA::Version::VERSION;
+      print "Loaded PDLA v$PDLA::Version::VERSION\n";
    }else{
-      warn "WARNING: PDL startup not found only plain perl available\n";
-      $PERLDL::PROMPT = 'perl> ';  # so there is visual indication of no PDL
+      warn "WARNING: PDLA startup not found only plain perl available\n";
+      $PERLDL::PROMPT = 'perl> ';  # so there is visual indication of no PDLA
 
-      eval << 'EOD'; # Fallback eval routine - proper one defined in PDL::Core
+      eval << 'EOD'; # Fallback eval routine - proper one defined in PDLA::Core
 
 sub eval_and_report {
    my $__code = shift; # Can be code ref or string
@@ -389,8 +389,8 @@ EOD
    }
 }
 
-print "\nNote: AutoLoader not enabled ('use PDL::AutoLoader' recommended)\n\n"
-  unless defined($PDL::AutoLoader::Rescan);
+print "\nNote: AutoLoader not enabled ('use PDLA::AutoLoader' recommended)\n\n"
+  unless defined($PDLA::AutoLoader::Rescan);
 
 if (-e 'local.perldlrc') {
     print "Reading local.perldlrc ...\n";
@@ -404,18 +404,18 @@ sub p { local $^W=0; print(@_); }  # suppress possible undefined var message
 
 my %demos =
     (
-     'pdl' => 'PDL::Demos::General', # have to protect pdl as it means something
-     '3d' => 'PDL::Demos::TriD1',
-     '3d2' => 'PDL::Demos::TriD2',
-     '3dgal' => 'PDL::Demos::TriDGallery',
-     'pgplot' => 'PDL::Demos::PGPLOT_demo',
-     'ooplot' => 'PDL::Demos::PGPLOT_OO_demo', # note: lowercase
-     'bad' => 'PDL::Demos::BAD_demo',
-     'bad2' => 'PDL::Demos::BAD2_demo',
-     'transform' => 'PDL::Demos::Transform_demo',
-     'cartography' => 'PDL::Demos::Cartography_demo',
-     'gnuplot' => 'PDL::Demos::Gnuplot_demo',
-     'prima' => 'PDL::Demos::Prima',
+     'pdl' => 'PDLA::Demos::General', # have to protect pdl as it means something
+     '3d' => 'PDLA::Demos::TriD1',
+     '3d2' => 'PDLA::Demos::TriD2',
+     '3dgal' => 'PDLA::Demos::TriDGallery',
+     'pgplot' => 'PDLA::Demos::PGPLOT_demo',
+     'ooplot' => 'PDLA::Demos::PGPLOT_OO_demo', # note: lowercase
+     'bad' => 'PDLA::Demos::BAD_demo',
+     'bad2' => 'PDLA::Demos::BAD2_demo',
+     'transform' => 'PDLA::Demos::Transform_demo',
+     'cartography' => 'PDLA::Demos::Cartography_demo',
+     'gnuplot' => 'PDLA::Demos::Gnuplot_demo',
+     'prima' => 'PDLA::Demos::Prima',
      );
 
 sub demo {
@@ -432,8 +432,8 @@ Use:
    demo pgplot      # PGPLOT graphics output (Req.: PGPLOT)
    demo OOplot      # PGPLOT OO interface    (Req.: PGPLOT)
 
-   demo gnuplot     # Gnuplot graphics (requires PDL::Graphics::Gnuplot)
-   demo prima       # Prima graphics (requires PDL::Graphics::Prima)
+   demo gnuplot     # Gnuplot graphics (requires PDLA::Graphics::Gnuplot)
+   demo prima       # Prima graphics (requires PDLA::Graphics::Prima)
 
    demo transform   # Coordinate transformations (Req.: PGPLOT)
    demo cartography # Cartographic projections (Req.: PGPLOT)
@@ -446,7 +446,7 @@ EOD
     } # if: /^$/
 
     if ( exists $demos{$_} ) {
-	require PDL::Demos::Screen; # Get the routines for screen demos.
+	require PDLA::Demos::Screen; # Get the routines for screen demos.
 	my $name = $demos{$_};
 	eval "require $name;"; # see docs on require for need for eval
 	$name .= "::run";
@@ -611,7 +611,7 @@ sub process_input {
       warn $mess if $mess;
   }
 
-  # Filter out PDL shell prefixes from cut-n-pasted lines
+  # Filter out PDLA shell prefixes from cut-n-pasted lines
   if ( $lines =~ s/$PERLDL::PREFIX_RE// and $readlines ) {
      my @hist = $PERLDL::TERM->GetHistory();
      foreach my $entry (@hist) { $entry =~ s/$PERLDL::PREFIX_RE//; }
@@ -739,14 +739,14 @@ __END__
 
 =head1 NAME
 
-perldl - Simple shell for PDL (see also L<pdl2>)
+perldl - Simple shell for PDLA (see also L<pdl2>)
 
 =head1 SYNOPSIS
 
-Use PDL interactively:
+Use PDLA interactively:
 
   bash$ perldl
-  pdl> $a = sequence(10) # or any other perl or PDL command
+  pdl> $a = sequence(10) # or any other perl or PDLA command
   
   bash$ pdl
   pdl> print "Hello, world!\n"; 
@@ -762,9 +762,9 @@ Run a script:
 =head1 DESCRIPTION
 
 The program B<perldl> is a simple shell (written in perl) for
-interactive use of PDL.  It consists of a command-line interface that
+interactive use of PDLA.  It consists of a command-line interface that
 supports immediate interpretation of perl commands and expressions.
-Perl expressions, including PDL constructs, can be entered directly at
+Perl expressions, including PDLA constructs, can be entered directly at
 the keyboard and are compiled and executed immediately.  The syntax is
 not exactly identical to Perl, in that under most circumstances ending
 a line causes immediate execution of the command entered so far (no
@@ -791,7 +791,7 @@ discussed near the end of this document.
 
 =head2 Reference manual & online help
 
-The PDL reference manual and online help are available from within 
+The PDLA reference manual and online help are available from within 
 B<perldl>, using the B<help> and B<apropos> commands (which may also
 be abbreviated B<?> and B<??>.)   The B<help> command alone prints a summary of
 help syntax, and B<< help <module-name> >> will print POD documentation
@@ -905,7 +905,7 @@ from a command journal file), then EOF will always terminate B<perldl>.
 
 Commands executed within C<perldl> can be terminated prematurely
 using C<Ctrl-C> (or whichever key sequence sends an INT signal
-to the process on your terminal). Provided your PDL code does not
+to the process on your terminal). Provided your PDLA code does not
 ignore C<sigint>s this should throw you back at the C<perldl>
 command prompt:
 
@@ -945,20 +945,20 @@ C<l> lists the history buffer
 
 =item *
 
-C<?> is an alias for L<help|PDL::Doc::Perldl/help>
+C<?> is an alias for L<help|PDLA::Doc::Perldl/help>
 
   pdl> ? pdl2    # get help for new pdl2 shell
 
 =item *
 
-C<??> is an alias for L<apropos|PDL::Doc::Perldl/apropos>
+C<??> is an alias for L<apropos|PDLA::Doc::Perldl/apropos>
 
-  pdl> ?? PDL::Doc
+  pdl> ?? PDLA::Doc
 
 =item *
 
-L<help|PDL::Doc::Perldl/help>, L<apropos|PDL::Doc::Perldl/apropos>,
-L<usage|PDL::Doc::Perldl/usage> and L<sig|PDL::Doc::Perldl/sig>:
+L<help|PDLA::Doc::Perldl/help>, L<apropos|PDLA::Doc::Perldl/apropos>,
+L<usage|PDLA::Doc::Perldl/usage> and L<sig|PDLA::Doc::Perldl/sig>:
 all words after these commands are used verbatim and not evaluated
 by perl. So you can write, e.g.,
 
@@ -1017,8 +1017,8 @@ Compare corresponding C<perl> switch.
 
 =item -V
 
-Prints a summary of PDL config. This information should
-be included with any PDL bug report. Compare corresponding
+Prints a summary of PDLA config. This information should
+be included with any PDLA bug report. Compare corresponding
 C<perl> switch.
 
 =back
@@ -1027,11 +1027,11 @@ C<perl> switch.
 
 If the file F<~/.perldlrc> is found it is sourced at start-up to load default
 modules, set shell variables, etc. If it is NOT found the distribution file
-F<PDL/default.perldlrc> is read instead. This loads various modules
+F<PDLA/default.perldlrc> is read instead. This loads various modules
 considered useful by default, and which ensure compatibility with
 v1.11. If you don't like this and want a more streamlined set of your
 own favourite modules simple create your own F<~/.perldlrc>.  You may
-wish to start from the existing F<PDL/default.perldlrc> as a template
+wish to start from the existing F<PDLA/default.perldlrc> as a template
 since it will not be sourced once you replace it with your own version.
 
 To set even more local defaults the file  F<local.perldlrc> (in the current
@@ -1041,7 +1041,7 @@ subroutines for the project in the current directory.
 The name is chosen specfically because it was found hidden files were
 NOT wanted in these circumstances.
 
-The startup file should normally include "use PDL::AutoLoader;", as 
+The startup file should normally include "use PDLA::AutoLoader;", as 
 many of the nicer interactive features won't work without it.
 
 =head2 Shell variables
@@ -1129,7 +1129,7 @@ command is interactive.
 
 =item *
 
-$PDL::toolongtoprint
+$PDLA::toolongtoprint
 
 The maximal size pdls to print (defaults to 10,000 elements).
 This is not just a C<perldl> or C<pdl2> variable but it is
@@ -1156,8 +1156,8 @@ definitions from the current version of 'script'.
 
 =head2 Executing perldl scripts from the command line
 
-PDL scripts are just perl scripts that happen to use PDL (and
-possibly PDL::NiceSlice).  But for the truly lazy, perldl can be
+PDLA scripts are just perl scripts that happen to use PDLA (and
+possibly PDLA::NiceSlice).  But for the truly lazy, perldl can be
 invokes as a script interpreter.  Because perldl is itself an interpreted
 perl script, most unices won't allow you to say "#!/usr/bin/perldl" 
 at the top of your script.
@@ -1167,7 +1167,7 @@ as if you typed it, line-by-line, into the perldl shell.
 
 =head2 Command preprocessing
 
-NOTE: This feature is used by default by L<PDL::NiceSlice|PDL::NiceSlice>.
+NOTE: This feature is used by default by L<PDLA::NiceSlice|PDLA::NiceSlice>.
 See below for more about slicing at the C<perldl> prompt
 
 In some cases, it is convenient to process commands before they are
@@ -1238,9 +1238,9 @@ An example of actual usage can be found in the C<perldl> script. Look
 at the function C<trans> to see how the niceslicing preprocessor is
 enabled/disabled.
 
-=head2 C<perldl> and L<PDL::NiceSlice|PDL::NiceSlice>
+=head2 C<perldl> and L<PDLA::NiceSlice|PDLA::NiceSlice>
 
-L<PDL::NiceSlice|PDL::NiceSlice> introduces a more convenient
+L<PDLA::NiceSlice|PDLA::NiceSlice> introduces a more convenient
 slicing syntax for piddles. In current versions of C<perldl> and
 C<pdl2> niceslicing is enabled by default (if the required CPAN
 modules are installed on your machine).
@@ -1250,14 +1250,14 @@ know if niceslicing is enabled. The startup message will contain
 info to this end, something like this:
 
    perlDL shell v1.XX
-    PDL comes with ABSOLUTELY NO WARRANTY. For details, see the file
-    'COPYING' in the PDL distribution. This is free software and you
+    PDLA comes with ABSOLUTELY NO WARRANTY. For details, see the file
+    'COPYING' in the PDLA distribution. This is free software and you
     are welcome to redistribute it under certain conditions, see
     the same file for details.
    ReadLines, NiceSlice  enabled
    Reading /home/csoelle/.perldlrc...
    Type 'demo' for online demos
-   Loaded PDL v2.XX
+   Loaded PDLA v2.XX
 
 When you get such a message that indicates C<NiceSlice> is enabled
 you can use the enhanced slicing syntax:
@@ -1265,15 +1265,15 @@ you can use the enhanced slicing syntax:
   pdl> $a = sequence 10;
   pdl> p $a(3:8:2)
 
-For details consult L<PDL::NiceSlice>.
+For details consult L<PDLA::NiceSlice>.
 
-L<PDL::NiceSlice|PDL::NiceSlice> installs a filter in the
+L<PDLA::NiceSlice|PDLA::NiceSlice> installs a filter in the
 preprocessing pipeline (see above) to enable the enhanced slicing
 syntax. You can use a few commands in the C<perldl> shell to
 switch this preprocessing on or off and also explicitly check
 the substitutions that the NiceSlice filter makes.
 
-You can switch the L<PDL::NiceSlice|PDL::NiceSlice> filter on and off
+You can switch the L<PDLA::NiceSlice|PDLA::NiceSlice> filter on and off
 by typing
 
   pdl> trans # switch niceslicing on
@@ -1334,11 +1334,11 @@ be careful :-) [Hint: add C<unless ($started++)> to above
 to ensure it only gets done once!]
 
 Another example application is as a hook for Autoloaders
-(e.g. PDL::AutoLoader) to add code too which allows them to
+(e.g. PDLA::AutoLoader) to add code too which allows them to
 automatically re-scan their files for changes. This is
 extremely convenient at the interactive command line. Since
 this hook is only in the shell it imposes no inefficiency on
-PDL scripts.
+PDLA scripts.
 
 Finally note this is a very powerful facility - which means
 it should be used with caution!

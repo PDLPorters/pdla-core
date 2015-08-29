@@ -1,16 +1,16 @@
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test;
 use strict;
 use warnings;
 
 BEGIN {
-    eval "use PDL::Opt::Simplex;";
+    eval "use PDLA::Opt::Simplex;";
     unless ($@) {
         plan tests => 8;
     }       
     else {
         plan tests => 1;
-        print "ok 1 # Skipped: PDL::Opt::Simplex not installed\n";
+        print "ok 1 # Skipped: PDLA::Opt::Simplex not installed\n";
         exit;
     }
 }
@@ -25,7 +25,7 @@ my ( $opt, $ssize, $optval );
 my ( $x, $y );
 
 # first test
-( $opt, $ssize, $optval ) = PDL::Opt::Simplex::simplex( 
+( $opt, $ssize, $optval ) = PDLA::Opt::Simplex::simplex( 
     pdl( [ 2, 2 ] ), pdl( [ 0.01, 0.01 ] ), 1e-4, 1e4, $func,
 );
 
@@ -38,7 +38,7 @@ ok( ( $optval - 1 ) < 0.001 );
 
 # second test
 my $logsub = sub {};
-( $opt, $ssize, $optval ) = PDL::Opt::Simplex::simplex( 
+( $opt, $ssize, $optval ) = PDLA::Opt::Simplex::simplex( 
     pdl( [ [ -1, -1 ], [ -1.1, -1 ], [ -1.1, -0.9 ] ] ), pdl( [ 0.01, 0.01 ] ),
     1e-4, 1e4, $func,
 );

@@ -6,8 +6,8 @@ BEGIN {
     plan tests => 26;
 }
 
-use PDL;
-use PDL::Image2D;
+use PDLA;
+use PDLA::Image2D;
 
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
@@ -92,7 +92,7 @@ $ans = $a->copy;
 print $a, $mask, patch2d($a,$mask);
 tapprox( patch2d($a,$mask), $ans );  # 7
 
-if ( $PDL::Bad::Status ) {
+if ( $PDLA::Bad::Status ) {
     # patchbad2d: bad data
     $m = $a->slice('1:3,1:3');
     $m .= $a->badvalue;
@@ -125,7 +125,7 @@ if ( $PDL::Bad::Status ) {
     tapprox( $ans[1], 11.756724 );
 
 } else { 
-    my $msg = "PDL::Bad support not available.";
+    my $msg = "PDLA::Bad support not available.";
     for (0..4) { skip($msg,1,1) } # skip 5 tests
 }
 # box2d bug test
@@ -160,7 +160,7 @@ ok(sum($im_mask) == 5);
 my $inpixels = pdl q[ 1 1 ; 1 2 ; 1 3 ; 2 1 ; 2 2 ];
 ok(sum($inpixels - qsortvec(scalar whichND($im_mask))) == 0);
 
-# Make sure the PDL pnpoly and the PP pnpoly give the same result
+# Make sure the PDLA pnpoly and the PP pnpoly give the same result
 ok(all($im_mask == $im->pnpoly($ps)));
 
 # Trivial test to make sure the polyfills using the pnpoly algorithm are working

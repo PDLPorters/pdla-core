@@ -1,6 +1,6 @@
 TODO
 
-PDL currently does not have internationalization support for
+PDLA currently does not have internationalization support for
 its error messages although perl itself does support i18n
 and locales.  Some of the tests for names and strings are
 specific to ASCII and English.  Please report any issues

@@ -1,5 +1,5 @@
 ##############################################
-package PDL::PP::PdlDimsObj; # Hold more dims
+package PDLA::PP::PdlDimsObj; # Hold more dims
 use Carp;
 
 sub new {
@@ -15,7 +15,7 @@ sub get_indobj_make {
 	if(defined $this->{$name}) {
 		$indobj = $this->{$name};
 	} else {
-		$indobj = PDL::PP::Ind->new($name);
+		$indobj = PDLA::PP::Ind->new($name);
 		$this->{$name}=$indobj;
 	}
 	if(defined $val) { $indobj->add_value($val); }
@@ -26,7 +26,7 @@ sub get_indobj_make {
 #
 # Encapsulate one index.
 
-package PDL::PP::Ind;
+package PDLA::PP::Ind;
 use Carp;
 
 sub new {
@@ -59,7 +59,7 @@ sub set_from { my($this,$otherpar) = @_;
 sub name {return (shift)->{Name}}
 
 sub get_decldim { my($this) = @_;
-	return "PDL_Indx __$this->{Name}_size;";
+	return "PDLA_Indx __$this->{Name}_size;";
 }
 
 sub get_initdim { my($this) = @_;

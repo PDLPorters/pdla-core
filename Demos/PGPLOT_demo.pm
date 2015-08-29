@@ -1,8 +1,8 @@
-package PDL::Demos::PGPLOT_demo;
-use PDL;
-use PDL::Graphics::PGPLOT;
+package PDLA::Demos::PGPLOT_demo;
+use PDLA;
+use PDLA::Graphics::PGPLOT;
 
-PDL::Demos::Routines->import();
+PDLA::Demos::Routines->import();
 sub comment($);
 sub act($);
 sub output;
@@ -13,14 +13,14 @@ $ENV{PGPLOT_XW_WIDTH}=0.3;
 $ENV{PGPLOT_DEV}=$^O =~ /MSWin32/ ? '/GW' : "/XSERVE";
 
 comment q|
-    Welcome to this tour of the PDL's PGPLOT interface.
+    Welcome to this tour of the PDLA's PGPLOT interface.
 
-    This tour will introduce the PDL's PGPLOT plotting module and show
+    This tour will introduce the PDLA's PGPLOT plotting module and show
     what this powerful package can provide in terms of plotting. It is
     not designed to give a full tour of PGPLOT, you are advised to see
     the routines provided with pgperl for that.
 
-    The PDL::Graphics::PGPLOT module provides a high-level interface
+    The PDLA::Graphics::PGPLOT module provides a high-level interface
     to PGPLOT. However if you want even better control of your plots 
     you might want to include the PGPLOT module specifically:
 
@@ -36,8 +36,8 @@ comment q|
 |;
 
 act q|
-    # ensure the module is loaded (required for PDL versions >= 2.004)
-    use PDL::Graphics::PGPLOT;
+    # ensure the module is loaded (required for PDLA versions >= 2.004)
+    use PDLA::Graphics::PGPLOT;
     # The size of the window can be specified
     $ENV{PGPLOT_XW_WIDTH}=0.3;
     # You can set your device explicitly
@@ -98,13 +98,13 @@ act q|
 |;
 
 act q|
-  # PDL::Graphics::PGPLOT contains several colour tables,
+  # PDLA::Graphics::PGPLOT contains several colour tables,
   # a more extensive collection can be found in 
-  # PDL::Graphics::LUT
+  # PDLA::Graphics::LUT
   #
   # (note: the call to lut_names() can take a few seconds to execute)
   #
-  use PDL::Graphics::LUT;
+  use PDLA::Graphics::LUT;
   @names = lut_names();
   print "Available tables: [ ", @names, " ]\n";
 
@@ -191,12 +191,12 @@ act q|
 
 act q|
   #
-  # the latest feature of PDL are complex numbers
+  # the latest feature of PDLA are complex numbers
   # so let's play with a simple example
   #
   
 
-  use PDL::Complex;
+  use PDLA::Complex;
   $z50 = zeroes(50);
   $c = $z50->xlinvals(0,7)+i*$z50->xlinvals(2,4);
   line im sin $c; hold;      # the imaginary part
@@ -210,7 +210,7 @@ act q|
   # more complex numbers
   #
   
-  use PDL::Complex;
+  use PDLA::Complex;
   $c =  zeroes(300)->xlinvals(0,12)+i*zeroes(300)->xlinvals(2,10);
   $sin = sin $c;
   line $sin->im, $sin->re;   # look at the result in the complex plane

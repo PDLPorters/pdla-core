@@ -1,10 +1,10 @@
-package PDL::PP;
+package PDLA::PP;
 
 __END__
 
 =head1 NAME
 
-PDL::PP - Generate PDL routines from concise descriptions
+PDLA::PP - Generate PDLA routines from concise descriptions
 
 =head1 SYNOPSIS
 
@@ -26,7 +26,7 @@ e.g.
 
 =head1 FUNCTIONS
 
-Here is a quick reference list of the functions provided by PDL::PP.
+Here is a quick reference list of the functions provided by PDLA::PP.
 
 =head2 pp_add_boot
 
@@ -87,28 +87,28 @@ Add BEGIN-block wrapping to code for the generated .pm file
 
 =for ref
 
-Sets the package to which the XS code is added (default is PDL)
+Sets the package to which the XS code is added (default is PDLA)
 
 
 =head2 pp_boundscheck
 
 =for ref
 
-Control state of PDL bounds checking activity
+Control state of PDLA bounds checking activity
 
 
 =head2 pp_core_importList
 
 =for ref
 
-Specify what is imported from PDL::Core
+Specify what is imported from PDLA::Core
 
 
 =head2 pp_def
 
 =for ref
 
-Define a new PDL function
+Define a new PDLA function
 
 
 =head2 pp_deprecate_module
@@ -122,7 +122,7 @@ Add runtime and POD warnings about a module being deprecated
 
 =for ref
 
-Mark the end of PDL::PP definitions in the file
+Mark the end of PDLA::PP definitions in the file
 
 
 =head2 pp_export_nothing
@@ -136,7 +136,7 @@ Clear out the export list for your generated module
 
 =for ref
 
-Add line number information to simplify debugging of PDL::PP code
+Add line number information to simplify debugging of PDLA::PP code
 
 
 =head2 pp_setversion
@@ -150,22 +150,22 @@ Set the version for .pm and .xs files
 =head1 OVERVIEW
 
 Why do we need PP? Several reasons: firstly, we want to be able to
-generate subroutine code for each of the PDL datatypes (PDL_Byte,
-PDL_Short,. etc).  AUTOMATICALLY.  Secondly, when referring to slices
-of PDL arrays in Perl (e.g. C<< $a->slice('0:10:2,:') >> or other things such
+generate subroutine code for each of the PDLA datatypes (PDLA_Byte,
+PDLA_Short,. etc).  AUTOMATICALLY.  Secondly, when referring to slices
+of PDLA arrays in Perl (e.g. C<< $a->slice('0:10:2,:') >> or other things such
 as transposes) it is nice to be able to do this transparently and to
 be able to do this 'in-place' - i.e, not to have to make a memory copy
 of the section. PP handles all the necessary element and offset
 arithmetic for you. There are also the notions of threading (repeated
-calling of the same routine for multiple slices, see L<PDL::Indexing>)
-and dataflow (see L<PDL::Dataflow>) which use of PP allows.
+calling of the same routine for multiple slices, see L<PDLA::Indexing>)
+and dataflow (see L<PDLA::Dataflow>) which use of PP allows.
 
 In much of what follows we will assume familiarity of the reader with
 the concepts of implicit and explicit threading and index manipulations
-within PDL. If you have not yet heard of these concepts or are not very
-comfortable with them it is time to check L<PDL::Indexing>.
+within PDLA. If you have not yet heard of these concepts or are not very
+comfortable with them it is time to check L<PDLA::Indexing>.
 
-As you may appreciate from its name PDL::PP is a Pre-Processor, i.e.
+As you may appreciate from its name PDLA::PP is a Pre-Processor, i.e.
 it expands code via substitutions to make real C-code. Technically, the
 output is XS code (see I<perlxs>) but that is very close to C.
 
@@ -199,14 +199,14 @@ very similar to the actual code used by 'sumover'):
 What's going on? The C<< Pars => >> line is very important for PP - it
 specifies all the arguments and their dimensionality. We call
 this the I<signature> of the PP function (compare also the explanations in
-L<PDL::Indexing>).  In this case the
+L<PDLA::Indexing>).  In this case the
 routine takes a 1-D function as input and returns a 0-D scalar as
 output.  The C<$a()> PP construct is used to access elements of the array
 a(n) for you - PP fills in all the required C code.
 
 You will notice that we are using the C<q{}> single-quote operator. This is
 not an accident. You generally want to use single quotes to denote your
-PP Code sections. PDL::PP uses C<$var()> for its parsing and if you don't
+PP Code sections. PDLA::PP uses C<$var()> for its parsing and if you don't
 use single quotes, Perl will try to interpolate C<$var()>. Also, using the
 single quote C<q> operator with curly braces makes it look like you are
 creating a code block, which is What You Mean. (Perl is smart enough to look
@@ -256,7 +256,7 @@ You can also see in the above example the use of another PP
 construct - C<$SIZE(n)> to get the length of the dimension C<n>.
 
 It should, however, be noted that you shouldn't write an explicit C-loop
-when you could have used the PP C<loop> construct since PDL::PP checks
+when you could have used the PP C<loop> construct since PDLA::PP checks
 automatically the loop limits for you, usage of C<loop> makes the code more
 concise, etc. But there are certainly situations where you need explicit
 control of the loop and now you know how to do it ;).
@@ -265,22 +265,22 @@ To revisit 'Why PP?' - the above code for sumit() will be
 generated for each data-type. It will operate on slices
 of arrays 'in-place'. It will thread automatically - e.g. if
 a 2D array is given it will be called repeatedly for each
-1D row (again check L<PDL::Indexing> for the details of threading).
+1D row (again check L<PDLA::Indexing> for the details of threading).
 And then b() will be a 1D array of sums of each row.
 We could call it with $a->xchg(0,1) to sum the columns instead.
 And Dataflow tracing etc. will be available.
 
 You can see PP saves the programmer from writing a lot of
 needlessly repetitive C-code -- in our opinion this is
-one of the best features of PDL making writing
-new C subroutines for PDL an amazingly concise exercise. A second reason is
+one of the best features of PDLA making writing
+new C subroutines for PDLA an amazingly concise exercise. A second reason is
 the ability to make PP expand your concise code definitions into different
 C code based on the needs of the computer architecture in question. Imagine
 for example you are lucky to have a supercomputer at your hands; in that
-case you want PDL::PP certainly to generate code that takes advantage of
+case you want PDLA::PP certainly to generate code that takes advantage of
 the vectorising/parallel computing features of your machine (this a project
 for the future). In any case, the bottom line is that your unchanged code
-should still expand to working XS code even if the internals of PDL
+should still expand to working XS code even if the internals of PDLA
 changed.
 
 Also, because you are generating the code in an actual Perl script,
@@ -319,14 +319,14 @@ syntax but much easier to understand and change.
 
 We should mention here also the ability to get the pointer to the
 beginning of the data in memory - a prerequisite for interfacing
-PDL to some libraries. This is handled with the C<$P(var)> directive,
+PDLA to some libraries. This is handled with the C<$P(var)> directive,
 see below.
 
 When starting work on a new pp_def'ined function, if you make a mistake, you
 will usually find a pile of compiler errors indicating line numbers in the
 generated XS file. If you know how to read XS files (or if you want to learn
 the hard way), you could open the generated XS file and search for the line
-number with the error. However, a recent addition to PDL::PP helps report
+number with the error. However, a recent addition to PDLA::PP helps report
 the correct line number of your errors: C<pp_line_numbers>. Working with the
 original summit example, if you had a mis-spelling of tmp in your code, you
 could change the (erroneous) code to something like this and the compiler
@@ -354,15 +354,15 @@ In my example script (called test.pd), line 15 is exactly the line at which
 I made my typo: C<rmp> instead of C<tmp>.
 
 So, after this quick overview of the general flavour of programming
-PDL routines using PDL::PP let's summarise in which circumstances you
-should actually use this preprocessor/precompiler. You should use PDL::PP
+PDLA routines using PDLA::PP let's summarise in which circumstances you
+should actually use this preprocessor/precompiler. You should use PDLA::PP
 if you want to
 
 =over 3
 
 =item *
 
-interface PDL to some external library
+interface PDLA to some external library
 
 =item *
 
@@ -372,13 +372,13 @@ and dataflow first).
 
 =item *
 
-be a PDL developer (and even then it's not obligatory)
+be a PDLA developer (and even then it's not obligatory)
 
 =back
 
 =head1 WARNING
 
-Because of its architecture, PDL::PP can be both flexible and easy to use
+Because of its architecture, PDLA::PP can be both flexible and easy to use
 on the one hand, yet exuberantly complicated at the same time. Currently,
 part of the problem is that error messages are not very informative and if
 something goes wrong, you'd better know what you are doing and be able to
@@ -389,13 +389,13 @@ the mailing list if you run into trouble.
 
 =head1 DESCRIPTION
 
-Now that you have some idea how to use C<pp_def> to define new PDL functions
+Now that you have some idea how to use C<pp_def> to define new PDLA functions
 it is time to explain the general syntax of C<pp_def>.
 C<pp_def> takes as arguments first the name of the function
 you are defining and then a hash list that can contain various keys.
 
 Based on these keys PP generates XS code and a .pm file. The function
-C<pp_done> (see example in the SYNOPSIS) is used to tell PDL::PP that there
+C<pp_done> (see example in the SYNOPSIS) is used to tell PDLA::PP that there
 are no more definitions in this file and it is time to generate the .xs and
  .pm file.
 
@@ -413,16 +413,16 @@ in this document so far. Implicit and explicit threading and the creation
 of the result are taken care of automatically in those operations. You
 can even do dataflow with C<sumit>, C<sumover>, etc
 (don't be dismayed if you don't understand the concept of dataflow
-in PDL very well yet; it is still very much experimental).
+in PDLA very well yet; it is still very much experimental).
 
 The 'slice operation' is a different kind of operation: in a slice
 operation, you are not changing any data, you are defining
 correspondences between different elements of two piddles (examples include
 the index manipulation/slicing function definitions in the file F<slices.pd>
-that is part of the PDL distribution; but beware, this is not introductory
+that is part of the PDLA distribution; but beware, this is not introductory
 level stuff).
 
-If PDL was compiled with support for bad values (i.e. C<WITH_BADVAL =E<gt> 1>),
+If PDLA was compiled with support for bad values (i.e. C<WITH_BADVAL =E<gt> 1>),
 then additional keys are required for C<pp_def>, as explained below.
 
 If you are just interested in communicating with some external
@@ -447,7 +447,7 @@ The second line simply declares our parameters and the parentheses
 mean that they are scalars. We call the string that defines our parameters
 and their dimensionality the I<signature> of that function. For its
 relevance with regard to threading and index manipulations check the
-L<PDL::Indexing> man page.
+L<PDLA::Indexing> man page.
 
 The third line is the actual operation. You need to use the
 dollar signs and parentheses to refer to your parameters
@@ -455,7 +455,7 @@ dollar signs and parentheses to refer to your parameters
 a good syntax is found).
 
 These lines are all that is necessary to actually define the function
-for PDL (well, actually it isn't; you additionally need to write a
+for PDLA (well, actually it isn't; you additionally need to write a
 Makefile.PL (see below) and build the module (something like 'perl
 Makefile.PL; make'); but let's ignore that for the moment). So now you
 can do
@@ -477,10 +477,10 @@ Seeing the above example code you will most probably ask: what is this
 strange C<$c=null> syntax in the second call to our new C<add> function? If
 you take another look at the definition of C<add> you will notice that
 the third argument C<c> is flagged with the qualifier C<[o]> which
-tells PDL::PP that this is an output argument. So the above call to
+tells PDLA::PP that this is an output argument. So the above call to
 add means 'create a new $c from scratch with correct dimensions' -
 C<null> is a special token for 'empty piddle' (you might ask why we
-haven't used the value C<undef> to flag this instead of the PDL
+haven't used the value C<undef> to flag this instead of the PDLA
 specific C<null>; we are currently thinking about it ;).
 
 [This should be explained in some other section of the manual
@@ -488,7 +488,7 @@ as well!!]
 The reason for having this syntax as an alternative is that if you have
 really huge piddles, you can do
 
-	$c = PDL->null;
+	$c = PDLA->null;
 	for(some long loop) {
 		# munge a,b
 		add($a,$b,$c);
@@ -506,16 +506,16 @@ If you just say
 the code generated by PP will automatically fill in C<$c=null>
 and return
 the result. If you want to learn more
-about the reasons why PDL::PP supports this style where output arguments
+about the reasons why PDLA::PP supports this style where output arguments
 are given as last arguments check the
-L<PDL::Indexing> man page.
+L<PDLA::Indexing> man page.
 
 C<[o]> is not the only qualifier a pdl argument can have in the signature.
 Another important qualifier is the C<[t]> option which flags a pdl as
-temporary.  What does that mean? You tell PDL::PP that this pdl is only
+temporary.  What does that mean? You tell PDLA::PP that this pdl is only
 used for temporary results in the course of the calculation and you are
 not interested in its value after the computation has been completed. But
-why should PDL::PP want to know about this in the first place?  The reason
+why should PDLA::PP want to know about this in the first place?  The reason
 is closely related to the concepts of pdl auto creation (you heard
 about that above) and implicit threading. If you use implicit threading
 the dimensionality of automatically created pdls is actually larger than
@@ -527,7 +527,7 @@ for one iteration in a thread loop, i.e. as large as required by the signature.
 So less memory is wasted when you flag a pdl as temporary. Secondly, you
 can use output auto creation with temporary pdls even when you are using
 explicit threading which is forbidden for normal output pdls flagged with
-C<[o]> (see L<PDL::Indexing>).
+C<[o]> (see L<PDLA::Indexing>).
 
 Here is an example where we use the [t] qualifier. We define the function
 C<callf> that calls a C routine C<f> which needs a temporary array of the
@@ -588,7 +588,7 @@ our previously defined functions with pdls of different type, e.g.
 
   add2($a,$b,($ret=null));
 
-where $a is of type C<PDL_Float> and $b of type C<PDL_Short>? With the signature
+where $a is of type C<PDLA_Float> and $b of type C<PDLA_Short>? With the signature
 as shown in the definition of C<add2> above the datatype of the operation
 (as determined at runtime) is that of the pdl with the 'highest' type
 (sequence is byte < short < ushort < long < float < double). In the add2
@@ -614,7 +614,7 @@ go through the list of qualifiers that change type conversion behaviour.
 
 The most important is the C<int> qualifier which comes in handy when a
 pdl argument represents indices into another pdl. Let's take a look at
-an example from C<PDL::Ufunc>:
+an example from C<PDLA::Ufunc>:
 
    pp_def('maximum_ind',
 	  Pars => 'a(n); int [o] b()',
@@ -631,7 +631,7 @@ a vector. If you look at the signature you notice that the output
 argument C<b> has been declared with the additional C<int> qualifier.
 This has the following consequences for type conversions: regardless of
 the type of the input pdl C<a> the output pdl C<b> will be of type
-C<PDL_Long> which makes sense since C<b> will represent an index into
+C<PDLA_Long> which makes sense since C<b> will represent an index into
 C<a>. Furthermore, if you call the function with an existing output
 pdl C<b> its type will not influence the datatype of the operation (see
 above). Hence, even if C<a> is of a smaller type than C<b> it will not
@@ -646,15 +646,15 @@ macro.  It expands to the current type in a so called generic
 loop. What is a generic loop? As you already heard a PP function has a
 runtime datatype as determined by the type of the pdl arguments it has
 been invoked with.  The PP generated XS code for this function
-therefore contains a switch like C<switch (type) {case PDL_Byte: ... case
-PDL_Double: ...}> that selects a case based on the runtime
+therefore contains a switch like C<switch (type) {case PDLA_Byte: ... case
+PDLA_Double: ...}> that selects a case based on the runtime
 datatype of the function (it's called a type ``loop''
 because there is a loop in PP code that generates the cases).
-In any case your code is inserted once for each PDL type
+In any case your code is inserted once for each PDLA type
 into this switch statement. The C<$GENERIC()> macro just expands to
 the respective type in each copy of your parsed code in this C<switch>
-statement, e.g., in the C<case PDL_Byte> section C<cur> will expand to
-C<PDL_Byte> and so on for the other case statements. I guess you
+statement, e.g., in the C<case PDLA_Byte> section C<cur> will expand to
+C<PDLA_Byte> and so on for the other case statements. I guess you
 realise that this is a useful macro to hold values of pdls in some
 code.
 
@@ -708,8 +708,8 @@ qualifiers, a pdl marked with a C<type+> qualifier does not influence
 the datatype of the pdl operation. Its meaning is "make this pdl at
 least of type C<type> or higher, as required by the type of the
 operation". In the sumover example this means that when you call the
-function with an C<a> of type PDL_Short the output pdl will be of type
-PDL_Long (just as would have been the case with the C<int>
+function with an C<a> of type PDLA_Short the output pdl will be of type
+PDLA_Long (just as would have been the case with the C<int>
 qualifier). This again tries to avoid overflow problems when using
 small datatypes (e.g. byte images).  However, when the datatype of the
 operation is higher than the type specified in the C<type+> qualifier
@@ -736,15 +736,15 @@ arguments as output and temporary args and all dimensions that you can
 later refer to in the C<Code> section are defined by name.
 
 It is important that you understand the meaning of the signature since
-in the latest PDL versions you can use it to define threaded functions
+in the latest PDLA versions you can use it to define threaded functions
 from within Perl, i.e. what we call I<Perl level threading>. Please check
-L<PDL::Indexing> for details.
+L<PDLA::Indexing> for details.
 
 =head2 The Code section
 
 The C<Code> section contains the actual XS code that will be in the
 innermost part of a thread loop (if you don't know what a thread loop is then
-you still haven't read L<PDL::Indexing>; do it now ;) after any PP macros
+you still haven't read L<PDLA::Indexing>; do it now ;) after any PP macros
 (like C<$GENERIC>) and PP functions have been expanded (like the
 C<loop> function we are going to explain next).
 
@@ -788,14 +788,14 @@ Let's dissect what is happening. Firstly, what is this function supposed to
 do? From its signature you see that it takes a 2D matrix with equal numbers
 of columns and rows and outputs a matrix of the same size. From a given
 input matrix $a it computes a symmetric output matrix $c (symmetric in
-the matrix sense that A^T = A where ^T means matrix transpose, or in PDL
+the matrix sense that A^T = A where ^T means matrix transpose, or in PDLA
 parlance $c == $c->xchg(0,1)). It does this by using only the values
 on and below the diagonal of $a. In the output matrix $c all values on
 and below the diagonal are the same as those in $a while those above the
 diagonal are a mirror image of those below the diagonal (above and below
-are here interpreted in the way that PDL prints 2D pdls). If this explanation
+are here interpreted in the way that PDLA prints 2D pdls). If this explanation
 still sounds a bit strange just go ahead, make a little file into which you
-write this definition, build the new PDL extension (see section on Makefiles
+write this definition, build the new PDLA extension (see section on Makefiles
 for PP code) and try it out with a couple of examples.
 
 Having explained what the function is supposed to do there are a
@@ -805,10 +805,10 @@ using the C<$SIZE> macro. Second, there are suddenly these funny C<n0>
 and C<n1> index names in the code though the signature defines only
 the dimension C<n>. Why this? The reason becomes clear when you note
 that both the first and second dimension of $a and $b are named C<n>
-in the signature of C<symm>. This tells PDL::PP that the first and
+in the signature of C<symm>. This tells PDLA::PP that the first and
 second dimension of these arguments should have the same
 size. Otherwise the generated function will raise a runtime error.
-However, now in an access to C<$a> and C<$c> PDL::PP cannot figure out
+However, now in an access to C<$a> and C<$c> PDLA::PP cannot figure out
 which index C<n> refers to any more just from the name of the index.
 Therefore, the indices with equal dimension names get numbered from
 left to right starting at 0, e.g. in the above example C<n0> refers to
@@ -816,7 +816,7 @@ the first dimension of C<$a> and C<$c>, C<n1> to the second and so on.
 
 In all examples so far, we have only used the C<Pars> and C<Code>
 members of the hash that was passed to C<pp_def>. There are certainly
-other keys that are recognised by PDL::PP and we will hear about some
+other keys that are recognised by PDLA::PP and we will hear about some
 of them in the course of this document. Find a (non-exhaustive) list
 of keys in Appendix A.  A list of macros and PPfunctions (we have only
 encountered some of those in the examples above yet) that are expanded
@@ -824,20 +824,20 @@ in values of the hash argument to C<pp_def> is summarised in Appendix
 B.
 
 At this point, it might be appropriate to mention that
-PDL::PP is not a completely static, well designed set of routines (as
+PDLA::PP is not a completely static, well designed set of routines (as
 Tuomas puts it: "stop thinking of PP as a set of routines carved in
-stone") but rather a collection of things that the PDL::PP author
-(Tuomas J. Lukka) considered he would have to write often into his PDL
+stone") but rather a collection of things that the PDLA::PP author
+(Tuomas J. Lukka) considered he would have to write often into his PDLA
 extension routines. PP tries to be expandable so that in the future,
 as new needs arise, new common code can be abstracted back into it. If
-you want to learn more on why you might want to change PDL::PP and how
-to do it check the section on PDL::PP internals.
+you want to learn more on why you might want to change PDLA::PP and how
+to do it check the section on PDLA::PP internals.
 
 =head2 Handling bad values
 
-If you do not have bad-value support compiled into PDL you can
+If you do not have bad-value support compiled into PDLA you can
 ignore this section and the related keys: C<BadCode>, C<HandleBad>, ...
-(try printing out the value of C<$PDL::Bad::Status> - if it equals 0 
+(try printing out the value of C<$PDLA::Bad::Status> - if it equals 0 
 then move straight on).
 
 There are several keys and macros used when writing code to handle
@@ -858,7 +858,7 @@ do not have a way of ignoring part of the data.
 
 =item HandleBad => 1
 
-This causes PDL::PP to write extra code that ensures the BadCode
+This causes PDLA::PP to write extra code that ensures the BadCode
 section is used, and that the C<$ISBAD()> macro (and its brethren)
 work.
 
@@ -904,10 +904,10 @@ something like:
  }
 
 This approach means that there is virtually no overhead when 
-bad values are not present (i.e. the L<badflag|PDL::Bad/badflag> routine
+bad values are not present (i.e. the L<badflag|PDLA::Bad/badflag> routine
 returns 0).
 
-The C preprocessor symbol C<PDL_BAD_CODE> is defined when the bad code
+The C preprocessor symbol C<PDLA_BAD_CODE> is defined when the bad code
 is compiled, so that you can reduce the amount of code you write.  The
 BadCode section can use the same macros and looping constructs as the
 Code section.  However, it wouldn't be much use without the following
@@ -971,33 +971,33 @@ Since this is Perl, TMTOWTDI, so you could also write:
        $SETBAD(c());
     }',
 
-You can reduce code repition using the C C<PDL_BAD_CODE> macro,
+You can reduce code repition using the C C<PDLA_BAD_CODE> macro,
 using the same code for both of the C<Code> and C<BadCode> sections:
 
-    #ifdef PDL_BAD_CODE
+    #ifdef PDLA_BAD_CODE
     if ( $ISGOOD(a()) && $ISGOOD(b()) ) {
-    #endif PDL_BAD_CODE
+    #endif PDLA_BAD_CODE
 
        $c() = $a() + $b();
 
-    #ifdef PDL_BAD_CODE
+    #ifdef PDLA_BAD_CODE
     } else {
        $SETBAD(c());
     }
-    #endif PDL_BAD_CODE
+    #endif PDLA_BAD_CODE
 
 If you want access to the value of the badflag for a given
-piddle, you can use the PDL STATE macros:
+piddle, you can use the PDLA STATE macros:
 
 =over 4
 
-=item $ISPDLSTATEBAD(pdl)
+=item $ISPDLASTATEBAD(pdl)
 
-=item $ISPDLSTATEGOOD(pdl)
+=item $ISPDLASTATEGOOD(pdl)
 
-=item $SETPDLSTATEBAD(pdl)
+=item $SETPDLASTATEBAD(pdl)
 
-=item $SETPDLSTATEGOOD(pdl)
+=item $SETPDLASTATEGOOD(pdl)
 
 =back
 
@@ -1008,12 +1008,12 @@ C<BadDoc> key.
 =head2 Interfacing your own/library functions using PP
 
 Now, consider the following: you have your own C function
-(that may in fact be part of some library you want to interface to PDL)
+(that may in fact be part of some library you want to interface to PDLA)
 which takes as arguments two pointers to vectors of double:
 
 	void myfunc(int n,double *v1,double *v2);
 
-The correct way of defining the PDL function is
+The correct way of defining the PDLA function is
 
 	pp_def('myfunc',
 		Pars => 'a(n); [o]b(n);',
@@ -1027,11 +1027,11 @@ element and the other elements are guaranteed to lie after that.
 Notice that here it is possible to make many mistakes. First,
 C<$SIZE(n)> must be used instead of C<n>. Second, you shouldn't put
 any loops in this code. Third, here we encounter a new hash key
-recognised by PDL::PP : the C<GenericTypes> declaration tells PDL::PP
+recognised by PDLA::PP : the C<GenericTypes> declaration tells PDLA::PP
 to ONLY GENERATE THE TYPELOOP FOP THE LIST OF TYPES SPECIFIED. In
 this case C<double>. This has two advantages. Firstly the size of
 the compiled code is reduced vastly, secondly if non-double arguments
-are passed to C<myfunc()> PDL will automatically convert them to
+are passed to C<myfunc()> PDLA will automatically convert them to
 double before passing to the external C routine and convert them
 back afterwards.
 
@@ -1071,14 +1071,14 @@ you have certain calling conventions. This can be exploited. In short,
 you can write a little parser (which is really not difficult in Perl) that
 then generates the calls to C<pp_def> from parsed descriptions of the
 functions in that library. For an example, please check the I<Slatec>
-interface in the C<Lib> tree of the PDL distribution. If you want to check
+interface in the C<Lib> tree of the PDLA distribution. If you want to check
 (during debugging) which calls to PP functions your Perl code generated
 a little helper package comes in handy which replaces the PP functions
 by identically named ones that dump their arguments to stdout.
 
 Just say
 
-   perl -MPDL::PP::Dump myfile.pd
+   perl -MPDLA::PP::Dump myfile.pd
 
 to see the calls to C<pp_def> and friends. Try it with F<ops.pd> and
 F<slatec.pd>. If you're interested (or want to enhance it), the source
@@ -1088,7 +1088,7 @@ is in Basic/Gen/PP/Dump.pm
 
 Macros: So far we have encountered the C<$SIZE>, C<$GENERIC> and C<$P> macros.
 Now we are going to quickly explain the other macros that are expanded in the
-C<Code> section of PDL::PP along with examples of their usage.
+C<Code> section of PDLA::PP along with examples of their usage.
 
 =over 3
 
@@ -1111,7 +1111,7 @@ you have two C functions with prototypes
   void double_func(double *in, double *out);
 
 which do basically the same thing but one accepts float and the other
-double pointers. You could interface them to PDL by defining a generic
+double pointers. You could interface them to PDLA by defining a generic
 function C<foofunc> (which will call the correct function depending
 on the type of the transformation):
 
@@ -1136,21 +1136,21 @@ If you really want brevity, you can of course do
 =item C<$PP>
 
 The C<$PP> macro is used for a so called I<physical pointer access>. The
-I<physical> refers to some internal optimisations of PDL (for those who
-are familiar with the PDL core we are talking about the vaffine
+I<physical> refers to some internal optimisations of PDLA (for those who
+are familiar with the PDLA core we are talking about the vaffine
 optimisations). This macro is mainly for internal use and you shouldn't
 need to use it in any of your normal code.
 
 =item C<$COMP> (and the C<OtherPars> section)
 
 The C<$COMP> macro is used to access non-pdl values in the code section. Its
-name is derived from the implementation of transformations in PDL. The
+name is derived from the implementation of transformations in PDLA. The
 variables you can refer to using C<$COMP> are members
-of the ``compiled'' structure that represents the PDL transformation in question
+of the ``compiled'' structure that represents the PDLA transformation in question
 but does not yet contain any information about dimensions
-(for further details check L<PDL::Internals>). However, you can treat
+(for further details check L<PDLA::Internals>). However, you can treat
 C<$COMP> just as a black box without knowing anything about the
-implementation of transformations in PDL. So when would you use this
+implementation of transformations in PDLA. So when would you use this
 macro? Its main usage is to access values of arguments that are
 declared in the C<OtherPars> section of a C<pp_def> definition. But
 then you haven't heard about the C<OtherPars> key yet?!  Let's have
@@ -1206,7 +1206,7 @@ Now you can call this function in the usual way:
 
 Admittedly this function is not very useful but it demonstrates how it
 works. If you call the function with an existing pdl and you don't need
-to explicitly specify the size of C<n> since PDL::PP can figure it out
+to explicitly specify the size of C<n> since PDLA::PP can figure it out
 from the dimensions of the non-null pdl. In that case you just give the
 dimension parameter as C<-1>:
 
@@ -1234,7 +1234,7 @@ However, you often call the functions that you defined with PP with pdls
 that have more dimensions than those specified in the signature. In this
 case the primitive operation is performed on all subslices of appropriate
 dimensionality in what is called a I<thread loop> (see also overview above
-and L<PDL::Indexing>). Assuming you have some notion of this concept you
+and L<PDLA::Indexing>). Assuming you have some notion of this concept you
 will probably appreciate that the operation specified in the code section
 should be optimised since this is the tightest loop inside a thread loop.
 However, if you revisit the example where we define the C<pnmout> function,
@@ -1269,7 +1269,7 @@ function:
 This works as follows. Normally the C code you write inside the
 C<Code> section is placed inside a thread loop (i.e. PP generates the
 appropriate wrapping XS code around it). However, when you explicitly
-use the C<threadloop> function, PDL::PP recognises this and doesn't
+use the C<threadloop> function, PDLA::PP recognises this and doesn't
 wrap your code with an additional thread loop. This has the effect that
 code you write outside the thread loop is only executed once per
 transformation and just the code with in the surrounding C<%{ ... %}>
@@ -1358,10 +1358,10 @@ in the signature. Instead you write
       "myexternalfunc",
       Pars         => ' p(m);  x(n);  [o] y(); [t] work(wn); ',
       RedoDimsCode => '
-	int im = $PDL(p)->dims[0];
-	int in = $PDL(x)->dims[0];
+	int im = $PDLA(p)->dims[0];
+	int in = $PDLA(x)->dims[0];
 	int min = in + im * im;
-	int inw = $PDL(work)->dims[0];
+	int inw = $PDLA(work)->dims[0];
 	$SIZE(wn) = inw >= min ? inw : min;
       ',
       Code => '
@@ -1369,7 +1369,7 @@ in the signature. Instead you write
       '
   );
 
-This code works as follows: The macro $PDL(p) expands to a
+This code works as follows: The macro $PDLA(p) expands to a
 pointer to the pdl struct for the piddle p.  You don't want
 a pointer to the data ( ie $P ) in this case, because you
 want to access the methods for the piddle on the C
@@ -1393,11 +1393,11 @@ the preceeding example.  However, because the piddle is
 flagged with [o] instead of [t], threading dimensions will
 be added if required just as if the size of the dimension
 were computed from the signature according to the usual
-rules. Here is an example from PDL::Math
+rules. Here is an example from PDLA::Math
 
  pp_def("polyroots",
       Pars => 'cr(n); ci(n); [o]rr(m); [o]ri(m);',
-      RedoDimsCode => 'int sn = $PDL(cr)->dims[0]; $SIZE(m) = sn-1;',
+      RedoDimsCode => 'int sn = $PDLA(cr)->dims[0]; $SIZE(m) = sn-1;',
 
 The input piddles are the real and imaginary parts of
 complex coefficients of a polynomial. The output piddles are
@@ -1412,7 +1412,7 @@ just as if there were no C<RedoDimsCode>.
 =head2 Typemap handling in the C<OtherPars> section
 
 The C<OtherPars> section discussed above is very often absolutely
-crucial when you interface external libraries with PDL. However in
+crucial when you interface external libraries with PDLA. However in
 many cases the external libraries either use derived types or
 pointers of various types.
 
@@ -1492,7 +1492,7 @@ You have already heard about the C<OtherPars> key. Currently, there are not
 many other keys for a data operation that will be useful in normal (whatever
 that is) PP programming. In fact, it would be interesting to hear about
 a case where you think you need more than what is provided at the moment.
-Please speak up on one of the PDL mailing lists. Most other keys recognised
+Please speak up on one of the PDLA mailing lists. Most other keys recognised
 by C<pp_def> are only really useful for what we call I<slice operations>
 (see also above).
 
@@ -1539,18 +1539,18 @@ consider this excerpt from F<Basic/Bad/bad.pd>:
     Inplace => 1,
     CopyBadStatusCode => 
     '/* propagate badflag if inplace AND it has changed */
-     if ( a == b && $ISPDLSTATEBAD(a) )
-       PDL->propagate_badflag( b, 0 );
+     if ( a == b && $ISPDLASTATEBAD(a) )
+       PDLA->propagate_badflag( b, 0 );
 
      /* always make sure the output is "good" */
-     $SETPDLSTATEGOOD(b);
+     $SETPDLASTATEGOOD(b);
     ',
     ...
 
 Since this routine removes all bad values, then the output piddle had
 its bad flag cleared. If run inplace (so C<a == b>), then we have to
 tell all the children of C<a> that the bad flag has been cleared (to
-save time we make sure that we call C<PDL-E<gt>propagate_badgflag> only
+save time we make sure that we call C<PDLA-E<gt>propagate_badgflag> only
 if the input piddle had its bad flag set).
 
 NOTE: one idea is that the documentation for the routine could be 
@@ -1560,10 +1560,10 @@ supplied (it's not an ideal solution).
 
 =back
 
-=head2 Other PDL::PP functions to support concise package definition
+=head2 Other PDLA::PP functions to support concise package definition
 
-So far, we have described the C<pp_def> and C<pp_done> functions. PDL::PP
-exports a few other functions to aid you in writing concise PDL extension
+So far, we have described the C<pp_def> and C<pp_done> functions. PDLA::PP
+exports a few other functions to aid you in writing concise PDLA extension
 package definitions.
 
 =head3 pp_addhdr
@@ -1575,7 +1575,7 @@ include directives in the right place into the generated XS file.
 To this end there is the C<pp_addhdr> function. This is also the function
 to use when you want to define some C functions for internal use by some
 of the XS functions (which are mostly functions defined by C<pp_def>).
-By including these functions here you make sure that PDL::PP inserts your
+By including these functions here you make sure that PDLA::PP inserts your
 code before the point where the actual XS module section begins and will
 therefore be left untouched by xsubpp (cf. I<perlxs> and I<perlxstut>
 man pages).
@@ -1587,7 +1587,7 @@ A typical call would be
   #include "libprotos.h"    /* prototypes of library functions */
   #include "mylocaldecs.h"  /* Local decs */
 
-  static void do_the real_work(PDL_Byte * in, PDL_Byte * out, int n)
+  static void do_the real_work(PDLA_Byte * in, PDLA_Byte * out, int n)
   {
 	/* do some calculations with the data */
   }
@@ -1623,12 +1623,12 @@ generated B<pm>-file. This is easily achieved with the C<pp_addpm> command:
 
    =head1 NAME
 
-   PDL::Lib::Mylib -- a PDL interface to the Mylib library
+   PDLA::Lib::Mylib -- a PDLA interface to the Mylib library
 
    =head1 DESCRIPTION
 
    This package implements an interface to the Mylib package with full
-   threading and indexing support (see L<PDL::Indexing>).
+   threading and indexing support (see L<PDLA::Indexing>).
 
    =cut
 
@@ -1671,7 +1671,7 @@ The arguments to C<pp_add_isa> are added the @ISA list, e.g.
 If your pp_def routines are to be used as object methods use
 C<pp_bless> to specify the package (i.e. class) to which
 your I<pp_def>ed methods will be added. For example,
-C<pp_bless('PDL::MyClass')>. The default is C<PDL> if this is
+C<pp_bless('PDLA::MyClass')>. The default is C<PDLA> if this is
 omitted.
 
 =head3 pp_addxs
@@ -1689,9 +1689,9 @@ side) to the generated XS file, for example
   isbigendian()
      CODE:
        unsigned short i;
-       PDL_Byte *b;
+       PDLA_Byte *b;
 
-       i = 42; b = (PDL_Byte*) (void*) &i;
+       i = 42; b = (PDLA_Byte*) (void*) &i;
 
        if (*b == 42)
           RETVAL = 0;
@@ -1704,7 +1704,7 @@ side) to the generated XS file, for example
   ');
 
 Especially C<pp_add_exported> and C<pp_addxs> should be used with care. PP uses
-PDL::Exporter, hence letting PP export your function means that they get added
+PDLA::Exporter, hence letting PP export your function means that they get added
 to the standard list of function exported by default (the list defined by the
 export tag ``:Func''). If you use C<pp_addxs> you shouldn't try to do anything
 that involves threading or indexing directly. PP is much better at generating
@@ -1778,7 +1778,7 @@ two. To use this, simply have the following line at some point in your
 
  pp_setversion('0.0.3');
 
-However, don't use this if you use L<Module::Build::PDL>. See that
+However, don't use this if you use L<Module::Build::PDLA>. See that
 module's documentation for details.
 
 =head3 pp_deprecate_module
@@ -1788,13 +1788,13 @@ as deprecated. This has the effect of emitting a warning when a user tries to
 C<use> the module. The generated POD for this module also carries a deprecation
 notice. The replacement module can be passed as an argument like this:
 
- pp_deprecate_module( infavor => "PDL::NewNonDeprecatedModule" );
+ pp_deprecate_module( infavor => "PDLA::NewNonDeprecatedModule" );
 
 Note that function affects I<only> the runtime warning and the POD.
 
 =head1 Making your PP function "private"
 
-Let's say that you have a function in your module called PDL::foo that
+Let's say that you have a function in your module called PDLA::foo that
 uses the PP function C<bar_pp> to do the heavy lifting. But you don't
 want to advertise that C<bar_pp> exists. To do this, you must move your
 PP function to the top of your module file, then call
@@ -1812,7 +1812,7 @@ and to prevent the function from being added to the symbol table, set
 
 in your pp_def declaration (see Image2D.pd for an example). This will
 effectively make your PP function "private." However, it is I<always>
-accessible via PDL::bar_pp due to Perl's module design. But making
+accessible via PDLA::bar_pp due to Perl's module design. But making
 it private will cause the user to go very far out of his or her way
 to use it, so he or she shoulders the consequences!
 
@@ -1824,13 +1824,13 @@ a delivery in a week from when I receive the email is 95% probable and
 two week delivery is 99% probable.
 
 And anyway, the slice operations require a much more intimate knowledge
-of PDL internals than the data operations. Furthermore, the complexity
+of PDLA internals than the data operations. Furthermore, the complexity
 of the issues involved is considerably higher than that in the average
 data operation. If you would like to convince yourself of this fact
-take a look at the F<Basic/Slices/slices.pd> file in the PDL
+take a look at the F<Basic/Slices/slices.pd> file in the PDLA
 distribution :-). Nevertheless,
 functions generated using the slice operations are at the heart of the
-index manipulation and dataflow capabilities of PDL.
+index manipulation and dataflow capabilities of PDLA.
 
 Also, there are a lot of dirty issues with virtual piddles and
 vaffines which we shall entirely skip here.
@@ -1838,7 +1838,7 @@ vaffines which we shall entirely skip here.
 =head2 Slices and bad values
 
 Slice operations need to be able to handle bad values (if support
-is compiled into PDL). The easiest thing to do is look at
+is compiled into PDLA). The easiest thing to do is look at
 F<Basic/Slices/slices.pd> to see how this works. 
 
 Along with C<BadCode>, there are also the C<BadBackCode> and 
@@ -1846,7 +1846,7 @@ C<BadRedoDimsCode> keys for C<pp_def>. However, any
 C<EquivCPOffsCode> should I<not> need changing, since 
 any changes are absorbed into the definition of the
 C<$EQUIVCPOFFS()> macro (i.e. it is handled automatically
-by PDL::PP).
+by PDLA::PP).
 
 =head2 A few notes on writing a slicing routine...
 
@@ -1857,34 +1857,34 @@ The following few paragraphs describe writing of a new slicing routine
 
 For printing warning messages or aborting/dieing, you can call C<warn> or C<barf> from PP code.
 However, you should be aware that these calls have been redefined using C preprocessor
-macros to C<< PDL->barf >> and C<< PDL->warn >>. These redefinitions are in place to keep
+macros to C<< PDLA->barf >> and C<< PDLA->warn >>. These redefinitions are in place to keep
 you from inadvertently calling perl's C<warn> or C<barf> directly, which can cause segfaults during
 pthreading (i.e. processor multi-threading).
 
-PDL's own versions of C<barf> and C<warn> will queue-up warning or barf messages until after pthreading
+PDLA's own versions of C<barf> and C<warn> will queue-up warning or barf messages until after pthreading
 is completed, and then call the perl versions of these routines.
 
-See L<PDL::ParallelCPU> for more information on pthreading.
+See L<PDLA::ParallelCPU> for more information on pthreading.
 
 =head1 USEFUL ROUTINES
 
-The PDL C<Core> structure, defined in F<Basic/Core/pdlcore.h.PL>, contains
+The PDLA C<Core> structure, defined in F<Basic/Core/pdlcore.h.PL>, contains
 pointers to a number of routines that may be useful to you.  The majority
 of these routines deal with manipulating piddles, but some are more general:
 
 =over 4
 
-=item PDL->qsort_B( PDL_Byte *xx, int a, int b )
+=item PDLA->qsort_B( PDLA_Byte *xx, int a, int b )
 
 Sort the array C<xx> between the indices C<a> and C<b>.
-There are also versions for the other PDL datatypes,
+There are also versions for the other PDLA datatypes,
 with postfix C<_S>, C<_U>, C<_L>, C<_N>, C<_Q>, C<_F>, and C<_D>.
-Any module using this must ensure that C<PDL::Ufunc>
+Any module using this must ensure that C<PDLA::Ufunc>
 is loaded.
 
-=item PDL->qsort_ind_B( PDL_Byte *xx, int *ix, int a, int b )
+=item PDLA->qsort_ind_B( PDLA_Byte *xx, int *ix, int a, int b )
 
-As for C<PDL-E<gt>qsort_B>, but this time sorting the indices
+As for C<PDLA-E<gt>qsort_B>, but this time sorting the indices
 rather than the data.
 
 =back
@@ -1901,17 +1901,17 @@ to the Makefile. In the following we will outline the typical format
 of a Perl Makefile to automatically build and install your package
 from a description in a PP file. Most of the rules to build the xs, pm
 and other required files from the PP file are already predefined in
-the PDL::Core::Dev package. We just have to tell MakeMaker to use
+the PDLA::Core::Dev package. We just have to tell MakeMaker to use
 it.
 
 In most cases you can define your Makefile like
 
   # Makefile.PL for a package defined by PP code.
 
-  use PDL::Core::Dev;            # Pick up development utilities
+  use PDLA::Core::Dev;            # Pick up development utilities
   use ExtUtils::MakeMaker;
 
-  $package = ["mylib.pd",Mylib,PDL::Lib::Mylib];
+  $package = ["mylib.pd",Mylib,PDLA::Lib::Mylib];
   %hash = pdlpp_stdargs($package);
   $hash{OBJECT} .= ' additional_Ccode$(OBJ_EXT) ';
   $hash{clean}->{FILES} .= ' todelete_Ccode$(OBJ_EXT) ';
@@ -1924,7 +1924,7 @@ Here, the list in $package is: first: PP source file name,
 then the prefix for the produced files and finally the whole package name.
 You can modify the hash in whatever way you like but it would be reasonable
 to stay within some limits so that your package will continue to work
-with later versions of PDL.
+with later versions of PDLA.
 
 If you don't want to use prepackaged arguments,
 here is a generic F<Makefile.PL> that you can adapt for your own
@@ -1932,30 +1932,30 @@ needs:
 
   # Makefile.PL for a package defined by PP code.
 
-  use PDL::Core::Dev;            # Pick up development utilities
+  use PDLA::Core::Dev;            # Pick up development utilities
   use ExtUtils::MakeMaker;
 
   WriteMakefile(
-   'NAME'  	=> 'PDL::Lib::Mylib',
+   'NAME'  	=> 'PDLA::Lib::Mylib',
    'VERSION_FROM'	=> 'mylib.pd',
-   'TYPEMAPS'     => [&PDL_TYPEMAP()],
+   'TYPEMAPS'     => [&PDLA_TYPEMAP()],
    'OBJECT'       => 'mylib$(OBJ_EXT) additional_Ccode$(OBJ_EXT)',
    'PM'		=> { 'Mylib.pm'            => '$(INST_LIBDIR)/Mylib.pm'},
-   'INC'          => &PDL_INCLUDE(), # add include dirs as required by your lib
+   'INC'          => &PDLA_INCLUDE(), # add include dirs as required by your lib
    'LIBS'         => [''],   # add link directives as necessary
    'clean'        => {'FILES'  =>
 			  'Mylib.pm Mylib.xs Mylib$(OBJ_EXT)
 			  additional_Ccode$(OBJ_EXT)'},
   );
 
-  # Add genpp rule; this will invoke PDL::PP on our PP file
+  # Add genpp rule; this will invoke PDLA::PP on our PP file
   # the argument is an array reference where the array has three string elements:
   #   arg1: name of the source file that contains the PP code
   #   arg2: basename of the xs and pm files to be generated
   #   arg3: name of the package that is to be generated
-  sub MY::postamble { pdlpp_postamble(["mylib.pd",Mylib,PDL::Lib::Mylib]); }
+  sub MY::postamble { pdlpp_postamble(["mylib.pd",Mylib,PDLA::Lib::Mylib]); }
 
-To make life even easier PDL::Core::Dev defines the function C<pdlpp_stdargs>
+To make life even easier PDLA::Core::Dev defines the function C<pdlpp_stdargs>
 that returns a hash with default values that can be passed (either
 directly or after appropriate modification) to a call to WriteMakefile.
 Currently, C<pdlpp_stdargs> returns a hash where the keys are filled in
@@ -1963,11 +1963,11 @@ as follows:
 
 	(
 	 'NAME'  	=> $mod,
-	 'TYPEMAPS'     => [&PDL_TYPEMAP()],
+	 'TYPEMAPS'     => [&PDLA_TYPEMAP()],
 	 'OBJECT'       => "$pref\$(OBJ_EXT)",
 	 PM 	=> {"$pref.pm" => "\$(INST_LIBDIR)/$pref.pm"},
 	 MAN3PODS => {"$src" => "\$(INST_MAN3DIR)/$mod.\$(MAN3EXT)"},
-	 'INC'          => &PDL_INCLUDE(),
+	 'INC'          => &PDLA_INCLUDE(),
 	 'LIBS'         => [''],
 	 'clean'        => {'FILES'  => "$pref.xs $pref.pm $pref\$(OBJ_EXT)"},
 	)
@@ -1989,10 +1989,10 @@ so that different things may be tried.
 your best bet will be to read the source code :-( or ask on the list
 (try the latter first) ]
 
-=head1 Appendix A: Some keys recognised by PDL::PP
+=head1 Appendix A: Some keys recognised by PDLA::PP
 
 Unless otherwise specified, the arguments are strings. Keys marked with
-(bad) are only used if bad-value support is compiled into PDL.
+(bad) are only used if bad-value support is compiled into PDLA.
 
 =over 4
 
@@ -2057,8 +2057,8 @@ for instance see the code for C<replacebad> in F<Basic/Bad/bad.pd>.
 
 =item Doc
 
-Used to specify a documentation string in Pod format. See PDL::Doc
-for information on PDL documentation conventions. Note: in
+Used to specify a documentation string in Pod format. See PDLA::Doc
+for information on PDLA documentation conventions. Note: in
 the special case where the PP 'Doc' string is one line this is
 implicitly used for the quick reference AND the documentation!
 
@@ -2074,16 +2074,16 @@ code) explicitly specify C<Doc=E<gt>undef>.
 Contains the text returned by the C<badinfo> command (in C<perldl>) or
 the C<-b> switch to the C<pdldoc> shell script. In many cases, you will
 not need to specify this, since the information can be automatically
-created by PDL::PP. However, as befits computer-generated text, it's
+created by PDLA::PP. However, as befits computer-generated text, it's
 rather stilted; it may be much better to do it yourself!
 
 =item NoPthread
 
-Optional flag to indicate the PDL function should B<not> use processor threads (i.e.
+Optional flag to indicate the PDLA function should B<not> use processor threads (i.e.
 pthreads or POSIX threads) to split up work across mutliple CPU cores. This option
-is typically set to 1 if the underlying PDL function is not threadsafe. If this option
+is typically set to 1 if the underlying PDLA function is not threadsafe. If this option
 isn't present, then the function is assumed to be threadsafe. This option only
-applies if PDL has been compiled with POSIX threads enabled. 
+applies if PDLA has been compiled with POSIX threads enabled. 
 
 =cut
 
@@ -2100,15 +2100,15 @@ applies if PDL has been compiled with POSIX threads enabled.
 
 =item PMCode
 
-PDL functions allow you to pass in a piddle into which you want the output
+PDLA functions allow you to pass in a piddle into which you want the output
 saved. This is handy because you can allocate an output piddle once and
-reuse it many times; the alternative would be for PDL to create a new piddle
+reuse it many times; the alternative would be for PDLA to create a new piddle
 each time, which may waste compute cycles or, more likely, RAM. This added
-flexibility comes at the cost of more complexity: PDL::PP has to write
+flexibility comes at the cost of more complexity: PDLA::PP has to write
 functions that are smart enough to count the arguments passed to it and
 create new piddles on the fly, but only if you want them.
 
-PDL::PP is smart enough to do that, but there are restrictions on argument
+PDLA::PP is smart enough to do that, but there are restrictions on argument
 order and the like. If you want a more flexible function, you can write your
 own Perl-side wrapper and specify it in the PMCode key. The string that you
 supply must (should) define a Perl function with a name that matches what you
@@ -2123,12 +2123,12 @@ to do. :-(
 
 =item PMFunc
 
-When pp_def generates functions, it typically defines them in the PDL
+When pp_def generates functions, it typically defines them in the PDLA
 package. Then, in the .pm file that it generates for your module, it
 typically adds a line that essentially copies that function into your current
 package's symbol table with code that looks like this:
 
- *func_name = \&PDL::func_name;
+ *func_name = \&PDLA::func_name;
 
 It's a little bit smarter than that (it knows when to wrap that sort of
 thing in a BEGIN block, for example, and if you specified something different
@@ -2148,7 +2148,7 @@ if you want to add Perl code to your module.
 =head2 Macros
 
 Macros labeled by (bad) are only used if bad-value support is compiled into
-PDL.
+PDLA.
 
 =over 7
 
@@ -2172,7 +2172,7 @@ replaced by the C type that is equal to the runtime type of the operation
 
 =item $P(a)
 
-a pointer access to the PDL named C<a> in the signature. Useful for
+a pointer access to the PDLA named C<a> in the signature. Useful for
 interfacing to C functions
 
 =item $PP(a)
@@ -2184,7 +2184,7 @@ a physical pointer access to pdl C<a>; mainly for internal use
 expansion alternatives according to runtime type of operation,
 where XXX is some string that is matched by C</[BSULNQFD+]/>.
 
-=item $PDL(a)
+=item $PDLA(a)
 
 return a pointer to the pdl data structure (pdl *) of piddle C<a>
 
@@ -2225,16 +2225,16 @@ execute following code if type of operation is any of C<TYPES>
 
 =back
 
-=head1 Appendix C: Functions imported by PDL::PP
+=head1 Appendix C: Functions imported by PDLA::PP
 
-A number of functions are imported when you C<use PDL::PP>. These include
+A number of functions are imported when you C<use PDLA::PP>. These include
 functions that control the generated C or XS code, functions that control
 the generated Perl code, and functions that manipulate the packages and
 symbol tables into which the code is created.
 
 =head2 Generating C and XS Code
 
-PDL::PP's main purpose is to make it easy for you to wrap the threading
+PDLA::PP's main purpose is to make it easy for you to wrap the threading
 engine around your own C code, but you can do some other things, too.
 
 =over
@@ -2246,7 +2246,7 @@ document discusses the use of pp_def.
 
 =item pp_done
 
-Indicates you are done with PDL::PP and that it should generate its .xs
+Indicates you are done with PDLA::PP and that it should generate its .xs
 and .pm files based upon the other pp_* functions that you have called.
 This function takes no arguments.
 
@@ -2272,7 +2272,7 @@ C code.
 
 =item pp_boundscheck
 
-PDL normally checks the bounds of your accesses before making them. You can
+PDLA normally checks the bounds of your accesses before making them. You can
 turn that on or off at runtime by setting MyPackage::set_boundscheck. This
 function allows you to remove that runtime flexibility and B<never> do bounds
 checking. It also returns the current boundschecking status if called
@@ -2285,7 +2285,7 @@ That needs to be addressed.
 
 =head2 Generating Perl Code
 
-Many functions imported when you use PDL::PP allow you to modify the
+Many functions imported when you use PDLA::PP allow you to modify the
 contents of the generated .pm file. In addition to pp_def and pp_done,
 the role of these functions is primarily to add code to various parts of
 your generated .pm file.
@@ -2294,7 +2294,7 @@ your generated .pm file.
 
 =item pp_addpm
 
-Adds Perl code to the generated .pm file. PDL::PP actually keeps track of
+Adds Perl code to the generated .pm file. PDLA::PP actually keeps track of
 three different sections of generated code: the Top, the Middle, and the
 Bottom. You can add Perl code to the Middle section using the one-argument
 form, where the argument is the Perl code you want to supply. In the
@@ -2358,8 +2358,8 @@ help the compiler report errors on the proper line.
 
 =head2 Modifying the Symbol Table and Export Behavior
 
-PDL::PP usually exports all functions generated using pp_def, and usually
-installs them into the PDL symbol table. However, you can modify this
+PDLA::PP usually exports all functions generated using pp_def, and usually
+installs them into the PDLA symbol table. However, you can modify this
 behavior with these functions.
 
 =over
@@ -2367,32 +2367,32 @@ behavior with these functions.
 =item pp_bless
 
 Sets the package (symbol table) to which the XS code is added. The default
-is PDL, which is generally what you want. If you use the default blessing
+is PDLA, which is generally what you want. If you use the default blessing
 and you create a function myfunc, then you can do the following:
 
  $piddle->myfunc(<args>);
- PDL::myfunc($piddle, <args>);
+ PDLA::myfunc($piddle, <args>);
 
 On the other hand, if you bless your functions into another package, you
-cannot invoke them as PDL methods, and must invoke them as:
+cannot invoke them as PDLA methods, and must invoke them as:
 
  MyPackage::myfunc($piddle, <args>);
 
 Of course, you could always use the PMFunc key to add your function to the
-PDL symbol table, but why do that?
+PDLA symbol table, but why do that?
 
 =item pp_add_isa
 
 Adds to the list of modules from which your B<module> inherits. The default
 list is
 
- qw(PDL::Exporter DynaLoader)
+ qw(PDLA::Exporter DynaLoader)
 
 =item pp_core_importlist
 
 At the top of your generated .pm file is a line that looks like this:
 
- use PDL::Core;
+ use PDLA::Core;
 
 You can modify that by specifying a string to pp_core_importlist. For
 example,
@@ -2401,16 +2401,16 @@ example,
 
 will result in
 
- use PDL::Core::Blarg;
+ use PDLA::Core::Blarg;
 
 You can use this, for example, to add a list of symbols to import from
-PDL::Core. For example:
+PDLA::Core. For example:
 
  pp_core_importlist(" ':Internal'");
 
 will lead to the following use statement:
 
- use PDL::Core ':Internal';
+ use PDLA::Core ':Internal';
 
 =item pp_setversion
 
@@ -2437,13 +2437,13 @@ programmers to use your functions as methods.
 
 =head1 SEE ALSO
 
-I<PDL>
+I<PDLA>
 
-For the concepts of threading and slicing check L<PDL::Indexing>.
+For the concepts of threading and slicing check L<PDLA::Indexing>.
 
-L<PDL::Internals>
+L<PDLA::Internals>
 
-L<PDL::BadValues> for information on bad values
+L<PDLA::BadValues> for information on bad values
 
 I<perlxs>, I<perlxstut>
 
@@ -2457,7 +2457,7 @@ Almost everything having to do with L<Slice Operation>.
 
 =head1 BUGS
 
-Although PDL::PP is quite flexible and thoroughly used, there are surely
+Although PDLA::PP is quite flexible and thoroughly used, there are surely
 bugs. First amonth them: this documentation needs a thorough revision.
 
 =head1 AUTHOR

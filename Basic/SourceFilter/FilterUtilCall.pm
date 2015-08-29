@@ -1,5 +1,5 @@
 # This original Filter::Util::Call-based
-# PDL::NiceSlice engine.
+# PDLA::NiceSlice engine.
 #
 use Filter::Util::Call;
 

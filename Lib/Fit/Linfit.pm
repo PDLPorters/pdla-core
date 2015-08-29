@@ -1,6 +1,6 @@
 =head1 NAME
 
-PDL::Fit::Linfit - routines for fitting data with linear combinations of functions.
+PDLA::Fit::Linfit - routines for fitting data with linear combinations of functions.
 
 =head1 DESCRIPTION
 
@@ -105,19 +105,19 @@ unnormalised units.
 
 =cut
 
-package PDL::Fit::Linfit;
+package PDLA::Fit::Linfit;
 
 @EXPORT_OK  = qw( linfit1d );
 %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 
-use PDL::Core;
-use PDL::Basic;
-use PDL::Exporter;
-@ISA    = qw( PDL::Exporter );
-use PDL::Options ':Func';
-use PDL::Slatec; # For matinv()
+use PDLA::Core;
+use PDLA::Basic;
+use PDLA::Exporter;
+@ISA    = qw( PDLA::Exporter );
+use PDLA::Options ':Func';
+use PDLA::Slatec; # For matinv()
 
-sub PDL::linfit1d {
+sub PDLA::linfit1d {
    my $opthash = ref($_[-1]) eq "HASH" ? pop(@_) : {} ; 
    my %opt = parse( { Weights=>ones(1) }, $opthash ) ;
    barf "Usage: linfit1d incorrect args\n" if $#_<1 or $#_ > 3;
@@ -160,7 +160,7 @@ sub PDL::linfit1d {
    }  
    
 }
-*linfit1d = \&PDL::linfit1d;
+*linfit1d = \&PDLA::linfit1d;
 
 
 1;

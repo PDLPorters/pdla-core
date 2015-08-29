@@ -1,7 +1,7 @@
 ###################################
 #
 #
-package PDL::Graphics::TriD::Object;
+package PDLA::Graphics::TriD::Object;
 
 use strict;
 
@@ -46,7 +46,7 @@ sub add_object {
 
 sub changed_from_above {
 	my($this) = @_;
-	print "CHANGED_FROM_ABOVE\n" if $PDL::Graphics::TriD::verbose;
+	print "CHANGED_FROM_ABOVE\n" if $PDLA::Graphics::TriD::verbose;
 	$this->changed();
 }
 
@@ -72,7 +72,7 @@ sub clear {
 
 sub changed {
 	my($this) = @_;
-	print "VALID0 $this\n" if $PDL::Graphics::TriD::verbose;
+	print "VALID0 $this\n" if $PDLA::Graphics::TriD::verbose;
 	$this->{ValidList} = 0;
 	for(@{$this->{ChangedSub}}) {
 		&$_($this);
@@ -86,9 +86,9 @@ sub i_keep_list {
 
 sub vrml_update {
   my ($this) = @_;
-  use PDL::Graphics::VRML;
+  use PDLA::Graphics::VRML;
 
-  $this->{VRML} = new PDL::Graphics::VRMLNode('Transform',
+  $this->{VRML} = new PDLA::Graphics::VRMLNode('Transform',
 				   'translation' => "-1 -1 -1",
 				   'scale' => "2 2 2");
   $this->{ValidList} = 1;

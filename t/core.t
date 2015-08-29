@@ -1,6 +1,6 @@
 # -*-perl-*-
 #
-# test some PDL core routines
+# test some PDLA core routines
 #
 
 use strict;
@@ -8,13 +8,13 @@ use Test::More;
 
 BEGIN {
     # if we've got this far in the tests then 
-    # we can probably assume PDL::LiteF works!
+    # we can probably assume PDLA::LiteF works!
     #
     eval {
-        require PDL::LiteF;
-    } or BAIL_OUT("PDL::LiteF failed: $@");
+        require PDLA::LiteF;
+    } or BAIL_OUT("PDLA::LiteF failed: $@");
     plan tests => 58;
-    PDL::LiteF->import;
+    PDLA::LiteF->import;
 }
 $| = 1;
 
@@ -43,7 +43,7 @@ ok tapprox( $b_dbl->sclr, 5 ), "sclr test of 1-elem pdl (dbl)";
 ok tapprox( $c_dbl->sclr, 4 ), "sclr test of 3-elem pdl (dbl)";
 
 # switch multielement check on
-is( PDL->sclr({Check=>'barf'}), 2, "changed error mode of sclr" );
+is( PDLA->sclr({Check=>'barf'}), 2, "changed error mode of sclr" );
 
 eval '$c_long->sclr';
 like $@, qr/multielement piddle in 'sclr' call/, "sclr failed on multi-element piddle (long)";
@@ -73,30 +73,30 @@ $c = $a->squeeze;
 ok eq_array( [ $b->dims ], [3,4] ), "reshape(-1)";
 ok all( $b == $c ), "squeeze";
 
-$c++; # check dataflow in reshaped PDL
+$c++; # check dataflow in reshaped PDLA
 ok all( $b == $c ), "dataflow"; # should flow back to b
 ok all( $a == 2 ), "dataflow";
 
 our $d = pdl(5); # zero dim piddle and reshape/squeeze
-ok $d->reshape(-1)->ndims==0, "reshape(-1) on 0-dim PDL gives 0-dim PDL";
-ok $d->reshape(1)->ndims==1, "reshape(1) on 0-dim PDL gives 1-dim PDL";
-ok $d->reshape(1)->reshape(-1)->ndims==0, "reshape(-1) on 1-dim, 1-element PDL gives 0-dim PDL";
+ok $d->reshape(-1)->ndims==0, "reshape(-1) on 0-dim PDLA gives 0-dim PDLA";
+ok $d->reshape(1)->ndims==1, "reshape(1) on 0-dim PDLA gives 1-dim PDLA";
+ok $d->reshape(1)->reshape(-1)->ndims==0, "reshape(-1) on 1-dim, 1-element PDLA gives 0-dim PDLA";
 
 
 
 
 # test topdl
 
-isa_ok( PDL->topdl(1),       "PDL", "topdl(1) returns a piddle" );
-isa_ok( PDL->topdl([1,2,3]), "PDL", "topdl([1,2,3]) returns a piddle" );
-isa_ok( PDL->topdl(1,2,3),   "PDL", "topdl(1,2,3) returns a piddle" );
-$a=PDL->topdl(1,2,3);
+isa_ok( PDLA->topdl(1),       "PDLA", "topdl(1) returns a piddle" );
+isa_ok( PDLA->topdl([1,2,3]), "PDLA", "topdl([1,2,3]) returns a piddle" );
+isa_ok( PDLA->topdl(1,2,3),   "PDLA", "topdl(1,2,3) returns a piddle" );
+$a=PDLA->topdl(1,2,3);
 ok (($a->nelem == 3  and  all($a == pdl(1,2,3))), "topdl(1,2,3) returns a 3-piddle containing (1,2,3)");
 
 
-# test $PDL::undefval support in pdl (bug #886263)
+# test $PDLA::undefval support in pdl (bug #886263)
 #
-is $PDL::undefval, 0, "default value of $PDL::undefval is 0";
+is $PDLA::undefval, 0, "default value of $PDLA::undefval is 0";
 
 $a = [ [ 2, undef ], [3, 4 ] ];
 $b = pdl( $a );
@@ -109,7 +109,7 @@ $c = pdl( long, [ 2, 0, 3, 4 ] )->reshape(2,2);
 ok all( $b == $c ), "undef converted to 0 (long)";
 
 do { 
-    local($PDL::undefval) = -999;
+    local($PDLA::undefval) = -999;
     $a = [ [ 2, undef ], [3, 4 ] ];
     $b = pdl( $a );
     $c = pdl( [ 2, -999, 3, 4 ] )->reshape(2,2);
@@ -128,7 +128,7 @@ $a = pdl(pdl(5));
 ok all( $a== pdl(5)), "pdl() can piddlify a piddle";
 
 TODO: {
-   local $TODO = 'Known_problems bug sf.net #3011879' if ($PDL::Config{SKIP_KNOWN_PROBLEMS} or exists $ENV{SKIP_KNOWN_PROBLEMS});
+   local $TODO = 'Known_problems bug sf.net #3011879' if ($PDLA::Config{SKIP_KNOWN_PROBLEMS} or exists $ENV{SKIP_KNOWN_PROBLEMS});
 
    # pdl of mixed-dim pdls: pad within a dimension
    $a = pdl( zeroes(5), ones(3) );
@@ -145,14 +145,14 @@ ok all($c == pdl([[[1,0,0],[0,0,0]],[[2,3,4],[5,0,0]]])),"Can catenate mixed-dim
 
 # same thing, with undefval set differently
 do {
-    local($PDL::undefval) = 99;
+    local($PDLA::undefval) = 99;
     $c = pdl [1], pdl[2,3,4], pdl[5];
     ok all($c == pdl([[[1,99,99],[99,99,99]],[[2,3,4],[5,99,99]]])), "undefval works for padding" or diag("c=$c\n");;
 } while(0);
 
 # empty pdl cases
 eval {$a = zeroes(2,0,1);};
-ok(!$@,"zeroes accepts empty PDL specification");
+ok(!$@,"zeroes accepts empty PDLA specification");
 
 eval { $b = pdl($a,sequence(2,0,1)); };
 ok((!$@ and all(pdl($b->dims) == pdl(2,0,1,2))), "catenating two empties gives an empty");

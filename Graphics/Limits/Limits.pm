@@ -1,4 +1,4 @@
-package PDL::Graphics::Limits;
+package PDLA::Graphics::Limits;
 
 use strict;
 use warnings;
@@ -23,11 +23,11 @@ $VERSION = eval $VERSION;
 
 # Preloaded methods go here.
 
-use PDL::Core qw( cat pdl );
-use PDL::Primitive qw( append );
-use PDL::Fit::Polynomial;
-use PDL::Options;
-use PDL::Bad;
+use PDLA::Core qw( cat pdl );
+use PDLA::Primitive qw( append );
+use PDLA::Fit::Polynomial;
+use PDLA::Options;
+use PDLA::Bad;
 use Carp;
 use POSIX qw( log10 );
 
@@ -36,17 +36,17 @@ use warnings;
 
 ################################################################################
 # figure out what's good in a piddle after a possible transformation which could
-# generate Infs or NaN's.  If only everyone used PDL::Bad::UseNaN...
+# generate Infs or NaN's.  If only everyone used PDLA::Bad::UseNaN...
 sub set_mask
 {
   my ( $mask, $data ) = @_;
 
-  if ( $PDL::Bad::Status )
+  if ( $PDLA::Bad::Status )
   {
     my $badflag = $data->badflag();
     $data->badflag(1);
 
-    $mask .= $PDL::Bad::UseNaN ? (! $data->isbad ) : ( $data->isfinite & ! $data->isbad );
+    $mask .= $PDLA::Bad::UseNaN ? (! $data->isbad ) : ( $data->isfinite & ! $data->isbad );
 
     $data->badflag($badflag);
   } else
@@ -58,11 +58,11 @@ sub set_mask
 
 
 {
-  package PDL::Graphics::Limits::DSet;
+  package PDLA::Graphics::Limits::DSet;
 
-  use PDL::Core qw( cat pdl );
+  use PDLA::Core qw( cat pdl );
 
-  *set_mask = \*PDL::Graphics::Limits::set_mask;
+  *set_mask = \*PDLA::Graphics::Limits::set_mask;
 
   sub new
   {
@@ -177,7 +177,7 @@ sub set_mask
 
     # reuse these as much as possible to reduce memory hit
     my $tmp;
-    my $mask = PDL::null;
+    my $mask = PDLA::null;
 
     # i know of no way of determining whether a function can be applied inplace.
     # assume not.
@@ -206,7 +206,7 @@ sub set_mask
       push @minmax, $tmp->where($mask)->minmax;
     }
 
-    my ( $min, $max ) = PDL::Core::pdl( @minmax )->minmax;
+    my ( $min, $max ) = PDLA::Core::pdl( @minmax )->minmax;
 
     $dset->set_minmax( $min, $max, $axis );
   }
@@ -356,11 +356,11 @@ sub normalize_dsets
     # [ \%h, @keys ]                        -> a hash with its keys
 
     # scalar or piddle, turn it into its own data set
-    if ( ! $ref || UNIVERSAL::isa($ds, 'PDL') )
+    if ( ! $ref || UNIVERSAL::isa($ds, 'PDLA') )
     {
       push @dsets,
-	PDL::Graphics::Limits::DSet->new( $attr->{Min}, $attr->{Max},
-			    { data => PDL::Core::topdl( $ds ) } );
+	PDLA::Graphics::Limits::DSet->new( $attr->{Min}, $attr->{Max},
+			    { data => PDLA::Core::topdl( $ds ) } );
     }
 
     elsif ( 'ARRAY' eq $ref )
@@ -466,9 +466,9 @@ sub normalize_array
 	eval
 	{
 	  # naked scalar or piddle: data vector with no attributes
-	  if ( ! $ref || UNIVERSAL::isa($vec, 'PDL') )
+	  if ( ! $ref || UNIVERSAL::isa($vec, 'PDLA') )
 	  {
-	    push @vecs, { data => PDL::Core::topdl( $vec ) };
+	    push @vecs, { data => PDLA::Core::topdl( $vec ) };
 	  }
 
 	  # array: data vector with attributes
@@ -491,7 +491,7 @@ sub normalize_array
       }
 
       push @$dsets,
-	PDL::Graphics::Limits::DSet->new( $attr->{Min}, $attr->{Max}, @vecs )
+	PDLA::Graphics::Limits::DSet->new( $attr->{Min}, $attr->{Max}, @vecs )
 	    if @vecs;
     }
   };
@@ -519,7 +519,7 @@ sub normalize_array_vec
     if @el < 1 || @el > 4;
 
   my %vec;
-  $vec{data} = PDL::Core::topdl( shift @el);
+  $vec{data} = PDLA::Core::topdl( shift @el);
 
   # if last value is CODE, it's a trans
   $vec{trans} = pop @el if 'CODE' eq ref $el[-1];
@@ -539,14 +539,14 @@ sub normalize_array_vec
   # two values? asymmetric errors
   if ( @el == 2 )
   {
-    $vec{errn} = PDL::Core::topdl($el[0]) if defined $el[0];
-    $vec{errp} = PDL::Core::topdl($el[1]) if defined $el[1];
+    $vec{errn} = PDLA::Core::topdl($el[0]) if defined $el[0];
+    $vec{errp} = PDLA::Core::topdl($el[1]) if defined $el[1];
   }
 
   # one value? symmetric errors
   elsif ( @el == 1 )
   {
-    $vec{errn} = PDL::Core::topdl($el[0]) if defined $el[0];
+    $vec{errn} = PDLA::Core::topdl($el[0]) if defined $el[0];
     $vec{errp} = $vec{errn} if defined $vec{errn};
   }
 
@@ -663,7 +663,7 @@ sub normalize_hash_dset
     push @dset, \%vec;
   }
 
-  PDL::Graphics::Limits::DSet->new( $attr->{Min}, $attr->{Max}, @dset );
+  PDLA::Graphics::Limits::DSet->new( $attr->{Min}, $attr->{Max}, @dset );
 }
 
 #####################################################################
@@ -939,7 +939,7 @@ sub limits
 	# fit values, just the min and max values.  since we
 	# get them all anyway, we'll use them.
 
-	my $mask = PDL::null;
+	my $mask = PDLA::null;
 	set_mask( $mask, $y );
 
 	my $fit = fitpoly1d( $y->where($mask)->qsort, 2 );
@@ -955,7 +955,7 @@ sub limits
   }
 
   # derive union of minmax limits from data sets
-  my $minmax = PDL::Core::null;
+  my $minmax = PDLA::Core::null;
   $minmax = append( $minmax, $_->get_minmax ) foreach @dsets;
 
   # get overall minmax limits
@@ -1023,7 +1023,7 @@ __END__
 
 =head1 NAME
 
-PDL::Graphics::Limits - derive limits for display purposes
+PDLA::Graphics::Limits - derive limits for display purposes
 
 
 =head1 DESCRIPTION
@@ -1032,7 +1032,7 @@ Functions to derive limits for data for display purposes
 
 =head1 SYNOPSIS
 
-  use PDL::Graphics::Limits;
+  use PDLA::Graphics::Limits;
 
 
 =head1 FUNCTIONS

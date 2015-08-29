@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-my @pack = (["ops.pd",qw(Ops PDL::Ops)]);
+my @pack = (["ops.pd",qw(Ops PDLA::Ops)]);
 my %hash = pdlpp_stdargs_int(@pack);
 $hash{LIBS}->[0] .= ' -lm ';
 

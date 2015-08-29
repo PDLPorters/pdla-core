@@ -5,8 +5,8 @@
 # 
 $| = 1;
 print "Initializing...\n";
-use PDL;
-use PDL::NiceSlice;
+use PDLA;
+use PDLA::NiceSlice;
 
 # Snarf the file and build a separate piddle for each polyline
 print "Interpreting map file...\n";
@@ -43,7 +43,7 @@ foreach $z(@mainlist) {
 print "... $nelem vectors\n";
 
 # Transform all the polylines into spherical coordinates.
-use PDL::Transform;
+use PDLA::Transform;
 $t = t_compose(t_scale(ones(3)*180/3.14159),t_spherical());
 
 $lonlat = $t->apply( $elements->(pdl(2,0,1)) )  ->(1:2); # discard radius
@@ -55,7 +55,7 @@ $idx = which((abs($lonlat->((0),0:-2) - $lonlat->((0),1:-1))) > 355);
 $p->($idx) .= 0 if($idx->nelem > 0);
 
 # Plot map
-use PDL::Graphics::PGPLOT::Window;
+use PDLA::Graphics::PGPLOT::Window;
 $w = pgwin(dev=>'/xs',size=>[10,10]);
 $w->lines($lonlat,$p,{Title=>'Lat/Lon map of world coastlines',XTitle=>'East Longitude',YTitle=>'North Latitude',Axis=>2});
 

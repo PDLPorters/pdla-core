@@ -1,6 +1,6 @@
-use PDL::LiteF;
-use PDL::IO::Pnm;
-use PDL::Dbg;
+use PDLA::LiteF;
+use PDLA::IO::Pnm;
+use PDLA::Dbg;
 use File::Temp qw(tempdir);
 use File::Spec;
 
@@ -22,8 +22,8 @@ sub rpnm_unlink {
   return $pdl;
 }
 
-$PDL::debug = $PDL::debug = 0;
-$PDL::debug = 1 if defined($ARGV[0]) && $ARGV[0] =~ /-v/;
+$PDLA::debug = $PDLA::debug = 0;
+$PDLA::debug = 1 if defined($ARGV[0]) && $ARGV[0] =~ /-v/;
 
 #              [FORMAT, extension, ushort-divisor,
 #               only RGB/no RGB/any (1/-1/0), mxdiff]
@@ -46,7 +46,7 @@ $im3 = byte [[0,0,255,255,12,13],[1,4,5,6,11,124],
 	     [100,0,0,0,10,10],[2,1,0,1,0,14],[2,1,0,1,0,14],
 	     [2,1,0,1,0,14]];
 
-if ($PDL::debug) {
+if ($PDLA::debug) {
   note $im1;
   $im1->px;
   note $im2;
@@ -87,7 +87,7 @@ for $raw (0,1) {
     $comp = $comp->ushort*65535 if $form->[0] eq 'SGI'; # yet another format quirk
     ok(tapprox($comp,$in3));
 
-    if ($PDL::debug) {
+    if ($PDLA::debug) {
       note $in1->px unless $form->[0] eq 'TIFF';
       note $in2->px;
       note $in3->px;

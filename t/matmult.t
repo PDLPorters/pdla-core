@@ -1,5 +1,5 @@
 use Test::More tests => 7;
-use PDL::LiteF;
+use PDLA::LiteF;
 
 sub tapprox {
 	my($a,$b) = @_;

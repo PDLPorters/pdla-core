@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-my @pack = (["gaussian.pd", qw(Gaussian PDL::Fit::Gaussian)]);
+my @pack = (["gaussian.pd", qw(Gaussian PDLA::Fit::Gaussian)]);
 my %hash = pdlpp_stdargs_int(@pack);
 $hash{OBJECT} .= ' ';
 $hash{DEFINE} .= ' ';

@@ -3,18 +3,18 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 BEGIN {
-   if ( $PDL::Config{USE_POGL} ) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw()";
+   if ( $PDLA::Config{USE_POGL} ) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw()";
       if (!$@) {
          eval "use OpenGL::Config";
       }
    }
 }
 
-my @pack = (["openglq.pd", qw(OpenGLQ PDL::Graphics::OpenGLQ)]);
+my @pack = (["openglq.pd", qw(OpenGLQ PDLA::Graphics::OpenGLQ)]);
 my %hash = pdlpp_stdargs_int(@pack);
 
-if ( $PDL::Config{USE_POGL} ) {
+if ( $PDLA::Config{USE_POGL} ) {
    push @{$hash{LIBS}}, $OpenGL::Config->{LIBS};
    $hash{DEFINE} .= ' '.$OpenGL::Config->{DEFINE};
    $hash{INC} .= ' '.$OpenGL::Config->{INC};
@@ -24,9 +24,9 @@ if ( $PDL::Config{USE_POGL} ) {
    }
 } else {
    warn "Graphics/TriD/OpenGLQ/Makefile.PL: will not compile bindings without Perl OpenGL\n\n";
-   ## push @{$hash{LIBS}}, $PDL::Config{OPENGL_LIBS};
-   ## $hash{DEFINE} .= ' '.$PDL::Config{OPENGL_DEFINE};
-   ## $hash{INC} .= ' '.$PDL::Config{OPENGL_INC};
+   ## push @{$hash{LIBS}}, $PDLA::Config{OPENGL_LIBS};
+   ## $hash{DEFINE} .= ' '.$PDLA::Config{OPENGL_DEFINE};
+   ## $hash{INC} .= ' '.$PDLA::Config{OPENGL_INC};
 }
 
 ${$hash{LIBS}}[0] .= ' -lm';

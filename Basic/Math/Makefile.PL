@@ -95,8 +95,8 @@ $mmdir =~ s/\\/\\\\/g;
 my $dir = File::Spec->canonpath(cwd);
 $dir = cdir $dir, $mdir unless $dir =~ /$mmdir$/;
 
-die "TEMPDIR not found in %PDL::Config"
-  unless $PDL::Config{TEMPDIR} && $PDL::Config{TEMPDIR}; # avoid 'only once'
+die "TEMPDIR not found in %PDLA::Config"
+  unless $PDLA::Config{TEMPDIR} && $PDLA::Config{TEMPDIR}; # avoid 'only once'
 
 foreach (@sfuncs) {
     $source{$_} = 'system' if is_sys_func( "$_();", $libs, $dir );
@@ -130,7 +130,7 @@ foreach (@keys) {
 }
 print "\n";
 
-my @pack = (["math.pd", qw(Math PDL::Math)]);
+my @pack = (["math.pd", qw(Math PDLA::Math)]);
 my %hash = pdlpp_stdargs_int(@pack);
 
 my %seen = (); # Build object file list

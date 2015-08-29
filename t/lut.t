@@ -7,9 +7,9 @@ BEGIN {
     plan tests => 8;
 }
 
-use PDL::LiteF;
-use PDL::Types;
-use PDL::Graphics::LUT;
+use PDLA::LiteF;
+use PDLA::Types;
+use PDLA::Graphics::LUT;
 
 sub tapprox {
     my($a,$b) = @_;
@@ -23,7 +23,7 @@ ok( $#names > -1, 1 );  # 1
 my @cols = lut_data( $names[0] );
 ok( $#cols, 3 );                         # 2
 ok( $cols[0]->nelem, $cols[1]->nelem );  # 3
-ok( $cols[2]->get_datatype, $PDL_F );    # 4
+ok( $cols[2]->get_datatype, $PDLA_F );    # 4
 
 # check we can reverse things
 my @cols2 = lut_data( $names[0], 1 );

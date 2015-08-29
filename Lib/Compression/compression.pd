@@ -6,22 +6,22 @@ pp_addpm({At=>'Top'},<<'EOD');
 
 =head1 NAME
 
-PDL::Compression - compression utilities
+PDLA::Compression - compression utilities
 
 =head1 DESCRIPTION
 
-These routines generally accept some data as a PDL and compress it
-into a smaller PDL.  Algorithms typically work on a single dimension
+These routines generally accept some data as a PDLA and compress it
+into a smaller PDLA.  Algorithms typically work on a single dimension
 and thread over other dimensions, producing a threaded table of
 compressed values if more than one dimension is fed in.
 
 The Rice algorithm, in particular, is designed to be identical to the 
-RICE_1 algorithm used in internal FITS-file compression (see PDL::IO::FITS).
+RICE_1 algorithm used in internal FITS-file compression (see PDLA::IO::FITS).
 
 
 =head1 SYNOPSIS
 
- use PDL::Compression
+ use PDLA::Compression
 
  ($b,$asize) = $a->rice_compress();
  $c = $b->rice_expand($asize);
@@ -38,13 +38,13 @@ pp_addpm({At=>'Bot'},<<'EOD');
 Copyright (C) 2010 Craig DeForest.
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 The Rice compression library is derived from the similar library in
 the CFITSIO 3.24 release, and is licensed under yet more more lenient
-terms than PDL itself; that notice is present in the file "ricecomp.c".
+terms than PDLA itself; that notice is present in the file "ricecomp.c".
 
 =head1 BUGS
 
@@ -90,13 +90,13 @@ pp_def(
 
 =for ref
 
-Squishes an input PDL along the 0 dimension by Rice compression.  In
-scalar context, you get back only the compressed PDL; in list context,
+Squishes an input PDLA along the 0 dimension by Rice compression.  In
+scalar context, you get back only the compressed PDLA; in list context,
 you also get back ancillary information that is required to uncompress
 the data with rice_uncompress.  
 
 Multidimensional data are threaded over - each row is compressed
-separately, and the returned PDL is squished to the maximum compressed
+separately, and the returned PDLA is squished to the maximum compressed
 size of any row.  If any of the streams could not be compressed (the
 algorithm produced longer output), the corresponding length is set to -1
 and the row is treated as if it had length 0.
@@ -105,7 +105,7 @@ Rice compression only works on integer data types -- if you have
 floating point data you must first quantize them.
 
 The underlying algorithm is identical to the Rice compressor used in
-CFITSIO (and is used by PDL::IO::FITS to load and save compressed FITS
+CFITSIO (and is used by PDLA::IO::FITS to load and save compressed FITS
 images).
 
 The optional blocksize indicates how many samples are to be compressed
@@ -140,7 +140,7 @@ Working on astronomical or solar image data, typical compression ratios of
 
 EOD
 	PMCode => <<'EOD',
-sub PDL::rice_compress {
+sub PDLA::rice_compress {
     my $in = shift;
     my $blocksize = shift || 32;
 
@@ -162,7 +162,7 @@ sub PDL::rice_compress {
     # lengths go here
     my ($len) = zeroes(long, $in->slice("(0)")->dims);
 
-    &PDL::_rice_compress_int( $in, $out, $len, $lbuf, $blocksize  );
+    &PDLA::_rice_compress_int( $in, $out, $len, $lbuf, $blocksize  );
     
     $l = $len->max;
     $out = $out->slice("0:".($l-1))->sever;
@@ -206,7 +206,7 @@ pp_def(
 
 =for ref
 
-Unsquishes a PDL that has been squished by rice_expand.
+Unsquishes a PDLA that has been squished by rice_expand.
 
 =for usage
 
@@ -218,7 +218,7 @@ Unsquishes a PDL that has been squished by rice_expand.
 
 EOD
 	PMCode => <<'EOD',
-sub PDL::rice_expand {
+sub PDLA::rice_expand {
     my $squished = shift;
     my $dim0 =shift;
     my $blocksize = shift || 32;
@@ -229,7 +229,7 @@ sub PDL::rice_expand {
     # Allocate row buffer to avoid weird memory edge case
     my $lbuf = zeroes($squished->type, $squished->dim(0));
    
-   &PDL::_rice_expand_int( $squished, $out, $lbuf, $blocksize );
+   &PDLA::_rice_expand_int( $squished, $out, $lbuf, $blocksize );
 
    return $out;
 }

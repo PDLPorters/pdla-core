@@ -1,6 +1,6 @@
 #!/usr/bin/perl 
 #
-#  PDL::Graphics::TriD::ButtonControl - This package simply defines 
+#  PDLA::Graphics::TriD::ButtonControl - This package simply defines 
 #  default event handler subroutines.      $Revision$  
 #
 #  James P. Edwards
@@ -14,7 +14,7 @@
 
 =head1 NAME
 
-PDL::Graphics::TriD::ButtonControl - default event handler subroutines
+PDLA::Graphics::TriD::ButtonControl - default event handler subroutines
 
 =head1 FUNCTIONS
 
@@ -36,7 +36,7 @@ the Event loop.
 
 =cut
 
-package PDL::Graphics::TriD::ButtonControl;
+package PDLA::Graphics::TriD::ButtonControl;
 use strict;
 use fields qw/Win W H SC/;
 
@@ -58,7 +58,7 @@ sub new {
 =cut
 
 sub mouse_moved{
-  print "mouse_moved @_\n" if $PDL::Graphics::TriD::verbose;
+  print "mouse_moved @_\n" if $PDLA::Graphics::TriD::verbose;
 }
 
 =head2 ButtonRelease
@@ -71,7 +71,7 @@ sub mouse_moved{
 sub ButtonRelease{
   my ($this,$x,$y) = @_;
   $this->{Win}{Active} = 0;
-  print "ButtonRelease @_\n"  if $PDL::Graphics::TriD::verbose;
+  print "ButtonRelease @_\n"  if $PDLA::Graphics::TriD::verbose;
 }
 
 =head2 ButtonPressed
@@ -89,7 +89,7 @@ sub ButtonPress{
 #
 # GL (0,0) point is Lower left X and Tk is upper left.
 #
-  $y = $PDL::Graphics::TriD::cur->{Height}-$y;
+  $y = $PDLA::Graphics::TriD::cur->{Height}-$y;
 
 #  print "$x $y ",$this->{Win}{X0}," ",$this->{Win}{Y0}," ",$this->{Win}{W}," ",$this->{Win}{H},"\n";
 
@@ -97,7 +97,7 @@ sub ButtonPress{
 	  && $this->{Win}{Y0} <= $y && $this->{Win}{Y0}+$this->{Win}{H}>=$y ){
 	 $this->{Win}{Active} = 1;
   }
-  print "ButtonPress @_ ",ref($this->{Win}),"\n" if $PDL::Graphics::TriD::verbose;
+  print "ButtonPress @_ ",ref($this->{Win}),"\n" if $PDLA::Graphics::TriD::verbose;
 }
 
 =head2 set_wh
@@ -110,7 +110,7 @@ sub ButtonPress{
 
 sub set_wh {
   my($this,$w,$h) = @_;
-  print ref($this)," $w,$h\n" if $PDL::Graphics::TriD::verbose;
+  print ref($this)," $w,$h\n" if $PDLA::Graphics::TriD::verbose;
   $this->{W} = $w; 
   $this->{H} = $h;
   $w = 0 unless defined $w;

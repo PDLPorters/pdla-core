@@ -54,8 +54,8 @@ sub mkdir_p ($$$) {
 }
 
 sub fix_pdl_dot_html ($) {
-##Links to PDL.html sensibly try to go up one too many directories
-##(e.g., to "../PDL.html" instead of "PDL.html").  This hopefully
+##Links to PDLA.html sensibly try to go up one too many directories
+##(e.g., to "../PDLA.html" instead of "PDLA.html").  This hopefully
 ##fixes that. Shamelessly ripped off hack_html().
     my $infile = shift;
     my $outfile = "${infile}.n";
@@ -68,7 +68,7 @@ sub fix_pdl_dot_html ($) {
     # assume that links do not break across a line
     while ( <$ifh> ) {
 	# fix the links
-	s{\.\.\/PDL\.html}{PDL.html}g;
+	s{\.\.\/PDLA\.html}{PDLA.html}g;
 	print $ofh $_;
     }
     $ifh->close;
@@ -130,8 +130,8 @@ $back = getcwd;
 $startdir = shift @ARGV; #$ARGV[0];
 
 unless (defined $startdir) {
-    require PDL;
-    ($startdir = $INC{'PDL.pm'}) =~ s/\.pm$//i;
+    require PDLA;
+    ($startdir = $INC{'PDLA.pm'}) =~ s/\.pm$//i;
     umask 0022;
 }
 die "couldn't find directory '$startdir'" unless -d $startdir;
@@ -140,8 +140,8 @@ $startdir = getcwd; # Hack to get absolute pathname
 chdir $back;
 
 $htmldir = shift @ARGV; #$ARGV[1];
-#$htmldir = File::Spec->catdir( $startdir, "HtmlDocs", "PDL" )
-$htmldir = "${startdir}/HtmlDocs/PDL"
+#$htmldir = File::Spec->catdir( $startdir, "HtmlDocs", "PDLA" )
+$htmldir = "${startdir}/HtmlDocs/PDLA"
     unless defined $htmldir;
 
 mkdir_p $htmldir, 0777, $htmldir;
@@ -182,15 +182,15 @@ $sub = sub {
     my $basename = basename($File::Find::name);
     my $outfi;
 
-    # Special case for needed for PDL.pm file since it is in a
+    # Special case for needed for PDLA.pm file since it is in a
     # different location than the other .pm and pod files.
-    if( $basename eq 'PDL.pm'){
+    if( $basename eq 'PDLA.pm'){
 	$outfi = $basename;
     } else {
 	$outfi = $2.($2 =~ /^\s*$/ ? '' : '/').$basename;
 	#
 	# with the following substitution, everything gets stored in the same directory -
-	# so PDL/Graphics/LUT -> PDL_Graphics_LUT for example
+	# so PDLA/Graphics/LUT -> PDLA_Graphics_LUT for example
 	#
 	#$outfi =~ s|/|_|g;
     }
@@ -215,8 +215,8 @@ $sub = sub {
     chdir $htmldir; # reuse our pod caches
     my $topPerlDir = $startdir;
 
-    # get Directory just above PDL for podroot arg
-    $topPerlDir = $1 if ($startdir =~ /^(.+?)\/PDL$/);
+    # get Directory just above PDLA for podroot arg
+    $topPerlDir = $1 if ($startdir =~ /^(.+?)\/PDLA$/);
     print "startdir: $startdir, podroot: $topPerlDir\n" if $verbose;
 
     # instead of having htmlroot="../../.."
@@ -224,7 +224,7 @@ $sub = sub {
     # calculate it from the known location of the
     # file we're creating
     my $htmlrootdir = $htmldir;
-    $htmlrootdir =~ s|PDL$||;
+    $htmlrootdir =~ s|PDLA$||;
 
     my $verbopts = $verbose ? "--verbose" : "--quiet";
 
@@ -240,16 +240,16 @@ $sub = sub {
     if($] <= 5.015) {
       # With perl 5.15.x (for some value of x) and later, '--libpods' is invalid
       # and hence needs to be removed.
-      # Beginning with 5.15.x, the generated PDL html docs are a little different
+      # Beginning with 5.15.x, the generated PDLA html docs are a little different
       # (missing some underlining of headings and some <b></b> tagging), though
       # this appears to have nothing to do with the removal of --libpods. Rather,
       # it seems to be the result of some other change to pod2html. Perhaps this
       # can be addressed over time. SIS 23-Feb-2012
-      # Cut out "PDL" from the podpath as it crashes the podscan(!) - It doesn't
-      # seem to help either -- it looks for cached docs in .../HtmlDocs/pdl/PDL,
+      # Cut out "PDLA" from the podpath as it crashes the podscan(!) - It doesn't
+      # seem to help either -- it looks for cached docs in .../HtmlDocs/pdl/PDLA,
       # which is silly.  I left this note because pod paths are pretty arcane to
       # me.  CED 11-Mar-2009
-      #    pod2html("--podpath=PDL:.",
+      #    pod2html("--podpath=PDLA:.",
       unshift @pod2html_args, "--libpods=perlfaq";
     }
     pod2html(@pod2html_args);
@@ -260,7 +260,7 @@ $sub = sub {
     chdir $File::Find::dir; # don't confuse File::Find
 };
 
-#File::Find::find($sub,$startdir,File::Spec->catdir( $startdir, $updir, "PDL.pm"));
-File::Find::find( $sub, $startdir, "${startdir}/../PDL.pm" );
+#File::Find::find($sub,$startdir,File::Spec->catdir( $startdir, $updir, "PDLA.pm"));
+File::Find::find( $sub, $startdir, "${startdir}/../PDLA.pm" );
 
 ## End

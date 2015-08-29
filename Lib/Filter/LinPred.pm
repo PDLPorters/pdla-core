@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::Filter::LinPred - Linear predictive filtering
+PDLA::Filter::LinPred - Linear predictive filtering
 
 =head1 SYNOPSIS
 
-	$a = new PDL::Filter::LinPred(
+	$a = new PDLA::Filter::LinPred(
 		{NLags => 10,
 		 LagInterval => 2,
 		 LagsBehind => 2,
@@ -62,22 +62,22 @@ The rest of the documentation is under lazy evaluation.
 Copyright (C) Tuomas J. Lukka 1997.
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 
 =cut
 
-package PDL::Filter::LinSmooth;
-use PDL;
-use PDL::Basic;
-use PDL::Slatec;
-use PDL::Slices;
-use PDL::Primitive;
+package PDLA::Filter::LinSmooth;
+use PDLA;
+use PDLA::Basic;
+use PDLA::Slatec;
+use PDLA::Slices;
+use PDLA::Primitive;
 use strict;
 
-@PDL::Filter::LinSmooth::ISA = qw/PDL::Filter::LinPred/;
+@PDLA::Filter::LinSmooth::ISA = qw/PDLA::Filter::LinPred/;
 
 sub _ntotlags {
 	my($this) = @_;
@@ -97,7 +97,7 @@ sub _ntotlags {
 sub _mk_mat {
 	my($this) = @_;
 
-	local $PDL::Debug = 1;
+	local $PDLA::Debug = 1;
 
 	my $n = $this->{LagsBehind};
 	my $nl = $this->{NLags};
@@ -105,14 +105,14 @@ sub _mk_mat {
 
 	my $auc = $this->{AutoCor};
 
-	my $autocov = PDL::float PDL->zeroes($nl*2,$nl*2);
+	my $autocov = PDLA::float PDLA->zeroes($nl*2,$nl*2);
 	$this->{AutoCov} = $autocov;
 
 	my $sal = $this->{SymAutoCor}->px->lags(0,1,$this->{NLags})->px;
 	print "L,LB: $nl,$n\n";
 
 	my ($tmp,$tmp2);
-	PDL::Graphics::PG::imag ($sal->copy);
+	PDLA::Graphics::PG::imag ($sal->copy);
 
 # First, the 2 diagonal slices
 	($tmp = $autocov->slice("$nl:-1,$nl:-1")->px) .=
@@ -129,7 +129,7 @@ sub _mk_mat {
 
 	my $autocinv = inv($autocov);
 #	print "$autocinv,$auc,$n\n"; $auc->slice("$n:-1");
-	$this->{AutoSliceUsed} = PDL->zeroes(2*$nl)->float;
+	$this->{AutoSliceUsed} = PDLA->zeroes(2*$nl)->float;
 
 	($tmp = $this->{AutoSliceUsed}->slice("0:$nl1"))
 		.= $auc->slice(($n+$nl-1).":$n");
@@ -137,7 +137,7 @@ sub _mk_mat {
 	($tmp = $this->{AutoSliceUsed}->slice("-1:$nl"))
 		.= $auc->slice(($n+$nl-1).":$n");
 
-	inner($autocinv->xchg(0,1),$this->{AutoSliceUsed},(my $tdw=PDL->null));
+	inner($autocinv->xchg(0,1),$this->{AutoSliceUsed},(my $tdw=PDLA->null));
 
 	$this->{AutoCov} = $autocov;
 	$this->{AutoCovInv} = $autocinv;
@@ -154,10 +154,10 @@ sub predict ($$) {
 
 	inner($ldata->xchg(0,1)->slice("-$nl:-1"),
 	      $this->{Weights}->slice("-$nl:-1"),
-	  (my $pred1=PDL->null));
+	  (my $pred1=PDLA->null));
 	inner($ldata->xchg(0,1)->slice("0:$nl1"),
 	      $this->{Weights}->slice("0:$nl1"),
-	  (my $pred2=PDL->null));
+	  (my $pred2=PDLA->null));
 
 	my $pred = $pred1 + $pred2;
 
@@ -167,12 +167,12 @@ sub predict ($$) {
 		$pred ;
 }
 
-package PDL::Filter::LinPred;
-use PDL;
-use PDL::Basic;
-use PDL::Slatec;
-use PDL::Slices;
-use PDL::Primitive;
+package PDLA::Filter::LinPred;
+use PDLA;
+use PDLA::Basic;
+use PDLA::Slatec;
+use PDLA::Slices;
+use PDLA::Primitive;
 use strict;
 
 sub _ntotlags {
@@ -186,7 +186,7 @@ sub _ntotlags {
 sub _mk_mat {
 	my($this) = @_;
 
-	local $PDL::Debug = 1;
+	local $PDLA::Debug = 1;
 
 	my $n = $this->{LagsBehind};
 	my $nl = $this->{NLags};
@@ -213,7 +213,7 @@ sub _mk_mat {
 	my $autocinv = inv($autocov);
 
 	$this->{AutoSliceUsed} = $auc->slice("$n:-1");
-	inner($autocinv->xchg(0,1),$this->{AutoSliceUsed},(my $tdw=PDL->null));
+	inner($autocinv->xchg(0,1),$this->{AutoSliceUsed},(my $tdw=PDLA->null));
 
 	$this->{AutoCov} = $autocov;
 	$this->{AutoCovInv} = $autocinv;
@@ -246,8 +246,8 @@ sub new ($$) {
 # Compute autocovariance
 		my $ldata = $data->lags(0,$this->{LagInterval},$n);
 # XXX This takes too much space.. define a special function.
-		inner($ldata->slice(":,0"),$ldata, ($atmp=PDL->null));
-		sumover($atmp->xchg(0,1),($auc=PDL->null));
+		inner($ldata->slice(":,0"),$ldata, ($atmp=PDLA->null));
+		sumover($atmp->xchg(0,1),($auc=PDLA->null));
 		$auc /= $ldata->getdim(0) * $data->getdim(1);
 		$auc -= $da ** 2;
 #		print "AUC: $auc\n";
@@ -263,7 +263,7 @@ sub new ($$) {
 	$this->{AutoCor} = $auc;
 	my $n = $this->{NTotLags};
 	$this->{SymAutoCor} =
-		(PDL->zeroes($n * 2 - 1)->float);
+		(PDLA->zeroes($n * 2 - 1)->float);
 	my $tmp;
 	($tmp = $this->{SymAutoCor}->slice("0:".($n-2)))  .=
 		$auc->slice("-1:1");
@@ -279,7 +279,7 @@ sub predict ($$) {
 	print "PREDICT, weights: $this->{Weights}\n";
 	inner($ldata->xchg(0,1)->slice("$this->{LagsBehind}:-1"),
 	      $this->{Weights},
-	  (my $pred=PDL->null));
+	  (my $pred=PDLA->null));
 	return wantarray ?  ($pred,$ldata->slice(":,(0)")) :
 		$pred ;
 }

@@ -4,7 +4,7 @@
 #
 # This is only for a set of rectangular meshes.
 #
-# Use PDL::Graphics::TriD::Surface for more general stuff.
+# Use PDLA::Graphics::TriD::Surface for more general stuff.
 #
 # I try to make this general enough that all Surface methods
 # work on this data also.
@@ -20,20 +20,20 @@
 # Flat:   normal(3,polygon, (),     @)
 # Smooth: normal(3,(),      vertex, @)
 
-package PDL::Graphics::TriD::Mesh;
+package PDLA::Graphics::TriD::Mesh;
 
 BEGIN {
-   use PDL::Config;
-   if ( $PDL::Config{USE_POGL} ) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw(:all)";
-      eval 'use PDL::Graphics::OpenGL::Perl::OpenGL';
+   use PDLA::Config;
+   if ( $PDLA::Config{USE_POGL} ) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw(:all)";
+      eval 'use PDLA::Graphics::OpenGL::Perl::OpenGL';
    } else {
-      eval 'use PDL::Graphics::OpenGL';
+      eval 'use PDLA::Graphics::OpenGL';
    }
 }
 
-use PDL::LiteF;
-@ISA=qw/PDL::Graphics::TriD::Object/;
+use PDLA::LiteF;
+@ISA=qw/PDLA::Graphics::TriD::Object/;
 
 # For now, x and y coordinates = values.
 
@@ -43,14 +43,14 @@ sub new {
 	my @xydims = splice @dims,0,2;
 	my @overdims = @dims;
 	my $this = {
-		Vertices => PDL->zeroes(3,@xydims,@overdims)->double,
+		Vertices => PDLA->zeroes(3,@xydims,@overdims)->double,
 		XYDims => [@xydims],
 		OverDims => [@overdims],
 		Data => $data,
 	};
-	PDL::Primitive::axisvalues($this->{Vertices}->slice('(0),:,:'));
-	PDL::Primitive::axisvalues($this->{Vertices}->slice('(1),:,:')->xchg(0,1));
-	PDL::Ops::assgn($this->{Data},$this->{Vertices}->slice('(2),:,:'));
+	PDLA::Primitive::axisvalues($this->{Vertices}->slice('(0),:,:'));
+	PDLA::Primitive::axisvalues($this->{Vertices}->slice('(1),:,:')->xchg(0,1));
+	PDLA::Ops::assgn($this->{Data},$this->{Vertices}->slice('(2),:,:'));
 	bless $this,$type;
 }
 
@@ -59,7 +59,7 @@ sub printdims {print $_[0].": ".(join ', ',$_[1]->dims)," and ",
 
 sub get_boundingbox {
 	my($this) = @_;
-	my $foo = PDL->zeroes(6)->double;
+	my $foo = PDLA->zeroes(6)->double;
 	$a = $this->{Vertices}; printdims "A",$a;
 	$b = $a->thread(0); printdims "B",$b;
 	$c = $b->clump(-1); printdims "C",$c;
@@ -67,12 +67,12 @@ sub get_boundingbox {
 
 	$this->{Vertices}->thread(0);
 
-	PDL::Primitive::minimum($this->{Vertices}->thread(0)->clump(-1)->unthread(1),
+	PDLA::Primitive::minimum($this->{Vertices}->thread(0)->clump(-1)->unthread(1),
 		 $foo->slice('0:2'));
-	PDL::Primitive::maximum($this->{Vertices}->thread(0)->clump(-1)->unthread(1),
+	PDLA::Primitive::maximum($this->{Vertices}->thread(0)->clump(-1)->unthread(1),
 		 $foo->slice('3:5'));
 	print "MeshBound: ",(join ',',$foo->list()),"\n";
-	return PDL::Graphics::TriD::BoundingBox->new( $foo->list() );
+	return PDLA::Graphics::TriD::BoundingBox->new( $foo->list() );
 }
 
 sub normals_flat {
@@ -85,15 +85,15 @@ sub normals_flat {
 #	$this->{Normals}->printdims("NORMALS");
 	my $nx = $this->{Normals}->slice('(0),:,:,(0),(0)');
 #	$nx->printdims("NX"); $v00->printdims("V0");
-	$nx *= PDL->pdl(0);
+	$nx *= PDLA->pdl(0);
 	$nx += $v11; $nx -= $v01; $nx += $v10; $nx -= $v00;
-	$nx *= PDL->pdl(-0.5);
+	$nx *= PDLA->pdl(-0.5);
 	my $ny = $this->{Normals}->slice('(1),:,:,(0),(0)');
-	$ny *= PDL->pdl(0);
+	$ny *= PDLA->pdl(0);
 	$ny += $v11; $ny -= $v10; $ny += $v01; $ny -= $v00;
-	$ny *= PDL->pdl(-0.5);
+	$ny *= PDLA->pdl(-0.5);
 	my $nz = $this->{Normals}->slice('(2),:,:,(0),(0)');
-	$nz .= PDL->pdl(1);
+	$nz .= PDLA->pdl(1);
 	print $this->{Vertices};
 	print $this->{Normals};
 	print $nx,$ny,$nz;
@@ -101,7 +101,7 @@ sub normals_flat {
 
 sub _allocnormalspoly {
 	my($this) = @_;
-	$this->{Normals} = (PDL->zeroes(3, (map {$_-1} @{$this->{XYDims}}),
+	$this->{Normals} = (PDLA->zeroes(3, (map {$_-1} @{$this->{XYDims}}),
 						@{$this->{OverDims}})->double )
 			-> dummy(3,$this->{XYDims}[1])
 			-> dummy(3,$this->{XYDims}[0]);
@@ -150,14 +150,14 @@ sub togl {
 	}
 }
 
-package PDL::Graphics::TriD;
-#use PDL::Graphics::OpenGL;
-use PDL::Graphics::OpenGL::Perl::OpenGL;
-use PDL::Core '';
+package PDLA::Graphics::TriD;
+#use PDLA::Graphics::OpenGL;
+use PDLA::Graphics::OpenGL::Perl::OpenGL;
+use PDLA::Core '';
 
 sub pdltotrianglemesh {
 	my($pdl,$x0,$x1,$y0,$y1) = @_;
-	if($#{$pdl->{Dims}} != 1) { barf "Too many dimensions for PDL::GL::Mesh: $#{$pdl->{Dims}}  \n"; }
+	if($#{$pdl->{Dims}} != 1) { barf "Too many dimensions for PDLA::GL::Mesh: $#{$pdl->{Dims}}  \n"; }
 	my ($d0,$d1); my($x,$y);
 	$xincr = ($x1 - $x0) / ($pdl->{Dims}[0]-1.0);
 	$yincr = ($y1 - $y0) / ($pdl->{Dims}[1]-1.0);
@@ -169,10 +169,10 @@ sub pdltotrianglemesh {
 		for $d1 (0..$pdl->{Dims}[1]-2) {
 			glBegin(GL_TRIANGLE_STRIP);
 			($v00,$v01,$v11,$v10) =
-			  (PDL::Core::at($pdl,$d0,$d1)
-			  ,PDL::Core::at($pdl,$d0,$d1+1)
-			  ,PDL::Core::at($pdl,$d0+1,$d1+1)
-			  ,PDL::Core::at($pdl,$d0+1,$d1));
+			  (PDLA::Core::at($pdl,$d0,$d1)
+			  ,PDLA::Core::at($pdl,$d0,$d1+1)
+			  ,PDLA::Core::at($pdl,$d0+1,$d1+1)
+			  ,PDLA::Core::at($pdl,$d0+1,$d1));
 
 			($nx,$ny) = (-0.5*($v11+$v10-$v01-$v00)/$xincr,
 			          -0.5*($v11-$v10+$v01-$v00)/$yincr);

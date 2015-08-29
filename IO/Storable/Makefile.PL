@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-my @pack = (["storable.pd", qw(Storable PDL::IO::Storable)]);
+my @pack = (["storable.pd", qw(Storable PDLA::IO::Storable)]);
 
 my %hash = pdlpp_stdargs_int(@pack);
 # $hash{'OPTIMIZE'}  = '-g'; # If you want to debug, uncomment this.

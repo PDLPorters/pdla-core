@@ -1,37 +1,37 @@
-use PDL::LiteF;
+use PDLA::LiteF;
 
-# TODO This file does not currently test anything beyond loading PDL::Slatec.
+# TODO This file does not currently test anything beyond loading PDLA::Slatec.
 
 use strict; # TODO fix the disabled code and enable strict
 use warnings;
 use Test::More tests => 2;
 
-our $HAVE_PDL_SLATEC = 0;
-our $HAVE_PDL_ICA = 0;
+our $HAVE_PDLA_SLATEC = 0;
+our $HAVE_PDLA_ICA = 0;
 BEGIN {
 
         eval {
-		require PDL::Slatec;
-		$HAVE_PDL_SLATEC = 1;
+		require PDLA::Slatec;
+		$HAVE_PDLA_SLATEC = 1;
 	};
 
         eval {
-		require PDL::ICA;
-		$HAVE_PDL_ICA = 1;
+		require PDLA::ICA;
+		$HAVE_PDLA_ICA = 1;
 	};
 }
 
 SKIP: {
-	skip "Could not load PDL::Slatec", 1 unless $HAVE_PDL_SLATEC;
-	pass("PDL::Slatec loads");
+	skip "Could not load PDLA::Slatec", 1 unless $HAVE_PDLA_SLATEC;
+	pass("PDLA::Slatec loads");
 }
 
 SKIP: {
-	skip "Could not load PDL::ICA", 1 unless $HAVE_PDL_ICA;
-	pass("PDL::ICA loads");
+	skip "Could not load PDLA::ICA", 1 unless $HAVE_PDLA_ICA;
+	pass("PDLA::ICA loads");
 }
 
-# use PDL::Graphics::PG;
+# use PDLA::Graphics::PG;
 # dev "/XSERVE",2,2;
 
 $|=1;
@@ -54,7 +54,7 @@ if(0) {
 
 {
 	my $pars = pdl 2,3,4;
-	my $rot = PDL::LinICA::_cayleygen({NVars=>3},$pars);
+	my $rot = PDLA::LinICA::_cayleygen({NVars=>3},$pars);
 
 	note $rot;
 
@@ -89,7 +89,7 @@ $data *= 0.1;
 ($xx = $data->slice('(0)')) *= 2;
 ($xx = $data->slice('(0)')) += $data->slice('(1)') * 0.3;
 
-$ica = new PDL::LinICA($data,4,{Accuracy => 0.001});
+$ica = new PDLA::LinICA($data,4,{Accuracy => 0.001});
 
 $newdata = $ica->get_newdata();
 
@@ -125,7 +125,7 @@ $data = $data0->xchg(0,3)->clump(3)->xchg(0,1);
 
 note("DATA: $data\n");
 
-$ica = new PDL::LinICA($data,4,{Accuracy => 0.001});
+$ica = new PDLA::LinICA($data,4,{Accuracy => 0.001});
 
 $newdata = $ica->get_newdata();
 

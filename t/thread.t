@@ -1,6 +1,6 @@
 use Test::More tests => 8;
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
 $|=1;
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
@@ -74,10 +74,10 @@ ok((join ',',$c->dims) eq "4,6,5");
 $a = pdl [[0,1,2],[3,4,5],[6,7,8]],[[10,11,12],[13,14,15],[16,17,18]];
 $b = pdl [2,3,4];
 
-PDL::threadover_n($a,$b,sub {print "ROUND: @_\n"});
+PDLA::threadover_n($a,$b,sub {print "ROUND: @_\n"});
 
 # As well as with virtuals...
 
-PDL::threadover_n($a->slice("-1:0,-1:0"),$b,sub {print "ROUND: @_\n"});
+PDLA::threadover_n($a->slice("-1:0,-1:0"),$b,sub {print "ROUND: @_\n"});
 
 ok 1; # got here

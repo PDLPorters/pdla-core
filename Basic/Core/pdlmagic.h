@@ -1,7 +1,7 @@
 #ifndef _pdlmagic_H_
 #define _pdlmagic_H_
 
-#define PDL_ISMAGIC(it) ((it)->magic != 0)
+#define PDLA_ISMAGIC(it) ((it)->magic != 0)
 
 /* Magic stuff */
 
@@ -16,55 +16,55 @@ typedef struct pdl_magic_vtable {
  */
 } pdl_magic_vtable;
 
-#define PDL_MAGIC_MARKCHANGED 0x0001
-#define PDL_MAGIC_MUTATEDPARENT 0x0002
-#define PDL_MAGIC_THREADING 0x0004
-#define PDL_MAGIC_DELETEDATA 0x0008
+#define PDLA_MAGIC_MARKCHANGED 0x0001
+#define PDLA_MAGIC_MUTATEDPARENT 0x0002
+#define PDLA_MAGIC_THREADING 0x0004
+#define PDLA_MAGIC_DELETEDATA 0x0008
 
-#define PDL_MAGIC_UNDESTROYABLE     0x4000 /* Someone is referring to this */
+#define PDLA_MAGIC_UNDESTROYABLE     0x4000 /* Someone is referring to this */
 				/* when magic removed, call pdl_destroy */
-#define PDL_MAGIC_DELAYED     0x8000
+#define PDLA_MAGIC_DELAYED     0x8000
 
-#define PDL_MAGICSTART \
+#define PDLA_MAGICSTART \
 		int what; /* when is this magic to be called */ \
 		pdl_magic_vtable *vtable; \
 		struct pdl_magic *next; \
 		pdl *pdl
 
-#define PDL_TRMAGICSTART \
+#define PDLA_TRMAGICSTART \
 		int what; /* when is this magic to be called */ \
 		pdl_magic_vtable *vtable; \
 		struct pdl_magic *next; \
 		pdl_trans *tr
 
 typedef struct pdl_magic {
-	PDL_MAGICSTART;
+	PDLA_MAGICSTART;
 } pdl_magic;
 
 typedef struct pdl_magic_perlfunc {
-	PDL_MAGICSTART;
+	PDLA_MAGICSTART;
 	SV *sv;         	/* sub{} or subname (perl_call_sv) */
 } pdl_magic_perlfunc;
 
 typedef struct pdl_magic_fammut {
-	PDL_MAGICSTART;
+	PDLA_MAGICSTART;
 	pdl_trans *ftr;
 } pdl_magic_fammut;
 
 typedef struct pdl_magic_changetrans {
-	PDL_MAGICSTART;
+	PDLA_MAGICSTART;
 	pdl_trans *tr;
 } pdl_magic_changetrans;
 
 typedef struct pdl_magic_deletedata {
-	PDL_MAGICSTART;
+	PDLA_MAGICSTART;
 	void (*func)(pdl *p, Size_t param);
 	Size_t param;
 } pdl_magic_deletedata;
 
-/* #define PDL_PTHREAD */
+/* #define PDLA_PTHREAD */
 /* Defined by MakeMaker */
-#ifdef PDL_PTHREAD
+#ifdef PDLA_PTHREAD
 
 /* This is a workaround to a perl CORE "feature" where they define a
  * macro PTHREAD_CREATE_JOINABLE with the same name as POSIX threads
@@ -79,7 +79,7 @@ typedef struct pdl_magic_deletedata {
 #include <pthread.h>
 
 typedef struct pdl_magic_pthread {
-	PDL_MAGICSTART;
+	PDLA_MAGICSTART;
 	int nthdim;
 	int nthreads;
 	pthread_key_t key;
@@ -89,11 +89,11 @@ typedef struct pdl_magic_pthread {
 /* - tr magics */
 
 typedef struct pdl_trmagic {
-	PDL_TRMAGICSTART;
+	PDLA_TRMAGICSTART;
 } pdl_trmagic;
 
 typedef struct pdl_trmagic_family {
-	PDL_TRMAGICSTART;
+	PDLA_TRMAGICSTART;
 	pdl *fprog,*tprog;
 	pdl *fmut,*tmut;
 } pdl_trmagic_family;

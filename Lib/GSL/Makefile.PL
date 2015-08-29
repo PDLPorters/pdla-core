@@ -17,16 +17,16 @@ sub get_gsl_config {
 #    to compile only some of the GSL modules here?)
 #
 sub get_gsl_libs {
-  warn << 'EOW' if ref $PDL::Config{GSL_LIBS};
+  warn << 'EOW' if ref $PDLA::Config{GSL_LIBS};
  The GSL_LIBS config variable must be a string (!)
  not a reference. You should probably leave it undefined
  and rely on gsl-config. Build will likely fail.
 EOW
 
-  my $lib = ($PDL::Config{GSL_LIBS} or
+  my $lib = ($PDLA::Config{GSL_LIBS} or
 	  get_gsl_config('--libs') or
 	  warn "\tno GSL link info (libgsl probably not available)\n");
-  my $inc = ($PDL::Config{GSL_INC} or
+  my $inc = ($PDLA::Config{GSL_INC} or
 	  get_gsl_config('--cflags') or 
 	  warn "\tno GSL include info (libgsl probably not available)\n\n");
   chomp $lib; chomp $inc;
@@ -64,13 +64,13 @@ undef &MY::postamble; # suppress warning
 *MY::postamble = sub {};
 if (! $new_enough) {
    write_dummy_make("Not building GSL modules: GSL version $version found, but need at least $MINVERSION");
-   $PDL::Config{WITH_GSL} = 0;
-} elsif ( defined($PDL::Config{WITH_GSL}) and ! $PDL::Config{WITH_GSL} ) {
+   $PDLA::Config{WITH_GSL} = 0;
+} elsif ( defined($PDLA::Config{WITH_GSL}) and ! $PDLA::Config{WITH_GSL} ) {
    write_dummy_make("Not building GSL modules: WITH_GSL=> 0");
 } else {
-   $PDL::Config{WITH_GSL} = 1;
+   $PDLA::Config{WITH_GSL} = 1;
    WriteMakefile(
-      'NAME'	=> 'PDL::GSL',
+      'NAME'	=> 'PDLA::GSL',
        (eval ($ExtUtils::MakeMaker::VERSION) >= 6.57_02 ? ('NO_MYMETA' => 1) : ()),
    );
 }

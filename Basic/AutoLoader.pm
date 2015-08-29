@@ -1,50 +1,50 @@
 
 =head1 NAME
 
-PDL::AutoLoader - MatLab style AutoLoader for PDL
+PDLA::AutoLoader - MatLab style AutoLoader for PDLA
 
 =head1 SYNOPSIS
 
- use PDL::AutoLoader;
+ use PDLA::AutoLoader;
  $a = func1(...);   # Load file func1.pdl
  $b = func2(...);   # Load file func2.pdl
 
- $PDL::AutoLoader::Rescan = 1; # Enable re-scanning
+ $PDLA::AutoLoader::Rescan = 1; # Enable re-scanning
 
 =head1 DESCRIPTION
 
-This module implements a MatLab style AutoLoader for PDL. If an unknown
-function C<func()> is called, PDL looks for a file called C<func.pdl>.
+This module implements a MatLab style AutoLoader for PDLA. If an unknown
+function C<func()> is called, PDLA looks for a file called C<func.pdl>.
 If it finds one, it compiles the file and calls the function C<func>.
 
 The list of directories to search in is given by the shell environment
-variable C<PDLLIB>. This is a colon-separated list of directories. On
+variable C<PDLALIB>. This is a colon-separated list of directories. On
 MSWindows systems, is it a I<semicolon> -separated list of directories.
 
 For example, in csh:
 
-  setenv PDLLIB "/home/joe/pdllib:/local/pdllib"
+  setenv PDLALIB "/home/joe/pdllib:/local/pdllib"
 
 B<Note>: This variable is unrelated to Perl's C<PERL5LIB>.
 
-If you add a leading '+' on a directory name, PDL will search the
-entire directory tree below that point. Internally, PDL stores the
-dirctory list in the variable C<@PDLLIB>, which can be modified at
+If you add a leading '+' on a directory name, PDLA will search the
+entire directory tree below that point. Internally, PDLA stores the
+dirctory list in the variable C<@PDLALIB>, which can be modified at
 run time.
 
 For example, in csh:
 
-  setenv PDLLIB "+/home/joe/PDL"
+  setenv PDLALIB "+/home/joe/PDLA"
 
-will search /home/joe/PDL and all its subdirectories for .pdl files.
+will search /home/joe/PDLA and all its subdirectories for .pdl files.
 
 =head2 AUTO-SCANNING
 
-The variable C<$PDL::AutoLoader::Rescan> controls whether files
+The variable C<$PDLA::AutoLoader::Rescan> controls whether files
 are automatically re-scanned for changes at the C<perldl> or
 C<pdl2> command line.
 
-If C<$PDL::AutoLoader::Rescan == 1> and the file is changed
+If C<$PDLA::AutoLoader::Rescan == 1> and the file is changed
 then the new definition is reloaded auto-matically before
 executing the C<perldl> or C<pdl2> command line. Which means
 in practice you can edit files, save changes and have C<perldl>
@@ -52,8 +52,8 @@ or C<pdl2> see the changes automatically.
 
 The default is '0' - i.e. to have this feature disabled.
 
-As this feature is only pertinent to the PDL shell it imposes
-no overhead on PDL scripts. Yes Bob you can have your cake and
+As this feature is only pertinent to the PDLA shell it imposes
+no overhead on PDLA scripts. Yes Bob you can have your cake and
 eat it too!
 
 Note: files are only re-evaled if they are determined to have
@@ -75,15 +75,15 @@ Copyright(C) 1997 Karl Glazebrook (kgb@aaoepp.aao.gov.au);
 several extensions by Craig DeForest (deforest@boulder.swri.edu)
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =head1 BUGS
 
 No doubt this interface could be improved upon some more. :-)
 
-Will probably be quite slow if C<$PDL::AutoLoader::Rescan == 1>
+Will probably be quite slow if C<$PDLA::AutoLoader::Rescan == 1>
 and thousands of functions have been autoloaded.
 
 There could be a race condition in which the file changes
@@ -100,33 +100,33 @@ modules and functions, see L<local::lib>.
 =cut
 
 BEGIN{
-   if (defined $ENV{"PDLLIB"}) {
+   if (defined $ENV{"PDLALIB"}) {
       if ( $^O eq 'MSWin32' ) { # win32 flavors
-         @PDLLIB = (".",split(';',$ENV{"PDLLIB"}));
-         s/"//g for @PDLLIB;
+         @PDLALIB = (".",split(';',$ENV{"PDLALIB"}));
+         s/"//g for @PDLALIB;
       } else {                  # unixen systems
-         @PDLLIB = (".",split(':',$ENV{"PDLLIB"}));
+         @PDLALIB = (".",split(':',$ENV{"PDLALIB"}));
       }
-      @PDLLIB = grep length, @PDLLIB;
+      @PDLALIB = grep length, @PDLALIB;
    }
-  $PDL::AutoLoader::Rescan=0;
-  %PDL::AutoLoader::FileInfo = ();
+  $PDLA::AutoLoader::Rescan=0;
+  %PDLA::AutoLoader::FileInfo = ();
 }
 
 # Code to reload stuff if changed
 
-sub PDL::AutoLoader::reloader {
-   return unless $PDL::AutoLoader::Rescan;
+sub PDLA::AutoLoader::reloader {
+   return unless $PDLA::AutoLoader::Rescan;
 
    # Now check functions and reload if changed
 
    my ($file, $old_t);
-   for my $func (keys %PDL::AutoLoader::FileInfo) {
-       ($file, $old_t) = @{ $PDL::AutoLoader::FileInfo{$func} };
+   for my $func (keys %PDLA::AutoLoader::FileInfo) {
+       ($file, $old_t) = @{ $PDLA::AutoLoader::FileInfo{$func} };
        if ( (stat($file))[9]>$old_t ) { # Reload
-          print "Reloading $file as file changed...\n" if $PDL::verbose;
-	  &PDL::AutoLoader::autoloader_do($file);
-	  $PDL::AutoLoader::FileInfo{$func} = [ $file, (stat($file))[9] ];
+          print "Reloading $file as file changed...\n" if $PDLA::verbose;
+	  &PDLA::AutoLoader::autoloader_do($file);
+	  $PDLA::AutoLoader::FileInfo{$func} = [ $file, (stat($file))[9] ];
        }
    }
 }
@@ -134,12 +134,12 @@ sub PDL::AutoLoader::reloader {
 # Used for Beta, and should probably be used generall in this mod
 #use File::Spec;
 
-sub PDL::AutoLoader::import {
+sub PDLA::AutoLoader::import {
 
 	# Beta folder support
 #	foreach (@INC) {
-#		$Beta_dir = File::Spec->catfile($_, 'PDL', 'Beta');
-#		push @PDLLIB, "+$Beta_dir" if -d $Beta_dir;
+#		$Beta_dir = File::Spec->catfile($_, 'PDLA', 'Beta');
+#		push @PDLALIB, "+$Beta_dir" if -d $Beta_dir;
 #	}
 
 my $pkg = (caller())[0];
@@ -147,12 +147,12 @@ my $toeval = "package $pkg;\n";
 
 # Make sure that the eval gets NiceSlice if we have it in this level
 # (it's a drag that preprocessors aren't transitive...)
-$toeval .= "use PDL::NiceSlice;\n" if(defined $PDL::NiceSlice::VERSION);
+$toeval .= "use PDLA::NiceSlice;\n" if(defined $PDLA::NiceSlice::VERSION);
 
 $toeval .= <<'EOD';
-$PDLLIB_CT = 0;
+$PDLALIB_CT = 0;
 
-push @PERLDL::AUTO, \&PDL::AutoLoader::reloader;
+push @PERLDL::AUTO, \&PDLA::AutoLoader::reloader;
 
 
 sub AUTOLOAD {
@@ -165,35 +165,35 @@ sub AUTOLOAD {
 
     goto &$AUTOLOAD if ord($func)==0;
 
-   # Check if the PDLLIB needs to be expanded and, if so, expand it.
-   # This only updates when PDLLIB changes size, which should be OK
+   # Check if the PDLALIB needs to be expanded and, if so, expand it.
+   # This only updates when PDLALIB changes size, which should be OK
    # for most things but doesn't catch new directories in expanded
    # directory trees.  It seems like an OK compromise between never 
    # catching anything and always thrashing through the directories.
-    if($PDLLIB_CT != scalar(@PDLLIB)) {
-	@PDLLIB_EXPANDED = PDL::AutoLoader::expand_path(@PDLLIB);
-	$PDLLIB_CT = scalar(@PDLLIB);
+    if($PDLALIB_CT != scalar(@PDLALIB)) {
+	@PDLALIB_EXPANDED = PDLA::AutoLoader::expand_path(@PDLALIB);
+	$PDLALIB_CT = scalar(@PDLALIB);
     }
 
-    print "Loading $func.pdl ..." if $PDL::verbose;
+    print "Loading $func.pdl ..." if $PDLA::verbose;
     my $file;
 
-    my $s = "PDL AutoLoader:  Undefined subroutine $func() cannot be autoloaded.\n";
+    my $s = "PDLA AutoLoader:  Undefined subroutine $func() cannot be autoloaded.\n";
 
-    for my $dir (@PDLLIB_EXPANDED) {
+    for my $dir (@PDLALIB_EXPANDED) {
         $file = $dir . "/" . "$func.pdl";
 	if (-e $file) {
 	  
-	  print "found $file\n" if $PDL::verbose;
+	  print "found $file\n" if $PDLA::verbose;
 
-	  &PDL::AutoLoader::autoloader_do($file);
+	  &PDLA::AutoLoader::autoloader_do($file);
 	  
 	  
 	  # Remember autoloaded functions and do some reasonably
 	  # smart cacheing of file/directory change times
 	  
-	  if ($PDL::AutoLoader::Rescan) {
-	    $PDL::AutoLoader::FileInfo{$func} = [ $file, (stat($file))[9] ];
+	  if ($PDLA::AutoLoader::Rescan) {
+	    $PDLA::AutoLoader::FileInfo{$func} = [ $file, (stat($file))[9] ];
 	  }
 	  
 	  # Now go to the autoload function
@@ -206,7 +206,7 @@ sub AUTOLOAD {
 	}
       }
 
-    die $s."\tNo file `$func.pdl' was found in your \@PDLLIB path.\n";
+    die $s."\tNo file `$func.pdl' was found in your \@PDLALIB path.\n";
 }
 
 EOD
@@ -219,26 +219,26 @@ eval $toeval;
 # Simple 'do' doesn't work with preprocessing -- this replaces
 # "do file" and sticks NiceSlice in manually if it's needed (yuck).
 
-sub PDL::AutoLoader::autoloader_do {
+sub PDLA::AutoLoader::autoloader_do {
   my ($file) = shift;
   
-  if(defined($PDL::NiceSlice::VERSION)) {
+  if(defined($PDLA::NiceSlice::VERSION)) {
     
-    print "AutoLoader: NiceSlice enabled...\n" if($PDL::debug);
+    print "AutoLoader: NiceSlice enabled...\n" if($PDLA::debug);
     
     if(open(AUTOLOAD_FILE,"<$file")) {
-      my($script) = &PDL::NiceSlice::perldlpp("PDL::NiceSlice", join("",<AUTOLOAD_FILE>));
+      my($script) = &PDLA::NiceSlice::perldlpp("PDLA::NiceSlice", join("",<AUTOLOAD_FILE>));
       eval $script;
     }
   } else {
-    print "AutoLoader: no NiceSlice...\n" if($PDL::debug);
+    print "AutoLoader: no NiceSlice...\n" if($PDLA::debug);
     do $file;
   }
 }
 
 
 # Expand directories recursively...
-sub PDL::AutoLoader::expand_dir {
+sub PDLA::AutoLoader::expand_dir {
   local $d;  
   local @list;  
   local @subdirs;  
@@ -254,13 +254,13 @@ sub PDL::AutoLoader::expand_dir {
   closedir FOO;
 
   while(defined ($d = shift @subdirs)) {
-    push(@list,&PDL::AutoLoader::expand_dir($d));
+    push(@list,&PDLA::AutoLoader::expand_dir($d));
   }
   return @list;
 }
 
 
-=head2 PDL::AutoLoader::expand_path
+=head2 PDLA::AutoLoader::expand_path
 
 =for ref 
 
@@ -273,14 +273,14 @@ to be able to use it.
 
 =cut
 
-sub PDL::AutoLoader::expand_path {
-    my @PDLLIB = @_;
-    my @PDLLIB_EXPANDED;
+sub PDLA::AutoLoader::expand_path {
+    my @PDLALIB = @_;
+    my @PDLALIB_EXPANDED;
     
-    print "AutoLoader: Expanding directories from ".join(':',@PDLLIB)."...\n"
-	if($PDL::debug);
+    print "AutoLoader: Expanding directories from ".join(':',@PDLALIB)."...\n"
+	if($PDLA::debug);
     local $_;
-    foreach $_(@PDLLIB) {
+    foreach $_(@PDLALIB) {
 	# Expand ~{name} and ~ conventions.
 	if(s/^(\+?)\~(\+||[a-zA-Z0-9]*)//) {
 	    if($2 eq '+') {
@@ -297,13 +297,13 @@ sub PDL::AutoLoader::expand_path {
 	}
 	
 	# If there's a leading '+', include all subdirs too.
-	push(@PDLLIB_EXPANDED,
-	     s/^\+// ? &PDL::AutoLoader::expand_dir($_) : $_
+	push(@PDLALIB_EXPANDED,
+	     s/^\+// ? &PDLA::AutoLoader::expand_dir($_) : $_
 	     );
     }
 
-    print "AutoLoader: returning ",join(",",@PDLLIB_EXPANDED),"\n" if($PDL::debug);
-    @PDLLIB_EXPANDED;
+    print "AutoLoader: returning ",join(",",@PDLALIB_EXPANDED),"\n" if($PDLA::debug);
+    @PDLALIB_EXPANDED;
 }
 
 

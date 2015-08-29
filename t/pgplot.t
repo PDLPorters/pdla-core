@@ -9,20 +9,20 @@ BEGIN{
 
 use strict;
 
-use PDL;
+use PDLA;
 use Test::More;
 
 BEGIN{
-   eval "use PDL::Graphics::PGPLOT; use PDL::Graphics::PGPLOT::Window;";
+   eval "use PDLA::Graphics::PGPLOT; use PDLA::Graphics::PGPLOT::Window;";
    if ($@) {
-      plan skip_all => "PDL::Graphics::PGPLOT not installed";
+      plan skip_all => "PDLA::Graphics::PGPLOT not installed";
    } elsif ( !exists($ENV{'DISPLAY'}) and !exists($ENV{HARNESS_ACTIVE}) ) {
       # We have this after the PGPLOT module is loaded so that we test whether the
       # module will at least load, even if we do not test it's
       # functionality.
       #
       plan tests => 1;
-      pass("use ok for PGPLOT PDL modules # skip -- DISPLAY environment variable not set");
+      pass("use ok for PGPLOT PDLA modules # skip -- DISPLAY environment variable not set");
       exit;
    } else {
       plan tests => 12;
@@ -79,8 +79,8 @@ EOD
     return get_answer();
 }
 
-my $interactive = exists($ENV{'PDL_INT'});
-my $skip_interactive_msg = "interactive tests not run since environment var PDL_INT not set";
+my $interactive = exists($ENV{'PDLA_INT'});
+my $skip_interactive_msg = "interactive tests not run since environment var PDLA_INT not set";
 my $interactive_ctr = 0;
 
 ###
@@ -91,12 +91,12 @@ my $dev = $ENV{'PGPLOT_DEV'} ? $ENV{'PGPLOT_DEV'} : "/xw";
 
 $dev = '/null' if exists $ENV{HARNESS_ACTIVE};
 
-my $w = PDL::Graphics::PGPLOT::Window->new(
+my $w = PDLA::Graphics::PGPLOT::Window->new(
 					   Dev => $dev,
 					   Size=> [6,4],
                                            NX=>2, NY=>2,
                                            Ch=>2.5, HardCH=>2.5);
-ok( UNIVERSAL::isa($w, "PDL::Graphics::PGPLOT::Window") );
+ok( UNIVERSAL::isa($w, "PDLA::Graphics::PGPLOT::Window") );
 
 my $a = rfits('m51.fits');
 

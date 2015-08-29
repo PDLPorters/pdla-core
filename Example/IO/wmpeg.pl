@@ -3,12 +3,12 @@
 # Created on: Wed 28 Jul 2010 03:41:45 PM 
 # Last saved: Thu 10 Feb 2011 05:10:44 PM 
 
-use PDL;
-use PDL::IO::Pic;
-use PDL::NiceSlice;
+use PDLA;
+use PDLA::IO::Pic;
+use PDLA::NiceSlice;
 
 # This is a simple program to create a demo MPEG-1
-# movie via the wmpeg() routine in PDL::IO::Pic
+# movie via the wmpeg() routine in PDLA::IO::Pic
 # and to test the functionality of using ffmpeg
 # in place of the outdated mpeg_encoder.
 

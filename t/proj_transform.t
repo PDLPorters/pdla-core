@@ -2,16 +2,16 @@
 
 use strict;
 use warnings;
-use PDL;
+use PDLA;
 use Test::More;
-use PDL::Config;
-plan skip_all => "PDL::Transform::Proj4 module not compiled."
-    unless $PDL::Config{WITH_PROJ};
-eval { require PDL::Transform::Proj4; PDL::Transform::Proj4->import; };
-plan skip_all => "PDL::Transform::Proj4 module compiled, but not available."
+use PDLA::Config;
+plan skip_all => "PDLA::Transform::Proj4 module not compiled."
+    unless $PDLA::Config{WITH_PROJ};
+eval { require PDLA::Transform::Proj4; PDLA::Transform::Proj4->import; };
+plan skip_all => "PDLA::Transform::Proj4 module compiled, but not available."
     if $@;
-plan skip_all => "PDL::Transform::Proj4 module requires the PDL::Bad module!"
-    unless $PDL::Bad::Status;
+plan skip_all => "PDLA::Transform::Proj4 module requires the PDLA::Bad module!"
+    unless $PDLA::Bad::Status;
 
 my $test_jpegtopnm = 1;
 if($^O =~ /MSWin32/i) {
@@ -23,12 +23,12 @@ if($^O =~ /MSWin32/i) {
 plan skip_all => "The jpegtopnm utility (needed for proj_transform.t tests) not found."
     if !$test_jpegtopnm;
 
-my @projections = sort keys %{PDL::GIS::Proj::load_projection_information()};
+my @projections = sort keys %{PDLA::GIS::Proj::load_projection_information()};
 plan tests => 25 + 2 * @projections;
 
-# Test integration with PDL::Transform
+# Test integration with PDLA::Transform
 
-use_ok('PDL::Transform::Cartography');
+use_ok('PDLA::Transform::Cartography');
 
 ### Get the vector coastline map (and a lon/lat grid), and load the Earth
 ### RGB daytime image -- both of these are built-in to the module. The

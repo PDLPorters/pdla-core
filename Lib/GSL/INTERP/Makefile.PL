@@ -46,11 +46,11 @@ EOI
 EOB
 }
 
-if (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==0) {
-  $msg = "\n   Will skip build of PDL::GSL::INTERP on this system   \n";
+if (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==0) {
+  $msg = "\n   Will skip build of PDLA::GSL::INTERP on this system   \n";
   $skip = 1;
-} elsif (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==1) {
-  print "\n   Will forcibly try and build PDL::GSL::INTERP on this system   \n\n";
+} elsif (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==1) {
+  print "\n   Will forcibly try and build PDLA::GSL::INTERP on this system   \n\n";
   $forcebuild=1;
 }
 
@@ -59,15 +59,15 @@ if (($skip && !$forcebuild) ||
   warn "trying to force GSL build but link test failed\n".
     "\t -- aborting GSL build\n" if $forcebuild;
   $msg ||=
-    "\n GSL Libraries not found... Skipping build of PDL::GSL::INTERP.\n";
+    "\n GSL Libraries not found... Skipping build of PDLA::GSL::INTERP.\n";
   write_dummy_make( $msg );
   return;
 } else {
-  print "\n   Building PDL::GSL::INTERP.", 
+  print "\n   Building PDLA::GSL::INTERP.", 
     "Turn off WITH_GSL if there are any problems\n\n";
 }
 
-my @pack = (["gsl_interp.pd", qw(INTERP PDL::GSL::INTERP)]);
+my @pack = (["gsl_interp.pd", qw(INTERP PDLA::GSL::INTERP)]);
 my %hash = pdlpp_stdargs_int(@pack);
 
 $hash{INC} .= " $GSL_includes";

@@ -1,27 +1,27 @@
 #!/usr/bin/perl
 
 #
-# t/gd_tests.t - tests functions in the PDL::IO::GD module
+# t/gd_tests.t - tests functions in the PDLA::IO::GD module
 #
 # Judd Taylor, USF IMaRS
 # 13 March 2003
 #
 
 use strict;
-use PDL;
-use PDL::Config;
+use PDLA;
+use PDLA::Config;
 use Test::More;
 use File::Temp qw(tempdir);
 
 BEGIN
 {
-    use PDL::Config;
-    if ( $PDL::Config{WITH_GD} ) 
+    use PDLA::Config;
+    if ( $PDLA::Config{WITH_GD} ) 
     {
-        eval( " use PDL::IO::GD; " );
+        eval( " use PDLA::IO::GD; " );
         if( $@ )
         {
-            plan skip_all => "PDL::IO::GD requires the gd image library.";
+            plan skip_all => "PDLA::IO::GD requires the gd image library.";
         }  
         else
         {
@@ -30,7 +30,7 @@ BEGIN
     }
     else
     {
-        plan skip_all => "PDL::IO::GD not compiled.";
+        plan skip_all => "PDLA::IO::GD not compiled.";
     }
 }
 
@@ -45,7 +45,7 @@ sub tapprox
 
 use ExtUtils::testlib;
 
-use PDL::IO::GD;
+use PDLA::IO::GD;
 
 # Test Files:
 my $tempdir = tempdir( CLEANUP=>1 );

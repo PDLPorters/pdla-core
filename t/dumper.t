@@ -20,11 +20,11 @@ BEGIN {
       plan skip_all => "Skip neither uuencode/decode nor Convert:UU is available\n";
    }
 
-   use PDL;
+   use PDLA;
 }
 
 ########### First test the load...
-use_ok('PDL::IO::Dumper');
+use_ok('PDLA::IO::Dumper');
 
 ########### Dump several items and make sure we get 'em back...
 # a: trivial
@@ -41,21 +41,21 @@ $a = eval $s;
 ok(!$@, 'Can eval dumped data code') or diag("The output string was '$s'\n");
 ok(ref $a eq 'HASH', 'HASH was restored');
 ok(($a->{a}==3), 'SCALAR value restored ok');
-ok(((ref $a->{b} eq 'PDL') && ($a->{b}==4)), '0-d PDL restored ok');
-ok(((ref $a->{c} eq 'PDL') && ($a->{c}->nelem == 9) 
-      && (sum(abs(($a->{c} - xvals(3,3))))<0.0000001)), '3x3 PDL restored ok');
-ok(((ref $a->{d} eq 'PDL') && ($a->{d}->nelem == 16)
-      && (sum(abs(($a->{d} - xvals(4,4))))<0.0000001)), '4x4 PDL restored ok');
+ok(((ref $a->{b} eq 'PDLA') && ($a->{b}==4)), '0-d PDLA restored ok');
+ok(((ref $a->{c} eq 'PDLA') && ($a->{c}->nelem == 9) 
+      && (sum(abs(($a->{c} - xvals(3,3))))<0.0000001)), '3x3 PDLA restored ok');
+ok(((ref $a->{d} eq 'PDLA') && ($a->{d}->nelem == 16)
+      && (sum(abs(($a->{d} - xvals(4,4))))<0.0000001)), '4x4 PDLA restored ok');
 
 ########## Dump a uuencoded expr and try to get it back...
 # e: uuencoded expr
 eval '$s = sdump({e=>xvals(25,25)});';
-ok(!$@, 'sdump() of 25x25 PDL to test uuencode dumps');
+ok(!$@, 'sdump() of 25x25 PDLA to test uuencode dumps');
 
 #diag $s,"\n";
 
 $a = eval $s;
-ok(!$@, 'Can eval dumped 25x25 PDL');
+ok(!$@, 'Can eval dumped 25x25 PDLA');
 
 # $s and $@ can be long so try and make things a bit clearer in the
 # output
@@ -69,10 +69,10 @@ if ( $@ ) {
    diag "--- ERROR (end) ---\n";
 }
 
-ok((ref $a eq 'HASH'), 'HASH structure for uuencoded 25x25 PDL restored');
-ok(((ref $a->{e} eq 'PDL') 
+ok((ref $a eq 'HASH'), 'HASH structure for uuencoded 25x25 PDLA restored');
+ok(((ref $a->{e} eq 'PDLA') 
       && ($a->{e}->nelem==625)
-      && (sum(abs(($a->{e} - xvals(25,25))))<0.0000001)), 'Verify 25x25 PDL restored data');
+      && (sum(abs(($a->{e} - xvals(25,25))))<0.0000001)), 'Verify 25x25 PDLA restored data');
 
 ########## Check header dumping...
 eval '$a = xvals(2,2); $a->sethdr({ok=>1}); $a->hdrcpy(1); $b = xvals(25,25); $b->sethdr({ok=>2}); $b->hdrcpy(0); $s = sdump([$a,$b,yvals(25,25)]);';

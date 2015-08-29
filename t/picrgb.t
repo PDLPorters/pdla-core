@@ -1,7 +1,7 @@
-use PDL;
-use PDL::IO::Pic;
-use PDL::ImageRGB;
-use PDL::Dbg;
+use PDLA;
+use PDLA::IO::Pic;
+use PDLA::ImageRGB;
+use PDLA::Dbg;
 use File::Temp qw(tempdir);
 use File::Spec;
 
@@ -18,15 +18,15 @@ sub tapprox {
 
 sub rpic_unlink {
   my $file = shift;
-  my $pdl = PDL->rpic($file);
+  my $pdl = PDLA->rpic($file);
   unlink $file;
   return $pdl;
 }
 
 sub depends_on {
   note "ushort is ok with $_[0]\n"
-	if $PDL::IO::Pic::converter{$_[0]}->{ushortok};
-  return 1 if $PDL::IO::Pic::converter{$_[0]}->{ushortok};
+	if $PDLA::IO::Pic::converter{$_[0]}->{ushortok};
+  return 1 if $PDLA::IO::Pic::converter{$_[0]}->{ushortok};
   return 256;
 }
 
@@ -42,8 +42,8 @@ sub tifftest {
   return 1;
 }
 
-$PDL::debug = 0;
-$PDL::IO::Pic::debug = 0;
+$PDLA::debug = 0;
+$PDLA::IO::Pic::debug = 0;
 $iform = 'PNMRAW'; # change to PNMASCII to use ASCII PNM intermediate
                    # output format
 
@@ -63,7 +63,7 @@ $iform = 'PNMRAW'; # change to PNMASCII to use ASCII PNM intermediate
 @allowed = ();
 ## for ('PNM') { push @allowed, $_
 for (keys %formats) {
-   if (PDL->rpiccan($_) && PDL->wpiccan($_) && defined $formats{$_}) {
+   if (PDLA->rpiccan($_) && PDLA->wpiccan($_) && defined $formats{$_}) {
       push @allowed, $_;
    }
 }
@@ -82,7 +82,7 @@ $im1 = ushort pdl [[[0,0,0],[256,65535,256],[0,0,0]],
 		   [[2560,65535,2560],[256,2560,2560],[65535,65534,65535]]];
 $im2 = byte ($im1/256);
 
-if ($PDL::debug){
+if ($PDLA::debug){
    note $im1;
    note $im2;
 }
@@ -107,18 +107,18 @@ foreach $form (sort @allowed) {
         $in1 = rpic_unlink($tushort) unless $usherr;
         $in2 = rpic_unlink($tbyte);
 
-        $comp = $im1 / PDL::ushort(mmax(depends_on($form),$arr->[1]));
-        note "Comparison arr: $comp" if $PDL::debug;
+        $comp = $im1 / PDLA::ushort(mmax(depends_on($form),$arr->[1]));
+        note "Comparison arr: $comp" if $PDLA::debug;
         ok($usherr || tapprox($comp,$in1,$arr->[3]) || tifftest($form));
         ok(tapprox($im2,$in2) || tifftest($form));
     }
 
-    if ($PDL::debug) {
+    if ($PDLA::debug) {
       note $in1->px;
       note $in2->px;
     }
 }
 
 use Data::Dumper;
-note "PDL::IO::Pic converter data:\n";
-note Dumper(\%PDL::IO::Pic::converter);
+note "PDLA::IO::Pic converter data:\n";
+note Dumper(\%PDLA::IO::Pic::converter);

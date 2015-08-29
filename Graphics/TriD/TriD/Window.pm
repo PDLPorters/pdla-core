@@ -1,40 +1,40 @@
 #
-# The PDL::Graphics::TriD::Window is already partially defined in
+# The PDLA::Graphics::TriD::Window is already partially defined in
 # the appropriate gdriver (GL or VRML) items defined here are common
 # to both
 # 
 
 # A function declaration so indirect object method works when defining $ev
 # in new_viewport:
-sub PDL::Graphics::TriD::EventHandler::new;
+sub PDLA::Graphics::TriD::EventHandler::new;
 
-package PDL::Graphics::TriD::Window;
-use PDL::Graphics::TriD::ViewPort;
+package PDLA::Graphics::TriD::Window;
+use PDLA::Graphics::TriD::ViewPort;
 use Data::Dumper;
 use strict;
 
 sub new {
   my($arg,$options) = @_;
 
-  print "PDL::Graphics::TriD::Window - calling SUPER::new...\n" if($PDL::debug_trid);
+  print "PDLA::Graphics::TriD::Window - calling SUPER::new...\n" if($PDLA::debug_trid);
   my $this = $arg->SUPER::new();
 
-  print "PDL::Graphics::TriD::Window - got back $this\n" if($PDL::debug_trid);
+  print "PDLA::Graphics::TriD::Window - got back $this\n" if($PDLA::debug_trid);
   # Make sure the Graphics has been initialized
   $options->{width} = 	300 unless defined $options->{width};
   $options->{height} = 	300 unless defined $options->{height};
   $this->{Width} = $options->{width};
   $this->{Height} = $options->{height};
 
-  print "PDL::Graphics::TriD::Window: calling gdriver....\n" if($PDL::debug_trid);
+  print "PDLA::Graphics::TriD::Window: calling gdriver....\n" if($PDLA::debug_trid);
   $this->{Interactive} = $this->gdriver($options);
-  print "PDL::Graphics::TriD::Window: gdriver gave back $this->{Interactive}....\n" if($PDL::debug_trid);
+  print "PDLA::Graphics::TriD::Window: gdriver gave back $this->{Interactive}....\n" if($PDLA::debug_trid);
 
   # set default values
   if($this->{Interactive}){
-      print "\tIt's interactive... calling ev_defaults...\n" if($PDL::debug_trid);
+      print "\tIt's interactive... calling ev_defaults...\n" if($PDLA::debug_trid);
 	 $this->{Ev} = $this->ev_defaults(); 
-      print "\tcalling new_viewport...\n" if($PDL::debug_trid);
+      print "\tcalling new_viewport...\n" if($PDLA::debug_trid);
 	 $this->new_viewport(0,0,$this->{Width},$this->{Height});  
   }else{
 	 $this->new_viewport(0,0,1,1);  
@@ -61,41 +61,41 @@ sub add_object {
 
 sub new_viewport {
   my($this,$x0,$y0,$x1,$y1, $options) = @_;
-  my $vp = new PDL::Graphics::TriD::ViewPort($x0,$y0,$x1,$y1);
+  my $vp = new PDLA::Graphics::TriD::ViewPort($x0,$y0,$x1,$y1);
 #
-  print "Adding viewport $x0,$y0,$x1,$y1\n" if($PDL::Graphics::TriD::verbose);
+  print "Adding viewport $x0,$y0,$x1,$y1\n" if($PDLA::Graphics::TriD::verbose);
   push @{$this->{_ViewPorts}}, $vp;
 #
 
   if($this->{Interactive} ){
 	 # set a default controller
-	 use PDL::Graphics::TriD::ArcBall;
-	 use PDL::Graphics::TriD::SimpleScaler;
-	 use PDL::Graphics::TriD::Control3D;
-         if (defined($PDL::Graphics::TriD::offline) and $PDL::Graphics::TriD::offline==1 ) {
-            eval "use PDL::Graphics::TriD::VRML";  
+	 use PDLA::Graphics::TriD::ArcBall;
+	 use PDLA::Graphics::TriD::SimpleScaler;
+	 use PDLA::Graphics::TriD::Control3D;
+         if (defined($PDLA::Graphics::TriD::offline) and $PDLA::Graphics::TriD::offline==1 ) {
+            eval "use PDLA::Graphics::TriD::VRML";  
          } else {
-            eval "use PDL::Graphics::TriD::GL";  
+            eval "use PDLA::Graphics::TriD::GL";  
          }
 
 	 my $ev = $options->{EHandler};
-	 $ev = new PDL::Graphics::TriD::EventHandler($vp) unless defined($ev);
+	 $ev = new PDLA::Graphics::TriD::EventHandler($vp) unless defined($ev);
 	 my $cont = $options->{Transformer};
-	 $cont = new PDL::Graphics::TriD::SimpleController() unless defined($cont);
+	 $cont = new PDLA::Graphics::TriD::SimpleController() unless defined($cont);
 
 	 $vp->transformer($cont);
     if(ref($ev)){
-		$ev->set_button(0,new PDL::Graphics::TriD::ArcCone(
+		$ev->set_button(0,new PDLA::Graphics::TriD::ArcCone(
 																			$vp, 0,
 																			$cont->{WRotation}));
-		$ev->set_button(2,new PDL::Graphics::TriD::SimpleScaler(
+		$ev->set_button(2,new PDLA::Graphics::TriD::SimpleScaler(
 																				  $vp,
 																				  \$cont->{CDistance}));
 
 		$vp->eventhandler($ev);
 	 }
   }
-  print "new_viewport: ",ref($vp)," ",$#{$this->{_ViewPorts}},"\n" if($PDL::Graphics::TriD::verbose);
+  print "new_viewport: ",ref($vp)," ",$#{$this->{_ViewPorts}},"\n" if($PDLA::Graphics::TriD::verbose);
 
   return $vp;
 }
@@ -231,9 +231,9 @@ sub AUTOLOAD {
   $sub =~ s/.*:://;
 
   print "AUTOLOAD: $sub at ",__FILE__," line ", __LINE__  ,".\n" 
-	 if($PDL::Graphics::TriD::verbose);
+	 if($PDLA::Graphics::TriD::verbose);
 
-  print "Window AUTOLOADing '$sub': self=$self, args='".join("','",@args),"'\n" if($PDL::debug_trid);
+  print "Window AUTOLOADing '$sub': self=$self, args='".join("','",@args),"'\n" if($PDLA::debug_trid);
 
   if($sub =~ /^gl/ && defined  $self->{_GLObject}){
 	 return  $self->{_GLObject}->$sub(@args);

@@ -1,8 +1,8 @@
 # XXX SOME TESTS DISABLED
 
-# XXX checking PDL using string equality
+# XXX checking PDLA using string equality
 
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test::More tests => 33;
 use strict;
 use warnings;
@@ -353,7 +353,7 @@ END
 
 
 #	note "NEW_OR_INPLACE_NOW\n";
-	$pb = PDL::Core::new_or_inplace($pa);
+	$pb = PDLA::Core::new_or_inplace($pa);
 #	note "NEW_OR_INPLACE_DONE\n";
 #	$pb->jdump();
 	my $pc = $pb->xchg(0,1);

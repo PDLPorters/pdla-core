@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 5;
-use PDL::LiteF;
+use PDLA::LiteF;
 
 my $inline_test_dir = './.inlinepdlpp';
 mkdir $inline_test_dir unless -d $inline_test_dir;

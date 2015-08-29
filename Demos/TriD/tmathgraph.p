@@ -1,11 +1,11 @@
 use blib;
-use PDL;
-use PDL::Graphics::TriD;
-use PDL::Graphics::TriD::Graph;
-use PDL::Graphics::TriD::MathGraph;
-use PDL::Graphics::TriD::Labels;
+use PDLA;
+use PDLA::Graphics::TriD;
+use PDLA::Graphics::TriD::Graph;
+use PDLA::Graphics::TriD::MathGraph;
+use PDLA::Graphics::TriD::Labels;
 
-$g = PDL::Graphics::TriD::get_new_graph();
+$g = PDLA::Graphics::TriD::get_new_graph();
 $g->default_axes();
 
 $coords = [
@@ -18,22 +18,22 @@ $coords = [
 ];
 
 
-$from = PDL->pdl([0,1,2,3,4,4,4,5,5,5]);
-$to = PDL->pdl([1,2,3,1,0,2,3,0,1,2]);
+$from = PDLA->pdl([0,1,2,3,4,4,4,5,5,5]);
+$to = PDLA->pdl([1,2,3,1,0,2,3,0,1,2]);
 
 for(@$coords) {
 	push @$names,join ",",@$_;
 }
 
-$e = new PDL::GraphEvolver(scalar @$coords);
-$e->set_links($from,$to,PDL->ones(1));
+$e = new PDLA::GraphEvolver(scalar @$coords);
+$e->set_links($from,$to,PDLA->ones(1));
 $c = $e->getcoords;
 
-$g->add_dataseries($lab = new PDL::Graphics::TriD::Labels($c,{Strings => $names}),
+$g->add_dataseries($lab = new PDLA::Graphics::TriD::Labels($c,{Strings => $names}),
 	"foo1");
 $g->bind_default("foo1");
 
-$g->add_dataseries($lin = new PDL::Graphics::TriD::MathGraph(
+$g->add_dataseries($lin = new PDLA::Graphics::TriD::MathGraph(
 	$c, {From => $from, To => $to}),"foo2");
 $g->bind_default("foo2");
 

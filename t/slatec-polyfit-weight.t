@@ -6,20 +6,20 @@ use warnings;
 
 ## Issue information
 ##
-## Name: PDL::Slatec::polyfit ignores incorrect length of weight piddle; passes
+## Name: PDLA::Slatec::polyfit ignores incorrect length of weight piddle; passes
 ##       garbage to slatec polfit
 ##
 ## <https://sourceforge.net/p/pdl/bugs/368/>
-## <https://github.com/PDLPorters/pdl/issues/48>
+## <https://github.com/PDLAPorters/pdl/issues/48>
 
-use PDL::LiteF;
+use PDLA::LiteF;
 BEGIN {
 	eval {
-		require PDL::Slatec;
-		PDL::Slatec->import();
+		require PDLA::Slatec;
+		PDLA::Slatec->import();
 		1;
 	} or do {
-		plan skip_all => "PDL::Slatec not available";
+		plan skip_all => "PDLA::Slatec not available";
 	}
 }
 
@@ -34,10 +34,10 @@ my $x = sequence( 9 );
 my $polyfit_orig;
 lives_ok { $polyfit_orig = polyfit( $x, $y, $x->ones, 4, .0001 ); } 'polyfit() works when the weight $w matches the length of $x';
 
-subtest 'Passing the weight in a PDL of length 1' => sub {
+subtest 'Passing the weight in a PDLA of length 1' => sub {
 	my $polyfit_pdl_len_one;
 	lives_ok { $polyfit_pdl_len_one = polyfit( $x, $y, pdl(1), 4, .0001 ); };
-	ok( approx($polyfit_orig, $polyfit_pdl_len_one)->all, 'passing a PDL of length 1 expands to the correct length' );
+	ok( approx($polyfit_orig, $polyfit_pdl_len_one)->all, 'passing a PDLA of length 1 expands to the correct length' );
 };
 
 subtest 'Passing the weight in a Perl scalar' => sub {

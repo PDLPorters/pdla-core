@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::Gaussian -- Gaussian distributions.
+PDLA::Gaussian -- Gaussian distributions.
 
 =head1 SYNOPSIS
 
- $a = new PDL::Gaussian([3],[5]);
+ $a = new PDLA::Gaussian([3],[5]);
  $a->set_covariance(...)
 
 =head1 DESCRIPTION
@@ -14,20 +14,20 @@ sets gaussian distributions.
 
 A new set of gaussians is initialized by
 
- $a = new PDL::Gaussian(xdims,gdims);
+ $a = new PDLA::Gaussian(xdims,gdims);
 
 Where I<xdims> is a reference to an array containing the
 dimensions in the space the gaussian
 is in and I<gdimslist> is a reference to an array containing
 the dimensionality of the gaussian space. For example, after
 
- $a = new PDL::Gaussian([2],[3,4]);
- $b = new PDL::Gaussian([],[]);
+ $a = new PDLA::Gaussian([2],[3,4]);
+ $b = new PDLA::Gaussian([],[]);
 
 The variable C<$a> contains set of 12 (=C<3*4>) 2-Dimensional gaussians
 and C<$b> is the simplest form: one 1D gaussian.
 Currently, I<xdims> may containe either zero or one dimensions
-due to limitations of L<PDL::PP|PDL::PP>.
+due to limitations of L<PDLA::PP|PDLA::PP>.
 
 To set the distribution parameters, you can use the routines
 
@@ -79,8 +79,8 @@ are automatically set to C<$small_covariance> to avoid singularities.
 
 Some of the routines (upd_covariance in particular, but likely others)
 cause segmentation faults and stack traces with current versions of
-PDL, which renders this module essentially unusable.  That is why this
-module is no longer included in the main PDL distribution (but is
+PDLA, which renders this module essentially unusable.  That is why this
+module is no longer included in the main PDLA distribution (but is
 available in the CVS version). Fixes are always welcome, so that we
 may re-include it.
 
@@ -109,32 +109,32 @@ of the given arguments for reasonability.
 Copyright (C) 1996 Tuomas J. Lukka (lukka@fas.harvard.edu)
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 =cut
 
-package PDL::Gaussian;
-use PDL::Core '';
-use PDL::Slatec;
-use PDL::Primitive;
-use PDL::Slices;
-# use PDL::Lib::LLSQRout;
+package PDLA::Gaussian;
+use PDLA::Core '';
+use PDLA::Slatec;
+use PDLA::Primitive;
+use PDLA::Slices;
+# use PDLA::Lib::LLSQRout;
 
 sub new {
 	my($type,$ndims,$nfuncs) = @_;
 	if($#{$ndims} != 0) {
-		barf("PDL::Gaussian can only have one dimension dimensionality\n");
+		barf("PDLA::Gaussian can only have one dimension dimensionality\n");
 	}
 	my $ndims1 = ($#{$ndims==0} ? $ndims : [1]);
 	bless {
-		Mu => (PDL->zeroes (@$ndims1,@$nfuncs)->double),
-		ICV => (PDL->zeroes (@$ndims1,@$ndims1,@$nfuncs)->double),
-		CV => (PDL->zeroes (@$ndims1,@$ndims1,@$nfuncs)->double),
-		lnPrefactor=> (PDL->zeroes(@$nfuncs)->double),
-		EigVec => (PDL->zeroes (@$ndims1,@$ndims1,@$nfuncs)->double),
-		EigVal => (PDL->zeroes (@$ndims1,@$nfuncs)->double),
+		Mu => (PDLA->zeroes (@$ndims1,@$nfuncs)->double),
+		ICV => (PDLA->zeroes (@$ndims1,@$ndims1,@$nfuncs)->double),
+		CV => (PDLA->zeroes (@$ndims1,@$ndims1,@$nfuncs)->double),
+		lnPrefactor=> (PDLA->zeroes(@$nfuncs)->double),
+		EigVec => (PDLA->zeroes (@$ndims1,@$ndims1,@$nfuncs)->double),
+		EigVal => (PDLA->zeroes (@$ndims1,@$nfuncs)->double),
 		NDims => $ndims,
 		NFuncs => $nfuncs,
 	},$type;
@@ -152,19 +152,19 @@ pref: $this->{lnPrefactor}, Eigvec: $this->{EigVec}, eigval: $this->{EigVal}\nMu
 
 sub set_covariance {
 	my($this,$cv) = @_;
-	PDL::Basic::similar_assign($cv,$this->{CV});
+	PDLA::Basic::similar_assign($cv,$this->{CV});
 	$this->upd_covariance();
 }
 
 sub set_icovariance {
 	my($this,$cv) = @_;
-	PDL::Basic::similar_assign($cv,$this->{ICV});
+	PDLA::Basic::similar_assign($cv,$this->{ICV});
 	$this->upd_icovariance();
 }
 
 sub set_mu {
 	my($this,$mu) = @_;
-	PDL::Basic::similar_assign($mu,$this->{Mu});
+	PDLA::Basic::similar_assign($mu,$this->{Mu});
 }
 
 sub get_covariance { my($this) = @_; return $this->{CV}; }
@@ -192,9 +192,9 @@ sub upd_icovariance {
 sub _eigs {
 	my($this,$mat) = @_;
 	my $tmpvec = $this->{EigVec}->float;
-	my $fvone = (PDL->zeroes(@{$this->{NDims}}))->float;
-	my $fvtwo = (PDL->zeroes(@{$this->{NDims}}))->float;
-	my $ierr = (PDL->zeroes(@{$this->{NFuncs}}))->long;
+	my $fvone = (PDLA->zeroes(@{$this->{NDims}}))->float;
+	my $fvtwo = (PDLA->zeroes(@{$this->{NDims}}))->float;
+	my $ierr = (PDLA->zeroes(@{$this->{NFuncs}}))->long;
 	my $tmp = $mat->float; # Copy, since is destroyed.
 	my $tmpval = $this->{EigVal}->float;
 
@@ -208,14 +208,14 @@ sub _eigs {
 # matrix we did not have
 sub _otrans {
 	my($this,$inv) = @_;
-	my $tmp = PDL->null;
+	my $tmp = PDLA->null;
 	$tmp .= $this->{EigVec}; my $foo;
 	if($inv) {
 		($foo = $tmp->thread(0)) /= $this->{EigVal};
 	} else {
 		($foo = $tmp->thread(0)) *= $this->{EigVal};
 	}
-	PDL::Primitive::inner($this->{EigVec}->thread(0,-1),$tmp->thread(-1,0),
+	PDLA::Primitive::inner($this->{EigVec}->thread(0,-1),$tmp->thread(-1,0),
 		$this->{($inv?"ICV":"CV")}->thread(0,1));
 }
 
@@ -241,7 +241,7 @@ sub calc_value ($$$) {
 sub calc_lnvalue ($$$) {
 	my($this,$xorig,$p) = @_;
 	my $x = $xorig;
-	my $muxed = (PDL->zeroes(@{$this->{NDims}},@{$p->{Dims}}))->double;
+	my $muxed = (PDLA->zeroes(@{$this->{NDims}},@{$p->{Dims}}))->double;
 
 #	print "MUXED1: $muxed\n";
 
@@ -252,7 +252,7 @@ sub calc_lnvalue ($$$) {
 #		$muxed->thread(1..$#{$this->{NFuncs}}+1),"-");
 
 	print "TOINNER1\n";
-	PDL::Ops::my_biop1($x, $arg11, $arg12, "-");
+	PDLA::Ops::my_biop1($x, $arg11, $arg12, "-");
 
 	print "TOINNER2\n";
 #	print "MUXED: $muxed\n";
@@ -267,7 +267,7 @@ sub calc_lnvalue ($$$) {
 #		,($this->{ICV}->thread(2..$#{$this->{ICV}{Dims}})),
 #		($muxed->thread(1..$#{$this->{NFuncs}}+1))
 #		   ($p->thread(0..$#{$this->{NFuncs}})));
-	PDL::Primitive::inner2($arg1,$arg2,$arg1,$arg3);
+	PDLA::Primitive::inner2($arg1,$arg2,$arg1,$arg3);
 	print "FROMINNER2\n";
 	$p /= -2;
 	print "TON3\n";
@@ -278,7 +278,7 @@ sub calc_lnvalue ($$$) {
 # Again, (nvars,newndims,foo) => (newndims,newndims,@xdims,foo)
 sub calc_lccovariance {
 	my($this,$vec,$var) = @_;
-	my $tmp = PDL->null;
+	my $tmp = PDLA->null;
 	inner2t($vec->xchg(0,1)->thread(3..$#{$this->{NFuncs}}+3),
 	    	 $this->{CV}->thread(2..$#{$this->{NFuncs}}+2),
 		$vec->thread(3..$#{$this->{NFuncs}}+3),
@@ -291,7 +291,7 @@ sub calc_lccovariance {
 sub calc_lcavg {
 	my($this,$vec,$var) = @_;
 #	kill INT,$$;
-	PDL::Primitive::inner(
+	PDLA::Primitive::inner(
 		$vec->thread(3..$#{$this->{NFuncs}}+3),
 		$this->{Mu}->thread(1..$#{$this->{Mu}{Dims}}),
 		$var->thread(2..$#{$this->{NFuncs}}+2));
@@ -306,10 +306,10 @@ sub calc_qavg {
 # which are then multiplied by the covariance eigenvalues.
 	my @cids = 2..$#{$terms->{Dims}};
 	my @cdims = @{$terms->{Dims}}[2..$#{$terms->{Dims}}];
-	my $tmp1 = PDL->zeroes(@{$this->{NDims}},@{$this->{NDims}});
-	my $tmp2 = PDL->zeroes(@{$this->{NDims}},@{$this->{NDims}},
+	my $tmp1 = PDLA->zeroes(@{$this->{NDims}},@{$this->{NDims}});
+	my $tmp2 = PDLA->zeroes(@{$this->{NDims}},@{$this->{NDims}},
 		@cdims, @{$this->{NFuncs}});
-	PDL::Primitive::inner2t(
+	PDLA::Primitive::inner2t(
 			$this->{EigVec}->xchg(0,1),
 			$terms->thread(@cids),
 			$this->{EigVec},

@@ -7,9 +7,9 @@ use Test::More tests => 35;
 
 BEGIN {
     # if we've got this far in the tests then 
-    # we can probably assume PDL::LiteF works!
+    # we can probably assume PDLA::LiteF works!
     #
-    use_ok( "PDL::LiteF" );
+    use_ok( "PDLA::LiteF" );
 }
 $| = 1;
 
@@ -94,7 +94,7 @@ ok($a==0, "max of empty nonbad int type gives 0");
 # test bad value handling with pctover and max
 #
 SKIP: {
-   skip "Bad value support not compiled", 5 unless $PDL::Bad::Status;
+   skip "Bad value support not compiled", 5 unless $PDLA::Bad::Status;
 
    $empty->badflag(1);
    $a = $empty->maximum;
@@ -123,21 +123,21 @@ my $i=pdl (1,0);
 my $j=pdl(-3, 3, -5, 10);
 
 #Test percentile routines
-#Test PDL::pct
-ok (tapprox(PDL::pct($f, .5),     3), 'PDL::pct 50th percentile');
-ok (tapprox(PDL::pct($g, .76), 0.76), 'PDL::pct interpolation test');
-ok (tapprox(PDL::pct($i, .76), 0.76), 'PDL::pct interpolation not in order test');
+#Test PDLA::pct
+ok (tapprox(PDLA::pct($f, .5),     3), 'PDLA::pct 50th percentile');
+ok (tapprox(PDLA::pct($g, .76), 0.76), 'PDLA::pct interpolation test');
+ok (tapprox(PDLA::pct($i, .76), 0.76), 'PDLA::pct interpolation not in order test');
 
-#Test PDL::oddpct
-ok (tapprox(PDL::oddpct($f, .5),  3), 'PDL::oddpct 50th percentile');
-ok (tapprox(PDL::oddpct($f, .79), 4), 'PDL::oddpct intermediate value test');
-ok (tapprox(PDL::oddpct($h, .5),  0), 'PDL::oddpct 3-member 50th percentile with negative value');
-ok (tapprox(PDL::oddpct($j, .1), -5), 'PDL::oddpct negative values in-between test');
+#Test PDLA::oddpct
+ok (tapprox(PDLA::oddpct($f, .5),  3), 'PDLA::oddpct 50th percentile');
+ok (tapprox(PDLA::oddpct($f, .79), 4), 'PDLA::oddpct intermediate value test');
+ok (tapprox(PDLA::oddpct($h, .5),  0), 'PDLA::oddpct 3-member 50th percentile with negative value');
+ok (tapprox(PDLA::oddpct($j, .1), -5), 'PDLA::oddpct negative values in-between test');
 
 #Test oddmedian
-ok (PDL::oddmedian($g) ==  0, 'Oddmedian 2-value piddle test');
-ok (PDL::oddmedian($h) ==  0, 'Oddmedian 3-value not in order test');
-ok (PDL::oddmedian($j) == -3, 'Oddmedian negative values even cardinality test');
+ok (PDLA::oddmedian($g) ==  0, 'Oddmedian 2-value piddle test');
+ok (PDLA::oddmedian($h) ==  0, 'Oddmedian 3-value not in order test');
+ok (PDLA::oddmedian($j) == -3, 'Oddmedian negative values even cardinality test');
 
 #Test mode and modeover
 my $a = pdl([1,2,3,3,4,3,2],1);

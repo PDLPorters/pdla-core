@@ -1,7 +1,7 @@
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::GSLSF::FERMI_DIRAC - PDL interface to GSL Special Functions
+PDLA::GSLSF::FERMI_DIRAC - PDLA interface to GSL Special Functions
 
 =head1 DESCRIPTION
 
@@ -102,8 +102,8 @@ This file copyright (C) 1999 Christian Pellegrin <chri@infis.univ.trieste.it>
 All rights reserved. There
 is no warranty. You are allowed to redistribute this software /
 documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 The GSL SF modules were written by G. Jungman.
 

@@ -1,7 +1,7 @@
 # Test other such primitives also
 use Test::More tests => 4;
 
-use PDL::LiteF;
+use PDLA::LiteF;
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 $b = double ones(2,3);

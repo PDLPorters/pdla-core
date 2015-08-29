@@ -12,62 +12,62 @@ my $forcebuild=0;
 my ($f77);
 our ($f2cbased, $g2cbased);
 
-if (defined $PDL::Config{WITH_SLATEC} && $PDL::Config{WITH_SLATEC}==0) {
-   $msg = "Will skip build of PDL::Slatec on this system";
+if (defined $PDLA::Config{WITH_SLATEC} && $PDLA::Config{WITH_SLATEC}==0) {
+   $msg = "Will skip build of PDLA::Slatec on this system";
    goto skip;
 }
 
-if (defined $PDL::Config{WITH_SLATEC} && $PDL::Config{WITH_SLATEC}==1) {
-   print "Will forcibly try and build PDL::Slatec on this system\n";
+if (defined $PDLA::Config{WITH_SLATEC} && $PDLA::Config{WITH_SLATEC}==1) {
+   print "Will forcibly try and build PDLA::Slatec on this system\n";
    $forcebuild=1;
 }
 
-if (exists $PDL::Config{F77CONF} && -f $PDL::Config{F77CONF}) {
-  print "Loading F77 configuration from $PDL::Config{F77CONF}...\n";
-  eval { require $PDL::Config{F77CONF} };
+if (exists $PDLA::Config{F77CONF} && -f $PDLA::Config{F77CONF}) {
+  print "Loading F77 configuration from $PDLA::Config{F77CONF}...\n";
+  eval { require $PDLA::Config{F77CONF} };
   if ($@ ne "") {
-    $msg = "F77CONF file not loaded: $@\nOught not build PDL::Slatec\n";
+    $msg = "F77CONF file not loaded: $@\nOught not build PDLA::Slatec\n";
     goto skip unless $forcebuild;
   }
   $f77 = 'F77Conf';
 } else {
   eval { require ExtUtils::F77; ExtUtils::F77->import; };  # Might want "ExtUtils::F77->import(qw(generic f2c))"
   if ($@ ne "") {
-    $msg = "ExtUtils::F77 module not found. Ought not build PDL::Slatec" ;
+    $msg = "ExtUtils::F77 module not found. Ought not build PDLA::Slatec" ;
     goto skip unless $forcebuild;
   } else {
     $f77 = 'ExtUtils::F77';
     print "(ExtUtils Version $ExtUtils::F77::VERSION)\n";
     if ($ExtUtils::F77::VERSION < 1.03 ) {
-      $msg = "Need a version of ExtUtils::F77 >= 1.03. Ought not build PDL::Slatec" ;
+      $msg = "Need a version of ExtUtils::F77 >= 1.03. Ought not build PDLA::Slatec" ;
       goto skip unless $forcebuild;
     }
   }  # end if ($@ ne "")
-} # if (exists $PDL::Config{F77CONF}...
+} # if (exists $PDLA::Config{F77CONF}...
 
 my $compiler_available = $f77->testcompiler;
 
 if (!$compiler_available) {
-   $msg = "No f77 compiler found. Ought to skip PDL::Slatec on this system";
-   $PDL::Config{WITH_SLATEC} = 0;
+   $msg = "No f77 compiler found. Ought to skip PDLA::Slatec on this system";
+   $PDLA::Config{WITH_SLATEC} = 0;
 } else {
-   $PDL::Config{WITH_SLATEC} = 1;
+   $PDLA::Config{WITH_SLATEC} = 1;
 }
 
 skip:
 
 if ($msg ne "" && $forcebuild==0) {
     write_dummy_make( $msg );
-    $PDL::Config{WITH_SLATEC} = 0;
+    $PDLA::Config{WITH_SLATEC} = 0;
     $donot = 1;
 } else {
-   print "\n   Building PDL::Slatec. Turn off WITH_SLATEC if there are any problems\n\n";
-   $PDL::Config{WITH_SLATEC} = 1;
+   print "\n   Building PDLA::Slatec. Turn off WITH_SLATEC if there are any problems\n\n";
+   $PDLA::Config{WITH_SLATEC} = 1;
 }
 
 return if $donot;
 
-my @pack = (["slatec.pd", qw(Slatec PDL::Slatec)]);
+my @pack = (["slatec.pd", qw(Slatec PDLA::Slatec)]);
 my @slatecfiles = map {s/^slatec\///; s/\.f$//; $_} glob("slatec/*.f");
 my %hash = pdlpp_stdargs_int(@pack);
 

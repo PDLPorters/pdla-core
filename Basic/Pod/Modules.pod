@@ -1,19 +1,19 @@
 =head1 NAME
 
-PDL::Modules - A guide to PDL's module reference.
+PDLA::Modules - A guide to PDLA's module reference.
 
 
 =head1 DESCRIPTION
 
-This page serves as a table of contents for PDL's module documentation.
-This page does not list every single PDL module. It only shows the ones
-intended for PDL users, while ommitting those which are deemed "for
+This page serves as a table of contents for PDLA's module documentation.
+This page does not list every single PDLA module. It only shows the ones
+intended for PDLA users, while ommitting those which are deemed "for
 internal use only". If you wish to see a comprehensive list of all
-documentation, please see the L<PDL::Index|PDL::Index> page.
+documentation, please see the L<PDLA::Index|PDLA::Index> page.
 
 =head1 LOOKING FOR A FUNCTION?
 
-If you want to search for a function name, you should use the PDL
+If you want to search for a function name, you should use the PDLA
 shell along with the "help" or "apropos" command (to do a fuzzy search).
 For example:
 
@@ -24,7 +24,7 @@ For example:
  yvals           Fills a piddle with Y index values. See the CAVEAT for xvals.
  zvals           Fills a piddle with Z index values. See the CAVEAT for xvals.
 
-To learn more about the PDL shell, see L<perldl|perldl> or L<pdl2|pdl2>.
+To learn more about the PDLA shell, see L<perldl|perldl> or L<pdl2|pdl2>.
 
 =head1 FOUNDATION
 
@@ -32,7 +32,7 @@ To learn more about the PDL shell, see L<perldl|perldl> or L<pdl2|pdl2>.
 
 =item L<perldl|perldl> or L<pdl2|pdl2>
 
-Learn about the PDL shell.
+Learn about the PDLA shell.
 
 =back
 
@@ -40,19 +40,19 @@ Learn about the PDL shell.
 
 =over 5
 
-=item L<PDL::Core|PDL::Core>
+=item L<PDLA::Core|PDLA::Core>
 
 Core module (e.g. creating piddles).
 
-=item L<PDL::Basic|PDL::Basic>
+=item L<PDLA::Basic|PDLA::Basic>
 
-Simplified interface to the more general PDL::Primitive.
+Simplified interface to the more general PDLA::Primitive.
 
-=item L<PDL::Ops|PDL::Ops>
+=item L<PDLA::Ops|PDLA::Ops>
 
 Basic operators (e.g. arithmetic, comparisons, etc.).
 
-=item L<PDL::Ufunc|PDL::Ufunc>
+=item L<PDLA::Ufunc|PDLA::Ufunc>
 
 Functions that accumulate along a dimension (e.g. sum, max).
 
@@ -62,15 +62,15 @@ Functions that accumulate along a dimension (e.g. sum, max).
 
 =over 5
 
-=item L<PDL::AutoLoader|PDL::AutoLoader>
+=item L<PDLA::AutoLoader|PDLA::AutoLoader>
 
 MATLAB-style function autoloader.
 
-=item L<PDL::Slices|PDL::Slices>
+=item L<PDLA::Slices|PDLA::Slices>
 
 Indexing and slices. How to access a subset of a piddle.
 
-=item L<PDL::NiceSlice|PDL::NiceSlice>
+=item L<PDLA::NiceSlice|PDLA::NiceSlice>
 
 Nicer syntax for slices.
 
@@ -82,35 +82,35 @@ Nicer syntax for slices.
 
 =over 5
 
-=item L<PDL::Primitive|PDL::Primitive>
+=item L<PDLA::Primitive|PDLA::Primitive>
 
 Fundamental operations on piddles.
 
-=item L<PDL::Complex|PDL::Complex>
+=item L<PDLA::Complex|PDLA::Complex>
 
 Complex numbers.
 
-=item L<PDL::Bad|PDL::Bad>
+=item L<PDLA::Bad|PDLA::Bad>
 
 Bad value support.
 
-=item L<PDL::Reduce|PDL::Reduce>
+=item L<PDLA::Reduce|PDLA::Reduce>
 
-A 'reduce' function for PDL.
+A 'reduce' function for PDLA.
 
-=item L<PDL::Lite|PDL::Lite>
+=item L<PDLA::Lite|PDLA::Lite>
 
-Minimum PDL module OO loader.
+Minimum PDLA module OO loader.
 
-=item L<PDL::LiteF|PDL::LiteF>
+=item L<PDLA::LiteF|PDLA::LiteF>
 
-Minimum PDL module function loader.
+Minimum PDLA module function loader.
 
-=item L<PDL::Extended|PDL::Extended>
+=item L<PDLA::Extended|PDLA::Extended>
 
 Extended Mathematical Operators.
 
-=item L<PDL::Func|PDL::Func>
+=item L<PDLA::Func|PDLA::Func>
 
 Interpolation-related functions.
 
@@ -122,11 +122,11 @@ Interpolation-related functions.
 
 =over 5
 
-=item L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT>
+=item L<PDLA::Graphics::PGPLOT|PDLA::Graphics::PGPLOT>
 
 PGPLOT library.
 
-=item L<PDL::Graphics::PLplot|PDL::Graphics::PLplot>
+=item L<PDLA::Graphics::PLplot|PDLA::Graphics::PLplot>
 
 PLplot library.
 
@@ -137,15 +137,15 @@ PLplot library.
 
 =over 5
 
-=item L<PDL::Graphics::TriD|PDL::Graphics::TriD>
+=item L<PDLA::Graphics::TriD|PDLA::Graphics::TriD>
 
 3D graphics core module.
 
-=item L<PDL::Graphics::TriD::Rout|PDL::Graphics::TriD::Rout>
+=item L<PDLA::Graphics::TriD::Rout|PDLA::Graphics::TriD::Rout>
 
 Helper routines for 3D graphics.
 
-=item L<PDL::Graphics::TriD::Contours|PDL::Graphics::TriD::Contours>
+=item L<PDLA::Graphics::TriD::Contours|PDLA::Graphics::TriD::Contours>
 
 3D surface contours.
 
@@ -157,15 +157,15 @@ Helper routines for 3D graphics.
 
 =over 5
 
-=item L<PDL::Graphics::LUT|PDL::Graphics::LUT>
+=item L<PDLA::Graphics::LUT|PDLA::Graphics::LUT>
 
 Look-up tables.
 
-=item L<PDL::Graphics::IIS|PDL::Graphics::IIS>
+=item L<PDLA::Graphics::IIS|PDLA::Graphics::IIS>
 
 Display images on IIS devices.
 
-=item L<PDL::Graphics::Limits|PDL::Graphics::Limits>
+=item L<PDLA::Graphics::Limits|PDLA::Graphics::Limits>
 
 Derive data limits for display purposes.
 
@@ -177,19 +177,19 @@ Derive data limits for display purposes.
 
 =over 5
 
-=item L<PDL::Compression|PDL::Compression>
+=item L<PDLA::Compression|PDLA::Compression>
 
 Compression utilities.
 
-=item L<PDL::Image2D|PDL::Image2D>
+=item L<PDLA::Image2D|PDLA::Image2D>
 
 2-dimmensional image processing.
 
-=item L<PDL::ImageND|PDL::ImageND>
+=item L<PDLA::ImageND|PDLA::ImageND>
 
 N-dimmensional image processing.
 
-=item L<PDL::ImageRGB|PDL::ImageRGB>
+=item L<PDLA::ImageRGB|PDLA::ImageRGB>
 
 RGB image data handling.
 
@@ -201,33 +201,33 @@ RGB image data handling.
 
 =over 5
 
-=item L<PDL::FFT|PDL::FFT>
+=item L<PDLA::FFT|PDLA::FFT>
 
 Fast Fourier Transform (native implementation).
 
-=item L<PDL::FFTW|PDL::FFTW>
+=item L<PDLA::FFTW|PDLA::FFTW>
 
-PDL interface to the FFTW library.
+PDLA interface to the FFTW library.
 
-=item L<PDL::Filter::LinPred|PDL::Filter::LinPred>
+=item L<PDLA::Filter::LinPred|PDLA::Filter::LinPred>
 
 Linear predictive filtering.
 
-=item L<PDL::Filter::Linear|PDL::Filter::Linear>
+=item L<PDLA::Filter::Linear|PDLA::Filter::Linear>
 
 Linear filtering.
 
-=item L<PDL::Opt::Simplex|PDL::Opt::Simplex>
+=item L<PDLA::Opt::Simplex|PDLA::Opt::Simplex>
 
 Simplex optimization routines.
 
-=item L<PDL::Minuit|PDL::Minuit>
+=item L<PDLA::Minuit|PDLA::Minuit>
 
-PDL interface to the Minuit library.
+PDLA interface to the Minuit library.
 
-=item L<PDL::Slatec|PDL::Slatec>
+=item L<PDLA::Slatec|PDLA::Slatec>
 
-PDL interface to the Slatec library.
+PDLA interface to the Slatec library.
 
 =back
 
@@ -237,17 +237,17 @@ PDL interface to the Slatec library.
 
 =over 5
 
-=item L<PDL::Transform|PDL::Transform>
+=item L<PDLA::Transform|PDLA::Transform>
 
 Coordinate transforms, image warping, and N-D functions.
 
-=item L<PDL::Transform::Cartography|PDL::Transform::Cartography>
+=item L<PDLA::Transform::Cartography|PDLA::Transform::Cartography>
 
 Cartographic projections.
 
-=item L<PDL::Transform::Proj4|PDL::Transform::Proj4>
+=item L<PDLA::Transform::Proj4|PDLA::Transform::Proj4>
 
-PDL interface to the Proj4 projection library.
+PDLA interface to the Proj4 projection library.
 
 =back
 
@@ -257,27 +257,27 @@ PDL interface to the Proj4 projection library.
 
 =over 5
 
-=item L<PDL::IO|PDL::IO>
+=item L<PDLA::IO|PDLA::IO>
 
 Overview of IO functions.
 
-=item L<PDL::IO::Dumper|PDL::IO::Dumper>
+=item L<PDLA::IO::Dumper|PDLA::IO::Dumper>
 
 Data dumper.
 
-=item L<PDL::IO::FastRaw|PDL::IO::FastRaw>
+=item L<PDLA::IO::FastRaw|PDLA::IO::FastRaw>
 
 Fast storage format (outdated).
 
-=item L<PDL::IO::FlexRaw|PDL::IO::FlexRaw>
+=item L<PDLA::IO::FlexRaw|PDLA::IO::FlexRaw>
 
 Flexible storage format.
 
-=item L<PDL::IO::Rout|PDL::IO::Rout>
+=item L<PDLA::IO::Rout|PDLA::IO::Rout>
 
 Misc IO routines.
 
-=item L<PDL::IO::Sortable|PDL::IO::Sortable>
+=item L<PDLA::IO::Sortable|PDLA::IO::Sortable>
 
 Support for Perl's 'Storable' module.
 
@@ -288,29 +288,29 @@ Support for Perl's 'Storable' module.
 
 =over 5
 
-=item L<PDL::IO::FITS|PDL::IO::FITS>
+=item L<PDLA::IO::FITS|PDLA::IO::FITS>
 
-PDL support for FITS images.
+PDLA support for FITS images.
 
-=item L<PDL::IO::PNM|PDL::IO::PNM>
+=item L<PDLA::IO::PNM|PDLA::IO::PNM>
 
-PDL support for PNM images.
+PDLA support for PNM images.
 
-=item L<PDL::IO::GD|PDL::IO::GD>
+=item L<PDLA::IO::GD|PDLA::IO::GD>
 
-PDL interface to the GD image library.
+PDLA interface to the GD image library.
 
-=item L<PDL::IO::HDF|PDL::IO::HDF>
+=item L<PDLA::IO::HDF|PDLA::IO::HDF>
 
-PDL interface to the HDH4 image library.
+PDLA interface to the HDH4 image library.
 
-=item L<PDL::IO::NetPBM|PDL::IO::NetPBM>
+=item L<PDLA::IO::NetPBM|PDLA::IO::NetPBM>
 
-PDL interface to the NetPBM image library.
+PDLA interface to the NetPBM image library.
 
-=item L<PDL::IO::NDF|PDL::IO::NDF>
+=item L<PDLA::IO::NDF|PDLA::IO::NDF>
 
-PDL interface to the Starlink image library. Available
+PDLA interface to the Starlink image library. Available
 as a separate CPAN download.
 
 =back
@@ -321,11 +321,11 @@ as a separate CPAN download.
 
 =over 5
 
-=item L<PDL::Matrix|PDL::Matrix>
+=item L<PDLA::Matrix|PDLA::Matrix>
 
 Convenience class for 2D matrix work.
 
-=item L<PDL::MatrixOps|PDL::MatrixOps>
+=item L<PDLA::MatrixOps|PDLA::MatrixOps>
 
 Additional matrix operators.
 
@@ -337,23 +337,23 @@ Additional matrix operators.
 
 =over 5
 
-=item L<PDL::GSL::DIFF|PDL::GSL::DIFF>
+=item L<PDLA::GSL::DIFF|PDLA::GSL::DIFF>
 
 Numerical differentiation.
 
-=item L<PDL::GSL::INTEG|PDL::GSL::INTEG>
+=item L<PDLA::GSL::INTEG|PDLA::GSL::INTEG>
 
 Numerical integration.
 
-=item L<PDL::GSL::INTERP|PDL::GSL::INTERP>
+=item L<PDLA::GSL::INTERP|PDLA::GSL::INTERP>
 
 Interpolation.
 
-=item L<PDL::GSL::MROOT|PDL::GSL::MROOT>
+=item L<PDLA::GSL::MROOT|PDLA::GSL::MROOT>
 
 Multidimensional root-finding.
 
-=item L<PDL::GSL::RNG|PDL::GSL::RNG>
+=item L<PDLA::GSL::RNG|PDLA::GSL::RNG>
 
 RNG and randist.
 
@@ -365,61 +365,61 @@ RNG and randist.
 
 =over 5
 
-=item L<PDL::GSLSF::AIRY|PDL::GSLSF::AIRY>
+=item L<PDLA::GSLSF::AIRY|PDLA::GSLSF::AIRY>
 
-=item L<PDL::GSLSF::BESSEL|PDL::GSLSF::BESSEL>
+=item L<PDLA::GSLSF::BESSEL|PDLA::GSLSF::BESSEL>
 
-=item L<PDL::GSLSF::CLAUSEN|PDL::GSLSF::CLAUSEN>
+=item L<PDLA::GSLSF::CLAUSEN|PDLA::GSLSF::CLAUSEN>
 
-=item L<PDL::GSLSF::COULOMB|PDL::GSLSF::COULOMB>
+=item L<PDLA::GSLSF::COULOMB|PDLA::GSLSF::COULOMB>
 
-=item L<PDL::GSLSF::COUPLING|PDL::GSLSF::COUPLING>
+=item L<PDLA::GSLSF::COUPLING|PDLA::GSLSF::COUPLING>
 
-=item L<PDL::GSLSF::DAWSON|PDL::GSLSF::DAWSON>
+=item L<PDLA::GSLSF::DAWSON|PDLA::GSLSF::DAWSON>
 
-=item L<PDL::GSLSF::DEBYE|PDL::GSLSF::DEBYE>
+=item L<PDLA::GSLSF::DEBYE|PDLA::GSLSF::DEBYE>
 
-=item L<PDL::GSLSF::DILOG|PDL::GSLSF::DILOG>
+=item L<PDLA::GSLSF::DILOG|PDLA::GSLSF::DILOG>
 
-=item L<PDL::GSLSF::ELEMENTARY|PDL::GSLSF::ELEMENTARY>
+=item L<PDLA::GSLSF::ELEMENTARY|PDLA::GSLSF::ELEMENTARY>
 
-=item L<PDL::GSLSF::ELLINT|PDL::GSLSF::ELLINT>
+=item L<PDLA::GSLSF::ELLINT|PDLA::GSLSF::ELLINT>
 
-=item L<PDL::GSLSF::ELLJAC|PDL::GSLSF::ELLJAC>
+=item L<PDLA::GSLSF::ELLJAC|PDLA::GSLSF::ELLJAC>
 
-=item L<PDL::GSLSF::ERF|PDL::GSLSF::ERF>
+=item L<PDLA::GSLSF::ERF|PDLA::GSLSF::ERF>
 
-=item L<PDL::GSLSF::EXP|PDL::GSLSF::EXP>
+=item L<PDLA::GSLSF::EXP|PDLA::GSLSF::EXP>
 
-=item L<PDL::GSLSF::EXPINT|PDL::GSLSF::EXPINT>
+=item L<PDLA::GSLSF::EXPINT|PDLA::GSLSF::EXPINT>
 
-=item L<PDL::GSLSF::FERMI_DIRAC|PDL::GSLSF::FERMI_DIRAC>
+=item L<PDLA::GSLSF::FERMI_DIRAC|PDLA::GSLSF::FERMI_DIRAC>
 
-=item L<PDL::GSLSF::GAMMA|PDL::GSLSF::GAMMA>
+=item L<PDLA::GSLSF::GAMMA|PDLA::GSLSF::GAMMA>
 
-=item L<PDL::GSLSF::GEGENBAUER|PDL::GSLSF::GEGENBAUER>
+=item L<PDLA::GSLSF::GEGENBAUER|PDLA::GSLSF::GEGENBAUER>
 
-=item L<PDL::GSLSF::HYPERG|PDL::GSLSF::HYPERG>
+=item L<PDLA::GSLSF::HYPERG|PDLA::GSLSF::HYPERG>
 
-=item L<PDL::GSLSF::LAGUERRE|PDL::GSLSF::LAGUERRE>
+=item L<PDLA::GSLSF::LAGUERRE|PDLA::GSLSF::LAGUERRE>
 
-=item L<PDL::GSLSF::LEGENDRE|PDL::GSLSF::LEGENDRE>
+=item L<PDLA::GSLSF::LEGENDRE|PDLA::GSLSF::LEGENDRE>
 
-=item L<PDL::GSLSF::LOG|PDL::GSLSF::LOG>
+=item L<PDLA::GSLSF::LOG|PDLA::GSLSF::LOG>
 
-=item L<PDL::GSLSF::POLY|PDL::GSLSF::POLY>
+=item L<PDLA::GSLSF::POLY|PDLA::GSLSF::POLY>
 
-=item L<PDL::GSLSF::POW_INT|PDL::GSLSF::POW_INT>
+=item L<PDLA::GSLSF::POW_INT|PDLA::GSLSF::POW_INT>
 
-=item L<PDL::GSLSF::PSI|PDL::GSLSF::PSI>
+=item L<PDLA::GSLSF::PSI|PDLA::GSLSF::PSI>
 
-=item L<PDL::GSLSF::SYNCHROTRON|PDL::GSLSF::SYNCHROTRON>
+=item L<PDLA::GSLSF::SYNCHROTRON|PDLA::GSLSF::SYNCHROTRON>
 
-=item L<PDL::GSLSF::TRANSPORT|PDL::GSLSF::TRANSPORT>
+=item L<PDLA::GSLSF::TRANSPORT|PDLA::GSLSF::TRANSPORT>
 
-=item L<PDL::GSLSF::TRIG|PDL::GSLSF::TRIG>
+=item L<PDLA::GSLSF::TRIG|PDLA::GSLSF::TRIG>
 
-=item L<PDL::GSLSF::ZETA|PDL::GSLSF::ZETA>
+=item L<PDLA::GSLSF::ZETA|PDLA::GSLSF::ZETA>
 
 =back
 
@@ -429,19 +429,19 @@ RNG and randist.
 
 =over 5
 
-=item L<PDL::Fit::Gaussian|PDL::Fit::Gaussian>
+=item L<PDLA::Fit::Gaussian|PDLA::Fit::Gaussian>
 
 Fit gaussian curves.
 
-=item L<PDL::Fit::Polynomial|PDL::Fit::Polynomial>
+=item L<PDLA::Fit::Polynomial|PDLA::Fit::Polynomial>
 
 Fit polynomials.
 
-=item L<PDL::Fit::Linfit|PDL::Fit::Linfit>
+=item L<PDLA::Fit::Linfit|PDLA::Fit::Linfit>
 
 Fit linear combinations of functions.
 
-=item L<PDL::Fit::LM|PDL::Fit::LM>
+=item L<PDLA::Fit::LM|PDLA::Fit::LM>
 
 Fit functions using the Levenberg-Marquardt algorithm.
 
@@ -453,21 +453,21 @@ Fit functions using the Levenberg-Marquardt algorithm.
 
 =over 5
 
-=item L<PDL::Dbg|PDL::Dbg>
+=item L<PDLA::Dbg|PDLA::Dbg>
 
-PDL debugger.
+PDLA debugger.
 
-=item L<PDL::DiskCache|PDL::DiskCache>
+=item L<PDLA::DiskCache|PDLA::DiskCache>
 
 Manage many piddles through a disk cache.
 
-=item L<PDL::CallExt|PDL::CallExt>
+=item L<PDLA::CallExt|PDLA::CallExt>
 
 Call external functions.
 
-=item L<PDL::Objects|PDL::Objects>
+=item L<PDLA::Objects|PDLA::Objects>
 
-If you want to sub-class from PDL (note: incomplete).
+If you want to sub-class from PDLA (note: incomplete).
 
 =back
 

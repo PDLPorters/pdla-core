@@ -1,36 +1,36 @@
 #!/usr/bin/perl
 #
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test::More tests => 6;
 
-# Test PDL Subclassing via hashes
+# Test PDLA Subclassing via hashes
 
 ########### First test normal subclassing ###########
 
-package PDL::Derived;
+package PDLA::Derived;
 
-@PDL::Derived::ISA = qw/PDL/;
+@PDLA::Derived::ISA = qw/PDLA/;
 
 sub new {
    my $class = shift;
    my $x = bless {}, $class;
    my $value = shift;
-   $$x{PDL} = $value;
+   $$x{PDLA} = $value;
    $$x{SomethingElse} = 42;
    return $x;
 }
 
 package main;
 
-# Create a PDL::Derived instance
+# Create a PDLA::Derived instance
 
-$z = PDL::Derived->new( ones(5,5) ) ;
+$z = PDLA::Derived->new( ones(5,5) ) ;
 
-# PDL::Derived should have PDL properties
+# PDLA::Derived should have PDLA properties
 
 $z++;
 
-ok(sum($z)==50, "derived object does PDL stuff");
+ok(sum($z)==50, "derived object does PDLA stuff");
 
 # And should also have extra bits
 
@@ -43,25 +43,25 @@ undef $z;
 ok(1==1, "survives distruction");  # huh?
 
 
-########### Now test magic subclassing i.e. PDL=code ref ###########
+########### Now test magic subclassing i.e. PDLA=code ref ###########
 
-package PDL::Derived2;
+package PDLA::Derived2;
 
 # This is a array of ones of dim 'Coeff'
 # All that is stored initially is "Coeff", the
-# PDL array is only realised when a boring PDL
+# PDLA array is only realised when a boring PDLA
 # function is called on it. One can imagine methods
-# in PDL::Derived2 doing manipulation on the Coeffs
+# in PDLA::Derived2 doing manipulation on the Coeffs
 # rather than actualizing the data.
 
-@PDL::Derived2::ISA = qw/PDL/;
+@PDLA::Derived2::ISA = qw/PDLA/;
 
 sub new {
    my $class = shift;
    my $x = bless {}, $class;
    my $value = shift;
    $$x{Coeff} = $value;
-   $$x{PDL} = sub { return $x->cache };
+   $$x{PDLA} = sub { return $x->cache };
    $$x{SomethingElse} = 42;
    return $x;
 }
@@ -72,21 +72,21 @@ sub new {
 sub cache {
   my $self = shift;
   my $v = $self->{Coeff};
-  $self->{Cache} = PDL->ones($v,$v)+2 unless exists $self->{Cache};
+  $self->{Cache} = PDLA->ones($v,$v)+2 unless exists $self->{Cache};
   return $self->{Cache};
 }
 
 package main;
 
-# Create a PDL::Derived2 instance
+# Create a PDLA::Derived2 instance
 
-$z = PDL::Derived2->new(5);
+$z = PDLA::Derived2->new(5);
 
-# PDL::Derived2 should have PDL properties
+# PDLA::Derived2 should have PDLA properties
 
 $z++;
 
-ok(sum($z)==100, "derived2 has PDL properties");
+ok(sum($z)==100, "derived2 has PDLA properties");
 
 # And should also have extra bits
 

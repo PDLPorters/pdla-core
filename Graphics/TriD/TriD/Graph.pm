@@ -1,6 +1,6 @@
-package PDL::Graphics::TriD::Graph;
-use base qw/PDL::Graphics::TriD::Object/;
-use PDL::LiteF; # XXX F needed?
+package PDLA::Graphics::TriD::Graph;
+use base qw/PDLA::Graphics::TriD::Object/;
+use PDLA::LiteF; # XXX F needed?
 
 use fields qw(Data DataBind UnBound DefaultAxes Axis );
 
@@ -72,7 +72,7 @@ sub get_points {
 
 
 	my @ddims = $d->dims; shift @ddims;
-	my $p = PDL->zeroes(&PDL::float(),3,@ddims);
+	my $p = PDLA->zeroes(&PDLA::float(),3,@ddims);
 	my $pnew;
 	for(@{$this->{DataBind}{$name}}) {
 		defined($this->{Axis}{$_->[0]}) or die("Axis not defined: $_->[0]");
@@ -101,7 +101,7 @@ sub delete_data {
 
 sub default_axes {
 	my($this) = @_;
-	$this->set_axis(PDL::Graphics::TriD::EuclidAxes->new(),"Euclid3");
+	$this->set_axis(PDLA::Graphics::TriD::EuclidAxes->new(),"Euclid3");
 	$this->set_default_axis("Euclid3",[0,1,2]);
 }
 
@@ -114,7 +114,7 @@ sub set_default_axis {
 sub changed {}
 
 
-package PDL::Graphics::TriD::EuclidAxes;
+package PDLA::Graphics::TriD::EuclidAxes;
 
 sub new {
 	my($type) = @_; bless {Names => [X,Y,Z]},$type;
@@ -178,8 +178,8 @@ sub transform {
 # projects from the sphere to a cylinder
 # 
 
-package PDL::Graphics::TriD::CylindricalEquidistantAxes;
-use PDL::Core '';
+package PDLA::Graphics::TriD::CylindricalEquidistantAxes;
+use PDLA::Core '';
 
 
 sub new {
@@ -293,8 +293,8 @@ sub transform {
 }
 
 
-package PDL::Graphics::TriD::PolarStereoAxes;
-use PDL::Core '';
+package PDLA::Graphics::TriD::PolarStereoAxes;
+use PDLA::Core '';
 
 
 sub new {

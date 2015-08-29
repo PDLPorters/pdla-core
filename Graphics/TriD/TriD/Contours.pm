@@ -1,6 +1,6 @@
 =head1 NAME
 
-PDL::Graphics::TriD::Contours - 3D Surface contours for TriD
+PDLA::Graphics::TriD::Contours - 3D Surface contours for TriD
 
 =head1 SYNOPSIS
 
@@ -8,27 +8,27 @@ PDL::Graphics::TriD::Contours - 3D Surface contours for TriD
 
     # A simple contour plot in black and white
 
-    use PDL::Graphics::TriD;
-    use PDL::Graphics::TriD::Contours;
+    use PDLA::Graphics::TriD;
+    use PDLA::Graphics::TriD::Contours;
     $size = 25;
     $x = (xvals zeroes $size,$size) / $size;
     $y = (yvals zeroes $size,$size) / $size;
     $z = (sin($x*6.3) * sin($y*6.3)) ** 3;
-    $data=new PDL::Graphics::TriD::Contours($z,
+    $data=new PDLA::Graphics::TriD::Contours($z,
                [$z->xvals/$size,$z->yvals/$size,0]);
-    PDL::Graphics::TriD::graph_object($data)
+    PDLA::Graphics::TriD::graph_object($data)
 
 =cut 
 
-package PDL::Graphics::TriD::Contours;
+package PDLA::Graphics::TriD::Contours;
 use strict;
-use PDL;
-use PDL::Graphics::TriD;
-use PDL::Graphics::TriD::Rout;
-use PDL::Graphics::TriD::Labels;
+use PDLA;
+use PDLA::Graphics::TriD;
+use PDLA::Graphics::TriD::Rout;
+use PDLA::Graphics::TriD::Labels;
 #use Data::Dumper;
 
-use base qw/PDL::Graphics::TriD::GObject/;
+use base qw/PDLA::Graphics::TriD::GObject/;
 use fields qw/ContourSegCnt Labels LabelStrings/;
 
 =head1 FUNCTIONS
@@ -41,7 +41,7 @@ Define a new contour plot for TriD.
 
 =for example
 
-  $data=new PDL::Graphics::TriD::Contours($d,[$x,$y,$z],[$r,$g,$b],$options);
+  $data=new PDLA::Graphics::TriD::Contours($d,[$x,$y,$z],[$r,$g,$b],$options);
 
 where $d is a 2D pdl of data to be contoured. [$x,$y,$z] define a 3D
 map of $d into the visualization space [$r,$g,$b] is an optional [3,1]
@@ -77,7 +77,7 @@ sub new{
     undef $colors;
   }
 
-  $colors = PDL::Graphics::TriD::realcoords("COLOR",pdl[1,1,1]) unless defined $colors;
+  $colors = PDLA::Graphics::TriD::realcoords("COLOR",pdl[1,1,1]) unless defined $colors;
 
   my $this = $type->SUPER::new($points,$colors,$options);
 
@@ -108,7 +108,7 @@ sub new{
     }else{      
       $this->{Options}{ContourMin} = int($fac*$min+1)/$fac;
       print "ContourMin =  ",$this->{Options}{ContourMin},"\n"
-		  if($PDL::Graphics::TriD::verbose);
+		  if($PDLA::Graphics::TriD::verbose);
     }
   }
   unless(defined $this->{Options}{ContourMax} && 
@@ -124,14 +124,14 @@ sub new{
       }else{
 	$this->{Options}{ContourMax} = (int($fac*$max)-1)/$fac;
       print "ContourMax =  ",$this->{Options}{ContourMax},"\n"
-		  if($PDL::Graphics::TriD::verbose);
+		  if($PDLA::Graphics::TriD::verbose);
       }
     }
   }
   unless(defined $this->{Options}{ContourInt} &&  $this->{Options}{ContourInt}>0){
     $this->{Options}{ContourInt} = int($fac*($this->{Options}{ContourMax}-$this->{Options}{ContourMin}))/(10*$fac);
     print "ContourInt =  ",$this->{Options}{ContourInt},"\n"
-		if($PDL::Graphics::TriD::verbose);
+		if($PDLA::Graphics::TriD::verbose);
   }
 #
 # The user could also name cvals
@@ -147,7 +147,7 @@ sub new{
   }
   $this->{Options}{ContourVals} = $cvals;
 
-  print "Cvals = $cvals\n" if($PDL::Graphics::TriD::verbose);  
+  print "Cvals = $cvals\n" if($PDLA::Graphics::TriD::verbose);  
   
   $this->contour_segments($cvals,$data,$grid);
 
@@ -165,7 +165,7 @@ sub get_valid_options{
 			 ContourVals=> pdl->null,
 			 UseDefcols=>1,
 	                 Labels=> undef,
-			 Font=>$PDL::Graphics::TriD::GL::fontbase}
+			 Font=>$PDLA::Graphics::TriD::GL::fontbase}
 }
 
 
@@ -258,7 +258,7 @@ $table is passed in as either a piddle of [3,n] colors, where n is the
 number of contour levels, or as a reference to a function which
 expects the number of contour levels as an argument and returns a
 [3,n] piddle.  It should be straight forward to use the
-L<PDL::Graphics::LUT> tables in a function which subsets the 256
+L<PDLA::Graphics::LUT> tables in a function which subsets the 256
 colors supplied by the look up table into the number of colors needed
 by Contours.
 
@@ -280,7 +280,7 @@ sub set_colortable{
   if($colors->getdim(0)!=3){
     $colors->reshape(3,$colors->nelem/3);
   }
-  print "Color info ",$self->{Colors}->info," ",$colors->info,"\n" if($PDL::Graphics::TriD::verbose);
+  print "Color info ",$self->{Colors}->info," ",$colors->info,"\n" if($PDLA::Graphics::TriD::verbose);
  
   $self->{Colors} = $colors;
 }

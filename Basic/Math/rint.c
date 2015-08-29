@@ -16,14 +16,14 @@
  * Copyright (c) 1998, Raphael Manfredi <Raphael_Manfredi@hp.com>
  *           (c) 2010, Derek Lamb <lambd@users.sourceforge.net>
 
- Note that other functions in PDL::Math use code from the Cephes math
+ Note that other functions in PDLA::Math use code from the Cephes math
  library. If this new Banker's rounding code causes some problems, it
  is possible to rename the round.c provided therein and use it here.
 
 All rights reserved. There is no warranty. You are allowed to
  redistribute this software / documentation under certain
- conditions. For details, see the file COPYING in the PDL
- distribution. If this file is separated from the PDL distribution,
+ conditions. For details, see the file COPYING in the PDLA
+ distribution. If this file is separated from the PDLA distribution,
  the copyright notice should be included in the file.
 
  */

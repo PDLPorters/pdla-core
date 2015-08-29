@@ -1,29 +1,29 @@
 
-package PDL::CallExt;
+package PDLA::CallExt;
 
 @EXPORT_OK  = qw( callext callext_cc );
 %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 @EXPORT = @EXPORT_OK;
 
 use Config;
-use PDL::Core;
-use PDL::Exporter;
+use PDLA::Core;
+use PDLA::Exporter;
 use DynaLoader;
 use Carp;
-@ISA    = qw( PDL::Exporter DynaLoader );
+@ISA    = qw( PDLA::Exporter DynaLoader );
 
-bootstrap PDL::CallExt;
+bootstrap PDLA::CallExt;
 
 =head1 NAME
 
-PDL::CallExt - call functions in external shared libraries
+PDLA::CallExt - call functions in external shared libraries
 
 =head1 SYNOPSIS
 
- use PDL::CallExt;
+ use PDLA::CallExt;
  callext('file.so', 'foofunc', $x, $y); # pass piddles to foofunc()
 
- % perl -MPDL::CallExt -e callext_cc file.c
+ % perl -MPDLA::CallExt -e callext_cc file.c
 
 =head1 DESCRIPTION
 
@@ -34,8 +34,8 @@ piddle arguments to it.
 It provides a reasonably portable way of doing this, including
 compiling the code with the right flags, though it requires simple
 perl and C wrapper routines to be written. You may prefer to use PP,
-which is much more portable. See L<PDL::PP>. You should definitely use
-the latter for a 'proper' PDL module, or if you run in to the
+which is much more portable. See L<PDLA::PP>. You should definitely use
+the latter for a 'proper' PDLA module, or if you run in to the
 limitations of this module.
 
 =head1 API
@@ -50,7 +50,7 @@ hence this limitation.
 In detail the code in the original file.c would look like this:
 
  #include "pdlsimple.h" /* Declare simple piddle structs - note this .h file
- 			   contains NO perl/PDL dependencies so can be used
+ 			   contains NO perl/PDLA dependencies so can be used
  			   standalone */
 
  int foofunc(int nargs, pdlsimple **args); /* foofunc prototype */
@@ -65,15 +65,15 @@ pdlsimple.h defines a simple N-dimensional data structure which looks like this:
      int    datatype;  /* whether byte/int/float etc. */
      void  *data;      /* Generic pointer to the data block */
      int    nvals;     /* Number of data values */
-     PDL_Long *dims;   /* Array of data dimensions */
+     PDLA_Long *dims;   /* Array of data dimensions */
      int    ndims;     /* Number of data dimensions */
   };
 
-(PDL_Long is always a 4 byte int and is defined in pdlsimple.h)
+(PDLA_Long is always a 4 byte int and is defined in pdlsimple.h)
 
-This is a simplification of the internal representation of piddles in PDL which is
+This is a simplification of the internal representation of piddles in PDLA which is
 more complicated because of threading, dataflow, etc. It will usually be found
-somewhere like /usr/local/lib/perl5/site_perl/PDL/pdlsimple.h
+somewhere like /usr/local/lib/perl5/site_perl/PDLA/pdlsimple.h
 
 Thus to actually use this to call real functions one would need to write a wrapper.
 e.g. to call a 2D image processing routine:
@@ -95,9 +95,9 @@ This might be compiled (e.g. Linux):
 In general Perl knows how to do this, so you should be able to get
 away with:
 
- perl -MPDL::CallExt -e callext_cc file.c
+ perl -MPDLA::CallExt -e callext_cc file.c
 
-callext_cc() is a function defined in PDL::CallExt to generate the
+callext_cc() is a function defined in PDLA::CallExt to generate the
 correct compilation flags for shared objects.
 
 If their are problems you will need to refer to you C compiler manual to find
@@ -122,7 +122,7 @@ Call a function in an external library using Perl dynamic loading
   callext('file.so', 'foofunc', $x, $y); # pass piddles to foofunc()
 
 The file must be compiled with dynamic loading options
-(see C<callext_cc>). See the module docs C<PDL::Callext>
+(see C<callext_cc>). See the module docs C<PDLA::Callext>
 for a description of the API.
 
 =head2 callext_cc
@@ -135,11 +135,11 @@ Compile external C code for dynamic loading
 
 Usage:
 
- % perl -MPDL::CallExt -e callext_cc file.c -o file.so
+ % perl -MPDLA::CallExt -e callext_cc file.c -o file.so
 
 This works portably because when Perl has built in knowledge of how to do
 dynamic loading on the system on which it was installed.
-See the module docs C<PDL::Callext> for a description of
+See the module docs C<PDLA::Callext> for a description of
 the API.
 
 =cut
@@ -166,7 +166,7 @@ sub callext{
 # like HP-UX, we need to make separate cc and ld runs in order to create the
 # shared objects.
 #
-# The signature of the function was therefore changed starting at PDL 2.0.
+# The signature of the function was therefore changed starting at PDLA 2.0.
 # It is now:
 #
 #   ($src, $ccflags, $ldflags, $output)
@@ -191,10 +191,10 @@ sub callext_cc {
 	my $eo = ( $^O =~ /MSWin/i ? '"' : '' );
 
 	# Compiler command
-        # Placing $ccflags *before* installsitearch/PDL/Core enables us to include
+        # Placing $ccflags *before* installsitearch/PDLA/Core enables us to include
         # the blib 'pdlsimple.h' during 'make test'.
 	my $cc_cmd = join(' ', map { $Config{$_} } qw(cc ccflags cccdlflags)) .
-		qq{ $ccflags "-I$Config{installsitearch}/PDL/Core" -c $src $do$cc_obj$eo};
+		qq{ $ccflags "-I$Config{installsitearch}/PDLA/Core" -c $src $do$cc_obj$eo};
 
 	# The linker output flag is -o on cc and gcc, and -out: on MS Visual Studio
 	my $o = ( $Config{cc} eq 'cl' ? '-out:' : '-o ');
@@ -228,8 +228,8 @@ sub callext_cc {
 Copyright (C) Karl Glazebrook 1997.
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 

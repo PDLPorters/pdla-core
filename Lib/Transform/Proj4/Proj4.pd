@@ -1,4 +1,4 @@
-# PDL::PP Definition file for the PDL::Transform::Proj4 module
+# PDLA::PP Definition file for the PDLA::Transform::Proj4 module
 #
 # Judd Taylor, USF IMaRS
 # 4 Apr 2006
@@ -10,16 +10,16 @@ use lib File::Spec->catdir((File::Spec->updir) x 3, 'inc');
 use vars qw( $VERSION );
 $VERSION = "1.32";
 
-pp_add_isa( 'PDL::Transform' );
+pp_add_isa( 'PDLA::Transform' );
 
 # This array holds the list of functions we want to export (everything here is explicit!)
 my @export_funcs = ();
 
 pp_addbegin( <<'ENDBEGIN' );
-use PDL;
-use PDL::NiceSlice;
-use PDL::Transform;
-use PDL::GIS::Proj;
+use PDLA;
+use PDLA::NiceSlice;
+use PDLA::Transform;
+use PDLA::GIS::Proj;
 ENDBEGIN
 
 #
@@ -28,7 +28,7 @@ ENDBEGIN
 pp_addpm( { At => 'Top' }, <<'ENDPM' );
 
 #
-# PDL::Transform::Proj4
+# PDLA::Transform::Proj4
 #
 # Judd Taylor, USF IMaRS
 # 4 Apr 2006
@@ -36,14 +36,14 @@ pp_addpm( { At => 'Top' }, <<'ENDPM' );
 
 =head1 NAME
 
-PDL::Transform::Proj4 - PDL::Transform interface to the Proj4 projection library
+PDLA::Transform::Proj4 - PDLA::Transform interface to the Proj4 projection library
 
 =head1 SYNOPSIS
 
  # Using the generalized proj interface:
  # Make an orthographic map of Earth
- use PDL::Transform::Cartography;
- use PDL::Transform::Proj4;
+ use PDLA::Transform::Cartography;
+ use PDLA::Transform::Proj4;
  $a = earth_coast();
  $a = graticule(10,2)->glue(1,$a);
  $t = t_proj( proj_params => "+proj=ortho +ellps=WGS84 +lon_0=-90 +lat_0=40" );
@@ -52,8 +52,8 @@ PDL::Transform::Proj4 - PDL::Transform interface to the Proj4 projection library
  
  # Using the aliased functions:
  # Make an orthographic map of Earth
- use PDL::Transform::Cartography;
- use PDL::Transform::Proj4;
+ use PDLA::Transform::Cartography;
+ use PDLA::Transform::Proj4;
  $a = earth_coast();
  $a = graticule(10,2)->glue(1,$a);
  $t = t_proj_ortho( ellps => 'WGS84', lon_0 => -90, lat_0 => 40 )
@@ -62,14 +62,14 @@ PDL::Transform::Proj4 - PDL::Transform interface to the Proj4 projection library
 
 =head1 DESCRIPTION
 
-Works like PDL::Transform::Cartography, but using the proj library in the background.
+Works like PDLA::Transform::Cartography, but using the proj library in the background.
 
 Please see the proj library docs at L<http://www.remotesensing.org/proj> for more information
 on proj, and how to use the library.
 
 =head1 GENERALIZED INTERFACE
 
-The main object here is the PDL::Transform::Proj4 object, aliased to the t_proj() function.
+The main object here is the PDLA::Transform::Proj4 object, aliased to the t_proj() function.
 
 This object accepts all of the standard options described below, but mainly is there to be called
 with just the B<proj_params> option defined.
@@ -209,7 +209,7 @@ Eccentricity squared +es=e2
 sub new 
 {
     my $proto = shift;
-    my $sub = "PDL::Transform::Proj4::new()";
+    my $sub = "PDLA::Transform::Proj4::new()";
     #print STDERR "$sub: ARGS: [" . join(", ", @_ ) . "]\n";
     my $class = ref($proto) || $proto;
     my $self  = $class->SUPER::new( @_ );
@@ -230,22 +230,22 @@ sub new
     # Grab our options:
     
     # Used in the general sense:
-    $self->{params}->{proj_params} = PDL::Transform::_opt( $o, ['proj_params','params'] );
+    $self->{params}->{proj_params} = PDLA::Transform::_opt( $o, ['proj_params','params'] );
 
     # Projection options available to all projections:
     $self->{general_params} = [ qw( proj x_0 y_0 lat_0 lon_0 units init ) ];
     foreach my $param ( @{ $self->{general_params} } )
-        { $self->{params}->{$param} = PDL::Transform::_opt( $o, [ $param ] ); }
+        { $self->{params}->{$param} = PDLA::Transform::_opt( $o, [ $param ] ); }
     
     # Options that have no value (like "+over"):
     $self->{bool_params} = [ qw( no_defs over geoc ) ];
     foreach my $param ( @{ $self->{bool_params} } )
-        { $self->{params}->{$param} = ( PDL::Transform::_opt( $o, [ $param ] ) ) ? 'ON' : undef; }
+        { $self->{params}->{$param} = ( PDLA::Transform::_opt( $o, [ $param ] ) ) ? 'ON' : undef; }
     
     # Options for the Earth figure: (ellipsoid, etc):
     $self->{earth_params} = [ qw( ellps R R_A R_V R_a R_g R_h R_lat_a R_lat_g b f rf e es ) ];
     foreach my $param ( @{ $self->{earth_params} } )
-        { $self->{params}->{$param} = PDL::Transform::_opt( $o, [ $param ] ); }
+        { $self->{params}->{$param} = PDLA::Transform::_opt( $o, [ $param ] ); }
     
     # First process the old params that may already be in the string:
     # These override the specific params set above:
@@ -286,14 +286,14 @@ sub new
     {
         my $in = shift;
         my $opt = shift;
-        my $sub = "PDL::Transform::Proj4->{func}()";
+        my $sub = "PDLA::Transform::Proj4->{func}()";
         
         my $out = $in->new_or_inplace();
         
         # Always set the badflag to 1 here, to handle possible bad projection values:
         $out->badflag(1);
         
-        PDL::GIS::Proj::fwd_trans_inplace( $out->((0)), $out->((1)), $opt->{proj_params}, 1 );
+        PDLA::GIS::Proj::fwd_trans_inplace( $out->((0)), $out->((1)), $opt->{proj_params}, 1 );
         return $out;
     };
   
@@ -302,14 +302,14 @@ sub new
     {
         my $in = shift;
         my $opt = shift;
-        my $sub = "PDL::Transform::Proj4->{inv}()";
+        my $sub = "PDLA::Transform::Proj4->{inv}()";
         
         my $out = $in->new_or_inplace();
         
         # Always set the badflag to 1 here, to handle possible bad projection values:
         $out->badflag(1);
         
-        PDL::GIS::Proj::inv_trans_inplace( $out->((0)), $out->((1)), $opt->{proj_params}, 1 );
+        PDLA::GIS::Proj::inv_trans_inplace( $out->((0)), $out->((1)), $opt->{proj_params}, 1 );
         return $out;
     };
   
@@ -319,7 +319,7 @@ sub new
 sub update_proj_string
 {
     my $self = shift;
-    my $sub = "PDL::Transform::Proj4::update_proj_string()";
+    my $sub = "PDLA::Transform::Proj4::update_proj_string()";
     
     # (Re)Generate the proj_params string from the options passed:
     #
@@ -349,7 +349,7 @@ sub proj_params
 
 sub t_proj 
 { 
-    PDL::Transform::Proj4->new( @_ );
+    PDLA::Transform::Proj4->new( @_ );
 } # End of t_proj()...
 
 1;
@@ -375,13 +375,13 @@ push( @export_funcs, 't_proj' );
 
 # Add in the auto-generated projection classes:
 require Alien::Proj4;
-require PDL::Config;
+require PDLA::Config;
 my @inc = Alien::Proj4->default_inc;
-@inc = @{$PDL::Config{PROJ_INC}}
-  if $PDL::Config{PROJ_INC} and @{$PDL::Config{PROJ_INC}};
+@inc = @{$PDLA::Config{PROJ_INC}}
+  if $PDLA::Config{PROJ_INC} and @{$PDLA::Config{PROJ_INC}};
 my $supplied = File::Spec->catdir((File::Spec->updir) x 2, qw(GIS Proj include));
 push @inc, File::Spec->rel2abs($supplied); # because Inline builds elsewhere
-Alien::Proj4->import($PDL::Config{PROJ_LIBS}, \@inc);
+Alien::Proj4->import($PDLA::Config{PROJ_LIBS}, \@inc);
 
 my $projections = Alien::Proj4->load_projection_information();
 
@@ -397,15 +397,15 @@ foreach my $name ( sort keys %$projections )
 # Autogenerated code for the Proj4 projection code: 
 #    INSERT_NAME_HERE
 #
-package PDL::Transform::Proj4::INSERT_NAME_HERE;
-use PDL::Transform::Proj4;
-@ISA = ( 'PDL::Transform::Proj4' );
+package PDLA::Transform::Proj4::INSERT_NAME_HERE;
+use PDLA::Transform::Proj4;
+@ISA = ( 'PDLA::Transform::Proj4' );
 
 sub new
 {
     my $proto = shift;
     my $class = ref($proto) || $proto;
-    my $sub = "PDL::Transform::Proj4::INSERT_NAME_HERE::new()";
+    my $sub = "PDLA::Transform::Proj4::INSERT_NAME_HERE::new()";
     #print STDERR "$sub: ARGS: [" . join(", ", @_ ) . "]\n";
     my $self  = $class->SUPER::new( @_ );
     bless ($self, $class);
@@ -429,7 +429,7 @@ sub new
     #
     $self->{projection_params} = [ qw( INSERT_PARAM_LIST_HERE ) ];
     foreach my $param ( @{ $self->{projection_params} } )
-        { $self->{params}->{$param} = PDL::Transform::_opt( $o, [ $param ] ); }
+        { $self->{params}->{$param} = PDLA::Transform::_opt( $o, [ $param ] ); }
     
     $self->update_proj_string();
     
@@ -440,7 +440,7 @@ sub new
     #print STDERR "$sub: Final proj_params: \'" . $self->{params}->{proj_params} . "\'\n";
         
     return $self;
-} # End of PDL::Transform::INSERT_NAME_HERE::new()...
+} # End of PDLA::Transform::INSERT_NAME_HERE::new()...
 
 1;
 
@@ -485,7 +485,7 @@ INSERT_PARAM_LIST_HERE
 
 
 sub INSERT_ALIAS_NAME_HERE 
-    { PDL::Transform::Proj4::INSERT_NAME_HERE->new( @_ ); }
+    { PDLA::Transform::Proj4::INSERT_NAME_HERE->new( @_ ); }
 ENDTEMPLATE
     
     $alias_template =~ s/INSERT_ALIAS_NAME_HERE/$alias_name/sg;

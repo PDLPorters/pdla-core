@@ -6,7 +6,7 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
 |               TODO for Missing Perldl Functionality               |
 +-------------------------------------------------------------------+
 
-  Set readline_name to 'PDL Shell' instead of the
+  Set readline_name to 'PDLA Shell' instead of the
   default 'Perl REPL' but need to figure how to do
   so first (override default term?).
 
@@ -61,7 +61,7 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
 
   Add <TAB> expansion to the pdl2 help/? command.
 
-  Track pdl2 session variables for PDL, including: vars
+  Track pdl2 session variables for PDLA, including: vars
   (global and lexical), subs that were defined, modules
   loaded, and plugins for the REPL.  It should be possible
   to <TAB> complete for these.
@@ -92,10 +92,10 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
     a routine readline::F_ClearScreen() to override the default
     function for win32 systems.
 
-  Add runtime PDL module load list so you know what has been
+  Add runtime PDLA module load list so you know what has been
   loaded with use/require.  Maybe a pop-up info window would
   work here (curses based or GUI based).  Maybe there could
-  be a runtime list/variable in PDL::Config that is updated
+  be a runtime list/variable in PDLA::Config that is updated
   as each module is loaded.  Override '*CORE::GLOBAL::use'?
   It would also be possible to use MOP features of Moose.
  
@@ -107,14 +107,14 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
    -M <module> load module <module>
    -m <module> unload module <module>
    -I <dir>    Add <dir> to include path.
-   -V          print PDL version info (e.g. for a bug report)
+   -V          print PDLA version info (e.g. for a bug report)
    -f <file>   execute file <file> before starting perldl
    -glut       try to load OpenGL module (Enables readline event-loop processing).
    -tk         try to load Tk module (Enables readline event-loop processing).
    -w          run with warning messages turned-on 
    -           Following arguments are files for input.
  
-  Add @PERLDL::AUTO processing to the PDLCommands plugin.
+  Add @PERLDL::AUTO processing to the PDLACommands plugin.
   Should be able to just run the code after the line is read
   but before it is eval'd.
  
@@ -171,7 +171,7 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
   Add a CompletionDriver for Plugins for load_plugin() as
   well as the ability to toggle plugins on and off (or at
   least enable and disable them).  Would it simplify
-  PDL::NiceSlice if the implementation were migrated to
+  PDLA::NiceSlice if the implementation were migrated to
   Filter::Simple?
 
   Make pdl2 fall back cleanly to a basic Devel::REPL or
@@ -203,7 +203,7 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
   Add option for quiet startup for use when piping to the
   shell or taking input from a file.
 
-  Add INPUT and OUTPUT handle args for PDL shells.  How do
+  Add INPUT and OUTPUT handle args for PDLA shells.  How do
   we add this to the default term from Devel::REPL?
   NOTE: Also need to fix perldl v.1.x not to use STDIN/STDOUT.
  
@@ -219,10 +219,10 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
   ->do_p<TAB> in line#3 triggers a method completion to 
   ->do_print followed by a space shown in line#4.
    
-    #1 PDL> $_RE<TAB>
-    #2 PDL> $_REPL _
-    #3 PDL> $_REPL ->do_p<TAB>
-    #4 PDL> $_REPL ->do_print _
+    #1 PDLA> $_RE<TAB>
+    #2 PDLA> $_REPL _
+    #3 PDLA> $_REPL ->do_p<TAB>
+    #4 PDLA> $_REPL ->do_print _
 
   What we would like is the trailing space in line#2 to be
   collapsed once the -> is typed following the completion.
@@ -231,8 +231,8 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
 
   Enhance completion strategy for Perldl2: (1) sort and
   prioritze completions to remove long lists of useless
-  options [see completion paper], (2) allow chained PDL method
-  completions by recognizing that the output of many (all?) PDL
+  options [see completion paper], (2) allow chained PDLA method
+  completions by recognizing that the output of many (all?) PDLA
   methods is a pdl so we could do method completion again...
  
   Make Perldl2 fail/degrade gracefully if various files and

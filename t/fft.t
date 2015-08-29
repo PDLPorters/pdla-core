@@ -1,9 +1,9 @@
 
 use strict;
 
-use PDL;
-use PDL::Image2D;
-use PDL::FFT;
+use PDLA;
+use PDLA::Image2D;
+use PDLA::FFT;
 
 use Test;
 BEGIN { plan tests => 17; }

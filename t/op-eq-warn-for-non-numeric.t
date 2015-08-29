@@ -9,18 +9,18 @@ use warnings;
 ## Name: "isn't numeric in null operation" warning could be more helpful
 ##
 ## <http://sourceforge.net/p/pdl/bugs/332/>
-## <https://github.com/PDLPorters/pdl/issues/33>
+## <https://github.com/PDLAPorters/pdl/issues/33>
 
-use PDL::Config;
-use PDL::LiteF;
+use PDLA::Config;
+use PDLA::LiteF;
 
-# The following code calls the PDL::Ops::eq() function via the operator
+# The following code calls the PDLA::Ops::eq() function via the operator
 # overload for the eq operator. Because the Perl eq operator is usually used
 # for strings, the default warning of "isn't numeric in null operation" is
-# confusing. Comparing a PDL against a string should give a more useful
+# confusing. Comparing a PDLA against a string should give a more useful
 # warning.
 
-my $numeric_warning = [qr/not numeric nor a PDL/];
+my $numeric_warning = [qr/not numeric nor a PDLA/];
 my $no_warning = undef;
 
 sub check_eq_warnings {
@@ -42,11 +42,11 @@ subtest "String 'nan' is numeric" => sub {
 	check_eq_warnings('nan', $no_warning);
 };
 TODO: {
-	# implementing this might require checking for strings that can be made into PDLs
+	# implementing this might require checking for strings that can be made into PDLAs
 	local $TODO = "Using the eq operator with the string 'bad' might be a good feature";
-	todo_skip "Bad values disabled", 1 unless $PDL::Config{WITH_BADVAL};
+	todo_skip "Bad values disabled", 1 unless $PDLA::Config{WITH_BADVAL};
 
-	subtest "String 'bad' is numeric (in PDL)" => sub {
+	subtest "String 'bad' is numeric (in PDLA)" => sub {
 		check_eq_warnings('bad', $no_warning);
 	};
 }

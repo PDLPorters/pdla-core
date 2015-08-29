@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::IO::IDL -- I/O of IDL Save Files
+PDLA::IO::IDL -- I/O of IDL Save Files
 
 =head1 DESCRIPTION
 
-PDL::IO::IDL allows you to read and write IDL(tm) data files.
+PDLA::IO::IDL allows you to read and write IDL(tm) data files.
 
 Currently, only reading is implemented.  Scalars, arrays,
 and structures are all supported.  Heap pointers, compiled code, and
@@ -22,9 +22,9 @@ These things seem to work:
 =item BYTE, SHORT, LONG, FLOAT, and DOUBLE numeric types and arrays
 
 All of these types seem to work fine.  The corresponding variable is
-stored as a PDL in the hash element with the same name as the original
+stored as a PDLA in the hash element with the same name as the original
 variable in the file.  Arrays are byteswapped as needed and are read in so 
-that the dim list has the same indexing order within PDL as it did within IDL.
+that the dim list has the same indexing order within PDLA as it did within IDL.
 
 =item STRINGs and arrays of STRINGs
 
@@ -51,7 +51,7 @@ These things are known to be not working and may one day be fixed:
 
 =item COMPLEX numbers
 
-These could be implemented as 2-arrays or as PDL::Complex values, but aren't yet.
+These could be implemented as 2-arrays or as PDLA::Complex values, but aren't yet.
 
 =item PTR types
 
@@ -84,12 +84,12 @@ IDL objects contain compiled code.
 
 =cut
 
-  package PDL::IO::IDL;
+  package PDLA::IO::IDL;
   
   BEGIN {
     
     use Exporter ();
-    package PDL::IO::IDL;
+    package PDLA::IO::IDL;
     @ISA = ( Exporter );
     @EXPORT_OK = qw( ridl );
     @EXPORT = @EXPORT_OK;
@@ -98,8 +98,8 @@ IDL objects contain compiled code.
     our $VERSION = "0.5";
     $VERSION = eval $VERSION;
     
-    use PDL;
-    use PDL::Exporter;
+    use PDLA;
+    use PDLA::Exporter;
     use Carp;
     
   }
@@ -125,7 +125,7 @@ a future date.  Furthermore, because IDL identifiers can't contain
 special characters, some fields that start with '+' are used to store
 metadata about the file itself.
 
-Numeric arrays are stored as PDLs, structures are stored as hashes,
+Numeric arrays are stored as PDLAs, structures are stored as hashes,
 and string and structure arrays are stored as perl lists.  Named
 structure types don't exist in perl in the same way that they do in
 IDL, so named structures are described in the 'structs' field of the
@@ -147,14 +147,14 @@ sub ridl {
 
   read_records($hash);
 
-  my @snames = sort keys %{$PDL::IO::IDL::struct_table};
+  my @snames = sort keys %{$PDLA::IO::IDL::struct_table};
   @snames = grep(!m/^\+/,@snames);
   if(@snames) {
     $hash->{'+structs'}={};
     local $_;
     for(@snames) {
       $hash->{'+structs'}->{$_} = 
-	$PDL::IO::IDL::struct_table->{$_}->{'names'};
+	$PDLA::IO::IDL::struct_table->{$_}->{'names'};
     }
   }
 
@@ -241,10 +241,10 @@ sub read_preamble {
   my $buf;
   my $out;
 
-  sysread(IDLSAV,$buf,4) || barf ("PDL::IO::IDL: Couldn't read preamble\n");
+  sysread(IDLSAV,$buf,4) || barf ("PDLA::IO::IDL: Couldn't read preamble\n");
   my @sig = unpack("a2S",$buf);
 
-  barf("PDL::IO::IDL: This isn't an IDL save file (wrong magic)\n")
+  barf("PDLA::IO::IDL: This isn't an IDL save file (wrong magic)\n")
     if($sig[0] ne 'SR');
 
   if($sig[1] == 1024 || $sig[1] == 4) {
@@ -257,7 +257,7 @@ sub read_preamble {
 
   $p64 = 0;
 
-  $PDL::IO::IDL::struct_table = {};
+  $PDLA::IO::IDL::struct_table = {};
 
   return {"+meta"=>{}};
 }
@@ -283,7 +283,7 @@ sub read_records {
 
     ### Read header of the record
     
-    sysread(IDLSAV, $tbuf, 4) || barf("PDL::IO::IDL: unexpected EOF\n");
+    sysread(IDLSAV, $tbuf, 4) || barf("PDLA::IO::IDL: unexpected EOF\n");
     my $type = unpack "N",$tbuf;
     
     ### Record the next seek location
@@ -291,16 +291,16 @@ sub read_records {
       
     my $next;
     if($p64) {
-      print "Reading 64-bit location..."  if($PDL::debug);
+      print "Reading 64-bit location..."  if($PDLA::debug);
       sysread(IDLSAV,$buf,8 + 8);
       my @next = unpack "NN",$buf;
       $next = $next[1] + 2**32 * $next[0];
     } else {      
-      print "Reading 32-bit location..." if($PDL::debug);
+      print "Reading 32-bit location..." if($PDLA::debug);
       sysread(IDLSAV,$buf,4 + 8);
       $next = unpack "N",$buf;
     }
-    print "$next\n" if($PDL::debug);
+    print "$next\n" if($PDLA::debug);
     
     ###
     ### Infinite-loop detector
@@ -318,16 +318,16 @@ sub read_records {
 
     if(defined $types->[$type]) {
       if(defined ($types->[$type]->[1])) {
-	print "Found record of type $types->[$type]->[0]...\n" if($PDL::debug || $PDL::IO::IDL::test);
+	print "Found record of type $types->[$type]->[0]...\n" if($PDLA::debug || $PDLA::IO::IDL::test);
 	$retval = &{$types->[$type]->[1]}($hash);
-	print "OK.\n" if($PDL::debug);
+	print "OK.\n" if($PDLA::debug);
       } else {
 	print STDERR "Ignoring record of type ".$types->[$type]->[0]." - not implemented.\n";
       }
     } else {
       print STDERR "\nIgnoring record of unknown type $type - not implemented.\n";
     }
-    print "Seeking $next ($tag_count tags read so far...)\n" if($PDL::debug || $PDL::IO::IDL::test);
+    print "Seeking $next ($tag_count tags read so far...)\n" if($PDLA::debug || $PDLA::IO::IDL::test);
     $tag_count++;
     sysseek(IDLSAV, $next, 0);
   $FOO::hash = $hash;    
@@ -443,7 +443,7 @@ sub r_var {
   my ($type,$flags) = unpack "NN",$buf;
 
   unless(defined $vtypes->[$type]) {
-      barf("PDL::IO::IDL: Unknown variable type $type");
+      barf("PDLA::IO::IDL: Unknown variable type $type");
   }
   
   unless(defined $vtypes->[$type]->[1]) {
@@ -451,10 +451,10 @@ sub r_var {
       return 1;
   }
 
-  print "Variable $name found (flags is $flags)...\n" if($PDL::debug);
+  print "Variable $name found (flags is $flags)...\n" if($PDLA::debug);
   
   if((($flags & 4) == 0)  and  (($flags & 32) == 0)) {
-      print "it's a scalar\n" if($PDL::debug);
+      print "it's a scalar\n" if($PDLA::debug);
 
 
       sysread(IDLSAV,$buf,4);
@@ -481,7 +481,7 @@ sub r_var {
 	print STDERR "Warning: Reading data from an array but got code $indicator (expected 7)\n"
 	  if($indicator != 7);
 	  
-	  print "simple array...type=$type\n" if($PDL::debug);
+	  print "simple array...type=$type\n" if($PDLA::debug);
 
 	my @args= ($flags,[ @{$arrdesc->{dims}}[0..$arrdesc->{ndims}-1]], 
 		   @{$vtypes->[$type]->[2]});
@@ -491,17 +491,17 @@ sub r_var {
       } else {
 
 	  ## Structure case
-	  print "structure...\n" if($PDL::debug);
+	  print "structure...\n" if($PDLA::debug);
 	  my($sname) = r_structdesc();
 
 	  my @structs;
-	  print "Reading $arrdesc->{nelem} structures....\n" if($PDL::debug || $PDL::IO::IDL::test);
+	  print "Reading $arrdesc->{nelem} structures....\n" if($PDLA::debug || $PDLA::IO::IDL::test);
 	  my $i;
 
 	  {my $buf; sysread(IDLSAV,$buf,4);}
 
 	  for ($i=0;$i<$arrdesc->{nelem};$i++) {
-	    if($PDL::IO::IDL::test && !($i%100)){
+	    if($PDLA::IO::IDL::test && !($i%100)){
 	      print "$i of $arrdesc->{nelem}...\n";
 	    }
 	      
@@ -524,7 +524,7 @@ sub r_var {
 #
 # Take a linear list of items and an array descriptor, and 
 # hand back a multi-dimensional perl list with the correct dimension
-# according to the descriptor.  (This isn't necessary for PDL types,
+# according to the descriptor.  (This isn't necessary for PDLA types,
 # only for structures and strings).
 #
 
@@ -586,7 +586,7 @@ sub r_arraydesc {
 
     $out->{pdldims} = $dims;
 
-    print STDERR "PDL::IO::IDL: Inconsistent array dimensions in variable (nelem=$nelem, dims=".join("x",@{$out->{dims}}).")"
+    print STDERR "PDLA::IO::IDL: Inconsistent array dimensions in variable (nelem=$nelem, dims=".join("x",@{$out->{dims}}).")"
 	if($nelem != $dims->prod);
     
     $out;
@@ -602,23 +602,23 @@ sub r_arraydesc {
 sub r_structdesc {
     my $buf;
 
-    print "Reading a structure description...\n" if($PDL::IO::IDL::test);
+    print "Reading a structure description...\n" if($PDLA::IO::IDL::test);
 
     sysread(IDLSAV,$buf,4);   # Discard initial long (value=9) from descriptor
     my($name) = r_string(); # Have to store structures in the structure table.
     $name =~ s/\s//g;
     
-    $name = "+anon".scalar(keys %{$PDL::IO::IDL::struct_table})
+    $name = "+anon".scalar(keys %{$PDLA::IO::IDL::struct_table})
 	if($name eq '');
 
     sysread(IDLSAV,$buf,4*3);
     my($predef,$ntags,$nbytes) = unpack("N"x3,$buf);
-    print "predef=$predef,ntags=$ntags,nbytes=$nbytes\n" if($PDL::debug);
+    print "predef=$predef,ntags=$ntags,nbytes=$nbytes\n" if($PDLA::debug);
     if(!($predef & 1)) {
 	my $i;
-	print "not predefined. ntags=$ntags..\n" if($PDL::debug || $PDL::IO::IDL::test);
+	print "not predefined. ntags=$ntags..\n" if($PDLA::debug || $PDLA::IO::IDL::test);
 
-	my $st = $PDL::IO::IDL::struct_table->{$name} = {
+	my $st = $PDLA::IO::IDL::struct_table->{$name} = {
 	    "ntags" => $ntags 
 		,"nbytes"=> $nbytes
 		,"names" => []
@@ -631,7 +631,7 @@ sub r_structdesc {
 	$st->{descrip} = [(unpack "N"x(3*$ntags), $buf)];
 
 	
-	print "ntags is $ntags\n" if($PDL::debug || $PDL::IO::IDL::test);
+	print "ntags is $ntags\n" if($PDLA::debug || $PDLA::IO::IDL::test);
 	### Read tag names.
 	for $i(0..$ntags-1) {
 	    push(@{$st->{names}},r_string());
@@ -647,18 +647,18 @@ sub r_structdesc {
 	    $narrays++  if($a & 38);
 	}
 
-	print "narrays=$narrays\n" if($PDL::debug || $PDL::IO::IDL::test);
+	print "narrays=$narrays\n" if($PDLA::debug || $PDLA::IO::IDL::test);
 	for $i(0..($narrays-1)) {
 	    push( @{$st->{arrays}}, r_arraydesc() );
 	}
 
-	print "nstructs=$nstructs\n" if($PDL::debug || $PDL::IO::IDL::test);
+	print "nstructs=$nstructs\n" if($PDLA::debug || $PDLA::IO::IDL::test);
 	for $i(0..($nstructs-1)) {
 	    push( @{$st->{structs}}, r_structdesc() );
 	}
 
     }
-    print "finished with structure desc...\n" if($PDL::IO::IDL::test);
+    print "finished with structure desc...\n" if($PDLA::IO::IDL::test);
     return $name;
 }
 
@@ -676,12 +676,12 @@ sub r_struct {
     my($sname) = shift;
  
 
-    print ("_ "x$r_struct_recursion) . "Reading a structure...\n" if($PDL::IO::IDL::test);
+    print ("_ "x$r_struct_recursion) . "Reading a structure...\n" if($PDLA::IO::IDL::test);
     my $zz=$r_struct_recursion;
     local($r_struct_recursion) = $zz++;
 
     # Get the structure descriptor from the table.
-    my($sd) = $PDL::IO::IDL::struct_table->{$sname};
+    my($sd) = $PDLA::IO::IDL::struct_table->{$sname};
     barf "Unknown structure type $sname" unless defined($sd);
 
     # Initialize the structure itself and the array and structure indices.
@@ -698,9 +698,9 @@ sub r_struct {
 	my($type) = $sd->{descrip}->[$i*3+1];
 	my($flags) = $sd->{descrip}->[$i*3+2];
 
-	print "reading tag #$i ($sd->{names}->[$i])\n" if($PDL::debug);
+	print "reading tag #$i ($sd->{names}->[$i])\n" if($PDLA::debug);
 
-	barf("PDL::IO::IDL: Unknown variable type $type in structure")
+	barf("PDLA::IO::IDL: Unknown variable type $type in structure")
 	    unless defined($vtypes->[$type]);
 	
 	unless(defined($vtypes->[$type]->[1])) {
@@ -728,7 +728,7 @@ sub r_struct {
 		    my @args = ($flags,[ @{$arrdesc->{dims}}[0..$arrdesc->{ndims}-1]],
 				@{$vtypes->[$type]->[2]});
 		    my $pdl = &{$vtypes->[$type]->[1]}(@args);
-		    print "  pdl is $pdl\n" if($PDL::debug);
+		    print "  pdl is $pdl\n" if($PDLA::debug);
 		    $struct->{$name} = $pdl;
 
 		} else {
@@ -794,7 +794,7 @@ sub r_strvar {
 #
 # r_byte_pdl
 #
-# Reads a byte PDL (stored as a strvar)
+# Reads a byte PDLA (stored as a strvar)
 #
 sub r_byte_pdl {
   my($flags,$dims) = @_;
@@ -804,7 +804,7 @@ sub r_byte_pdl {
 
   $a = r_string();
 
-  my $pdl = new PDL;
+  my $pdl = new PDLA;
   $pdl->set_datatype(byte->enum);
   $pdl->setdims($dims);
   ${ $pdl->get_dataref() } = $a;
@@ -826,16 +826,16 @@ sub r_n_pdl {
     my($flags,$dims,$type) = @_;
     
     my $nelem = pdl($dims)->prod;
-    my $dsize = PDL::Core::howbig($type);
+    my $dsize = PDLA::Core::howbig($type);
     my $hunksize = $dsize * $nelem;
 
-    my $pdl = PDL->new_from_specification($type,@$dims);
+    my $pdl = PDLA->new_from_specification($type,@$dims);
     my $dref = $pdl->get_dataref();
     
     my $len = sysread(IDLSAV, $$dref, $hunksize - ($hunksize % -4) );
     $pdl->upd_data;
     
-    print "bytes were ",join(",",unpack "C"x($hunksize-($hunksize%-4)),$$dref),"\n" if($PDL::debug);
+    print "bytes were ",join(",",unpack "C"x($hunksize-($hunksize%-4)),$$dref),"\n" if($PDLA::debug);
     
     
     if($swab) {
@@ -857,12 +857,12 @@ sub r_n_cast {
 =head1 AUTHOR, LICENSE, NO WARRANTY
 
 THIS CODE IS PROVIDED WITH NO WARRANTY and may be distributed and/or
-modified under the same terms as PDL itself.
+modified under the same terms as PDLA itself.
 
 This code is based on the analysis of the IDL save file format
 published by Craig Markwardt in 2002. 
 
-IDL is a trademark of Research Systems Incorporated (RSI).  The PDL
+IDL is a trademark of Research Systems Incorporated (RSI).  The PDLA
 development team, and authors of this code, are not affiliated with RSI.
 
 =cut

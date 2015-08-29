@@ -10,7 +10,7 @@ use strict;
 use Config;
 use File::Find;
 use Debian::Debhelper::Dh_Lib;
-use PDL::Config::Debian;
+use PDLA::Config::Debian;
 
 =head1 SYNOPSIS
 
@@ -109,7 +109,7 @@ foreach my $package (@{$dh{DOPACKAGES}}) {
 
 		# add pdlapi-<ver> for XS modules
 		addsubstvar($package, "pdl:Depends",
-			"pdlapi-$PDL::Config::Debian::pdl_core_version")
+			"pdlapi-$PDLA::Config::Debian::pdl_core_version")
 			if $deps & XS_MODULE;
 	}
 }

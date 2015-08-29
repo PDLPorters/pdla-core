@@ -1,4 +1,4 @@
-The following issues have been reported with this version of PDL:
+The following issues have been reported with this version of PDLA:
 
 - New support for 64bit data and the modulus operator causes
   some fails in t/ops.t.  The new tests which are failing have
@@ -23,7 +23,7 @@ The following issues have been reported with this version of PDL:
 
 
 - A change in perl-5.14 on how the 'x' operator works affects
-  PDL's overload of that operator for matrix multiplication.
+  PDLA's overload of that operator for matrix multiplication.
   This can affect code using parentheses to group.  An example
   that shows the problem is code like:
 
@@ -42,7 +42,7 @@ The following issues have been reported with this version of PDL:
   INSTALL file for a hand fix.
 
 
-- The current Ctrl-C logic in the PDL shells (pdl2 and perldl)
+- The current Ctrl-C logic in the PDLA shells (pdl2 and perldl)
   doesn't work the same with the perl's new "safe signals".  A
   workaround to the problem is to set the PERL_SIGNALS environment
   variable to "unsafe".  See sf.net feature request #3308168
@@ -81,7 +81,7 @@ The following issues have been reported with this version of PDL:
   the configure-build-test process.
 
 
-- Directory completion in the interactive PDL shells (perldl and pdl2)
+- Directory completion in the interactive PDLA shells (perldl and pdl2)
   using Term::ReadLine::Perl adds a space after each directory expansion.
   To continue to complete, one must delete the space before typing <TAB>
   again.  The problem has been reported as a Term::ReadLine::Perl bug.
@@ -95,7 +95,7 @@ The following issues have been reported with this version of PDL:
 
 
 - The following SourceForge bugs are outstanding at time of the
-  PDL-2.013 release:
+  PDLA-2.013 release:
 
   393   Tests may fail if perl is compiled with -Duselongdouble
   392   Inline Pdlpp doesn't work in clean build tree
@@ -113,21 +113,21 @@ The following issues have been reported with this version of PDL:
   346   ExtUtils::F77 dependency causing problems for CPAN install
   343   longlong constructor and display lose digits due to implicit double precision conversions
   340   orover of byte data returns long type
-  339   PDL::Complex support is inconsistent and incomplete
+  339   PDLA::Complex support is inconsistent and incomplete
   334   Test coverage is incomplete
   330   NiceSlice can get confused by comments to cause compilation errors
-  324   PDL re-install wipes out non-core docs
-  322   PDL::Demos system needs overhaul
+  324   PDLA re-install wipes out non-core docs
+  322   PDLA::Demos system needs overhaul
   308   propagate badflag with .=
   274   'help funname' fails to show multiple function names
-  254   online docs don't link to functions in other PDL modules
+  254   online docs don't link to functions in other PDLA modules
   238   NiceSlice affects code where it should not
-  210   default PDL build output too long
+  210   default PDLA build output too long
   147   closing TriD window kills perldl shell
 
 
-For more information on these and other PDL issues, and for
+For more information on these and other PDLA issues, and for
 submissions of patches (bug patches are always welcome!),
-see the PDL mailing lists. Links to archive list discussions
+see the PDLA mailing lists. Links to archive list discussions
 and how to register for the mailing lists can be found at
 http://pdl.perl.org/?page=mailing-lists .

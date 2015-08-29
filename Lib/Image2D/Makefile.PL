@@ -2,14 +2,14 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-my @pack = (["image2d.pd", qw(Image2D PDL::Image2D)]);
+my @pack = (["image2d.pd", qw(Image2D PDLA::Image2D)]);
 
 my %hash = pdlpp_stdargs_int( @pack );
 $hash{LIBS} = [ '-lm' ];
 
 # On windows we do not have an rint function (at least on VC++)
 # Should do a proper test for rint similar to that done for
-# PDL::Math. For now, simply test architecture
+# PDLA::Math. For now, simply test architecture
 if ($^O =~ /MSWin/i) {
   $hash{DEFINE} = " -DNEEDS_RINT";
 }

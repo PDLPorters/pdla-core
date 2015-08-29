@@ -1,13 +1,13 @@
 =head1 NAME
 
-PDL::Graphics::TriD::VRML -- TriD VRML backend
+PDLA::Graphics::TriD::VRML -- TriD VRML backend
 
 =head1 SYNOPSIS
 
-  BEGIN { $PDL::Graphics::TriD::device = "VRML"; }
+  BEGIN { $PDLA::Graphics::TriD::device = "VRML"; }
 
-  use PDL::Graphics::TriD;
-  use PDL::LiteF;
+  use PDLA::Graphics::TriD;
+  use PDLA::LiteF;
 
   # set some vrml parameters
   my $set = tridsettings(); # get the defaults
@@ -19,8 +19,8 @@ PDL::Graphics::TriD::VRML -- TriD VRML backend
 
 =head1 DESCRIPTION
 
-This module implements the VRML for PDL::Graphics::TriD (the generic
-3D plotting interface for PDL). You can use this backend either (a)
+This module implements the VRML for PDLA::Graphics::TriD (the generic
+3D plotting interface for PDLA). You can use this backend either (a)
 for generating 3D graphics on your machine which can be directly
 viewed with a VRML browser or (b) generate dynamic VRML worlds to
 distribute over the web.
@@ -35,22 +35,22 @@ at C<http://vrml.sgi.com/> or C<http://www.vrml.org/>
 
 ###################################
 ##
-package PDL::Graphics::TriD::VRML;
+package PDLA::Graphics::TriD::VRML;
 
-use PDL::Core '';  # barf
-use PDL::Graphics::VRML;
-use PDL::LiteF;
-use PDL::Config;
-PDL::Graphics::VRMLNode->import();
-PDL::Graphics::VRMLProto->import();
+use PDLA::Core '';  # barf
+use PDLA::Graphics::VRML;
+use PDLA::LiteF;
+use PDLA::Config;
+PDLA::Graphics::VRMLNode->import();
+PDLA::Graphics::VRMLProto->import();
 
-$PDL::homepageURL = 'http://pdl.perl.org/';
+$PDLA::homepageURL = 'http://pdl.perl.org/';
 
-sub PDL::Graphics::TriD::Logo::tovrml {
+sub PDLA::Graphics::TriD::Logo::tovrml {
    my ($this) = @_;
    my ($p,$tri) = ("","");
-   PDL::Graphics::VRMLPdlNode::v3array($this->{Points},\$p,"");
-   PDL::Graphics::VRMLPdlNode::triangles((map
+   PDLA::Graphics::VRMLPdlNode::v3array($this->{Points},\$p,"");
+   PDLA::Graphics::VRMLPdlNode::triangles((map
                      {$this->{Index}->slice("($_)")} (0..2)),\$tri,"");
    my $indface = vrn('IndexedFaceSet',
                     'coord' => vrn('Coordinate',
@@ -59,8 +59,8 @@ sub PDL::Graphics::TriD::Logo::tovrml {
                     'solid' => 'TRUE');
    return vrn('Transform',
               'children' => [vrn('Anchor',
-                                 'description' => "\"The PDL Homepage\"",
-                                 'url' => "\"$PDL::homepageURL\"",
+                                 'description' => "\"The PDLA Homepage\"",
+                                 'url' => "\"$PDLA::homepageURL\"",
                                  'children' =>
 				      vrn('Shape',
 					  'appearance' =>
@@ -70,7 +70,7 @@ sub PDL::Graphics::TriD::Logo::tovrml {
 					  'geometry' => $indface)),
 			vrn(Viewpoint,
 				position => '0 0 25',
-				description => "\"PDL Logo\""
+				description => "\"PDLA Logo\""
 			)
 
 		],
@@ -78,7 +78,7 @@ sub PDL::Graphics::TriD::Logo::tovrml {
               'scale'    => vrml3v([map {$this->{Size}} (0..2)]));
 }
 
-sub PDL::Graphics::TriD::Description::tovrml {
+sub PDLA::Graphics::TriD::Description::tovrml {
 	my($this) = @_;
 #	print "DESCRTIPTION : TOVRML\n";
 	return vrn(Transform,
@@ -110,7 +110,7 @@ sub PDL::Graphics::TriD::Description::tovrml {
 	);
 }
 
-sub PDL::Graphics::VRML::vrmltext {
+sub PDLA::Graphics::VRML::vrmltext {
   my ($this,$text,$coords) = @_;
   $this->uses('TriDGraphText');
   return vrn('TriDGraphText',
@@ -118,12 +118,12 @@ sub PDL::Graphics::VRML::vrmltext {
 	     'position' => vrml3v($coords));
 }
 
-sub PDL::Graphics::TriD::Material::tovrml {
+sub PDLA::Graphics::TriD::Material::tovrml {
   my $this = shift;
   my $ambi = (pdl(@{$this->{Ambient}})**2)->sum /
     (pdl(@{$this->{Diffuse}})**2)->sum;
   $ambi = sqrt($ambi);
-  new PDL::Graphics::VRMLNode('Material',
+  new PDLA::Graphics::VRMLNode('Material',
 			'diffuseColor' => vrml3v($this->{Diffuse}),
 			'emissiveColor' => vrml3v($this->{Emissive}),
 			'shininess' => $this->{Shine},
@@ -132,42 +132,42 @@ sub PDL::Graphics::TriD::Material::tovrml {
 		     );
 }
 
-sub PDL::Graphics::TriD::Scale::tovrml {my ($this) = @_;
+sub PDLA::Graphics::TriD::Scale::tovrml {my ($this) = @_;
 	print "Scale ",(join ',',@{$this->{Args}}),"\n";
-	new PDL::Graphics::VRMLNode('Transform',
+	new PDLA::Graphics::VRMLNode('Transform',
 		   'scale',vrml3v(@{$this->{Args}}));
     }
 
 
-sub PDL::Graphics::TriD::Translation::tovrml {
+sub PDLA::Graphics::TriD::Translation::tovrml {
   my ($this) = @_;
-  new PDL::Graphics::VRMLNode('Transform',
+  new PDLA::Graphics::VRMLNode('Transform',
 		   'translation',vrml3v(@{$this->{Args}}));
 }
 
 # XXXXX this has to be fixed -> wrap in one transform + children
-sub PDL::Graphics::TriD::Transformation::tovrml {
+sub PDLA::Graphics::TriD::Transformation::tovrml {
 	my($this) = @_;
 	my @nodes = map {$_->tovrml()} @{$this->{Transforms}};
 	push @nodes,$this->SUPER::tovrml();
 }
 
 
-sub PDL::Graphics::TriD::Quaternion::tovrml {my($this) = @_;
+sub PDLA::Graphics::TriD::Quaternion::tovrml {my($this) = @_;
 	if(abs($this->[0]) == 1) { return ; }
 	if(abs($this->[0]) >= 1) {
 		# die "Unnormalized Quaternion!\n";
 		$this->normalize_this();
 	}
-	new PDL::Graphics::VRMLNode('Transform',
+	new PDLA::Graphics::VRMLNode('Transform',
 		   'rotation',vrml3v(@{$this}[1..3])." $this->[0]");
 }
 
 
 # this 'poor mans viewport' implementation makes an image from its objects
 # and writes it as a gif file
-sub PDL::Graphics::TriD::ViewPort::togif_vp {
-  require PDL::IO::Pic;
+sub PDLA::Graphics::TriD::ViewPort::togif_vp {
+  require PDLA::IO::Pic;
   my ($this,$win,$rec,$file) = @_;
   my $p;
   # this needs more thinking
@@ -178,54 +178,54 @@ sub PDL::Graphics::TriD::ViewPort::togif_vp {
   $p->wpic($file);
 }
 
-sub PDL::Graphics::TriD::GObject::tovrml {
+sub PDLA::Graphics::TriD::GObject::tovrml {
 	return $_[0]->vdraw($_[0]->{Points});
 }
 
-sub PDL::Graphics::TriD::GObject::tovrml_graph {
+sub PDLA::Graphics::TriD::GObject::tovrml_graph {
 	return $_[0]->vdraw($_[2]);
 }
 
-sub PDL::Graphics::TriD::Points::vdraw {
+sub PDLA::Graphics::TriD::Points::vdraw {
 	my($this,$points) = @_;
-	new PDL::Graphics::VRMLNode('Shape',
+	new PDLA::Graphics::VRMLNode('Shape',
 			 'geometry' =>
-			 new PDL::Graphics::VRMLPdlNode($points,$this->{Colors},
+			 new PDLA::Graphics::VRMLPdlNode($points,$this->{Colors},
 					     {Title => 'PointSet',
 					     DefColors => $this->defcols}));
 }
 
-sub PDL::Graphics::TriD::LineStrip::vdraw {
+sub PDLA::Graphics::TriD::LineStrip::vdraw {
 	my($this,$points) = @_;
-	new PDL::Graphics::VRMLNode('Shape',
+	new PDLA::Graphics::VRMLNode('Shape',
 			 'geometry' =>
-			 new PDL::Graphics::VRMLPdlNode($points,$this->{Colors},
+			 new PDLA::Graphics::VRMLPdlNode($points,$this->{Colors},
 					     {Title => 'IndexedLineSet',
 					      DefColors => $this->defcols}));
 }
 
-sub PDL::Graphics::TriD::Lattice::vdraw {
+sub PDLA::Graphics::TriD::Lattice::vdraw {
 	my($this,$points) = @_;
-	new PDL::Graphics::VRMLNode('Shape',
+	new PDLA::Graphics::VRMLNode('Shape',
 			 'geometry' =>
-			 new PDL::Graphics::VRMLPdlNode($points,$this->{Colors},
+			 new PDLA::Graphics::VRMLPdlNode($points,$this->{Colors},
 					     {Title => 'IndexedLineSet',
 					      DefColors => $this->defcols,
 					      IsLattice => 1}));
 }
 
-sub PDL::Graphics::TriD::SLattice::vdraw {
+sub PDLA::Graphics::TriD::SLattice::vdraw {
 	my($this,$points) = @_;
 	my $children = [vrn('Shape',
 		'geometry' =>
-		 new PDL::Graphics::VRMLPdlNode($points,$this->{Colors},
+		 new PDLA::Graphics::VRMLPdlNode($points,$this->{Colors},
 				      {Title => 'IndexedFaceSet',
 				       DefColors => $this->defcols,
 				       IsLattice => 1,
 				      }))];
 	push @$children, vrn('Shape',
 		 'geometry' =>
-		 new PDL::Graphics::VRMLPdlNode($points,$this->{Colors},
+		 new PDLA::Graphics::VRMLPdlNode($points,$this->{Colors},
 				      {Title => 'IndexedLineSet',
 				       DefColors => 0,
 				       Surface => 1,
@@ -237,15 +237,15 @@ sub PDL::Graphics::TriD::SLattice::vdraw {
 	    'children' => $children);
 }
 
-sub PDL::Graphics::TriD::SLattice_S::vdraw {
+sub PDLA::Graphics::TriD::SLattice_S::vdraw {
 	my($this,$points) = @_;
-   my $vp =  &PDL::Graphics::TriD::get_current_window()->current_viewport;
+   my $vp =  &PDLA::Graphics::TriD::get_current_window()->current_viewport;
 	my $mat = $vp->{DefMaterial}->tovrml;
 	my $children = [vrn('Shape',
 		 'appearance' => vrn('Appearance',
 				    'material' => $mat),
 		'geometry' =>
-		 new PDL::Graphics::VRMLPdlNode($points,$this->{Colors},
+		 new PDLA::Graphics::VRMLPdlNode($points,$this->{Colors},
 				      {Title => 'IndexedFaceSet',
 				       DefColors => 1,
 				       IsLattice => 1,
@@ -253,7 +253,7 @@ sub PDL::Graphics::TriD::SLattice_S::vdraw {
 				      }))];
 	push @$children, vrn('Shape',
 		 'geometry' =>
-		 new PDL::Graphics::VRMLPdlNode($points,$this->{Colors},
+		 new PDLA::Graphics::VRMLPdlNode($points,$this->{Colors},
 				      {Title => 'IndexedLineSet',
 				       DefColors => 0,
 				       Surface => 1,
@@ -266,26 +266,26 @@ sub PDL::Graphics::TriD::SLattice_S::vdraw {
 }
 
 ##################################
-# PDL::Graphics::TriD::Image
+# PDLA::Graphics::TriD::Image
 #
 #
 
-sub PDL::Graphics::TriD::Image::tovrml {
+sub PDLA::Graphics::TriD::Image::tovrml {
 	$_[0]->vdraw();
 }
 
-sub PDL::Graphics::TriD::Image::tovrml_graph {
-	&PDL::Graphics::TriD::Image::tovrml;
+sub PDLA::Graphics::TriD::Image::tovrml_graph {
+	&PDLA::Graphics::TriD::Image::tovrml;
 }
 
 
 # The quick method is to use texturing for the good effect.
 # XXXXXXXXXXXX wpic currently rescales $im 0..255, that's not correct (in $url->save)! fix
-sub PDL::Graphics::TriD::Image::vdraw {
+sub PDLA::Graphics::TriD::Image::vdraw {
   my ($this,$vert) = @_;
   my $p = $this->flatten(0); # no binary alignment
   if(!defined $vert) {$vert = $this->{Points}}
-  my $url = new PDL::Graphics::TriD::VRML::URL('image/JPG');
+  my $url = new PDLA::Graphics::TriD::VRML::URL('image/JPG');
   $url->save($p);
   vrn('Shape',
       'appearance' => vrn('Appearance',
@@ -302,7 +302,7 @@ sub PDL::Graphics::TriD::Image::vdraw {
   );
 }
 
-sub PDL::Graphics::TriD::Graph::tovrml {
+sub PDLA::Graphics::TriD::Graph::tovrml {
 	my($this) = @_;
 	my @children = ();
 	for(keys %{$this->{Axis}}) {
@@ -317,9 +317,9 @@ sub PDL::Graphics::TriD::Graph::tovrml {
 }
 
 
-sub PDL::Graphics::TriD::EuclidAxes::tovrml_axis {
+sub PDLA::Graphics::TriD::EuclidAxes::tovrml_axis {
   my($this,$graph) = @_;
-  my $vrml = $PDL::Graphics::VRML::cur;
+  my $vrml = $PDLA::Graphics::VRML::cur;
   my $lset = vrn('Shape',
 		 'geometry' => vrn('IndexedLineSet',
 				   'coord',
@@ -364,10 +364,10 @@ sub PDL::Graphics::TriD::EuclidAxes::tovrml_axis {
   return [@children];
 }
 
-sub PDL::Graphics::TriD::SimpleController::tovrml {
+sub PDLA::Graphics::TriD::SimpleController::tovrml {
   # World origin is disregarded XXXXXXX
   my $this = shift;
-  my $inv = new PDL::Graphics::TriD::Quaternion(@{$this->{WRotation}});
+  my $inv = new PDLA::Graphics::TriD::Quaternion(@{$this->{WRotation}});
   $inv->invert_rotation_this;
   my $pos = $inv->rotate([0,0,1]);
 #  print "SC: POS0:",(join ',',@$pos),"\n";
@@ -397,7 +397,7 @@ sub Win32::fn_win32_format {
 }
 
 package Win32::DDE::Netscape;
-use PDL::Core '';  # barf
+use PDLA::Core '';  # barf
 require Win32::DDE::Client if $^O =~ /win32/i;
 
 
@@ -426,8 +426,8 @@ sub geturl {
   barf "can't disconnect" unless $client->Disconnect;
 }
 
-package PDL::Graphics::TriD::VRML::Parameter;
-use PDL::Core '';  # barf
+package PDLA::Graphics::TriD::VRML::Parameter;
+use PDLA::Core '';  # barf
 
 sub new {
   my ($type,%hash) = @_;
@@ -489,18 +489,18 @@ sub wfile {
 }
 
 
-$PDL::Graphics::TriD::VRML::Parameter::lastfile = '';
+$PDLA::Graphics::TriD::VRML::Parameter::lastfile = '';
 
 my %subs = (
 	    'netscape/unix' =>
 	      sub {my $file = $_[0]->file; my $cmd;
 		   if ($file eq
-		       $PDL::Graphics::TriD::VRML::Parameter::lastfile)
+		       $PDLA::Graphics::TriD::VRML::Parameter::lastfile)
 		     { $cmd = 'reload' }
 		   else { my $target = $#_ > 0 ? "#$_[1]" : '';
 			  $cmd = "openURL(file:$file$target)"}
 		   system('netscape','-remote',$cmd);
-		 $PDL::Graphics::TriD::VRML::Parameter::lastfile = $file},
+		 $PDLA::Graphics::TriD::VRML::Parameter::lastfile = $file},
 	    'netscape/win32' =>
 	     sub {my $file = $_[0]->file; $file = Win32::fn_win32_format $file;
 		  Win32::DDE::Netscape::activate;
@@ -520,13 +520,13 @@ sub send_to_browser {my $this=$_[0]; &{$this->{'Browser'}}(@_)
 		       if defined $this->{'Browser'}}
 
 
-package PDL::Graphics::TriD::VRML::URL;
-use PDL::Core '';  # barf
+package PDLA::Graphics::TriD::VRML::URL;
+use PDLA::Core '';  # barf
 
 my %types = (
-	     'image/JPG' => {'save' => sub {local $PDL::debug=0; $_[1]->wpic($_[0]->wfile)},
+	     'image/JPG' => {'save' => sub {local $PDLA::debug=0; $_[1]->wpic($_[0]->wfile)},
 			     'ext'  => 'jpg',
-			     'setup' => sub {require PDL::IO::Pic},
+			     'setup' => sub {require PDLA::IO::Pic},
 			    },
 );
 
@@ -539,7 +539,7 @@ sub new {
   $this->{'Type'} = $types{$mime};
   &{$this->{'Type'}->{'setup'}} if defined $this->{'Type'}->{'setup'};
   $this->{'Binding'} = 'local';
-  $this->{'Filestem'} = $PDL::Config{TEMPDIR} . "/tridim_$urlnum";
+  $this->{'Filestem'} = $PDLA::Config{TEMPDIR} . "/tridim_$urlnum";
   $urlnum++;
   return $this;
 }
@@ -561,24 +561,24 @@ sub totext {
 
 sub save { &{$_[0]->{Type}->{save}}(@_) }
 
-package PDL::Graphics::TriD::VRML;
-$PDL::Graphics::VRML::cur = undef;
-$PDL::Graphics::TriD::create_window_sub = sub {
-	return new PDL::Graphics::TriD::Window;
+package PDLA::Graphics::TriD::VRML;
+$PDLA::Graphics::VRML::cur = undef;
+$PDLA::Graphics::TriD::create_window_sub = sub {
+	return new PDLA::Graphics::TriD::Window;
 };
 
 # set up the default parameters for VRML
-my $tmpdir = $PDL::Config{TEMPDIR} ||
-  die "TEMPDIR not found in %PDL::Config";
+my $tmpdir = $PDLA::Config{TEMPDIR} ||
+  die "TEMPDIR not found in %PDLA::Config";
 my $tmpname = "$tmpdir/tridvrml_$$.wrl";
-my $para = $PDL::Graphics::TriD::Settings =
-  PDL::Graphics::TriD::VRML::Parameter->new() ;
+my $para = $PDLA::Graphics::TriD::Settings =
+  PDLA::Graphics::TriD::VRML::Parameter->new() ;
 $para->file($tmpname);
 $para->browser_com($^O =~ /win32/i ? 'netscape/win32' : 'none');
 
 
-package PDL::Graphics::TriD::VRMLObject;
-use base qw/PDL::Graphics::TriD::Object/;
+package PDLA::Graphics::TriD::VRMLObject;
+use base qw/PDLA::Graphics::TriD::Object/;
 use fields qw/Node/;
 
 sub new {
@@ -593,15 +593,15 @@ sub tovrml {
   return $_[0]->{Node};
 }
 
-#package PDL::Graphics::TriD::VRML::Window;
-package PDL::Graphics::TriD::Window;
+#package PDLA::Graphics::TriD::VRML::Window;
+package PDLA::Graphics::TriD::Window;
 
-use PDL::Graphics::TriD::Control3D;
-PDL::Graphics::VRMLNode->import();
-PDL::Graphics::VRMLProto->import();
-use PDL::Core '';  # barf
+use PDLA::Graphics::TriD::Control3D;
+PDLA::Graphics::VRMLNode->import();
+PDLA::Graphics::VRMLProto->import();
+use PDLA::Core '';  # barf
 
-use base qw/PDL::Graphics::TriD::Object/;
+use base qw/PDLA::Graphics::TriD::Object/;
 use fields qw/Width Height Interactive _ViewPorts _CurrentViewPort
               VRMLTop DefMaterial/;
 use strict;
@@ -609,18 +609,18 @@ use strict;
 sub gdriver {
   my($this) = @_;
 
-  require PDL::Version if not defined $PDL::Version::VERSION;
+  require PDLA::Version if not defined $PDLA::Version::VERSION;
   $this->{Width} = 300; $this->{Height} = 300;
-  $this->{VRMLTop} = new PDL::Graphics::VRML("\"PDL::Graphics::TriD::VRML Scene\"",
-				  ["\"generated by the PDL::Graphics::TriD module\"",
-				   "\"version $PDL::Version::VERSION\""]);
-  my $fontstyle = new PDL::Graphics::VRMLNode('FontStyle',
+  $this->{VRMLTop} = new PDLA::Graphics::VRML("\"PDLA::Graphics::TriD::VRML Scene\"",
+				  ["\"generated by the PDLA::Graphics::TriD module\"",
+				   "\"version $PDLA::Version::VERSION\""]);
+  my $fontstyle = new PDLA::Graphics::VRMLNode('FontStyle',
 				    'size' => 0.04,
 				    'family' => "\"SANS\"",
 				    'justify' => "\"MIDDLE\"");
-  $PDL::Graphics::TriD::VRML::fontstyle = $fontstyle;
-  $this->{VRMLTop}->add_proto(PDL::Graphics::TriD::SimpleController->new->tovrml);
-  $PDL::Graphics::VRML::cur = $this->{VRMLTop};
+  $PDLA::Graphics::TriD::VRML::fontstyle = $fontstyle;
+  $this->{VRMLTop}->add_proto(PDLA::Graphics::TriD::SimpleController->new->tovrml);
+  $PDLA::Graphics::VRML::cur = $this->{VRMLTop};
   $this->{VRMLTop}->register_proto(
 	    vrp('TriDGraphText',
 		[fv3f('position',"0 0 0"),
@@ -649,9 +649,9 @@ sub new_viewport {
 	my($this,$x0,$y0,$x1,$y1) = @_;
 	# print STDERR "Installing new viewport\n";
 	barf "only allowing [0,1,0,1] viewports with VRML backend"
-	  if abs(PDL->pdl($x0,$y0,$x1-1,$y1-1))->max > 0.01;
+	  if abs(PDLA->pdl($x0,$y0,$x1-1,$y1-1))->max > 0.01;
 
-	my $vp = new PDL::Graphics::TriD::ViewPort($x0,$y0,$x1,$y1);
+	my $vp = new PDLA::Graphics::TriD::ViewPort($x0,$y0,$x1,$y1);
 	push @{$this->{_ViewPorts}},$vp;
 	return $vp;
 }
@@ -664,7 +664,7 @@ sub clear_viewports {
 
 sub display {
   my $this = shift;
-  my $vrmlparam =  $PDL::Graphics::TriD::Settings;
+  my $vrmlparam =  $PDLA::Graphics::TriD::Settings;
 
 #  if (@{$this->{_ViewPorts}}) {
   if (0) {
@@ -683,8 +683,8 @@ sub display {
 
 <HTML>
 <HEAD>
-   <TITLE> PDL::Graphics::TriD Display </TITLE>
-   <META NAME="GENERATOR" CONTENT="PDL::Graphics::TriD::VRML">
+   <TITLE> PDLA::Graphics::TriD Display </TITLE>
+   <META NAME="GENERATOR" CONTENT="PDLA::Graphics::TriD::VRML">
 </HEAD>
 <BODY>
 <TD align="center"><IMG SRC="$gfile" ALT="Gif image" HEIGHT=$this->{H}
@@ -726,7 +726,7 @@ EOH
 
 sub twiddle {
   my $this = shift;
-  if ($PDL::Graphics::TriD::keeptwiddling) {
+  if ($PDLA::Graphics::TriD::keeptwiddling) {
     $this->display();
     print "---- (press enter)";
     <>
@@ -734,8 +734,8 @@ sub twiddle {
   # should probably wait for input of character 'q' ?
 }
 
-package PDL::Graphics::TriD::ViewPort;
-use base qw/PDL::Graphics::TriD::Object/;
+package PDLA::Graphics::TriD::ViewPort;
+use base qw/PDLA::Graphics::TriD::Object/;
 use fields qw/X0 Y0 W H Transformer EHandler Active ResizeCommands 
               DefMaterial AspectRatio Graphs/;
 
@@ -753,8 +753,8 @@ Probably incomplete/buggy implementation of some TriD features.
 Copyright (C) 1997, 1998 Christian Soeller (c.soeller@auckland.ac.nz).
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 

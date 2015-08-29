@@ -1,12 +1,12 @@
-package PDL::Graphics::TriD::Logo;
-use PDL::Lite;
+package PDLA::Graphics::TriD::Logo;
+use PDLA::Lite;
 
-@ISA=qw/PDL::Graphics::TriD::Object/;
+@ISA=qw/PDLA::Graphics::TriD::Object/;
 
 sub new {
   my ($type,$pos,$size) = @_;
   $this = bless {},$type;
-  $this->{Points} = PDL->pdl ([
+  $this->{Points} = PDLA->pdl ([
 			       [  0.843,  0.852,      0],
 			       [  0.843,  0.852,     -1],
 			       [  1.227,  0.891,      0],
@@ -159,7 +159,7 @@ sub new {
 			       [  4.809,   0.36,     -1],
 			       [  4.809,  1.797,      0],
 			       [  4.809,  1.797,     -1]]);
-  $this->{Index} = PDL->pdl([
+  $this->{Index} = PDLA->pdl([
 			     [  0,  1,  2],
 			     [  3,  2,  1],
 			     [  2,  3,  4],
@@ -460,7 +460,7 @@ sub new {
 			     [136,144,146],
 			     [124,120,122],
 			     [114,126,150]]);
-  $this->{Material} = new PDL::Graphics::TriD::Material(
+  $this->{Material} = new PDLA::Graphics::TriD::Material(
 				  Shine => 0.212766,
 				   Specular =>[0.753217,0.934416,1],
 				   Ambient =>[0,0,0],
@@ -476,6 +476,6 @@ sub new {
 
 # ***add these lines to, e.g. tvrml2.pl
 #
-# use PDL::Graphics::TriD::Logo;
-# $win->add_object(new PDL::Graphics::TriD::Logo);
+# use PDLA::Graphics::TriD::Logo;
+# $win->add_object(new PDLA::Graphics::TriD::Logo);
 

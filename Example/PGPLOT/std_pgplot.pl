@@ -14,8 +14,8 @@ version of the same (the object-oriented interface is strongly recommended.)
 
 =cut
 
-use PDL;
-use PDL::Graphics::PGPLOT;
+use PDLA;
+use PDLA::Graphics::PGPLOT;
 
 
 ##

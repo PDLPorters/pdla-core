@@ -1,14 +1,14 @@
 # Copyright (C) 1998 Tuomas J. Lukka.
 # All rights reserved, except redistribution
-# with PDL under the PDL License permitted.
+# with PDLA under the PDLA License permitted.
 
-package PDL::Demos::TriD2;
+package PDLA::Demos::TriD2;
 
-use PDL;
-use PDL::Graphics::TriD;
-use PDL::Graphics::TriD::Image;
+use PDLA;
+use PDLA::Graphics::TriD;
+use PDLA::Graphics::TriD::Image;
 
-PDL::Demos::Routines->import();
+PDLA::Demos::Routines->import();
 sub comment($);
 sub act($);
 sub actnw($);
@@ -18,7 +18,7 @@ sub run {
 
 comment q|
 	Welcome to a short tour of the more esoteric capabilities of
-	PDL::Graphics::TriD.
+	PDLA::Graphics::TriD.
 
 	As in '3d', press 'q' in the graphics window for the next
 	screen.  Rotate the image by pressing mouse button one and
@@ -26,9 +26,9 @@ comment q|
 
 	Note that the script must start with
 
-		use PDL;
-		use PDL::Graphics::TriD;
-		use PDL::Graphics::TriD::Image;
+		use PDLA;
+		use PDLA::Graphics::TriD;
+		use PDLA::Graphics::TriD::Image;
 
 	to work.
 |;
@@ -78,7 +78,7 @@ actnw q|
 	$o0 = imagrgb3d($pic, {Points => [[0,0,0],[0,1,0],[0,1,1],[0,0,1]]});
 
 	# Because we have the data in $pic, we could just as easily
-	# save it in a jpeg using the PDL::Io::Pic module - or read
+	# save it in a jpeg using the PDLA::Io::Pic module - or read
 	# it from one.
         # [press 'q' in the graphics window when done]
 |;

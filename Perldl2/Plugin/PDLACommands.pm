@@ -1,4 +1,4 @@
-package PDL::Perldl2::Plugin::PDLCommands;
+package PDLA::Perldl2::Plugin::PDLACommands;
 
 use Devel::REPL::Plugin;
 
@@ -24,7 +24,7 @@ around 'read' => sub {
    ##     warn $mess if $mess;
    ## }
 
-   # Filter out PDL shell prefixes from cut-n-pasted lines
+   # Filter out PDLA shell prefixes from cut-n-pasted lines
    if ( defined($lines) and $lines =~ s/$PERLDL::PREFIX_RE// ) {
       if ($PERLDL::TERM->can('GetHistory') and $PERLDL::TERM->can('SetHistory')) {
          my @hist = $PERLDL::TERM->GetHistory();
@@ -35,7 +35,7 @@ around 'read' => sub {
 
    return $lines unless defined $lines;
 
-   # print STDERR "PDLCommands: got '$lines'\n";
+   # print STDERR "PDLACommands: got '$lines'\n";
    if ( lc $lines eq 'q' || lc $lines eq 'x' || lc $lines eq 'exit' ) { return "quit"; };
 
    $lines =~ s/^\s*\?\?\s*/apropos /; # Make '??' = 'apropos'
@@ -66,7 +66,7 @@ __END__
 
 =head1 NAME
 
-PDL::Perldl2::Plugin::PDLCommands - implement perldl aliases/escapes
+PDLA::Perldl2::Plugin::PDLACommands - implement perldl aliases/escapes
 
 =head1 DESCRIPTION
 
@@ -91,7 +91,7 @@ structured pre-processing of the command line entered:
 
 =head1 SEE ALSO
 
-C<PDL::Perldl>, C<Devel::REPL>
+C<PDLA::Perldl>, C<Devel::REPL>
 
 =head1 AUTHOR
 

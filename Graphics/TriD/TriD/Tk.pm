@@ -1,6 +1,6 @@
 #!/usr/bin/perl 
 #
-#  PDL::Graphics::TriD::Tk - A Tk widget interface to the PDL::Graphics::TriD
+#  PDLA::Graphics::TriD::Tk - A Tk widget interface to the PDLA::Graphics::TriD
 #  visualization package:  $Revision$  
 #
 #  James P. Edwards
@@ -14,7 +14,7 @@
 
 =head1 NAME
 
-PDL::Graphics::TriD::Tk - A Tk widget interface to the PDL::Graphics::TriD.
+PDLA::Graphics::TriD::Tk - A Tk widget interface to the PDLA::Graphics::TriD.
 
 =head1 SYNOPSIS
 
@@ -24,11 +24,11 @@ PDL::Graphics::TriD::Tk - A Tk widget interface to the PDL::Graphics::TriD.
  # Opens a Tk window with an embedded TriD window - that's all
  # see Demos/TkTriD_demo.pm for a better example
  # 
- use PDL;
- use PDL::Graphics::TriD;
- use PDL::Graphics::TriD::GL;
+ use PDLA;
+ use PDLA::Graphics::TriD;
+ use PDLA::Graphics::TriD::GL;
  use Tk;
- use PDL::Graphics::TriD::Tk;
+ use PDLA::Graphics::TriD::Tk;
 
  my $MW = MainWindow->new();
  my $TriDW = $MW->Tk( )->pack(-expand=>1, -fill=>'both');
@@ -45,33 +45,33 @@ control TriD object orientation and size respectively.
 
 =cut
 
-package PDL::Graphics::TriD::Tk;
+package PDLA::Graphics::TriD::Tk;
 use Tk;
-use PDL::Core;
-use PDL::Graphics::TriD;
+use PDLA::Core;
+use PDLA::Graphics::TriD;
 
 BEGIN {
-   use PDL::Config;
-   if ( $PDL::Config{USE_POGL} ) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw(:all)";
-      eval 'use PDL::Graphics::OpenGL::Perl::OpenGL';
+   use PDLA::Config;
+   if ( $PDLA::Config{USE_POGL} ) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw(:all)";
+      eval 'use PDLA::Graphics::OpenGL::Perl::OpenGL';
    } else {
-      eval 'use PDL::Graphics::OpenGL';
+      eval 'use PDLA::Graphics::OpenGL';
    }
 }
 
 use strict;
 
 
-@PDL::Graphics::TriD::Tk::ISA = qw(Tk::Frame);
+@PDLA::Graphics::TriD::Tk::ISA = qw(Tk::Frame);
 
-$PDL::Graphics::TriD::Tk::verbose=0;
+$PDLA::Graphics::TriD::Tk::verbose=0;
 
 Tk::Widget->Construct('Tk');
 
-#$PDL::Graphics::TriD::Tk::VERSION = '$Revision$ ' ;
-#$PDL::Graphics::TriD::Tk::VERSION =~ s/\$Revision$\s*$/$1/;
-#sub Version {return $PDL::Graphics::TriD::Tk::VERSION;}
+#$PDLA::Graphics::TriD::Tk::VERSION = '$Revision$ ' ;
+#$PDLA::Graphics::TriD::Tk::VERSION =~ s/\$Revision$\s*$/$1/;
+#sub Version {return $PDLA::Graphics::TriD::Tk::VERSION;}
 
 =head1 FUNCTIONS
 
@@ -86,10 +86,10 @@ Used for widget initialization by Tk, this function should never be called direc
 sub Populate {
   my($TriD, $args) = @_;
 
-  if(defined $PDL::Graphics::TriD::cur){
+  if(defined $PDLA::Graphics::TriD::cur){
 	 print "Current code limitations prevent TriD:Tk from being loaded after ";
     print "another TriD graphics window has been defined.  If you are running the ";
-	 print "PDL demo package, please start it again and run this demo first.\n";
+	 print "PDLA demo package, please start it again and run this demo first.\n";
 	 exit;
   }
 
@@ -100,7 +100,7 @@ sub Populate {
   # This bind causes GL to be initialized after the 
   # Tk frame is ready to accept it
   $TriD->bind("<Configure>", [ \&GLinit ]);
-  print "Populate complete\n" if($PDL::Graphics::TriD::Tk::verbose);
+  print "Populate complete\n" if($PDLA::Graphics::TriD::Tk::verbose);
 }
 
 =head2 MainLoop
@@ -130,7 +130,7 @@ sub MainLoop
 	if( &XPending()){
 	  my @e = &glpXNextEvent();
 #	  if($e[0] == &ConfigureNotify) {
-#	    print "CONFIGNOTIFE\n" if($PDL::Graphics::TriD::verbose);
+#	    print "CONFIGNOTIFE\n" if($PDLA::Graphics::TriD::verbose);
 #	    $self->reshape($e[1],$e[2]);
 #	  }
 
@@ -174,7 +174,7 @@ sub GLinit{
                  height=>$self->height};
     $options->{mask} = ( ExposureMask );
 
-    $self->{GLwin} = PDL::Graphics::TriD::get_current_window($options);
+    $self->{GLwin} = PDLA::Graphics::TriD::get_current_window($options);
 
     $self->{GLwin}->reshape($self->width,$self->height);
 
@@ -212,13 +212,13 @@ sub refresh{
 
 =for ref 
 
-Trys to find a subroutine in PDL::Graphics::TriD when it is 
+Trys to find a subroutine in PDLA::Graphics::TriD when it is 
 not found in this package.  
 
 =cut
 
 #
-#  This AUTOLOAD allows the PDL::Graphics::TriD::Tk object to act as the PDL::Graphics::TriD
+#  This AUTOLOAD allows the PDLA::Graphics::TriD::Tk object to act as the PDLA::Graphics::TriD
 #  object which it contains.  It seems slow and may not be a good idea.
 #
 

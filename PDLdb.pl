@@ -1,21 +1,21 @@
 
 =head1 NAME 
 
-PDLdb.pl - the perl debugger with PDL support
+PDLAdb.pl - the perl debugger with PDLA support
 
 =head1 SYNOPSIS
 
-    export PERL5DB='BEGIN { require "PDLdb.pl" }'    # e.g., with sh/bash
+    export PERL5DB='BEGIN { require "PDLAdb.pl" }'    # e.g., with sh/bash
     
     perl -d  your_Perl_script
 
 =head1 DESCRIPTION
 
-C<PDLdb.pl> is an enhanced version of the perl debugger which supports
-PDL::NiceSlice constructs. Set the PERL5DB environment variable as
+C<PDLAdb.pl> is an enhanced version of the perl debugger which supports
+PDLA::NiceSlice constructs. Set the PERL5DB environment variable as
 shown above and it will be loaded automatically by Perl when you invoke
 a script with C<perl -d>. This documentation tries to outline the
-structure and services provided by C<PDLdb.pl>, i.e., C<perl5db.pl>,
+structure and services provided by C<PDLAdb.pl>, i.e., C<perl5db.pl>,
 and to describe how you can use them.
 
 =head1 GENERAL NOTES
@@ -510,7 +510,7 @@ where it has to go.
 
 =cut
 
-package # this is the PDLdb
+package # this is the PDLAdb
         DB;
 
 BEGIN {eval 'use IO::Handle'};	# Needed for flush only? breaks under miniperl
@@ -518,7 +518,7 @@ BEGIN {eval 'use IO::Handle'};	# Needed for flush only? breaks under miniperl
 # Debugger for Perl 5.00x; perl5db.pl patch level:
 $VERSION = 0.01;
 
-$header = "PDLdb.pl version $VERSION";
+$header = "PDLAdb.pl version $VERSION";
 
 =head1 DEBUGGER ROUTINES
 
@@ -640,7 +640,7 @@ sub eval {
         # $usercontext built in DB::DB near the comment
         # "set up the context for DB::eval ..."
         # Evaluate and save any results.
-        $evalarg = PDL::NiceSlice::perldlpp('PDL::NiceSlice',$evalarg);
+        $evalarg = PDLA::NiceSlice::perldlpp('PDLA::NiceSlice',$evalarg);
         @res = eval "$usercontext $evalarg;\n";  # '\n' for nice recursive debug
 
         # Restore those old values.
@@ -1862,7 +1862,7 @@ see what's happening in any given command.
 
 =cut
 
-require PDL::NiceSlice;
+require PDLA::NiceSlice;
 
 sub DB {
 

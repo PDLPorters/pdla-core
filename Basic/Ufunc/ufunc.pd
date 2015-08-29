@@ -4,34 +4,34 @@ pp_addpm({At=>'Top'},<<'EOD');
 
 =head1 NAME
 
-PDL::Ufunc - primitive ufunc operations for pdl
+PDLA::Ufunc - primitive ufunc operations for pdl
 
 =head1 DESCRIPTION
 
 This module provides some primitive and useful functions defined
-using PDL::PP based on functionality of what are sometimes called
+using PDLA::PP based on functionality of what are sometimes called
 I<ufuncs> (for example NumPY and Mathematica talk about these).
 It collects all the functions generally used to C<reduce> or
 C<accumulate> along a dimension. These all do their job across the
 first dimension but by using the slicing functions you can do it
 on any dimension.
 
-The L<PDL::Reduce|PDL::Reduce> module provides an alternative interface
+The L<PDLA::Reduce|PDLA::Reduce> module provides an alternative interface
 to many of the functions in this module.
 
 =head1 SYNOPSIS
 
- use PDL::Ufunc;
+ use PDLA::Ufunc;
 
 =cut
 
-use PDL::Slices;
+use PDLA::Slices;
 use Carp;
 EOD
 
 # check for bad value support
-use PDL::Config;
-my $bvalflag = $PDL::Config{WITH_BADVAL} || 0;
+use PDLA::Config;
+my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
 
 # should we use the finite() routine in libm ?
 # (is the Windows version _finite() ?)
@@ -54,7 +54,7 @@ Project via $name to N-1 dimensions
 This function reduces the dimensionality of a piddle
 by one by taking the $name along the 1st dimension.
 
-By using L<xchg|PDL::Slices/xchg> etc. it is possible to use
+By using L<xchg|PDLA::Slices/xchg> etc. it is possible to use
 I<any> dimension.
 
 =for usage
@@ -86,7 +86,7 @@ Cumulative $name
 This function calculates the cumulative $name
 along the 1st dimension.
 
-By using L<xchg|PDL::Slices/xchg> etc. it is possible to use
+By using L<xchg|PDLA::Slices/xchg> etc. it is possible to use
 I<any> dimension.
 
 The sum is started so that the first element in the cumulative $name
@@ -273,7 +273,7 @@ foreach my $func ( keys %over ) {
                if ( $ISGOOD(a()) ) { ' . $op . ' flag = 1; if (' . $check . ') break; }
             %}
             if ( flag ) { $b() = tmp; }
-            else        { $SETBAD(b()); $PDLSTATESETBAD(b); }',
+            else        { $SETBAD(b()); $PDLASTATESETBAD(b); }',
 	   CopyBadStatusCode => '',
 	   Doc => projectdocs( $txt, $func,''), 
        BadDoc => 
@@ -293,7 +293,7 @@ pp_def(
        Pars => 'a(n); int+ [o]b();',
        Code =>
        '$GENERIC(b) tmp = 0;
-       PDL_Indx ns = $SIZE(n), nn;
+       PDLA_Indx ns = $SIZE(n), nn;
        /* Integration formulae from Press et al 2nd Ed S 4.1 */
        switch (ns) {
       case 1:
@@ -366,7 +366,7 @@ pp_def(
 
 	BadCode => 
 	'$GENERIC(b) tmp = 0;
-         PDL_Indx cnt = 0;
+         PDLA_Indx cnt = 0;
 	 loop(n) %{ 
             if ( $ISGOOD(a()) ) { tmp += $a(); cnt++; }
          %}
@@ -389,7 +389,7 @@ pp_def(
 	  else { $b() = 0; }',
 	BadCode => 
 	'double tmp = 0;
-         PDL_Indx cnt = 0;
+         PDLA_Indx cnt = 0;
 	 loop(n) %{ 
             if ( $ISGOOD(a()) ) { tmp += $a(); cnt++; }
          %}
@@ -402,21 +402,21 @@ pp_def(
 
 # Internal utility sorting routine for median/qsort/qsortvec routines.
 #
-# note: we export them to the PDL Core structure for use in
+# note: we export them to the PDLA Core structure for use in
 #       other modules (eg Image2D)
 
-for (keys %PDL::Types::typehash) {
-    my $ctype = $PDL::Types::typehash{$_}{ctype};
-    my $ppsym = $PDL::Types::typehash{$_}{ppsym};
+for (keys %PDLA::Types::typehash) {
+    my $ctype = $PDLA::Types::typehash{$_}{ctype};
+    my $ppsym = $PDLA::Types::typehash{$_}{ppsym};
 
-    pp_add_boot( " PDL->qsort_${ppsym} = pdl_qsort_${ppsym};" .
-		 " PDL->qsort_ind_${ppsym} = pdl_qsort_ind_${ppsym};\n" );
+    pp_add_boot( " PDLA->qsort_${ppsym} = pdl_qsort_${ppsym};" .
+		 " PDLA->qsort_ind_${ppsym} = pdl_qsort_ind_${ppsym};\n" );
 
     pp_addhdr(<<"FOO"
 
-      void pdl_qsort_$ppsym($ctype* xx, PDL_Indx a, PDL_Indx b) {
+      void pdl_qsort_$ppsym($ctype* xx, PDLA_Indx a, PDLA_Indx b) {
 
-         PDL_Indx i,j;
+         PDLA_Indx i,j;
 
          $ctype t, median;
 
@@ -440,11 +440,11 @@ for (keys %PDL::Types::typehash) {
 
       }
 
-      void pdl_qsort_ind_$ppsym($ctype* xx,  PDL_Indx* ix, PDL_Indx a, PDL_Indx b) {
+      void pdl_qsort_ind_$ppsym($ctype* xx,  PDLA_Indx* ix, PDLA_Indx a, PDLA_Indx b) {
 
-         PDL_Indx i,j;
+         PDLA_Indx i,j;
 
-         PDL_Indx t;
+         PDLA_Indx t;
         $ctype median;
 
          i = a; j = b;
@@ -477,8 +477,8 @@ for (keys %PDL::Types::typehash) {
 	/* Compare a vector in lexicographic order, returning the
 	 *  equivalent of "<=>". 
  	 */
-      signed char pdl_cmpvec_$ppsym($ctype *a, $ctype *b, PDL_Indx n) {
-	PDL_Indx i;
+      signed char pdl_cmpvec_$ppsym($ctype *a, $ctype *b, PDLA_Indx n) {
+	PDLA_Indx i;
 	for(i=0; i<n; a++,b++,i++) {
 	 if( *a < *b ) return -1;
 	 if( *a > *b ) return 1;
@@ -486,9 +486,9 @@ for (keys %PDL::Types::typehash) {
 	return 0;
      }	
 	
-      void pdl_qsortvec_$ppsym($ctype *xx, PDL_Indx n, PDL_Indx a, PDL_Indx b) {
+      void pdl_qsortvec_$ppsym($ctype *xx, PDLA_Indx n, PDLA_Indx a, PDLA_Indx b) {
 		
-	PDL_Indx i,j, median_ind;
+	PDLA_Indx i,j, median_ind;
 
 	$ctype t;
 	i = a; 
@@ -502,7 +502,7 @@ for (keys %PDL::Types::typehash) {
 	  while( pdl_cmpvec_$ppsym( &(xx[n*j]), &(xx[n*median_ind]), n )  >  0 ) 
 		j--;
 	  if(i<=j) {
-		PDL_Indx k;
+		PDLA_Indx k;
 		$ctype *aa = &xx[n*i];
 	        $ctype *bb = &xx[n*j];
 		for( k=0; k<n; aa++,bb++,k++ ) {
@@ -529,9 +529,9 @@ for (keys %PDL::Types::typehash) {
 	
       }
 
-      void pdl_qsortvec_ind_$ppsym($ctype *xx, PDL_Indx *ix, PDL_Indx n, PDL_Indx a, PDL_Indx b) {
+      void pdl_qsortvec_ind_$ppsym($ctype *xx, PDLA_Indx *ix, PDLA_Indx n, PDLA_Indx a, PDLA_Indx b) {
 		
-	PDL_Indx i,j, median_ind;
+	PDLA_Indx i,j, median_ind;
 
 	$ctype t;
 	i = a; 
@@ -545,7 +545,7 @@ for (keys %PDL::Types::typehash) {
 	  while( pdl_cmpvec_$ppsym( &(xx[n*ix[j]]), &(xx[n*ix[median_ind]]), n )  >  0 ) 
 		j--;
 	  if(i<=j) {
-		PDL_Indx k;
+		PDLA_Indx k;
 	        k = ix[i];
 	        ix[i] = ix[j];
 		ix[j] = k;	        
@@ -593,13 +593,13 @@ sub generic_qsortvec {
 # should use threadloop ?
 #
 my $copy_to_temp_good = '
-           PDL_Indx nn, nn1;
+           PDLA_Indx nn, nn1;
 	   loop(n) %{ $tmp() = $a(); %}
            nn = $COMP(__n_size)-1; ' .
        generic_qsort('tmp');
 
 my $copy_to_temp_bad = '
-        register PDL_Indx nn = 0;
+        register PDLA_Indx nn = 0;
 	loop(n) %{ 
            if ( $ISGOOD(a()) ) { $tmp(n=>nn) = $a(); nn++; }
         %}
@@ -627,10 +627,10 @@ pp_def(
        Pars => 'a(n); [o]b(); [t]tmp(n);',
        Doc => projectdocs('median','medover',''),
        Code => 
-       "PDL_Indx nn2;\n" . $copy_to_temp_good . $find_median_average,
+       "PDLA_Indx nn2;\n" . $copy_to_temp_good . $find_median_average,
        BadCode =>
        $copy_to_temp_bad . 
-       '   PDL_Indx nn1, nn2;
+       '   PDLA_Indx nn1, nn2;
            nn -= 1; ' .
        generic_qsort('tmp') .
        $find_median_average . '}',
@@ -654,7 +654,7 @@ some circumstances.
        $copy_to_temp_good . $find_median_lower,
        BadCode =>
        $copy_to_temp_bad . 
-       '   PDL_Indx nn1;
+       '   PDLA_Indx nn1;
            nn -= 1; '.
        $find_median_lower . '}',
 
@@ -678,14 +678,14 @@ C<modeover> treats BAD the same as any other value:  if
 BAD is the most common element, the returned value is also BAD.
 '),
 	 Code => <<'EOCODE',
-	       PDL_Indx i = 0;
-	       PDL_Indx most = 0;
+	       PDLA_Indx i = 0;
+	       PDLA_Indx most = 0;
 	       $GENERIC() curmode;
                $GENERIC() curval;
 
                /* Copy input to buffer for sorting, and sort it */
                loop(n) %{ $sorted() = $data(); %}
-               PDL->$TBSULNQ(qsort_B,qsort_S,qsort_U,qsort_L,qsort_N,qsort_Q)($P(sorted),0,$SIZE(n)-1);
+               PDLA->$TBSULNQ(qsort_B,qsort_S,qsort_U,qsort_L,qsort_N,qsort_Q)($P(sorted),0,$SIZE(n)-1);
       
                /* Walk through the sorted data and find the most common elemen */
                loop(n) %{
@@ -757,7 +757,7 @@ implemented here is based on the interpolation variant described at
 L<http://en.wikipedia.org/wiki/Percentile> as used by Microsoft Excel
 and recommended by NIST.
 
-By using L<xchg|PDL::Slices/xchg> etc. it is possible to use
+By using L<xchg|PDLA::Slices/xchg> etc. it is possible to use
 I<any> dimension.
 
 =for usage
@@ -774,12 +774,12 @@ I<any> dimension.
 ',
         Code => '
            double np, pp1, pp2;
-           PDL_Indx nn2;
+           PDLA_Indx nn2;
 	   ' . $copy_to_temp_good .
            $find_pct_interpolate,
        BadCode =>
        $copy_to_temp_bad .  '
-           PDL_Indx nn1, nn2;
+           PDLA_Indx nn1, nn2;
            double np, pp1, pp2;
            nn -= 1; ' .  generic_qsort('tmp') .
            $find_pct_interpolate . '}',
@@ -801,7 +801,7 @@ falls between two values, the nearest data value is the result.
 The algorithm implemented is from the textbook version described
 first at L<http://en.wikipedia.org/wiki/Percentile>.
 
-By using L<xchg|PDL::Slices/xchg> etc. it is possible to use
+By using L<xchg|PDLA::Slices/xchg> etc. it is possible to use
 I<any> dimension.
 
 =for usage
@@ -817,14 +817,14 @@ I<any> dimension.
 
 ',
         Code => '
-           PDL_Indx np;
+           PDLA_Indx np;
 	   ' . $copy_to_temp_good . '
            np = (nn+1)*$p();
            if (np > nn) np = nn;
            if (np < 0) np = 0;
 	   $b() = $tmp(n => np);
 ',
-       BadCode => 'PDL_Indx np;
+       BadCode => 'PDLA_Indx np;
        ' . $copy_to_temp_bad . '
            nn -= 1;
            ' .  generic_qsort('tmp') . '
@@ -853,11 +853,11 @@ interpolated.
 
 =cut
 
-*pct = \\&PDL::pct;
-sub PDL::pct {
+*pct = \\&PDLA::pct;
+sub PDLA::pct {
 	my(\$x, \$p) = \@_; 
     my \$tmp;
-	\$x->clump(-1)->pctover(\$p, \$tmp=PDL->nullcreate(\$x));
+	\$x->clump(-1)->pctover(\$p, \$tmp=PDLA->nullcreate(\$x));
 	return \$tmp->at();
 }
 
@@ -881,11 +881,11 @@ result.
 
 =cut
 
-*oddpct = \\&PDL::oddpct;
-sub PDL::oddpct {
+*oddpct = \\&PDLA::oddpct;
+sub PDLA::oddpct {
 	my(\$x, \$p) = \@_; 
     my \$tmp;
-	\$x->clump(-1)->oddpctover(\$p, \$tmp=PDL->nullcreate(\$x));
+	\$x->clump(-1)->oddpctover(\$p, \$tmp=PDLA->nullcreate(\$x));
 	return \$tmp->at();
 }
 
@@ -951,10 +951,10 @@ EOD
 
    pp_addpm(<<"EOD");
 
-*$name = \\&PDL::$name;
-sub PDL::$name {
+*$name = \\&PDLA::$name;
+sub PDLA::$name {
 	my(\$x) = \@_; my \$tmp;
-	\$x->clump(-1)->${func}( \$tmp=PDL->nullcreate(\$x) );
+	\$x->clump(-1)->${func}( \$tmp=PDLA->nullcreate(\$x) );
 	return \$tmp->at();
 }
 EOD
@@ -994,7 +994,7 @@ EOPM
 
 pp_addpm(<<'EOPM');
 *any = \&or;
-*PDL::any = \&PDL::or;
+*PDLA::any = \&PDLA::or;
 
 =head2 all
 
@@ -1027,7 +1027,7 @@ EOPM
 pp_addpm(<<'EOPM');
 
 *all = \&and;
-*PDL::all = \&PDL::and;
+*PDLA::all = \&PDLA::and;
 
 EOPM
 
@@ -1057,8 +1057,8 @@ The two values are returned as Perl scalars similar to min/max.
 
 =cut
 
-*minmax = \&PDL::minmax;
-sub PDL::minmax {
+*minmax = \&PDLA::minmax;
+sub PDLA::minmax {
   my ($x)=@_; my $tmp;
   my @arr = $x->clump(-1)->minmaximum;
   return map {$_->sclr} @arr[0,1]; # return as scalars !
@@ -1079,12 +1079,12 @@ pp_def(
     Inplace => 1,
     Pars => 'a(n); [o]b(n);',
     Code => 
-    'PDL_Indx nn;
+    'PDLA_Indx nn;
      loop(n) %{ $b() = $a(); %}
      nn = $COMP(__n_size)-1;
     ' . generic_qsort('b'),
     BadCode =>
-    'register PDL_Indx nn = 0, nb = $SIZE(n) - 1;
+    'register PDLA_Indx nn = 0, nb = $SIZE(n) - 1;
      loop(n) %{ 
         if ( $ISGOOD(a()) ) { $b(n=>nn) = $a(); nn++; }
         else                { $SETBAD(b(n=>nb)); nb--; }
@@ -1126,14 +1126,14 @@ pp_def(
        HandleBad => 1,
        Pars => 'a(n); indx [o]indx(n);',
        Code => 
-       'PDL_Indx nn = $COMP(__n_size)-1;
+       'PDLA_Indx nn = $COMP(__n_size)-1;
         if ($SIZE(n) == 0) return;
         loop(n) %{ 
            $indx() = n; 
         %}
        ' . generic_qsort_ind(),
        BadCode =>
-       'register PDL_Indx nn = 0, nb = $SIZE(n) - 1;
+       'register PDLA_Indx nn = 0, nb = $SIZE(n) - 1;
         if ($SIZE(n) == 0) return;
         loop(n) %{ 
            if ( $ISGOOD(a()) ) { $indx(n=>nn) = n; nn++; } /* play safe since nn used more than once */ 
@@ -1175,8 +1175,8 @@ pp_def(
     Inplace => 1,
     Pars => 'a(n,m); [o]b(n,m);',
     Code => 
-    'PDL_Indx nn;
-     PDL_Indx nd;
+    'PDLA_Indx nn;
+     PDLA_Indx nd;
      loop(n,m) %{ $b() = $a(); %}
      nn = ($COMP(__m_size))-1;
      nd = $COMP(__n_size);
@@ -1223,8 +1223,8 @@ pp_def(
     HandleBad => 1,
     Pars => 'a(n,m); indx [o]indx(m);',
     Code => 
-    'PDL_Indx nd;
-     PDL_Indx nn=$COMP(__m_size)-1;
+    'PDLA_Indx nd;
+     PDLA_Indx nn=$COMP(__m_size)-1;
      loop(m) %{
         $indx()=m;
      %}
@@ -1236,8 +1236,8 @@ pp_def(
 Sort a list of vectors lexicographically, returning the indices of the
 sorted vectors rather than the sorted list itself.
 
-As with C<qsortvec>, the input PDL should be an NxM array containing M
-separate N-dimensional vectors.  The return value is an integer M-PDL 
+As with C<qsortvec>, the input PDLA should be an NxM array containing M
+separate N-dimensional vectors.  The return value is an integer M-PDLA 
 containing the M-indices of original array rows, in sorted order.
 
 As with C<qsortvec>, the zeroth element of the vectors runs slowest in the
@@ -1277,7 +1277,7 @@ for my $which (
              } else {
 	     ' . ($bvalflag ? '
 	             $SETBAD(c());
-		     $PDLSTATESETBAD(c);
+		     $PDLASTATESETBAD(c);
 	     ' : '
                      $c() = 0.25;
                      if($c()>0)
@@ -1292,7 +1292,7 @@ for my $which (
 	 	if( $ISGOOD(a()) && ($a()*0 == 0) && (!flag || $a() '.$op.' cur)) {cur = $a(); flag = 1;}
 	     %}
              if ( flag ) { $c() = cur; }
-             else        { $SETBAD(c()); $PDLSTATESETBAD(c); }',
+             else        { $SETBAD(c()); $PDLASTATESETBAD(c); }',
 	    CopyBadStatusCode => '',
 	    Doc => projectdocs($name,$name),
 	    BadDoc => 
@@ -1300,7 +1300,7 @@ for my $which (
 otherwise the bad flag is cleared for the output piddle.
 
 Note that C<NaNs> are considered to be valid values;
-see L<isfinite|PDL::Math/isfinite> and L<badmask|PDL::Math/badmask>
+see L<isfinite|PDLA::Math/isfinite> and L<badmask|PDLA::Math/badmask>
 for ways of masking NaNs.
 ',
 	    );
@@ -1311,7 +1311,7 @@ for ways of masking NaNs.
 	    Pars => 'a(n); indx [o] c();', 
 	    Code => 
 	    '$GENERIC() cur;
-             PDL_Indx curind;
+             PDLA_Indx curind;
 	     int flag = 0;
 	     loop(n) %{
 	 	if(!flag || $a() '.$op.' cur || IsNaN(cur))
@@ -1322,7 +1322,7 @@ for ways of masking NaNs.
   	     } else { '
 	     . ($bvalflag ? '
 	          $SETBAD(c());
-                  $PDLSTATESETBAD(c);
+                  $PDLASTATESETBAD(c);
 	     ' : '
 	       $c() = 0.25;      /* check for floatiness */
 	       if($c() == 0) {
@@ -1335,13 +1335,13 @@ for ways of masking NaNs.
 	       ',
 	    BadCode => 
 	    '$GENERIC() cur;
-             PDL_Indx curind; int flag = 0; /* should set curind to -1 and check for that, then do not need flag */
+             PDLA_Indx curind; int flag = 0; /* should set curind to -1 and check for that, then do not need flag */
 	     loop(n) %{
 	 	if( $ISGOOD(a()) && (!flag || $a() '.$op.' cur)) 
                    {cur = $a(); curind = n; flag = 1;}
 	     %}
              if ( flag && !IsNaN(cur) ) { $c() = curind; }
-             else        { $SETBAD(c()); $PDLSTATESETBAD(c); }',
+             else        { $SETBAD(c()); $PDLASTATESETBAD(c); }',
 	    CopyBadStatusCode => '',
 	    Doc => "Like $name but returns the index rather than the value",
 	    BadDoc => 
@@ -1354,12 +1354,12 @@ otherwise the bad flag is cleared for the output piddle.',
 	    HandleBad => 0,   # just a marker 
 	    Pars => 'a(n); indx [o]c(m);',
 	    Code =>
-	    '$GENERIC() cur; PDL_Indx curind; register PDL_Indx ns = $SIZE(n);
+	    '$GENERIC() cur; PDLA_Indx curind; register PDLA_Indx ns = $SIZE(n);
 	     if($SIZE(m) > $SIZE(n)) $CROAK("n_ind: m_size > n_size");
 	     loop(m) %{
 		 curind = ns;
 		 loop(n) %{
-		 	PDL_Indx nm; int flag=0;
+		 	PDLA_Indx nm; int flag=0;
 		 	for(nm=0; nm<m; nm++) {
 				if($c(m=>nm) == n) {flag=1; break;}
 			}
@@ -1389,7 +1389,7 @@ pp_def(
 	Pars => 'a(n); [o]cmin(); [o] cmax(); indx [o]cmin_ind(); indx [o]cmax_ind();',
 	Code => 
 	'$GENERIC() curmin, curmax;
-         PDL_Indx curmin_ind, curmax_ind;
+         PDLA_Indx curmin_ind, curmax_ind;
 
  	 curmin = curmax = 0; /* Handle null piddle --CED */
 
@@ -1407,7 +1407,7 @@ pp_def(
 	CopyBadStatusCode => '',
 	BadCode => 
 	'$GENERIC() curmin, curmax;
-         PDL_Indx curmin_ind, curmax_ind; int flag = 0;
+         PDLA_Indx curmin_ind, curmax_ind; int flag = 0;
 	
 	 loop(n) %{
             if ( $ISGOOD(a()) ) {
@@ -1427,8 +1427,8 @@ pp_def(
          } else {
             $SETBAD(cmin()); $SETBAD(cmin_ind());
             $SETBAD(cmax()); $SETBAD(cmax_ind());
-            $PDLSTATESETBAD(cmin); $PDLSTATESETBAD(cmin_ind);
-            $PDLSTATESETBAD(cmax); $PDLSTATESETBAD(cmax_ind);
+            $PDLASTATESETBAD(cmin); $PDLASTATESETBAD(cmin_ind);
+            $PDLASTATESETBAD(cmax); $PDLASTATESETBAD(cmax_ind);
          }',
 	Doc =>
 '
@@ -1465,8 +1465,8 @@ Contributions by Christian Soeller (c.soeller@auckland.ac.nz)
 and Karl Glazebrook (kgb@aaoepp.aao.gov.au).  All rights
 reserved. There is no warranty. You are allowed to redistribute this
 software / documentation under certain conditions. For details, see
-the file COPYING in the PDL distribution. If this file is separated
-from the PDL distribution, the copyright notice should be included in
+the file COPYING in the PDLA distribution. If this file is separated
+from the PDLA distribution, the copyright notice should be included in
 the file.
 
 =cut

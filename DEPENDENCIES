@@ -1,8 +1,8 @@
 +----------------------------------------------------------------------------+
-|                        PDL Module Dependencies                             |
+|                        PDLA Module Dependencies                             |
 +----------------------------------------------------------------------------+
 
-This file lists dependencies of PDL modules on external programs
+This file lists dependencies of PDLA modules on external programs
 or libraries.  Some of the modules will build ok without the
 external software but in general are not very useful without it.
 Others require certain libraries/include files to be installed.
@@ -11,15 +11,15 @@ See INSTALL on hints how to enable/disable building of some modules
 in the distribution if required.
 
 The easiest way to resolve dependencies on other Perl modules is
-to use the CPAN module to install PDL. Installation should be as
+to use the CPAN module to install PDLA. Installation should be as
 simple as
 
-  cpan install PDL   # if the cpan script is in your path
+  cpan install PDLA   # if the cpan script is in your path
 
 or if you don't have the cpan script try
 
   perl -MCPAN -e shell
-  cpan> install PDL
+  cpan> install PDLA
 
 
 
@@ -27,7 +27,7 @@ or if you don't have the cpan script try
 |    MODULE      |     DEPENDS ON      |             COMMENT                 |
 +----------------+---------------------+-------------------------------------+
 
-PDL (all)         perl >= 5.10.x          PDL requires at least this version
+PDLA (all)         perl >= 5.10.x          PDLA requires at least this version
                                           of perl to build and run.
 
                   File::Spec  >= 0.6      perl5 core module.
@@ -41,10 +41,10 @@ PDL (all)         perl >= 5.10.x          PDL requires at least this version
 					  with support for CONFIGURE_REQUIRES.
 
 
-PDL::NiceSlice    Text::Balanced >= 1.89  A nicer way to index piddles.
+PDLA::NiceSlice    Text::Balanced >= 1.89  A nicer way to index piddles.
                   Filter::Util::Call
 
-                  Filter::Simple          Required for new PDL::NiceSlice
+                  Filter::Simple          Required for new PDLA::NiceSlice
                   Module::Compile         implementation under development.
 
 
@@ -52,11 +52,11 @@ Inline::Pdlpp     Inline >= 0.68          This module allows to define fast
                   Inline::C >= 0.62       PP code inline in your scripts.
 
                                           NOTE: Though Inline is listed as as
-					  PDL prerequisite for CPAN, you can
-                                          build PDL manually without it.
+					  PDLA prerequisite for CPAN, you can
+                                          build PDLA manually without it.
 
 
-PDL::ParallelCPU  pthreads library        Multi-CPU support will be enabled
+PDLA::ParallelCPU  pthreads library        Multi-CPU support will be enabled
                                           if libpthreads is detected and
                                           built against.  A pthreads for
 					  win32 can be found at
@@ -64,7 +64,7 @@ PDL::ParallelCPU  pthreads library        Multi-CPU support will be enabled
 
 
 
-PDL::IO::Dumper   Data::Dumper >= 2.121
+PDLA::IO::Dumper   Data::Dumper >= 2.121
                   Convert::UU             Convert::UU is required.
 
                   uuencode/uudecode       (Optional) Better performance on
@@ -73,7 +73,7 @@ PDL::IO::Dumper   Data::Dumper >= 2.121
                                           if detected.
 
 
-PDL::IO::Storable Storable >=1.03
+PDLA::IO::Storable Storable >=1.03
                   perl >= 5.10.x          Will build but won't work for perl
 		                          versions prior to 5.10.0
 
@@ -85,7 +85,7 @@ pdl2   (shell)    Devel::REPL >= 1.003011
 					  Devel::REPL requires Data::Dump::Streamer
 					  to support pdl2.  This may need to be
 					  hand-installed if you are doing a manual
-					  PDL build.
+					  PDLA build.
 
 perldl (shell)    Term::ReadLine::Perl    
                   or Term::ReadLine::Gnu 
@@ -97,17 +97,17 @@ perldl (shell)    Term::ReadLine::Perl
                                           or Term::ReadLine::Gnu is not installed.
 
 
-PDL::GIS::Proj
-PDL::Transform::Proj
-                  A PDL interface to the PROJ4 geographic projection
-                  library and the PDL::Transform interface to PROJ4.
+PDLA::GIS::Proj
+PDLA::Transform::Proj
+                  A PDLA interface to the PROJ4 geographic projection
+                  library and the PDLA::Transform interface to PROJ4.
                   See http://trac.osgeo.org/proj/
 
                                           Module will be built if the PROJ4
                                           library is installed and detected.
 
 
-PDL::Graphics::TriD
+PDLA::Graphics::TriD
                   Requires the perl OpenGL module be installed.
 		  See the POGL_VERSION entry in perldl.conf for
 		  the minimum required version.
@@ -116,7 +116,7 @@ PDL::Graphics::TriD
                   library and FreeGLUT (Apple GLUT on Mac OS X)
                   installed.
 
-                                          PDL::Graphics::TriD will be
+                                          PDLA::Graphics::TriD will be
                                           built if Perl OpenGL is detected
 					  and of version greater than the
 					  POGL_VERSION in perldl.conf.
@@ -125,7 +125,7 @@ PDL::Graphics::TriD
                                           perldl.conf and set WITH_3D => 0.
 
 
-PDL::Graphics::PGPLOT
+PDLA::Graphics::PGPLOT
                   Requires both the PGPLOT perl module **and**
                   the PGPLOT fortran library.  See
                   http://astro.caltech.edu/~tjp/pgplot for the
@@ -135,23 +135,23 @@ PDL::Graphics::PGPLOT
                 
                   NOTE: These are two separate items to be installed.
   
-                                          PDL::Graphics::PGPLOT Module
+                                          PDLA::Graphics::PGPLOT Module
                                           builds ok without PGPLOT module
                                           and library.
 
 
-PDL::Graphics::IIS
+PDLA::Graphics::IIS
                   To be useful an application that supports
                   the 'IIS' protocol must be installed, e.g.
                   SAOimage or Ximtool, see
                   http://tdc-www.harvard.edu/software/saoimage.html
                   http://iraf.noao.edu/iraf/web/projects/x11iraf/
 
-                                          PDL::Graphics::IIS  builds
+                                          PDLA::Graphics::IIS  builds
                                           without viewers.
 
 
-PDL::GSL modules
+PDLA::GSL modules
                   Needs the GSL (Gnu Scientific Library) to
                   build.  Version >= 1.0 is required
                   See http://www.gnu.org/software/gsl/
@@ -161,7 +161,7 @@ PDL::GSL modules
                                           is installed and detected.
 
 
-PDL::IO::Browser
+PDLA::IO::Browser
                   Requires a 'curses'-compatible library.
 		  You'll need to enable in perldl.conf if you
 		  wish to try the new configure and build,
@@ -169,8 +169,8 @@ PDL::IO::Browser
 
                                           Not built by default.
 
-PDL::IO::FastRaw
-PDL::IO::FlexRaw
+PDLA::IO::FastRaw
+PDLA::IO::FlexRaw
                   Memory-mapped file IO functions (mapfraw
 		  and mapflex) require File::Map 0.47 or
 		  higher.  (Systems with POSIX mmap routines
@@ -182,7 +182,7 @@ PDL::IO::FlexRaw
 					  or mmap dependencies are met.
 
 
-PDL::IO::FITS     Needs Astro::FITS::Header for full support
+PDLA::IO::FITS     Needs Astro::FITS::Header for full support
                   of all FITS header features.  Will build ok,
                   and run, without it but for given that
                   Astro::FITS::Header is a Perl only module, you
@@ -193,7 +193,7 @@ PDL::IO::FITS     Needs Astro::FITS::Header for full support
                   with the cpan shell.
 
 
-PDL::IO::GD       PDL interface to the GD image library.
+PDLA::IO::GD       PDLA interface to the GD image library.
                   See http://www.libgd.org
                                         
                                           Will not be built unless
@@ -201,8 +201,8 @@ PDL::IO::GD       PDL interface to the GD image library.
                                           and detected.
 
 
-PDL::IO::HDF      PDL interface to HDF4 library.  See
-                  PDL::IO::HDF5 on CPAN for HDF5 bindings.
+PDLA::IO::HDF      PDLA interface to HDF4 library.  See
+                  PDLA::IO::HDF5 on CPAN for HDF5 bindings.
                   Not all HDF4 types are supported.
                   See http://www.hdfgroup.org/products/hdf4/
 
@@ -210,7 +210,7 @@ PDL::IO::HDF      PDL interface to HDF4 library.  See
                                           HDF4 libraries are detected.
 
 
-PDL::IO::Pic      rpic/wpic: NetPBM converters
+PDLA::IO::Pic      rpic/wpic: NetPBM converters
                   See http://netpbm.sourceforge.net/
 
                   wmpeg: requires the ffmpeg program
@@ -222,7 +222,7 @@ PDL::IO::Pic      rpic/wpic: NetPBM converters
                                           NetPBM.
 
 
-PDL::Minuit       PDL interface to Minuit minimization routines in
+PDLA::Minuit       PDLA interface to Minuit minimization routines in
                   the CERN library,
                   http://wwwasdoc.web.cern.ch/wwwasdoc/minuit/minmain.html
                   The Minuit library code is included.  A fortran compiler
@@ -233,8 +233,8 @@ PDL::Minuit       PDL interface to Minuit minimization routines in
                                           supports your platform.
 
 
-PDL::Slatec       Linear algebra routines.
-                  Several other PDL modules use PDL::Slatec
+PDLA::Slatec       Linear algebra routines.
+                  Several other PDLA modules use PDLA::Slatec
 
                   Slatec fortran lib is included but
                   requires a fortran compiler and

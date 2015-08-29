@@ -1,6 +1,6 @@
 # REPLACE FOLLOWING BY
 #
-# use PDL::PP qw/PDL::Experiment PDL::Experiment Experiment/;
+# use PDLA::PP qw/PDLA::Experiment PDLA::Experiment Experiment/;
 #
 # when using not in this package.
 
@@ -9,33 +9,33 @@ pp_add_exported('',"rpnm wpnm");
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::IO::Pnm -- pnm format I/O for PDL
+PDLA::IO::Pnm -- pnm format I/O for PDLA
 
 =head1 SYNOPSIS
 
-  use PDL::IO::Pnm;
+  use PDLA::IO::Pnm;
   $im = wpnm $pdl, $file, $format[, $raw];
-  rpnm $stack->slice(':,:,:,(0)'),"PDL.ppm";
+  rpnm $stack->slice(':,:,:,(0)'),"PDLA.ppm";
 
 =head1 DESCRIPTION
 
-pnm I/O for PDL.
+pnm I/O for PDLA.
 
 =cut
 
-use PDL::Core qw/howbig convert/;
-use PDL::Types;
-use PDL::Basic;  # for max/min
-use PDL::IO::Misc;
+use PDLA::Core qw/howbig convert/;
+use PDLA::Types;
+use PDLA::Basic;  # for max/min
+use PDLA::IO::Misc;
 use Carp;
 use File::Temp qw( tempfile );
 
-# return the upper limit of data values an integer PDL data type
+# return the upper limit of data values an integer PDLA data type
 # can hold
 sub dmax {
     my $type = shift;
     my $sz = 8*howbig($type);
-    $sz-- if ($type == $PDL_S || $type == $PDL_L);  # signed types
+    $sz-- if ($type == $PDLA_S || $type == $PDLA_L);  # signed types
     return ((1 << $sz)-1);
 }
 
@@ -90,7 +90,7 @@ data (ppm). This also means for a palette image that the distinction between
 an image and its lookup table is lost which can be a problem in cases (but can
 hardly be avoided when using netpbm/pbmplus).  Datatype is dependent
 on the maximum grey/color-component value (for raw and binary formats
-always PDL_B). rpnm tries to read chopped files by zero padding the
+always PDLA_B). rpnm tries to read chopped files by zero padding the
 missing data (well it currently doesn't, it barfs; I'll probably fix it
 when it becomes a problem for me ;). You can also read directly into an
 existing pdl that has to have the right size(!). This can come in handy
@@ -102,7 +102,7 @@ netpbm/pbmplus packages.
 =for example
 
   $stack = zeroes(byte,3,500,300,4);
-  rpnm $stack->slice(':,:,:,(0)'),"PDL.ppm";
+  rpnm $stack->slice(':,:,:,(0)'),"PDLA.ppm";
 
 reads an rgb image (that had better be of size (500,300)) into the
 first plane of a 3D RGB datacube (=4D pdl datacube). You can also do
@@ -110,8 +110,8 @@ inplace transpose/inversion that way.
 
 =cut
 
-sub rpnm {PDL->rpnm(@_)}
-sub PDL::rpnm {
+sub rpnm {PDLA->rpnm(@_)}
+sub PDLA::rpnm {
     barf 'Usage: $im = rpnm($file) or $im = $pdl->rpnm($file)'
        if $#_<0 || $#_>2;
     my ($pdl,$file,$maybe) = @_;
@@ -131,13 +131,13 @@ sub PDL::rpnm {
     my $succeed = open(PNM, $file);
     # redirection now in effect for child
     # close(STDERR);
-    open(STDERR, ">&PDL::IO::Pnm::SAVEERR");
+    open(STDERR, ">&PDLA::IO::Pnm::SAVEERR");
     rbarf $efile,"Can't open pnm file '$file'" unless $succeed;
     binmode PNM;
 
     read(PNM,(my $magic),2);
     rbarf $efile, "Oops, this is not a PNM file" unless $magic =~ /P[1-6]/;
-    print "reading pnm file with magic $magic\n" if $PDL::debug>1;
+    print "reading pnm file with magic $magic\n" if $PDLA::debug>1;
 
     my ($isrgb,$israw,$params) = (0,0,3);
     $israw = 1 if $magic =~ /P[4-6]/;
@@ -159,10 +159,10 @@ sub PDL::rpnm {
 	}
     }
 
-    my $type = $PDL_B;
+    my $type = $PDLA_B;
     do {
 TYPES:	{  my $pdlt;
-	   foreach $pdlt ($PDL_B,$PDL_US,$PDL_L){
+	   foreach $pdlt ($PDLA_B,$PDLA_US,$PDLA_L){
 	     if ($dims[2] <= dmax($pdlt))
 	       { $type = $pdlt;
 	         last TYPES;
@@ -180,28 +180,28 @@ TYPES:	{  my $pdlt;
     my @Dims = @dims[0,1];
     $Dims[0] *= 3 if $isrgb;
     if ($pdl->getndims==1 && $pdl->getdim(0)==0 && $isrgb) { #input pdl is null
-	local $PDL::debug = 0; # shut up
-	$pdl = $pdl->zeroes(PDL::Type->new($type),3,@dims[0,1]);
+	local $PDLA::debug = 0; # shut up
+	$pdl = $pdl->zeroes(PDLA::Type->new($type),3,@dims[0,1]);
     }
     my $npdl = $isrgb ? $pdl->clump(2) : $pdl;
     if ($israw) {
        pnminraw (convert(pdl(0),$type), $npdl, $Dims[0], $Dims[1],
-	 $magic eq "P4", 'PDL::IO::Pnm::PNM');
+	 $magic eq "P4", 'PDLA::IO::Pnm::PNM');
     } else {
        my $form = $1 if $magic =~ /P([1-3])/;
        pnminascii (convert(pdl(0),$type), $npdl, $Dims[0], $Dims[1],
-	$form, 'PDL::IO::Pnm::PNM');
+	$form, 'PDLA::IO::Pnm::PNM');
     }
     print("loaded pnm file, $dims[0]x$dims[1], gmax: $dims[2]",
 	   $isrgb ? ", RGB data":"", $israw ? ", raw" : " ASCII"," data\n")
-	if $PDL::debug;
+	if $PDLA::debug;
     unlink($efile);
 
     # need to byte swap for little endian platforms
     unless ( isbigendian() ) {
        if ($israw ) {
-          $pdl->bswap2 if $type==$PDL_US or $pdl->type == ushort;
-          $pdl->bswap4 if $type==$PDL_L;  # not likely, but supported anyway
+          $pdl->bswap2 if $type==$PDLA_US or $pdl->type == ushort;
+          $pdl->bswap4 if $type==$PDLA_L;  # not likely, but supported anyway
        }
     }
     return $pdl;
@@ -233,8 +233,8 @@ packages.
 
 =cut
 
-*wpnm = \&PDL::wpnm;
-sub PDL::wpnm {
+*wpnm = \&PDLA::wpnm;
+sub PDLA::wpnm {
     barf ('Usage: wpnm($pdl,$filename,$format[,$raw]) ' .
 	   'or $pdl->wpnm($filename,$format[,$raw])') if $#_ < 2;
     my ($pdl,$file,$type,$raw) = @_;
@@ -254,13 +254,13 @@ sub PDL::wpnm {
     barf "wpnm: expecting 2D (w,h) input"
 	if ($type =~ /P[G,B]M/) && ($#Dims != 1);
     barf "wpnm: user should convert float and double data to appropriate type"
-	if ($pdl->get_datatype == $PDL_F) || ($pdl->get_datatype == $PDL_D);
+	if ($pdl->get_datatype == $PDLA_F) || ($pdl->get_datatype == $PDLA_D);
     barf "wpnm: expecting prescaled data"
-	if (($pdl->get_datatype != $PDL_B) || ($pdl->get_datatype != $PDL_US)) &&
+	if (($pdl->get_datatype != $PDLA_B) || ($pdl->get_datatype != $PDLA_US)) &&
 	    ($pdl->min < 0);
 
     # check for raw format
-    $israw = 1 if (($pdl->get_datatype == $PDL_B) || ($pdl->get_datatype == $PDL_US) || ($type =~ /PBM/));
+    $israw = 1 if (($pdl->get_datatype == $PDLA_B) || ($pdl->get_datatype == $PDLA_US) || ($type =~ /PBM/));
     $israw = 0 if (defined($raw) && !$raw);
 
 
@@ -279,13 +279,13 @@ sub PDL::wpnm {
     open(STDERR, ">$efile") || barf "Can't redirect stderr";
     my $succeed = open(PNM, $pref . $file);
     # close(STDERR);
-    open(STDERR, ">&PDL::IO::Pnm::SAVEERR");
+    open(STDERR, ">&PDLA::IO::Pnm::SAVEERR");
     rbarf $efile, "Can't open pnm file" unless $succeed;
     binmode PNM;
 
     $max =$pdl->max;
     print "writing ". ($israw ? "raw" : "ascii") .
-      "format with magic $magic\n" if $PDL::debug;
+      "format with magic $magic\n" if $PDLA::debug;
     # write header
     print PNM "$magic\n";
     print PNM "$Dims[-2] $Dims[-1]\n";
@@ -319,7 +319,7 @@ sub PDL::wpnm {
           }
        }
     }
-    pnmout($out,$israw,$type eq "PBM",'PDL::IO::Pnm::PNM');
+    pnmout($out,$israw,$type eq "PBM",'PDLA::IO::Pnm::PNM');
 
     # check if our child returned an error (in case of a pipe)
     if (!(close PNM)) {
@@ -352,8 +352,8 @@ treated ungracefully (C<rpnm> just barfs).
 Copyright (C) 1996,1997 Christian Soeller <c.soeller@auckland.ac.nz>
 All rights reserved. There is no warranty. You are allowed
 to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution,
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
 the copyright notice should be included in the file.
 
 
@@ -372,7 +372,7 @@ pp_def('pnminraw',
 	Code => 'int ms, ns, i,j,k,bit,llen;
 		 PerlIO *fp;
 		 IO *io;
-		 PDL_Byte *buf, *bp;
+		 PDLA_Byte *buf, *bp;
 		 $GENERIC() *gbp;
 
 		 io = GvIO(gv_fetchpv($COMP(fd),FALSE,SVt_PVIO));
@@ -381,7 +381,7 @@ pp_def('pnminraw',
 		 ms = $SIZE(m); ns = $SIZE(n);
 		 llen = ($COMP(isbin) ? ((ms+7) / 8) : (ms * sizeof($GENERIC())));
 		 /* allocate a buffer of length llen */
-		 if ((buf = (PDL_Byte*) malloc(llen*sizeof(PDL_Byte)))
+		 if ((buf = (PDLA_Byte*) malloc(llen*sizeof(PDLA_Byte)))
 		      == NULL)
 			barf("Error getting mem for line buffer");
 		 threadloop %{  /* with top to bottom inversion */
@@ -427,7 +427,7 @@ pp_addhdr(<<'EOH');
 #define PGM 2
 #define PPM 3
 
-int getint(PerlIO *fp, PDL_Long *ip);
+int getint(PerlIO *fp, PDLA_Long *ip);
 
 /* process one input line from an ascii pnm file
  * and store data into a pdl data component
@@ -442,9 +442,9 @@ int getint(PerlIO *fp, PDL_Long *ip);
  */
 #define    TRAILING_WHITESPACE_CHECK(s) \
    if (s!=' ' && s!='\t' && s!='\r' && s!='\n' && s!=',')  return -1
-int getint(PerlIO *fp, PDL_Long *ip)
+int getint(PerlIO *fp, PDLA_Long *ip)
 {
-  PDL_Long i = 0;
+  PDLA_Long i = 0;
   int nread = 0;
   int s = PerlIO_getc(fp);
 
@@ -524,7 +524,7 @@ pp_def( 'pnminascii',
 		case PGM:
 		case PPM:
 		   threadloop %{  /* with top to bottom inversion */
-			PDL_Long j;
+			PDLA_Long j;
 			for (i=ns-1; i>= 0; i--) {
 			  loop(m) %{
 			    if (getint(fp,&j) <= 0)

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-use PDL::LiteF;
-use PDL::Transform;
+use PDLA::LiteF;
+use PDLA::Transform;
 use Test::More tests => 27;
 
 ##############################
@@ -55,7 +55,7 @@ ok(all($b == $a*0.5));
 
 ##############################
 # diab jerius' t_scale crash
-# (this is due to a problem with inplace flag handling in PDL <= 2.6; transform works around it)
+# (this is due to a problem with inplace flag handling in PDLA <= 2.6; transform works around it)
 
 $a = pdl(49,49);
 $t = t_linear({scale=>pdl([1,3]), offset=>pdl([12,8])});
@@ -69,7 +69,7 @@ ok(1);  # still here!
 # bad value handling...
 
 SKIP: {
-    skip "Bad value support not included", 3 if !$PDL::Bad::Status;
+    skip "Bad value support not included", 3 if !$PDLA::Bad::Status;
     $a = sequence(5,5);
     no warnings;
     my $t1 = t_linear(pre=>[1.5,2]);
@@ -87,7 +87,7 @@ SKIP: {
     ok(($b->slice("0")->isbad->all  and  $b->slice(":,0:1")->isbad->all and $b->isbad->sum==13), "Bad values happen with 'h' method"); 
 }
 
-use PDL::IO::FITS;
+use PDLA::IO::FITS;
 my $m51 = rfits('m51.fits');
 my $m51map = $m51->map(t_identity,{method=>'s'}); #SHOULD be a no-op
 ok(all($m51==$m51map));

@@ -1,9 +1,9 @@
-# Tests for a segfault bug in PDL through 2.4.2
+# Tests for a segfault bug in PDLA through 2.4.2
 # (Thanks, Alexey!)
 
 print "1..1\n";
 
-use PDL;
+use PDLA;
 use strict;
 my $x = pdl(1,2);
 my $y = bless \my $z,"ASFG";

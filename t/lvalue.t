@@ -3,11 +3,11 @@ use English;
 
 use Test;
 
-use PDL::LiteF;
-use PDL::Lvalue;
+use PDLA::LiteF;
+use PDLA::Lvalue;
 
 BEGIN { 
-    if ( PDL::Lvalue->subs and !$PERLDB) {
+    if ( PDLA::Lvalue->subs and !$PERLDB) {
 	plan tests => 3;
     } else {
 	plan tests => 1;
@@ -18,7 +18,7 @@ BEGIN {
 
 $| = 1;
 
-ok (PDL::Lvalue->subs('slice'));
+ok (PDLA::Lvalue->subs('slice'));
 
 $a = sequence 10;
 eval '$a->slice("") .= 0';

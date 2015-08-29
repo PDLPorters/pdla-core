@@ -1,28 +1,28 @@
 =head1 NAME
 
-PDL::MATLAB - A guide for MATLAB users.
+PDLA::MATLAB - A guide for MATLAB users.
 
 =head1 INTRODUCTION
 
 If you are a MATLAB user, this page is for you. It explains the key
-differences between MATLAB and PDL to help you get going as quickly
+differences between MATLAB and PDLA to help you get going as quickly
 as possible.
 
-B<This document is not a tutorial>. For that, go to L<PDL::QuickStart|
-PDL::QuickStart>. This document B<complements> the Quick Start guide, as
-it highlights the key differences between MATLAB and PDL.
+B<This document is not a tutorial>. For that, go to L<PDLA::QuickStart|
+PDLA::QuickStart>. This document B<complements> the Quick Start guide, as
+it highlights the key differences between MATLAB and PDLA.
 
 =head1 Perl
 
-The key difference between MATLAB and PDL is B<Perl>.
+The key difference between MATLAB and PDLA is B<Perl>.
 
 Perl is a general purpose programming language with thousands of modules
-freely available on the web. PDL is an extension of Perl. This gives PDL
+freely available on the web. PDLA is an extension of Perl. This gives PDLA
 programs access to more features than most numerical tools can dream of.
-At the same time, most syntax differences between MATLAB and PDL are a
+At the same time, most syntax differences between MATLAB and PDLA are a
 result of its Perl foundation.
 
-B<You do not have to learn much Perl to be effective with PDL>. But
+B<You do not have to learn much Perl to be effective with PDLA>. But
 if you wish to learn Perl, there is excellent documentation available
 on-line (L<http://perldoc.perl.org>) or through the command C<perldoc perl>.
 There is also a beginner's portal (L<http://perl-begin.org>).
@@ -35,7 +35,7 @@ has a vast array of modules. Run C<perldoc cpan> for more information.
 MATLAB typically refers to vectors, matrices, and arrays. Perl already
 has arrays, and the terms "vector" and "matrix" typically refer to one-
 and two-dimensional collections of data. Having no good term to describe
-their object, PDL developers coined the term "I<piddle>" to give a name to
+their object, PDLA developers coined the term "I<piddle>" to give a name to
 their data type.
 
 A I<piddle> consists of a series of numbers organized as an N-dimensional
@@ -46,29 +46,29 @@ For more information, see "B<Piddles vs Perl Arrays>" later in this document.
 
 =head1 COMMAND WINDOW AND IDE
 
-Unlike MATLAB, PDL does not come with a dedicated IDE. It does however
+Unlike MATLAB, PDLA does not come with a dedicated IDE. It does however
 come with an interactive shell and you can use a Perl IDE to develop
-PDL programs.
+PDLA programs.
 
-=head2 PDL interactive shell
+=head2 PDLA interactive shell
 
 To start the interactive shell, open a terminal and run C<perldl> or C<pdl2>.
 As in MATLAB, the interactive shell is the best way to learn the
 language. To exit the shell, type C<exit>, just like MATLAB.
 
-=head2 Writing PDL programs
+=head2 Writing PDLA programs
 
 One popular IDE for Perl is called Padre (L<http://padre.perlide.org>).
 It is cross platform and easy to use.
 
-Whenever you write a stand-alone PDL program (i.e. outside the
-C<perldl> or C<pdl2> shell) you must start the program with C<use PDL;>.
-This command imports the PDL module into Perl. Here is a sample
-PDL program:
+Whenever you write a stand-alone PDLA program (i.e. outside the
+C<perldl> or C<pdl2> shell) you must start the program with C<use PDLA;>.
+This command imports the PDLA module into Perl. Here is a sample
+PDLA program:
 
-  use PDL;             # Import main PDL module.
-  use PDL::NiceSlice;  # Import additional PDL module.
-  use PDL::AutoLoader; # Import additional PDL module.
+  use PDLA;             # Import main PDLA module.
+  use PDLA::NiceSlice;  # Import additional PDLA module.
+  use PDLA::AutoLoader; # Import additional PDLA module.
   
   $b = pdl [2,3,4];              # Statements end in semicolon.
   $A = pdl [ [1,2,3],[4,5,6] ];  # 2-dimensional matrix.
@@ -81,7 +81,7 @@ Save this file as C<myprogram.pl> and run it with:
 
 =head2 New: Flexible syntax
 
-In current versions of PDL (version 2.4.7 or later) there is
+In current versions of PDLA (version 2.4.7 or later) there is
 a flexible matrix syntax that can look extremely similar to MATLAB:
 
 1) Use a ';' to delimit rows:
@@ -96,7 +96,7 @@ a flexible matrix syntax that can look extremely similar to MATLAB:
 
 
 Basically, as long as you put a C<q> in front of the opening bracket,
-PDL should "do what you mean". So you can write in a syntax that is
+PDLA should "do what you mean". So you can write in a syntax that is
 more comfortable for you.
 
 
@@ -106,24 +106,24 @@ There are two modules that MATLAB users will want to use:
 
 =over 5
 
-=item L<PDL::NiceSlice|PDL::NiceSlice>
+=item L<PDLA::NiceSlice|PDLA::NiceSlice>
 
-Gives PDL a syntax for slices (sub-matrices) that is shorter and
+Gives PDLA a syntax for slices (sub-matrices) that is shorter and
 more familiar to MATLAB users.
 
   % MATLAB
   b(1:5)            -->  Selects the first 5 elements from b.
   
-  # PDL without NiceSlice
+  # PDLA without NiceSlice
   $b->slice("0:4")  -->  Selects the first 5 elements from $b.
   
-  # PDL with NiceSlice
+  # PDLA with NiceSlice
   $b(0:4)           -->  Selects the first 5 elements from $b.
 
-=item L<PDL::AutoLoader|PDL::AutoLoader>
+=item L<PDLA::AutoLoader|PDLA::AutoLoader>
 
-Provides a MATLAB-style autoloader for PDL. If an unknown function
-C<foo()> is called, PDL looks for a file called C<foo.pdl>. If it
+Provides a MATLAB-style autoloader for PDLA. If an unknown function
+C<foo()> is called, PDLA looks for a file called C<foo.pdl>. If it
 finds one, it reads it.
 
 =back
@@ -132,7 +132,7 @@ finds one, it reads it.
 
 =head1 BASIC FEATURES
 
-This section explains how PDL's syntax differs from MATLAB. Most
+This section explains how PDLA's syntax differs from MATLAB. Most
 MATLAB users will want to start here.
 
 
@@ -142,13 +142,13 @@ MATLAB users will want to start here.
 
 =item Indices
 
-In PDL, indices start at '0' (like C and Java), not 1 (like MATLAB or FORTRAN).
+In PDLA, indices start at '0' (like C and Java), not 1 (like MATLAB or FORTRAN).
 For example, if C<$b> is an array with 5 elements, the elements would be
 numbered from 0 to 4.
 
 =item Displaying an object
 
-MATLAB normally displays object contents automatically. In the PDL shells you
+MATLAB normally displays object contents automatically. In the PDLA shells you
 display objects explicitly with the C<print> command or the shortcut C<p>:
 
 MATLAB:
@@ -158,7 +158,7 @@ MATLAB:
  >> b = 23;       % Suppress output.
  >> 
 
-PDL Shell (perldl or pdl2):
+PDLA Shell (perldl or pdl2):
 
  pdl> $a = 12    # No output.
  pdl> print $a   # Print object.
@@ -176,7 +176,7 @@ PDL Shell (perldl or pdl2):
 
 =over 5
 
-=item Variables in PDL
+=item Variables in PDLA
 
 Variables always start with the '$' sign.
 
@@ -195,14 +195,14 @@ Use the "pdl" constructor to create a new I<piddle>.
 
 =item Simple matrices
 
-                      MATLAB       PDL
+                      MATLAB       PDLA
                       ------       ------
   Matrix of ones      ones(5)      ones 5,5
   Matrix of zeros     zeros(5)     zeros 5,5
   Random matrix       rand(5)      random 5,5
   Linear vector       1:5          sequence 5
 
-Notice that in PDL the parenthesis in a function call are often optional.
+Notice that in PDLA the parenthesis in a function call are often optional.
 It is important to keep an eye out for possible ambiguities. For example:
 
   pdl> p zeros 2, 2 + 2
@@ -237,7 +237,7 @@ to use parentheses to make your code unambiguous.
 B<Explanation>: Start with a 1-dimensional piddle of 5 elements and give
 it equally spaced values from 2 to 10.
 
-MATLAB has a single function call for this. On the other hand, PDL's
+MATLAB has a single function call for this. On the other hand, PDLA's
 method is more flexible:
 
   pdl> p zeros(5,5)->xlinvals(2,10)
@@ -278,12 +278,12 @@ method is more flexible:
 =item Slicing and indices
 
 Extracting a subset from a collection of data is known as I<slicing>.
-PDL and MATLAB have a similar syntax for slicing, but there are two
+PDLA and MATLAB have a similar syntax for slicing, but there are two
 important differences:
 
-1) PDL indices start at 0, as in C and Java. MATLAB starts indices at 1.
+1) PDLA indices start at 0, as in C and Java. MATLAB starts indices at 1.
 
-2) In MATLAB you think "rows and columns". In PDL, think "x and y".
+2) In MATLAB you think "rows and columns". In PDLA, think "x and y".
 
   MATLAB                         PerlDL
   ------                         ------
@@ -311,13 +311,13 @@ important differences:
 
 =item B<Warning>
 
-When you write a stand-alone PDL program you have
-to include the L<PDL::NiceSlice|PDL::NiceSlice> module. See the
+When you write a stand-alone PDLA program you have
+to include the L<PDLA::NiceSlice|PDLA::NiceSlice> module. See the
 previous section "B<MODULES FOR MATLAB USERS>" for more information.
 
-  use PDL;             # Import main PDL module.
-  use PDL::NiceSlice;  # Nice syntax for slicing.
-  use PDL::AutoLoader; # MATLAB-like autoloader.
+  use PDLA;             # Import main PDLA module.
+  use PDLA::NiceSlice;  # Nice syntax for slicing.
+  use PDLA::AutoLoader; # MATLAB-like autoloader.
   
   $A = random 4,4;
   print $A(0,1);
@@ -354,7 +354,7 @@ previous section "B<MODULES FOR MATLAB USERS>" for more information.
 
 Some functions (like C<sum>, C<max> and C<min>) aggregate data
 for an N-dimensional data set. This is a place where MATLAB and
-PDL take a different approach:
+PDLA take a different approach:
 
 =over 10
 
@@ -378,7 +378,7 @@ C<A(:)> notation which basically turns the entire data set into a single
   >> max(A(:))
   ans = 1
 
-=item PDL offers two functions for each feature.
+=item PDLA offers two functions for each feature.
 
   sum   vs   sumover
   avg   vs   average
@@ -411,24 +411,24 @@ works over the entire piddle.
 
 =item B<Note>
 
-Notice that PDL aggregates horizontally while MATLAB aggregates
+Notice that PDLA aggregates horizontally while MATLAB aggregates
 vertically. In other words:
 
   MATLAB              PerlDL
   max(A)       ==     $A->transpose->maximum
   max(A')      ==     $A->maximum
 
-B<TIP>: In MATLAB you think "rows and columns". In PDL, think "x and y".
+B<TIP>: In MATLAB you think "rows and columns". In PDLA, think "x and y".
 
 =back
 
 =head2 Higher dimensional data sets
 
-A related issue is how MATLAB and PDL understand data sets of higher
+A related issue is how MATLAB and PDLA understand data sets of higher
 dimension. MATLAB was designed for 1D vectors and 2D matrices. Higher
-dimensional objects ("N-D arrays") were added on top. In contrast, PDL
+dimensional objects ("N-D arrays") were added on top. In contrast, PDLA
 was designed for N-dimensional piddles from the start. This leads to
-a few surprises in MATLAB that don't occur in PDL:
+a few surprises in MATLAB that don't occur in PDLA:
 
 =over 5
 
@@ -440,7 +440,7 @@ a few surprises in MATLAB that don't occur in PDL:
   >> size(vector)              pdl> p $vector->dims
   ans = 1 4                    4
 
-MATLAB sees C<[1,2,3,4]> as a 2D matrix (1x4 matrix). PDL sees it
+MATLAB sees C<[1,2,3,4]> as a 2D matrix (1x4 matrix). PDLA sees it
 as a 1D vector: A single dimension of size 4.
 
 =item But MATLAB ignores the last dimension of a 4x1x1 matrix.
@@ -468,7 +468,7 @@ as a 1D vector: A single dimension of size 4.
 =item Feature support.
 
 In MATLAB, several features such as sparse matrix support are not
-available for N-D arrays. In PDL, just about any feature supported by
+available for N-D arrays. In PDLA, just about any feature supported by
 1D and 2D piddles, is equally supported by N-dimensional piddles.
 There is usually no distinction.
 
@@ -492,10 +492,10 @@ is most familiar to MATLAB users:
 
 Never use for-loops for numerical work. Perl's for-loops are faster
 than MATLAB's, but they both pale against a "vectorized" operation.
-PDL has many tools that facilitate writing vectorized programs.
+PDLA has many tools that facilitate writing vectorized programs.
 These are beyond the scope of this guide. To learn more, see:
-L<PDL::Indexing|PDL::Indexing>, L<PDL::Threading|PDL::Threading>,
-and L<PDL::PP|PDL::PP>.
+L<PDLA::Indexing|PDLA::Indexing>, L<PDLA::Threading|PDLA::Threading>,
+and L<PDLA::PP|PDLA::PP>.
 
 Likewise, never use C<1..10> for numerical work, even outside a for-loop.
 C<1..10> is a Perl array. Perl arrays are designed for flexibility, not
@@ -560,7 +560,7 @@ your C<elsif>'s correctly.
 
 =head2 TIMTOWDI (There Is More Than One Way To Do It)
 
-One of the most interesting differences between PDL and other tools
+One of the most interesting differences between PDLA and other tools
 is the expressiveness of the Perl language. TIMTOWDI, or "There Is
 More Than One Way To Do It", is Perl's motto.
 
@@ -612,7 +612,7 @@ languages.
 
 =head2 Functions
 
-PDL's syntax for declaring functions differs significantly from MATLAB's.
+PDLA's syntax for declaring functions differs significantly from MATLAB's.
 
   MATLAB                          PerlDL
   ------                          ------
@@ -622,7 +622,7 @@ PDL's syntax for declaring functions differs significantly from MATLAB's.
                                   }
 
 Don't be intimidated by all the new syntax. Here is a quick run through
-a function declaration in PDL:
+a function declaration in PDLA:
 
 1) "B<sub>" stands for "subroutine".
 
@@ -662,10 +662,10 @@ So, in the previous examples:
 
 To read data files containing whitespace separated columns of
 numbers (as would be read using the MATLAB I<load> command)
-one uses the PDL I<rcols> in L<PDL::IO::Misc>.  For a general
-review of the IO functionality available in PDL, see the
-documentation for L<PDL::IO>, e.g., C<help PDL::IO> in the I<pdl2>
-shell or C< pdldoc PDL::IO > from the shell command line.
+one uses the PDLA I<rcols> in L<PDLA::IO::Misc>.  For a general
+review of the IO functionality available in PDLA, see the
+documentation for L<PDLA::IO>, e.g., C<help PDLA::IO> in the I<pdl2>
+shell or C< pdldoc PDLA::IO > from the shell command line.
 
 =head2 Data structures
 
@@ -737,13 +737,13 @@ or run the command C<perldoc perldata>.>
 
 =head2 Performance
 
-PDL has powerful performance features, some of which are not normally
+PDLA has powerful performance features, some of which are not normally
 available in numerical computation tools. The following pages will guide
 you through these features:
 
 =over 5
 
-=item L<PDL::Indexing|PDL::Indexing>
+=item L<PDLA::Indexing|PDLA::Indexing>
 
 B<Level>: Beginner
 
@@ -751,11 +751,11 @@ This beginner tutorial covers the standard "vectorization" feature that
 you already know from MATLAB. Use this page to learn how to avoid for-loops
 to make your program more efficient.
 
-=item L<PDL::Threading|PDL::Threading>
+=item L<PDLA::Threading|PDLA::Threading>
 
 B<Level>: Intermediate
 
-PDL's "vectorization" feature goes beyond what most numerical software
+PDLA's "vectorization" feature goes beyond what most numerical software
 can do. In this tutorial you'll learn how to "thread" over higher dimensions,
 allowing you to vectorize your program further than is possible in MATLAB.
 
@@ -770,13 +770,13 @@ tool to help you focus your optimization efforts. You can read about it
 online (L<http://perldoc.perl.org/Benchmark.html>) or through the
 command C<perldoc Benchmark>.
 
-=item L<PDL::PP|PDL::PP>
+=item L<PDLA::PP|PDLA::PP>
 
 B<Level>: Advanced
 
-PDL's Pre-Processor is one of PDL's most powerful features. You
+PDLA's Pre-Processor is one of PDLA's most powerful features. You
 write a function definition in special markup and the pre-processor
-generates real C code which can be compiled. With PDL:PP
+generates real C code which can be compiled. With PDLA:PP
 you get the full speed of native C code without having to deal with
 the full complexity of the C language.
 
@@ -786,14 +786,14 @@ the full complexity of the C language.
 
 =head2 Plotting
 
-PDL has full-featured plotting abilities. Unlike MATLAB, PDL relies more on
+PDLA has full-featured plotting abilities. Unlike MATLAB, PDLA relies more on
 third-party libraries (pgplot and PLplot) for its 2D plotting features.
 Its 3D plotting and graphics uses OpenGL for performance and portability.
-PDL has three main plotting modules:
+PDLA has three main plotting modules:
 
 =over 5
 
-=item L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT>
+=item L<PDLA::Graphics::PGPLOT|PDLA::Graphics::PGPLOT>
 
 B<Best for>: Plotting 2D functions and data sets.
 
@@ -804,7 +804,7 @@ compared to newer packages such as PLplot (e.g. no RGB graphics).
 But it has many features that still make it popular in the scientific
 community.
 
-=item L<PDL::Graphics::PLplot|PDL::Graphics::PLplot>
+=item L<PDLA::Graphics::PLplot|PDLA::Graphics::PLplot>
 
 B<Best for>: Plotting 2D functions as well as 2D and 3D data sets.
 
@@ -814,11 +814,11 @@ It supports plots of both 2D and 3D data sets. PLplot is best
 supported for unix/linux/macosx platforms. It has an active
 developers community and support for win32 platforms is improving.
 
-=item L<PDL::Graphics::TriD|PDL::Graphics::TriD>
+=item L<PDLA::Graphics::TriD|PDLA::Graphics::TriD>
 
 B<Best for>: Plotting 3D functions.
 
-The native PDL 3D graphics library using OpenGL as a backend
+The native PDLA 3D graphics library using OpenGL as a backend
 for 3D plots and data visualization. With OpenGL, it is easy
 to manipulate the resulting 3D objects with the mouse in real
 time.
@@ -828,7 +828,7 @@ time.
 
 =head2 Writing GUIs
 
-Through Perl, PDL has access to all the major toolkits for creating
+Through Perl, PDLA has access to all the major toolkits for creating
 a cross platform graphical user interface. One popular option is
 wxPerl (L<http://wxperl.sourceforge.net>). These are the Perl bindings
 for wxWidgets, a powerful GUI toolkit for writing cross-platform
@@ -843,13 +843,13 @@ IDE B<Padre> is written with wxPerl.
 
 Simulink is a graphical dynamical system modeler and simulator. It
 can be purchased separately as an add-on to MATLAB.
-PDL and Perl do not have a direct equivalent to MATLAB's Simulink.
+PDLA and Perl do not have a direct equivalent to MATLAB's Simulink.
 If this feature is important to you, then take a look at B<Scilab>:
 
 L<http://www.scilab.org>
 
-Scilab is another numerical analysis software. Like PDL, it is free
-and open source. It doesn't have PDL's unique features, but it is
+Scilab is another numerical analysis software. Like PDLA, it is free
+and open source. It doesn't have PDLA's unique features, but it is
 very similar to MATLAB. Scilab comes with B<Xcos> (previously Scicos),
 a graphical system modeler and simulator similar to Simulink.
 

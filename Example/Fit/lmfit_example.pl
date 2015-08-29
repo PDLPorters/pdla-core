@@ -1,6 +1,6 @@
-use PDL;
-use PDL::Math;
-use PDL::Fit::LM;
+use PDLA;
+use PDLA::Math;
+use PDLA::Fit::LM;
 use strict;
 
 

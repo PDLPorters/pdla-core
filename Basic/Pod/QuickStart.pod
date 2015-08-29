@@ -1,11 +1,11 @@
 
 =head1 NAME
 
-PDL::QuickStart - Quick introduction to PDL features.
+PDLA::QuickStart - Quick introduction to PDLA features.
 
 =head1 SYNOPSIS
 
-A brief summary of the main PDL features and how to use them.
+A brief summary of the main PDLA features and how to use them.
 
 =head1 DESCRIPTION
 
@@ -20,28 +20,28 @@ it simply users can define their own special data types, and write
 custom routines to manipulate them either in low level languages (C and
 Fortran) or in Perl itself.
 
-This has been fully exploited by the PerlDL developers. The 'PDL' module is a
+This has been fully exploited by the PerlDL developers. The 'PDLA' module is a
 complete Object-Oriented extension to Perl (although you don't have to know
 what an object is to use it) which allows large N-dimensional data sets, such
 as large images, spectra, time series, etc to be stored  B<efficiently> and
-manipulated B<en masse>.  For example  with the PDL module we can write the
+manipulated B<en masse>.  For example  with the PDLA module we can write the
 Perl code C<$a = $b + $c>, where C<$b> and C<$c> are large datasets
 (e.g. 2048x2048 images), and get the result in only a fraction of a second.
 
-PDL variables (or 'piddles' as they have come to be known)
+PDLA variables (or 'piddles' as they have come to be known)
 support a wide range of fundamental data types - arrays can be bytes,
 short integers (signed or unsigned), long integers, floats or
 double precision floats. And because of the Object-Oriented nature
-of PDL new customised datatypes can be derived from them.
+of PDLA new customised datatypes can be derived from them.
 
-As well as the PDL modules, that can be used by normal Perl programs, PerlDL
+As well as the PDLA modules, that can be used by normal Perl programs, PerlDL
 comes with a command line Perl shell, called 'perldl', which supports command
-line editing. In combination with the various PDL graphics modules this allows
+line editing. In combination with the various PDLA graphics modules this allows
 data to be easily played with and visualised.
 
 =head2 Help
 
-PDL contains extensive documentation, available both within the
+PDLA contains extensive documentation, available both within the
 I<perldl> or I<pdl2> shells and from the command line, using the C<pdldoc> program.
 For further information try either of:
 
@@ -51,9 +51,9 @@ For further information try either of:
 HTML copies of the documentation should also be available. 
 To find their location, try the following:
 
- pdl> foreach ( map{"$_/PDL/HtmlDocs"}@INC ) { p "$_\n" if -d $_ }  
+ pdl> foreach ( map{"$_/PDLA/HtmlDocs"}@INC ) { p "$_\n" if -d $_ }  
 
-=head2 Perl Datatypes and how PDL extends them
+=head2 Perl Datatypes and how PDLA extends them
 
 The fundamental Perl data structures are scalar variables, e.g. C<$x>,
 which can hold numbers or strings, lists or arrays of scalars, e.g. C<@x>,
@@ -84,7 +84,7 @@ of this is that for simple operations (e.g. C<$x += 2>) one can manipulate
 the whole array without caring about its dimensionality.
 
 I find when using perlDL it is most useful to think of standard Perl
-C<@x> variables as "lists" of generic "things" and PDL variables like
+C<@x> variables as "lists" of generic "things" and PDLA variables like
 C<$x> as "arrays" which can be contained in lists or hashes. Quite
 often in my perlDL scripts I have C<@x> contain a list of spectra, or a
 list of images (or even a mix!). Or perhaps one could have a hash
@@ -98,31 +98,31 @@ double precision floats.
 
 PerlDL is loaded into your Perl script using this command:
 
- use PDL;  # in Perl scripts: use the standard perlDL modules
+ use PDLA;  # in Perl scripts: use the standard perlDL modules
 
 There are also a lot of extension modules, e.g. 
-L<PDL::Graphics::TriD|PDL::Graphics::TriD>. 
+L<PDLA::Graphics::TriD|PDLA::Graphics::TriD>. 
 Most of these (but not all as sometimes it is not appropriate) follow
 a standard convention. If you say:
 
- use PDL::Graphics::TriD;
+ use PDLA::Graphics::TriD;
 
 You import everything in a standard list from the module. Sometimes
 you might want to import nothing (e.g. if you want to use OO syntax
 all the time and save the import tax). For these you say:
 
- use PDL::Graphics::TriD qw();
+ use PDLA::Graphics::TriD qw();
 
 And the empty C<qw()>  quotes are recognised as meaning 'nothing'.
 You can also specify a list of functions to import in the normal
 Perl way.
 
 There is also an interactive shell, C<perldl> or C<pdl2>, see I<perldl>
-or L<pdl2|PDL::Perldl2> for details.
+or L<pdl2|PDLA::Perldl2> for details.
 
-=head2 To create a new PDL variable
+=head2 To create a new PDLA variable
 
-Here are some ways of creating a PDL variable:
+Here are some ways of creating a PDLA variable:
 
  $a = pdl [1..10];             # 1D array
  $a = pdl (1,2,3,4);           # Ditto
@@ -130,10 +130,10 @@ Here are some ways of creating a PDL variable:
  $b = pdl [[1,2,3],[4,5,6]];   # 2D 3x2 array
  $b = pdl '[1 2 3; 4 5 6]';    # Ditto
  $b = pdl q[1,2,3; 4,5,6];     # Ditto
- $b = pdl <<NEWPDL             # Ditto
+ $b = pdl <<NEWPDLA             # Ditto
    [1 2 3]
    [4 5 6]
- NEWPDL
+ NEWPDLA
  $c = pdl q[1 -2];             # 2-element piddle containing 1 and -2
  $c = pdl q[1 - 2];            # 2-element piddle containing 1 and -2
  $b = pdl 42                   # 0-dimensional scalar
@@ -144,13 +144,13 @@ Here are some ways of creating a PDL variable:
  
  $c = rfits $file;             # Read FITS file
  
- @x = ( pdl(42), zeroes(3,2,4), rfits($file) ); # Is a LIST of PDL variables!
+ @x = ( pdl(42), zeroes(3,2,4), rfits($file) ); # Is a LIST of PDLA variables!
 
-The L<pdl()|PDL::Core/pdl> function is used to initialise a PDL variable from a scalar,
-list, list reference, another PDL variable, or a properly formatted string.
+The L<pdl()|PDLA::Core/pdl> function is used to initialise a PDLA variable from a scalar,
+list, list reference, another PDLA variable, or a properly formatted string.
 
-In addition all PDL functions automatically convert normal Perl scalars
-to PDL variables on-the-fly.
+In addition all PDLA functions automatically convert normal Perl scalars
+to PDLA variables on-the-fly.
 
 (also see "Type Conversion" and "Input/Output" sections below)
 
@@ -187,14 +187,14 @@ piddles. Therefore, the following will raise an error
  print "is ok" if $a > 3;
 
 since C<$a E<gt> 3> is a piddle with 4 elements. Rather use 
-L<all|PDL::Ufunc/all> or L<any|PDL::Ufunc/any>
+L<all|PDLA::Ufunc/all> or L<any|PDLA::Ufunc/any>
 to test if all or any of the elements fulfill the condition:
 
  print "some are > 3" if any $a>3;
  print "can't take logarithm" unless all $a>0;
 
 There are also many predefined functions, which are described on other
-man pages. Check L<PDL::Index>.
+man pages. Check L<PDLA::Index>.
 
 =head2 Matrix functions
 
@@ -219,7 +219,7 @@ e.g.:
              [ 2  2]
             ]
 
-Note: L<transpose()|PDL::Basic/transpose> 
+Note: L<transpose()|PDLA::Basic/transpose> 
 does what it says and is a convenient way
 to turn row vectors into column vectors.
 
@@ -232,11 +232,11 @@ to turn row vectors into column vectors.
  1;
 
 If put in file dotproduct.pdl would be autoloaded if you
-are using L<PDL::AutoLoader|PDL::AutoLoader> (see below).
+are using L<PDLA::AutoLoader|PDLA::AutoLoader> (see below).
 
 Of course, this function is already available as the 
-L<inner|PDL::Primitive/inner>
-function, see L<PDL::Primitive>.
+L<inner|PDLA::Primitive/inner>
+function, see L<PDLA::Primitive>.
 
 =head2 Type Conversion
 
@@ -249,7 +249,7 @@ Default for pdl() is double. Conversions are:
 Also double(), short(), ushort(), indx().  
 
   NOTE: The indx() routine is a special integer type that
-  is the correct size for a PDL index value (dimension size,
+  is the correct size for a PDLA index value (dimension size,
   index, or offest) which can be either a 32bit (long) or
   64bit (longlong) quantity depending on whether the perl
   is built with 32bit or 64bit support.
@@ -272,13 +272,13 @@ Automatically expands array in N-dimensional format:
 
 =head2 Sections
 
-PDL has very powerful multidimensional slicing and sectioning
-operators; see L<the PDL::Slices(3) man page|PDL::Slices> for details;
+PDLA has very powerful multidimensional slicing and sectioning
+operators; see L<the PDLA::Slices(3) man page|PDLA::Slices> for details;
 we'll describe the most important one here.
 
-PDL shows its Perl/C heritage in that arrays are zero-offset.  Thus a
+PDLA shows its Perl/C heritage in that arrays are zero-offset.  Thus a
 100x100 image has indices C<0..99,0..99>.  (The convention is that the
-I<center> of pixel (0,0) is at coordinate (0.0,0.0). All PDL graphics
+I<center> of pixel (0,0) is at coordinate (0.0,0.0). All PDLA graphics
 functions conform to this definition and hide away the unit offsets
 of, for example, the PGPLOT FORTRAN library.
 
@@ -287,8 +287,8 @@ at the bottom left when displaying an image. It appears at the
 top left when using "C<print $a>" etc.
 
 Simple sectioning uses a syntax extension to Perl,
-L<PDL::NiceSlice|PDL::NiceSlice>, that allows you to specify subranges
-via a null-method modifier to a PDL:
+L<PDLA::NiceSlice|PDLA::NiceSlice>, that allows you to specify subranges
+via a null-method modifier to a PDLA:
 
   $b = $a->($x1:$x2,$y1:$y2,($z1)); # Take subsection
 
@@ -297,7 +297,7 @@ cutout that is defined by the limits $x1, $x2, $y1, $y2, at the location
 $z1.  The parenthesis around C<$z1> cause the trivial index to be omitted --
 otherwise C<$b> would be three-dimensional with a third dimension of order 1.
 
-You can put PDL slices on either side of the element-wise assignment 
+You can put PDLA slices on either side of the element-wise assignment 
 operator C<.=>, like so:
 
   # Set part of $bigimage to values from $smallimage
@@ -316,36 +316,36 @@ Some other miscellany:
 
 =head2 Input/Output
 
-The C<PDL::IO> modules implement several useful IO format functions.
+The C<PDLA::IO> modules implement several useful IO format functions.
 It would be too much to give examples of each, but you can find a nice
-overview at L<PDL::IO|PDL::IO>. Here is a sample of some of the
-supported IO formats in PDL.
+overview at L<PDLA::IO|PDLA::IO>. Here is a sample of some of the
+supported IO formats in PDLA.
 
 =over 8
 
-=item PDL::IO::Misc
+=item PDLA::IO::Misc
 
 Ascii, FITS and FIGARO/NDF IO routines.
 
-=item PDL::IO::FastRaw
+=item PDLA::IO::FastRaw
 
 Using the raw data types of your machine, an unportable but blindingly
 fast IO format. Also supports memory mapping to conserve memory as
 well as get more speed.
 
-=item PDL::IO::FlexRaw
+=item PDLA::IO::FlexRaw
 
 General raw data formats. Like FastRaw, only better.
 
-=item PDL::IO::Browser
+=item PDLA::IO::Browser
 
 A Curses browser for arrays.
 
-=item PDL::IO::Pnm
+=item PDLA::IO::Pnm
 
 Portaple bitmap and pixmap support.
 
-=item PDL::IO::Pic
+=item PDLA::IO::Pic
 
 Using the previous module and netpbm, makes it possible to easily
 write GIF, jpeg and whatever with simple commands.
@@ -359,60 +359,60 @@ existing graphics libraries since no single package will satisfy all
 needs and all people and this allows one to work with packages one
 already knows and likes.  Obviously there will be some overlaps in
 functionality and some lack of consistency and uniformity. However
-this allows PDL to keep up with a rapidly developing field - the
-latest PDL modules provide interfaces to OpenGL and VRML graphics!
+this allows PDLA to keep up with a rapidly developing field - the
+latest PDLA modules provide interfaces to OpenGL and VRML graphics!
 
 =over 4
 
-=item PDL::Graphics::PGPLOT
+=item PDLA::Graphics::PGPLOT
 
 PGPLOT provides a simple library for line graphics and image display.
 
 There is an easy interface to this in the internal module
-L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT>, which
+L<PDLA::Graphics::PGPLOT|PDLA::Graphics::PGPLOT>, which
 calls routines in the separately available
 PGPLOT top-level module.
 
-=item PDL::Graphics::PLplot
+=item PDLA::Graphics::PLplot
 
 PLplot provides a simple library for creating graphics with multiple
 output drivers, including a direct-to-piddle driver.
 
 This module provides both high-level and low-level functionality built
 on PLplot. The low-level commands are pretty much direct bindings to
-PLplot's C interface. Read more at L<PDL::Graphics::PLplot|PDL::Graphics::PLplot>.
+PLplot's C interface. Read more at L<PDLA::Graphics::PLplot|PDLA::Graphics::PLplot>.
 
-=item PDL::Graphics::IIS
+=item PDLA::Graphics::IIS
 
 Many astronomers like to use SAOimage and Ximtool (or there
 derivations/clones). These are useful free widgets for inspection and
 visualisation of images. (They are not provided with perlDL but can
 easily be obtained from their official sites off the Net.)
 
-The L<PDL::Graphics::IIS|PDL::Graphics::IIS> 
+The L<PDLA::Graphics::IIS|PDLA::Graphics::IIS> 
 package provides allows one to display images
 in these ("IIS" is the name of an ancient item of image display
 hardware whose protocols these tools conform to.)
 
-=item PDL::Graphics::TriD
+=item PDLA::Graphics::TriD
 
-See L<PDL::Graphics::TriD|PDL::Graphics::TriD>, this is a collection
+See L<PDLA::Graphics::TriD|PDLA::Graphics::TriD>, this is a collection
 of 3D routines for OpenGL and (soon) VRML and other 3D formats which
-allow 3D point, line, and surface plots from PDL.
+allow 3D point, line, and surface plots from PDLA.
 
 =back
 
 =head2 Autoloading
 
-See L<PDL::AutoLoader>. This allows one to autoload functions
+See L<PDLA::AutoLoader>. This allows one to autoload functions
 on demand, in a way perhaps familiar to users of MatLab.
 
-One can also write PDL extensions as normal Perl modules.
+One can also write PDLA extensions as normal Perl modules.
 
-=head2 PDL shells
+=head2 PDLA shells
 
 The Perl script C<pdl2> (or C<perldl>) provides a simple command line interface
-to PDL.  If the latest Readlines/ReadKey modules have been installed C<pdl2>
+to PDLA.  If the latest Readlines/ReadKey modules have been installed C<pdl2>
 detects this and enables command line recall and editing.
 See the man page for details.
 
@@ -420,27 +420,27 @@ e.g.:
 
  % perldl
  perlDL shell v1.354
-  PDL comes with ABSOLUTELY NO WARRANTY. For details, see the file
-  'COPYING' in the PDL distribution. This is free software and you
+  PDLA comes with ABSOLUTELY NO WARRANTY. For details, see the file
+  'COPYING' in the PDLA distribution. This is free software and you
   are welcome to redistribute it under certain conditions, see
   the same file for details.
  ReadLines, NiceSlice, MultiLines  enabled
- Reading PDL/default.perldlrc...
- Found docs database /home/pdl/dev/lib/perl5/site_perl/PDL/pdldoc.db
+ Reading PDLA/default.perldlrc...
+ Found docs database /home/pdl/dev/lib/perl5/site_perl/PDLA/pdldoc.db
  Type 'help' for online help
  Type 'demo' for online demos
- Loaded PDL v2.4.9_003 (supports bad values)
+ Loaded PDLA v2.4.9_003 (supports bad values)
  pdl> $x = rfits 'm51.fits'
  Reading IMAGE data...
  BITPIX =  32  size = 147456 pixels 
  Reading  589824  bytes
  BSCALE =  &&  BZERO = 
 
- pdl> use PDL::Graphics::PGPLOT;
+ pdl> use PDLA::Graphics::PGPLOT;
  pdl> imag $x
  Displaying 384 x 384 image from 40 to 761, using 84 colors (16-99)...
 
-You can also run it from the Perl debugger (C<perl -MPDL -d -e 1>)
+You can also run it from the Perl debugger (C<perl -MPDLA -d -e 1>)
 if you want.
 
 Miscellaneous shell features:
@@ -462,11 +462,11 @@ The shell aliases C<p> to be a convenient short form of C<print>, e.g.
 
 The files C<~/.perldlrc> and C<local.perldlrc> (in the current
 directory) are sourced if found. This allows the user to have global
-and local PDL code for startup.
+and local PDLA code for startup.
 
 =item Help
 
-Type 'help'! One can search the PDL documentation, and look up documentation
+Type 'help'! One can search the PDLA documentation, and look up documentation
 on any function.
 
 =item Escape
@@ -480,7 +480,7 @@ C<$PERLDL_ESCAPE>. This could, for example, be set in C<~/.perldlrc>.
 =head2 Overload operators
 
 The following builtin Perl operators and functions have been overloaded
-to work on PDL variables:
+to work on PDLA variables:
 
  + - * / > < >= <= << >> & | ^ == != <=> ** % ! ~
  sin log abs atan2 sqrt cos exp
@@ -490,15 +490,15 @@ to work on PDL variables:
 
 =head2 Object-Orientation and perlDL
 
-PDL operations are available as functions and methods.
+PDLA operations are available as functions and methods.
 Thus one can derive new types of object, to represent
 custom data classes.
 
 By using overloading one can make mathematical operators
-do whatever you please, and PDL has some built-in tricks
-which allow existing PDL functions to work unchanged, even
+do whatever you please, and PDLA has some built-in tricks
+which allow existing PDLA functions to work unchanged, even
 if the underlying data representation is vastly changed!
-See L<PDL::Objects>
+See L<PDLA::Objects>
 
 =head2 Memory usage and references
 
@@ -563,7 +563,7 @@ Most functions, e.g. C<log()>, return a result which is a transformation
 of their argument. This makes for good programming practice. However many
 operations can be done "in-place" and this may be required when large
 arrays are in use and memory is at a premium. For these circumstances
-the operator L<inplace()|PDL::Core/inplace> 
+the operator L<inplace()|PDLA::Core/inplace> 
 is provided which prevents the extra copy and
 allows the argument to be modified. e.g.:
 
@@ -596,8 +596,8 @@ Type conversions, such asC<float()>, may cause hidden copying.
 
 If you have written a simple function and
 you don't want it to blow up in your face if you pass it a simple
-number rather than a PDL variable. Simply call the function
-L<topdl()|PDL::Core/topdl> first to make it safe. e.g.:
+number rather than a PDLA variable. Simply call the function
+L<topdl()|PDLA::Core/topdl> first to make it safe. e.g.:
 
  sub myfiddle { my $pdl = topdl(shift); $pdl->fiddle_foo(...); ... }
 

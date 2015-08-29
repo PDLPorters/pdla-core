@@ -3,7 +3,7 @@
 
 int main() {
 	pdl *bar;
-	pdl *foo = pdl_create(PDL_PERM);
+	pdl *foo = pdl_create(PDLA_PERM);
 	int inds[2] = {1,1};
 	pdl_dump(foo);
 

@@ -43,7 +43,7 @@ undef &MY::processPL; *MY::processPL = sub {
     join "", @m;
 };
 
-WriteMakefile(NAME => "PDL::PP",
+WriteMakefile(NAME => "PDLA::PP",
 	PM => {@pms},
 	'EXE_FILES' => ['pptemplate'],
 	clean => {FILES => "PP/Dump.pm PP/Dump.pm.tmp pptemplate.pod"},

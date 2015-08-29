@@ -1,6 +1,6 @@
 =head1 NAME
 
-PDL::Objects -- Object-Orientation, what is it and how to exploit it
+PDLA::Objects -- Object-Orientation, what is it and how to exploit it
 
 =head1 DESCRIPTION
 
@@ -15,45 +15,45 @@ like
 
 	$piddle->something()
 
-but don't want to mess up the PDL namespace (a worthy goal, indeed!).
+but don't want to mess up the PDLA namespace (a worthy goal, indeed!).
 The other is that you wish to provide special handling of some functions
 or more information about the data the piddle contains.
 In the first case, you can do with
 
 	package BAR;
-	@ISA=qw/PDL/;
+	@ISA=qw/PDLA/;
 	sub foo {my($this) = @_; fiddle;}
 
 	package main;
-	$a = PDL::pdl(BAR,5);
+	$a = PDLA::pdl(BAR,5);
 	$a->foo();
 
-However, because a PDL object is an opaque reference to a C struct,
+However, because a PDLA object is an opaque reference to a C struct,
 it is not possible to
-extend the PDL class by e.g. extra data via subclassing.
+extend the PDLA class by e.g. extra data via subclassing.
 To circumvent this problem
-PerlDL has built-in support to extent the PDL class via the I<has-a>
+PerlDL has built-in support to extent the PDLA class via the I<has-a>
 relation for blessed hashes.  You can get the I<HAS-A> behave like
-I<IS-A> simply in that you assign the C<PDL> object to the attribute
-named PDL and redefine the method initialize().
+I<IS-A> simply in that you assign the C<PDLA> object to the attribute
+named PDLA and redefine the method initialize().
 
     package FOO;
 
-    @FOO::ISA = qw(PDL);
+    @FOO::ISA = qw(PDLA);
     sub initialize {
         my $class = shift;
         my $self = {
                 creation_time => time(),  # necessary extension :-)
-                PDL => null,             # used to store PDL object
+                PDLA => null,             # used to store PDLA object
                 };
         bless $self, $class;
     }
 
-All PDL constructors will call initialize() to make sure that your
-extensions are added by I<all> PDL constructors automatically.   The
-C<PDL> attribute is used by perlDL to store the PDL object and
-all PDL methods use this attribute automatically if they are called
-with a blessed hash reference instead of a PDL object (a blessed scalar).
+All PDLA constructors will call initialize() to make sure that your
+extensions are added by I<all> PDLA constructors automatically.   The
+C<PDLA> attribute is used by perlDL to store the PDLA object and
+all PDLA methods use this attribute automatically if they are called
+with a blessed hash reference instead of a PDLA object (a blessed scalar).
 
 Do remember that if you subclass a class that is subclassed from a piddle,
 you need to call SUPER::initialize.
@@ -63,14 +63,14 @@ NEED STUFF ABOUT CODE REFs!!
 
 =head2 Examples
 
-You can find some simple examples of PDL subclassing in the PDL distribution
+You can find some simple examples of PDLA subclassing in the PDLA distribution
 test-case files. Look in C<t/subclass2.t>, C<t/subclass3.t>, etc.
 
 =head2 Output Auto-Creation and Subclassed Objects
 
-For PDL Functions where the output is created and returned, PDL will either
+For PDLA Functions where the output is created and returned, PDLA will either
 call the subclassed object's C<initialize> or C<copy> method to create the
-output object. (See L<PDL::Indexing|PDL::Indexing/"Output auto-creation and PP-function calling conventions"> 
+output object. (See L<PDLA::Indexing|PDLA::Indexing/"Output auto-creation and PP-function calling conventions"> 
 for a discussion on Output Auto-Creation.) This behavior is summarized as follows:
 
 =over 1
@@ -81,18 +81,18 @@ For I<Simple> functions, defined as having a signature of
 
  func( a(), [o]b() )
 
-PDL will call $a->copy to create the output object. 
+PDLA will call $a->copy to create the output object. 
 
 In the spirit of the Perl philosophy of making I<Easy Things Easy>,
-This behavior enables PDL-subclassed objects to be written without having to
-overload the many simple PDL functions in this category.
+This behavior enables PDLA-subclassed objects to be written without having to
+overload the many simple PDLA functions in this category.
 
-The file t/subclass4.t in the PDL Distribution tests for this behavior.
+The file t/subclass4.t in the PDLA Distribution tests for this behavior.
 See that file for an example. 
 
 =item *
 
-For other functions, PDL will call $class->initialize to create the output object.
+For other functions, PDLA will call $class->initialize to create the output object.
 Where $class is the class name of the first argument supplied to the function.
 
 For these more complex cases, it is difficult to second-guess the subclassed object's 

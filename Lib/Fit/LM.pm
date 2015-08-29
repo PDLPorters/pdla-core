@@ -1,34 +1,34 @@
 =head1 NAME
 
-PDL::Fit::LM -- Levenberg-Marquardt fitting routine for PDL
+PDLA::Fit::LM -- Levenberg-Marquardt fitting routine for PDLA
 
 =head1 DESCRIPTION
 
-This module provides fitting functions for PDL. Currently, only
+This module provides fitting functions for PDLA. Currently, only
 Levenberg-Marquardt fitting is implemented. Other procedures should
 be added as required. For a fairly concise overview on fitting
 see Numerical Recipes, chapter 15 "Modeling of data".
 
 =head1 SYNOPSIS
 
- use PDL::Fit::LM;
+ use PDLA::Fit::LM;
  $ym = lmfit $x, $y, $sig, \&expfunc, $a, {Maxiter => 300};
 
 =head1 FUNCTIONS
 
 =cut
 
-package PDL::Fit::LM;
+package PDLA::Fit::LM;
 
 @EXPORT_OK  = qw( lmfit tlmfit);
 %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 
-use PDL::Core;
-use PDL::Exporter;
-use PDL::Options;
-use PDL::Slatec; # for matrix inversion
+use PDLA::Core;
+use PDLA::Exporter;
+use PDLA::Options;
+use PDLA::Slatec; # for matrix inversion
 
-@ISA    = qw( PDL::Exporter );
+@ISA    = qw( PDLA::Exporter );
 
 =head2 lmfit
 
@@ -97,7 +97,7 @@ performed.
 
 =cut
 
-sub PDL::lmfit {
+sub PDLA::lmfit {
   my ($x,$y,$sig,$func,$a,$opt) = @_; # not using $ia right now
   $opt = {iparse( { Maxiter => 200,
 		  Eps => 1e-4}, ifhref($opt))};
@@ -115,7 +115,7 @@ sub PDL::lmfit {
   do {
     if ($iter>0) {
       $cov .= $al;
-      # local $PDL::debug = 1;
+      # local $PDLA::debug = 1;
       $codiag .= $aldiag*(1+$lambda);
       gefa $cov, $pivt, $info;     # gefa + gesl = solution by Gaussian elem.
       gesl $cov, $pivt, $bet, 0;   # solution returned in $bet
@@ -154,7 +154,7 @@ sub PDL::lmfit {
   # return inv $al as estimate of covariance matrix
   return wantarray ? ($ym,$a,matinv($al),$iter) : $ym;
 }
-*lmfit = \&PDL::lmfit;
+*lmfit = \&PDLA::lmfit;
 
 =pod
 
@@ -163,9 +163,9 @@ This nice example was provided by John Gehman and should
 help you to master the initial hurdles. It can also be found in
 the F<Example/Fit> directory.
 
-   use PDL;
-   use PDL::Math;
-   use PDL::Fit::LM;
+   use PDLA;
+   use PDLA::Math;
+   use PDLA::Fit::LM;
    use strict;
 
 
@@ -289,7 +289,7 @@ thread_define 'tlmfit(x(n);y(n);sig(n);a(m);iter();eps();[o] ym(n);[o] ao(m)),
                NOtherPars => 1',
   over {
     $_[7] .= $_[3]; # copy our parameter guess into the output
-    $_[6] .= PDL::lmfit $_[0],$_[1],$_[2],$_[8],$_[7],{Maxiter => $_[4],
+    $_[6] .= PDLA::lmfit $_[0],$_[1],$_[2],$_[8],$_[7],{Maxiter => $_[4],
 					   Eps => $_[5]};
   };
 
@@ -304,8 +304,8 @@ Not known yet.
 This file copyright (C) 1999, Christian Soeller
 (c.soeller@auckland.ac.nz).  All rights reserved. There is no
 warranty. You are allowed to redistribute this software documentation
-under certain conditions. For details, see the file COPYING in the PDL
-distribution. If this file is separated from the PDL distribution, the
+under certain conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution, the
 copyright notice should be included in the file.
 
 =cut

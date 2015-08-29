@@ -1,5 +1,5 @@
 use Test::More;
-use PDL::LiteF;
+use PDLA::LiteF;
 use Benchmark;  # not using ':hireswallclock'
 
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
@@ -12,7 +12,7 @@ sub tapprox {
        $d < $mdiff;
 }
 
-plan skip_all => 'No threads' if !PDL::Core::pthreads_enabled;
+plan skip_all => 'No threads' if !PDLA::Core::pthreads_enabled;
 plan tests => 27;
 
 $a = zeroes(2000000);
@@ -54,7 +54,7 @@ foreach (1..20){
 
 
 ### Pthread Indexing Test ####
-###  This checks for a problem seen in the dataflow back to the parent PDL (i.e. writeback xs code)
+###  This checks for a problem seen in the dataflow back to the parent PDLA (i.e. writeback xs code)
 ###    seen when pthreading is present 
 
 my $indexArg = pdl [[1]];
@@ -74,7 +74,7 @@ $lutEx->add_threading_magic(-1,-1);
 #   The lazy evaluation of the index operation will occur here first
 $in .= 1;
 
-# Check for writeback to the parent PDL working (should have three ones in the array)
+# Check for writeback to the parent PDLA working (should have three ones in the array)
 my $lutExSum = $lutEx->sum;
 ok( tapprox($lutExSum, pdl(3)) );
 
@@ -109,7 +109,7 @@ $lutEx->add_threading_magic(0,4);
 #   The lazy evaluation of the index operation will occur here first
 $in .= 1;
 
-# Check for writeback to the parent PDL working (should have three ones in the array)
+# Check for writeback to the parent PDLA working (should have three ones in the array)
 #print $lutEx;
 $lutExSum = $lutEx->sum;
 ok( tapprox($lutExSum, pdl(5)) );

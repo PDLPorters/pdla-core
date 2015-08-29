@@ -21,16 +21,16 @@ sub add_ids {
 		
 		# This usually sets the 'undef' key to whatever is in $_, because the
 		# object in $hash{$_} is usually a scalar, not an array. I know this
-		# becuase this function is called by AddArgsyms in PDL::PP, which
+		# becuase this function is called by AddArgsyms in PDLA::PP, which
 		# conructs the %hash to be
 		# 
 		#   sym_name => sym_name
 		# 
 		# The only other place that invokes this code is the constructor,
-		# which itself is called by MkDefSyms in PDL::PP. That invocation is
+		# which itself is called by MkDefSyms in PDLA::PP. That invocation is
 		# called with %hash set as
 		# 
-		#   _PDL_ThisTrans => ["__privtrans",C::Type->new(undef,"$_[0] *foo")]
+		#   _PDLA_ThisTrans => ["__privtrans",C::Type->new(undef,"$_[0] *foo")]
 		# 
 		# AFAIK, Sym2Id is never used anywhere in the code generation, and
 		# the setting of undef throws warning messages, so I am going to

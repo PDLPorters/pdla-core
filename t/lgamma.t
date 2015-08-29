@@ -2,10 +2,10 @@
 
 use strict;
 use Test::More;
-use PDL;
-use PDL::LiteF;
+use PDLA;
+use PDLA::LiteF;
 use Config;
-use PDL::Config;
+use PDLA::Config;
 
 $| = 1;
 
@@ -16,7 +16,7 @@ if($Config{cc} eq 'cl') {
   plan skip_all => 'lgamma not implemented for MS compilers';
   exit 0;
 }
-elsif ( $PDL::Config{WITH_BADVAL} ) {
+elsif ( $PDLA::Config{WITH_BADVAL} ) {
   plan tests => $test_count;
 }
 else {
@@ -32,7 +32,7 @@ is($x[1], -1);
 is(approx($x[0], -0.0498724412598397), 1);
 is($x[1], 1);
 
-if($PDL::Config{WITH_BADVAL}) {
+if($PDLA::Config{WITH_BADVAL}) {
   my $p = sequence (1);
   $p->badvalue (0);
   $p->badflag (1);

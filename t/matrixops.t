@@ -1,4 +1,4 @@
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test;
 use Config;
 
@@ -15,7 +15,7 @@ BEGIN { plan tests => 34,
 
 my $tol = 1e-14;
 
-eval 'use PDL::MatrixOps;';
+eval 'use PDLA::MatrixOps;';
 ok(!$@);
 
 
@@ -55,7 +55,7 @@ $a1 = inv($a,$opt={s=>1,lu=>\@a});
 $identity = zeroes(3,3); ($tmp = $identity->diagonal(0,1))++;
 
 ok(defined $a1);
-ok(ref ($opt->{lu}->[0]) eq 'PDL');
+ok(ref ($opt->{lu}->[0]) eq 'PDLA');
 ok(near(matmult($a1,$a),$identity,$tol));
 
 ### Check inv() with added thread dims (simple check)

@@ -1,10 +1,10 @@
 use strict;
 use Test;
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
 BEGIN { 
-    eval 'require PDL::NiceSlice';
+    eval 'require PDLA::NiceSlice';
     unless ($@) {
 	plan tests => 44,
 	# todo => [37..40],
@@ -16,10 +16,10 @@ BEGIN {
 } 
 
 $| = 1;
-sub PDL::NiceSlice::findslice;
+sub PDLA::NiceSlice::findslice;
 sub translate_and_show {
   my ($txt) = @_;
-  my $etxt = PDL::NiceSlice::findslice $txt;
+  my $etxt = PDLA::NiceSlice::findslice $txt;
   print "$txt -> \n\t$etxt\n";
   return $etxt;
 }
@@ -38,7 +38,7 @@ eval translate_and_show '$b = $a->((5));';
 ok (!$@);
 ok($b->at == 5);
 
-my $c = PDL->pdl(7,6);
+my $c = PDLA->pdl(7,6);
 eval translate_and_show '$b = $a(($c(1)->at(0)));';
 ok (!$@);
 ok($b->getndims == 0 && all $b == 6);

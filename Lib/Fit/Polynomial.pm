@@ -1,6 +1,6 @@
 =head1 NAME
 
-PDL::Fit::Polynomial - routines for fitting with polynomials
+PDLA::Fit::Polynomial - routines for fitting with polynomials
 
 =head1 DESCRIPTION
 
@@ -61,22 +61,22 @@ unnormalised units.
 
 =cut
 
-package PDL::Fit::Polynomial;
+package PDLA::Fit::Polynomial;
 
 @EXPORT_OK  = qw( fitpoly1d );
 %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 
-use PDL::Core;
-use PDL::Basic;
-use PDL::Exporter;
-@ISA    = qw( PDL::Exporter );
+use PDLA::Core;
+use PDLA::Basic;
+use PDLA::Exporter;
+@ISA    = qw( PDLA::Exporter );
 
-use PDL::Options ':Func';
-# use PDL::Slatec;  # For matinv()
-use PDL::MatrixOps; # for inv(), using this instead of call to Slatec routine
+use PDLA::Options ':Func';
+# use PDLA::Slatec;  # For matinv()
+use PDLA::MatrixOps; # for inv(), using this instead of call to Slatec routine
 
  
-sub PDL::fitpoly1d {
+sub PDLA::fitpoly1d {
    my $opthash = ref($_[-1]) eq "HASH" ? pop(@_) : {} ; 
    my %opt = parse( { Weights=>ones(1) }, $opthash ) ;
    barf "Usage: fitpoly1d incorrect args\n" if $#_<1 or $#_ > 2;
@@ -127,7 +127,7 @@ sub PDL::fitpoly1d {
    }  
    
 }
-*fitpoly1d = \&PDL::fitpoly1d;
+*fitpoly1d = \&PDLA::fitpoly1d;
 
 =head1 BUGS
 
@@ -135,7 +135,7 @@ May not work too well for data with large dynamic range.
 
 =head1 SEE ALSO
 
-L<PDL::Slatec/"polyfit">
+L<PDLA::Slatec/"polyfit">
 
 =head1 AUTHOR
 
@@ -143,8 +143,8 @@ This file copyright (C) 1999, Karl Glazebrook (kgb@aaoepp.aao.gov.au).
 All rights reserved. There
 is no warranty. You are allowed to redistribute this software
 documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 
 =cut

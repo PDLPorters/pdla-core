@@ -1,4 +1,4 @@
-use PDL::LiteF;
+use PDLA::LiteF;
 
 use Test::More tests => 4;
 use Test::Exception;
@@ -6,7 +6,7 @@ use Test::Exception;
 use strict;
 use warnings;
 
-# PDL::Core::set_debugging(1);
+# PDLA::Core::set_debugging(1);
 my $pb = pdl [[1,1,1],[2,2,2]];
 
 {

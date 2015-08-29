@@ -1,6 +1,6 @@
 Files in this directory are a subset, slightly modified, of the Small
 Scientific Library by Kenneth Geisshirt.  They may be distributed and
-modified under the same terms as PDL itself.
+modified under the same terms as PDLA itself.
 
 ------------------------------
 
@@ -9,7 +9,7 @@ Message-ID: <41E6EACE.6010600@geisshirt.dk>
 Date: Thu, 13 Jan 2005 22:40:30 +0100
 From: Kenneth Geisshirt <kenneth@geisshirt.dk>
 To: deforest@boulder.swri.edu
-Subject: Re: Small Scientific Library use within Perl/PDL?
+Subject: Re: Small Scientific Library use within Perl/PDLA?
 
 Craig DeForest wrote:
 
@@ -21,7 +21,7 @@ That's my mistake: SSLib is free software. I'll create a new tar ball
 this weekend (including a license). I'll probably use the MIT X License 
 since it's the less restricted license I know.
 
-If you decide to use some of my routines in PDL I'll be very happy. And 
+If you decide to use some of my routines in PDLA I'll be very happy. And 
 if you need any help please let me know.
 
 SSLib is a very simple library - not that the routines are simple but 

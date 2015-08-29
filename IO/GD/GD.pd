@@ -1,7 +1,7 @@
 #
 # GD.pd
 #
-# PDL interface to the GD c library
+# PDLA interface to the GD c library
 #   ('cos looping over a piddle in perl and using the perl GD lib is too slow...)
 #
 # Judd Taylor, USF IMaRS
@@ -9,7 +9,7 @@
 #
 
 use strict;
-#use PDL;
+#use PDLA;
 use vars qw( $VERSION );
 
 $VERSION = "2.1";
@@ -21,7 +21,7 @@ $VERSION = "2.1";
 pp_addpm({ At => 'Top' }, <<'ENDPM');
 =head1 NAME
 
-PDL::IO::GD - Interface to the GD image library.
+PDLA::IO::GD - Interface to the GD image library.
 
 =head1 SYNOPSIS
 
@@ -51,7 +51,7 @@ PDL::IO::GD - Interface to the GD image library.
 
 =head1 DESCRIPTION
 
-This is the "General Interface" for the PDL::IO::GD library, and is actually several
+This is the "General Interface" for the PDLA::IO::GD library, and is actually several
 years old at this point (read: stable). If you're feeling frisky, try the new OO 
 interface described below.
 
@@ -82,7 +82,7 @@ pp_addhdr(<<'EOH');
 
 #include <stdio.h>
 
-#define PKG "PDL::IO::GD"
+#define PKG "PDLA::IO::GD"
 
 EOH
 
@@ -91,7 +91,7 @@ pp_def( 'write_png',
         Pars => 'byte img(x,y); byte lut(i,j);',
         OtherPars => 'char* filename',
         Doc => <<'ENDDOC',
-Writes a 2-d PDL varable out to a PNG file, using the supplied color look-up-table piddle
+Writes a 2-d PDLA varable out to a PNG file, using the supplied color look-up-table piddle
 (hereafter referred to as a LUT).
 
 The LUT contains a line for each value 0-255 with a corresponding R, G, and B value.
@@ -211,7 +211,7 @@ pp_def( 'write_true_png',
         Pars => 'img(x,y,z);',
         OtherPars => 'char* filename',
         Doc => <<'ENDDOC',
-Writes an (x, y, z(3)) PDL varable out to a PNG file, using a true color format.
+Writes an (x, y, z(3)) PDLA varable out to a PNG file, using a true color format.
 
 This means a larger file on disk, but can contain more than 256 colors.
 ENDDOC
@@ -390,7 +390,7 @@ sub load_lut
 
 =head2 read_png( $filename )
 
-Reads a (palette) PNG image into a (new) PDL variable.
+Reads a (palette) PNG image into a (new) PDLA variable.
 
 =cut
 
@@ -411,7 +411,7 @@ sub read_png
 
 =head2 read_png_true( $filename )
 
-Reads a true color PNG image into a (new) PDL variable.
+Reads a true color PNG image into a (new) PDLA variable.
 
 =cut
 
@@ -474,7 +474,7 @@ pp_def( '_read_true_png',
         Code => <<'EOC' );
 gdImagePtr im;
 int xsize, ysize, x2, y2, z2;
-char* func = "PDL::IO::GD::_read_png(): ";
+char* func = "PDLA::IO::GD::_read_png(): ";
 char str[255];
 FILE *in = NULL;
 
@@ -523,7 +523,7 @@ pp_def( '_read_png',
         Code => <<'EOC' );
 gdImagePtr im;
 int xsize, ysize, x2, y2;
-char* func = "PDL::IO::GD::_read_png(): ";
+char* func = "PDLA::IO::GD::_read_png(): ";
 char str[255];
 FILE *in = NULL;
 
@@ -569,7 +569,7 @@ pp_def( '_gd_image_to_pdl_true',
         Code => <<'ENDCODE' );
 int xsize, ysize, x2, y2, z2;
 gdImagePtr im = INT2PTR(gdImagePtr, $COMP(img_ptr));
-char* func = "PDL::IO::GD::_gd_image_to_pdl_true(): ";
+char* func = "PDLA::IO::GD::_gd_image_to_pdl_true(): ";
 char str[255];
 
 xsize = gdImageSX(im);
@@ -601,7 +601,7 @@ pp_def( '_gd_image_to_pdl',
         Doc => undef,
         Code => <<'ENDCODE' );
 int xsize, ysize, x2, y2;
-char* func = "PDL::IO::GD::_gd_image_to_pdl(): ";
+char* func = "PDLA::IO::GD::_gd_image_to_pdl(): ";
 gdImagePtr im = INT2PTR(gdImagePtr, $COMP(img_ptr));
 char str[255];
 
@@ -657,7 +657,7 @@ for( y2 = 0; y2 < ysize; y2++ )
         );
     }
 }
-$img_ptr(i=>0) = (PDL_LongLong) PTR2IV(im);
+$img_ptr(i=>0) = (PDLA_LongLong) PTR2IV(im);
 ENDCODE
 
 pp_def( '_pdl_to_gd_image_lut',
@@ -698,7 +698,7 @@ for( y2 = 0; y2 < $SIZE(y); y2++ )
         gdImageSetPixel(im, x2, y2, $img(x=>x2,y=>y2));
     }
 }
-$img_ptr(q=>0) = (PDL_LongLong) PTR2IV(im);
+$img_ptr(q=>0) = (PDLA_LongLong) PTR2IV(im);
 ENDCODE
 
 # Function to write Read PNG LUT Table into a piddle variable:
@@ -729,7 +729,7 @@ pp_def( '_read_png_lut',
         Code => <<'EOC' );
 gdImagePtr im;
 int ind;
-char* func = "PDL::IO::GD::_read_png_lut(): ";
+char* func = "PDLA::IO::GD::_read_png_lut(): ";
 char str[255];
 FILE *in = NULL;
 
@@ -787,7 +787,7 @@ ENDXS
 ##################################################
 
 #########################################
-# Start the PDL::IO::GD OO module code: #
+# Start the PDLA::IO::GD OO module code: #
 #########################################
 pp_addpm( { At => 'Bot' }, <<'ENDPM' );
 
@@ -799,13 +799,13 @@ Object Oriented interface to the GD image library.
 
  # Open an existing file:
  # 
- my $gd = PDL::IO::GD->new( { filename => "test.png" } );
+ my $gd = PDLA::IO::GD->new( { filename => "test.png" } );
  
  # Query the x and y sizes:
  my $x = $gd->SX();
  my $y = $gd->SY();
 
- # Grab the PDL of the data:
+ # Grab the PDLA of the data:
  my $pdl = $gd->to_pdl();
 
  # Kill this thing:
@@ -813,7 +813,7 @@ Object Oriented interface to the GD image library.
 
  # Create a new object:
  # 
- my $im = PDL::IO::GD->new( { x => 300, y => 300 } );
+ my $im = PDLA::IO::GD->new( { x => 300, y => 300 } );
 
  # Allocate some colors:
  #
@@ -833,7 +833,7 @@ Object Oriented interface to the GD image library.
 
 =head1 DESCRIPTION
 
-This is the Object-Oriented interface from PDL to the GD image library.
+This is the Object-Oriented interface from PDLA to the GD image library.
 
 See L<http://www.boutell.com/gd/> for more information on the GD library and how it works.
 
@@ -859,15 +859,15 @@ there as well.
 
 =cut
 
-use PDL;
-use PDL::Slices;
-use PDL::IO::Misc;
+use PDLA;
+use PDLA::Slices;
+use PDLA::IO::Misc;
 
 #
 # Some helper functions:
 #
 sub _pkg_name
-    { return "PDL::IO::GD::" . (shift) . "()"; }
+    { return "PDLA::IO::GD::" . (shift) . "()"; }
 
 # ID a file type from it's filename:
 sub _id_image_file
@@ -986,20 +986,20 @@ sub _img_ptr_from_data
 
 =head2 new
 
-Creates a new PDL::IO::GD object.
+Creates a new PDLA::IO::GD object.
 
 Accepts a hash describing how to create the object. Accepts a single hash ( with
 curly braces ), an inline hash (the same, but without the braces) or a single
 string interpreted as a filename. Thus the following are all equivalent:
 
- PDL::IO::GD->new( {filename => 'image.png'} );
- PDL::IO::GD->new( filename => 'image.png' );
- PDL::IO::GD->new( 'image.png' );
+ PDLA::IO::GD->new( {filename => 'image.png'} );
+ PDLA::IO::GD->new( filename => 'image.png' );
+ PDLA::IO::GD->new( 'image.png' );
 
 If the hash has:
 
  pdl => $pdl_var (lut => $lut_piddle)
-    Then a new GD is created from that PDL variable.
+    Then a new GD is created from that PDLA variable.
 
  filename => $file
     Then a new GD is created from the image file.
@@ -1019,19 +1019,19 @@ If the hash has:
     
 Example:
  
- my $gd = PDL::IO::GD->new({ pdl => $pdl_var });
+ my $gd = PDLA::IO::GD->new({ pdl => $pdl_var });
     
- my $gd = PDL::IO::GD->new({ pdl => $pdl_var, lut => $lut_piddle });
+ my $gd = PDLA::IO::GD->new({ pdl => $pdl_var, lut => $lut_piddle });
  
- my $gd = PDL::IO::GD->new({ filename => "image.png" });
+ my $gd = PDLA::IO::GD->new({ filename => "image.png" });
  
- my $gd = PDL::IO::GD->new({ x => 100, y => 100 });
+ my $gd = PDLA::IO::GD->new({ x => 100, y => 100 });
  
- my $gd = PDL::IO::GD->new({ x => 100, y => 100, true_color => 1 });
+ my $gd = PDLA::IO::GD->new({ x => 100, y => 100, true_color => 1 });
  
- my $gd = PDL::IO::GD->new({ data => $imageData });
+ my $gd = PDLA::IO::GD->new({ data => $imageData });
  
- my $gd = PDL::IO::GD->new({ data => $imageData, type => 'wbmp' });
+ my $gd = PDLA::IO::GD->new({ data => $imageData, type => 'wbmp' });
 
 =cut
 
@@ -1074,7 +1074,7 @@ sub new
 
     if( !defined $options ) {
       die <<EOF;
-PDL::IO::GD::new couldn't parse its arguments.
+PDLA::IO::GD::new couldn't parse its arguments.
 Expected a hash-ref or an inline hash or just a filename
 EOF
     }
@@ -1082,7 +1082,7 @@ EOF
 
     
     if( defined( $options->{pdl} ) )
-    {   # Create it from a PDL variable:
+    {   # Create it from a PDLA variable:
         my $pdl = $options->{pdl};
         $pdl->make_physical();
         my $num_dims = scalar( $pdl->dims() );
@@ -1123,14 +1123,14 @@ EOF
         }
         else
         {
-            die "Can't create a PDL::IO::GD from a PDL with bad dims!\n";
+            die "Can't create a PDLA::IO::GD from a PDLA with bad dims!\n";
         }
     }
     elsif( exists( $options->{filename} ) )
     {   # Create it from a file:
 
         if( !defined $options->{filename} ) {
-          die "PDL::IO::GD::new got an undefined filename. Giving up.\n";
+          die "PDLA::IO::GD::new got an undefined filename. Giving up.\n";
         }
 
         # Figure out what type of file it is:
@@ -1234,7 +1234,7 @@ sub apply_lut
     my $self = shift;
     my $lut = shift;
     
-    # Let the PDL threading engine sort this out:
+    # Let the PDLA threading engine sort this out:
     $self->ColorAllocates( $lut->slice("(0),:"), $lut->slice("(1),:"), $lut->slice("(2),:") );
 } # End of apply_lut()...
 
@@ -1740,7 +1740,7 @@ ENDPM
 # The functions allow you to get a pointer to a formatted region of memory
 #   that contains image data in the specified format. This is useful, among
 #   other things, because PerlQt has almost no other way to import any image
-#   data from PDL!
+#   data from PDLA!
 #
 #void *gdImageWBMPPtr (gdImagePtr im, int *size, int fg);
 #void *gdImageJpegPtr (gdImagePtr im, int *size, int quality);
@@ -1985,7 +1985,7 @@ sub generate_pp_def_members
         my $doc_arg_list = join( ", ", @doc_args );
         my $pdlpp_call_arg_list = "\$" . join( "(), \$", @arg_names ) . "()";
         
-        # Add the PDL::PP code:
+        # Add the PDLA::PP code:
         #
         pp_def( $pdlpp_name,
             Pars => $pdlpp_arg_list,
@@ -2077,7 +2077,7 @@ ENDPM
         
         # Add the Class functions code:
         
-        # Figure out the perl arg list where it needs PDL::IO::GDImage objects:
+        # Figure out the perl arg list where it needs PDLA::IO::GDImage objects:
         #
         my @perl_arg_names;
         my @arg_names;
@@ -2094,7 +2094,7 @@ ENDPM
             if ( $type eq 'gdImagePtr' )
             {
                 push(@perl_arg_names, "\$" . $name . "->{IMG_PTR}" );
-                push(@doc_args, "\$" . $name . "(PDL::IO::GD)" );
+                push(@doc_args, "\$" . $name . "(PDLA::IO::GD)" );
                 next;
             }
             push(@doc_args, "\$" . $name);

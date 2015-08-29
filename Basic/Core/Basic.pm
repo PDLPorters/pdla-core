@@ -1,7 +1,7 @@
 
 =head1 NAME
 
-PDL::Basic -- Basic utility functions for PDL
+PDLA::Basic -- Basic utility functions for PDLA
 
 =head1 DESCRIPTION
 
@@ -9,42 +9,42 @@ This module contains basic utility functions for
 creating and manipulating piddles. Most of these functions
 are simplified interfaces to the more flexible functions in
 the modules 
-L<PDL::Primitive|PDL::Primitive> 
+L<PDLA::Primitive|PDLA::Primitive> 
 and 
-L<PDL::Slices|PDL::Slices>.
+L<PDLA::Slices|PDLA::Slices>.
 
 =head1 SYNOPSIS
 
- use PDL::Basic;
+ use PDLA::Basic;
 
 =head1 FUNCTIONS
 
 =cut
 
-package PDL::Basic;
-use PDL::Core '';
-use PDL::Types;
-use PDL::Exporter;
-use PDL::Options;
+package PDLA::Basic;
+use PDLA::Core '';
+use PDLA::Types;
+use PDLA::Exporter;
+use PDLA::Options;
 
-@ISA=qw/PDL::Exporter/;
+@ISA=qw/PDLA::Exporter/;
 @EXPORT_OK = qw/ ndcoords rvals axisvals allaxisvals xvals yvals zvals sec ins hist whist
 	similar_assign transpose sequence xlinvals ylinvals
 	zlinvals axislinvals/;
 %EXPORT_TAGS = (Func=>[@EXPORT_OK]);
 
 # Exportable functions
-*axisvals       = \&PDL::axisvals;		
-*allaxisvals       = \&PDL::allaxisvals;		
-*sec            = \&PDL::sec;		
-*ins            = \&PDL::ins;		
-*hist           = \&PDL::hist;		
-*whist           = \&PDL::whist;		
-*similar_assign = \&PDL::similar_assign;
-*transpose      = \&PDL::transpose;
-*xlinvals 	= \&PDL::xlinvals;
-*ylinvals 	= \&PDL::ylinvals;
-*zlinvals 	= \&PDL::zlinvals;
+*axisvals       = \&PDLA::axisvals;		
+*allaxisvals       = \&PDLA::allaxisvals;		
+*sec            = \&PDLA::sec;		
+*ins            = \&PDLA::ins;		
+*hist           = \&PDLA::hist;		
+*whist           = \&PDLA::whist;		
+*similar_assign = \&PDLA::similar_assign;
+*transpose      = \&PDLA::transpose;
+*xlinvals 	= \&PDLA::xlinvals;
+*ylinvals 	= \&PDLA::ylinvals;
+*zlinvals 	= \&PDLA::zlinvals;
 
 =head2 xvals
 
@@ -66,7 +66,7 @@ a dimension of size greater than 256.  To force a type, use the third form.
  $x = xvals([OPTIONAL TYPE],$nx,$ny,$nz...);
  $x = xvals([OPTIONAL TYPE], $somarray->dims);
 
-etc. see L<zeroes|PDL::Core/zeroes>.
+etc. see L<zeroes|PDLA::Core/zeroes>.
 
 =for example
 
@@ -95,7 +95,7 @@ Fills a piddle with Y index values.  See the CAVEAT for L<xvals|xvals>.
  $x = yvals($somearray); yvals(inplace($somearray));
  $x = yvals([OPTIONAL TYPE],$nx,$ny,$nz...);
 
-etc. see L<zeroes|PDL::Core/zeroes>.
+etc. see L<zeroes|PDLA::Core/zeroes>.
 
 =for example
 
@@ -124,7 +124,7 @@ Fills a piddle with Z index values.  See the CAVEAT for L<xvals|xvals>.
  $x = zvals($somearray); zvals(inplace($somearray));
  $x = zvals([OPTIONAL TYPE],$nx,$ny,$nz...);
 
-etc. see L<zeroes|PDL::Core/zeroes>.
+etc. see L<zeroes|PDLA::Core/zeroes>.
 
 =for example
 
@@ -218,50 +218,50 @@ See L<xlogvals|/xlogvals> for more information.
 
 # Conveniently named interfaces to axisvals()
 
-sub xvals { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->xvals : PDL->xvals(@_) }
-sub yvals { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->yvals : PDL->yvals(@_) }
-sub zvals { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->zvals : PDL->zvals(@_) }
-sub PDL::xvals {
+sub xvals { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->xvals : PDLA->xvals(@_) }
+sub yvals { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->yvals : PDLA->yvals(@_) }
+sub zvals { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->zvals : PDLA->zvals(@_) }
+sub PDLA::xvals {
     my $class = shift;
     my $pdl = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
     axisvals2($pdl,0);
     return $pdl;
 }
-sub PDL::yvals {
+sub PDLA::yvals {
     my $class = shift;
     my $pdl = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
     axisvals2($pdl,1);
     return $pdl;
 }
-sub PDL::zvals {
+sub PDLA::zvals {
     my $class = shift;
     my $pdl = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
     axisvals2($pdl,2);
     return $pdl;
 }
 
-sub PDL::xlinvals {
+sub PDLA::xlinvals {
 	my $dim = $_[0]->getdim(0);
 	barf "Must have at least two elements in dimension for xlinvals"
 		if $dim <= 1;
 	return $_[0]->xvals * (($_[2] - $_[1]) / ($dim-1)) + $_[1];
 }
 
-sub PDL::ylinvals {
+sub PDLA::ylinvals {
 	my $dim = $_[0]->getdim(1);
 	barf "Must have at least two elements in dimension for ylinvals"
 		if $dim <= 1;
 	return $_[0]->yvals * (($_[2] - $_[1]) / ($dim-1)) + $_[1];
 }
 
-sub PDL::zlinvals {
+sub PDLA::zlinvals {
 	my $dim = $_[0]->getdim(2);
 	barf "Must have at least two elements in dimension for zlinvals"
 		if $dim <= 1;
 	return $_[0]->zvals * (($_[2] - $_[1]) / ($dim-1)) + $_[1];
 }
 
-sub PDL::xlogvals {
+sub PDLA::xlogvals {
 	my $dim = $_[0]->getdim(0);
 	barf "Must have at least two elements in dimension for xlogvals"
 		if $dim <= 1;
@@ -272,7 +272,7 @@ sub PDL::xlogvals {
 	return exp($_[0]->xvals * (($lxmax - $lxmin) / ($dim-1)) + $lxmin);
 }
 
-sub PDL::ylogvals {
+sub PDLA::ylogvals {
 	my $dim = $_[0]->getdim(1);
 	barf "Must have at least two elements in dimension for xlogvals"
 		if $dim <= 1;
@@ -283,7 +283,7 @@ sub PDL::ylogvals {
 	return exp($_[0]->yvals * (($lxmax - $lxmin) / ($dim-1)) + $lxmin);
 }
 
-sub PDL::zlogvals {
+sub PDLA::zlogvals {
 	my $dim = $_[0]->getdim(2);
 	barf "Must have at least two elements in dimension for xlogvals"
 		if $dim <= 1;
@@ -300,7 +300,7 @@ sub PDL::zlogvals {
 =for ref
 
 Synonym for L<ndcoords|ndcoords> - enumerates all coordinates in a
-PDL or dim list, adding an extra dim on the front to accomodate
+PDLA or dim list, adding an extra dim on the front to accomodate
 the vector coordinate index (the form expected by L<indexND|indexND>,
 L<range|range>, and L<interpND|interpND>).  See L<ndcoords|ndcoords> for more detail.
 
@@ -319,7 +319,7 @@ $indices = allaxisvals($type,@dimlist);
 Enumerate pixel coordinates for an N-D piddle
 
 Returns an enumerated list of coordinates suitable for use in
-L<indexND|PDL::Slices/indexND> or L<range|PDL::Slices/range>: you feed
+L<indexND|PDLA::Slices/indexND> or L<range|PDLA::Slices/range>: you feed
 in a dimension list and get out a piddle whose 0th dimension runs over
 dimension index and whose 1st through Nth dimensions are the
 dimensions given in the input.  If you feed in a piddle instead of a
@@ -366,9 +366,9 @@ $indices = ndcoords($type,@dimlist);
 
 =cut
 
-sub PDL::ndcoords { 
+sub PDLA::ndcoords { 
   my $type;
-  if(ref $_[0] eq 'PDL::Type') {
+  if(ref $_[0] eq 'PDLA::Type') {
     $type = shift;
   }
   
@@ -377,7 +377,7 @@ sub PDL::ndcoords {
   unshift(@d,scalar(@dims));
   unshift(@d,$type) if defined($type);
 
-  $out = PDL->zeroes(@d);
+  $out = PDLA->zeroes(@d);
   
   for my $d(0..$#dims) {
     my $a = $out->index($d)->mv($d,0);
@@ -386,9 +386,9 @@ sub PDL::ndcoords {
 
   $out;
 }
-*ndcoords = \&PDL::ndcoords;
-*allaxisvals = \&PDL::ndcoords;
-*PDL::allaxisvals = \&PDL::ndcoords;
+*ndcoords = \&PDLA::ndcoords;
+*allaxisvals = \&PDLA::ndcoords;
+*PDLA::allaxisvals = \&PDLA::ndcoords;
  
 
 =head2 hist
@@ -411,7 +411,7 @@ If C<hist> is run in list context, C<$xvals> gives the
 computed bin centres as double values.
 
 A nice idiom (with 
-L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT>) is
+L<PDLA::Graphics::PGPLOT|PDLA::Graphics::PGPLOT>) is
 
  bin hist $data;  # Plot histogram
 
@@ -425,7 +425,7 @@ L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT>) is
 
 =cut
 
-sub PDL::hist {
+sub PDLA::hist {
 
     my $usage = "\n" . '  Usage:          $hist  = hist($data)' . "\n" .
                        '                  $hist  = hist($data,$min,$max,$step)' . "\n" .
@@ -439,7 +439,7 @@ sub PDL::hist {
     ($step, $min, $bins, $xvals) = 
         _hist_bin_calc($pdl, $min, $max, $step, wantarray());
 
-    PDL::Primitive::histogram($pdl->clump(-1),(my $hist = null),
+    PDLA::Primitive::histogram($pdl->clump(-1),(my $hist = null),
 			      $step,$min,$bins);
 
     return wantarray() ? ($xvals,$hist) : $hist;
@@ -461,7 +461,7 @@ as type double values.  C<$data> and C<$wt> should have
 the same dimensionality and extents.
 
 A nice idiom (with 
-L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT>) is
+L<PDLA::Graphics::PGPLOT|PDLA::Graphics::PGPLOT>) is
 
  bin whist $data, $wt;  # Plot histogram
 
@@ -477,7 +477,7 @@ L<PDL::Graphics::PGPLOT|PDL::Graphics::PGPLOT>) is
 
 =cut
 
-sub PDL::whist {
+sub PDLA::whist {
     barf('Usage: ([$xvals],$hist) = whist($data,$wt,[$min,$max,$step])')
             if @_ < 2;
     my($pdl,$wt,$min,$max,$step)=@_;
@@ -486,7 +486,7 @@ sub PDL::whist {
     ($step, $min, $bins, $xvals) = 
         _hist_bin_calc($pdl, $min, $max, $step, wantarray());
 
-    PDL::Primitive::whistogram($pdl->clump(-1),$wt->clump(-1),
+    PDLA::Primitive::whistogram($pdl->clump(-1),$wt->clump(-1),
 			       (my $hist = null), $step, $min, $bins);
     return wantarray() ? ($xvals,$hist) : $hist;
 }
@@ -505,9 +505,9 @@ sub _hist_bin_calc {
     barf "step is zero (or all data equal to one value)" if $step == 0;
     my $bins = int(($max-$min)/$step+0.5);
     print "hist with step $step, min $min and $bins bins\n"
-	if $PDL::debug;
+	if $PDLA::debug;
     # Need to use double for $xvals here
-    my $xvals = $min + $step/2 + sequence(PDL::Core::double,$bins)*$step if $wantarray;
+    my $xvals = $min + $step/2 + sequence(PDLA::Core::double,$bins)*$step if $wantarray;
 
     return ( $step, $min, $bins, $xvals );
 }
@@ -523,7 +523,7 @@ Create array filled with a sequence of values
 
  $a = sequence($b); $a = sequence [OPTIONAL TYPE], @dims;
 
-etc. see L<zeroes|PDL::Core/zeroes>.
+etc. see L<zeroes|PDLA::Core/zeroes>.
 
 =for example
 
@@ -539,8 +539,8 @@ etc. see L<zeroes|PDL::Core/zeroes>.
 
 =cut
 
-sub sequence { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->sequence : PDL->sequence(@_) }
-sub PDL::sequence {
+sub sequence { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->sequence : PDLA->sequence(@_) }
+sub PDLA::sequence {
     my $class = shift;
     my $pdl = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
     my $bar = $pdl->clump(-1)->inplace;
@@ -601,7 +601,7 @@ For a more general metric, one can define, e.g.,
    $f->($r);
  }
  sub l1 { sumover(abs($_[0])); }
- sub euclid { use PDL::Math 'pow'; pow(sumover(pow($_[0],2)),0.5); }
+ sub euclid { use PDLA::Math 'pow'; pow(sumover(pow($_[0],2)),0.5); }
  sub linfty { maximum(abs($_[0])); }
 
 so now
@@ -613,8 +613,8 @@ well-known norms.
 
 =cut
 
-sub rvals { ref($_[0]) && ref($_[0]) ne 'PDL::Type' ? $_[0]->rvals(@_[1..$#_]) : PDL->rvals(@_) }
-sub PDL::rvals { # Return radial distance from given point and offset
+sub rvals { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->rvals(@_[1..$#_]) : PDLA->rvals(@_) }
+sub PDLA::rvals { # Return radial distance from given point and offset
     my $class = shift;
     my $opt = pop @_ if ref($_[$#_]) eq "HASH";
     my %opt = defined $opt ? 
@@ -634,7 +634,7 @@ sub PDL::rvals { # Return radial distance from given point and offset
     for ($i=0; $i<$r->getndims; $i++) {
          $offset = (defined $pos[$i] ? $pos[$i] : int($r->getdim($i)/2));
 	 # Note careful coding for speed and min memory footprint
-	 PDL::Primitive::axisvalues($tmp->xchg(0,$i));
+	 PDLA::Primitive::axisvalues($tmp->xchg(0,$i));
 	 $tmp -= $offset; $tmp *= $tmp;
          $r += $tmp;
     }
@@ -659,12 +659,12 @@ See also L<allaxisvals|allaxisvals>, which generates all axis values
 simultaneously in a form useful for L<range|range>, L<interpND|interpND>, 
 L<indexND|indexND>, etc.
 
-Note the 'from specification' style (see L<zeroes|PDL::Core/zeroes>) is
+Note the 'from specification' style (see L<zeroes|PDLA::Core/zeroes>) is
 not available here, for obvious reasons.
 
 =cut
 
-sub PDL::axisvals {
+sub PDLA::axisvals {
 	my($this,$nth) = @_;
 	my $dummy = $this->new_or_inplace;
 	if($dummy->getndims() <= $nth) {
@@ -674,7 +674,7 @@ sub PDL::axisvals {
 #		barf("Too few dimensions given to axisvals $nth\n");
 	}
 	my $bar = $dummy->xchg(0,$nth);
-	PDL::Primitive::axisvalues($bar);
+	PDLA::Primitive::axisvalues($bar);
 	return $dummy;
 }
 
@@ -689,24 +689,24 @@ sub axisvals2 {
 #		barf("Too few dimensions given to axisvals $nth\n");
 	}
 	my $bar = $dummy->xchg(0,$nth);
-	PDL::Primitive::axisvalues($bar);
+	PDLA::Primitive::axisvalues($bar);
 	return $dummy;
 }
-sub PDL::sec {
+sub PDLA::sec {
 	my($this,@coords) = @_;
 	my $i; my @maps;
 	while($#coords > -1) {
 		$i = int(shift @coords) ;
 		push @maps, "$i:".int(shift @coords);
 	}
-	my $tmp = PDL->null;
+	my $tmp = PDLA->null;
 	$tmp .= $this->slice(join ',',@maps);
 	return $tmp;
 }
 
-sub PDL::ins {
+sub PDLA::ins {
 	my($this,$what,@coords) = @_;
-	my $w = PDL::Core::alltopdl($PDL::name,$what);
+	my $w = PDLA::Core::alltopdl($PDLA::name,$what);
 	my $tmp;
 	if($this->is_inplace) {
 	  $this->set_inplace(0);
@@ -723,7 +723,7 @@ sub PDL::ins {
 	return $this;
 }
 
-sub PDL::similar_assign {
+sub PDLA::similar_assign {
 	my($from,$to) = @_;
 	if((join ',',@{$from->dims}) ne (join ',',@{$to->dims})) {
 		barf "Similar_assign: dimensions [".
@@ -760,7 +760,7 @@ transpose rows and columns.
 
 =cut
 
-sub PDL::transpose {
+sub PDLA::transpose {
 	my($this) = @_;
 	if($this->getndims <= 1) {
 	    if($this->getndims==0) {

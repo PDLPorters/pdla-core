@@ -8,7 +8,7 @@ extern "C" {
 }
 #endif
 
-MODULE = PDL::Bench		PACKAGE = PDL::Bench
+MODULE = PDLA::Bench		PACKAGE = PDLA::Bench
 
 void
 c_use_pp(sv)

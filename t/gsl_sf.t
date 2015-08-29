@@ -1,27 +1,27 @@
 
 
-# Test Script for the PDL interface to the GSL library
+# Test Script for the PDLA interface to the GSL library
 #  This tests only that the interface is working, i.e. that the
 #   functions can be called. The actual return values are not
 #   checked. 
 #  The GSL library already has a extensive test suite, and we
 #  do not want to duplicate that effort here.
 
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test::More;
 
 BEGIN
 {
-   use PDL::Config;
-   if ( $PDL::Config{WITH_GSL} ) {
-      eval " use PDL::GSLSF::BESSEL; ";
+   use PDLA::Config;
+   if ( $PDLA::Config{WITH_GSL} ) {
+      eval " use PDLA::GSLSF::BESSEL; ";
       unless ($@) {
          plan tests => 1;
       } else {
-         plan skip_all => "PDL::GSLSF::BESSEL not installed.";
+         plan skip_all => "PDLA::GSLSF::BESSEL not installed.";
       }
    } else {
-      plan skip_all => "PDL::GSLSF::BESSEL not compiled.";
+      plan skip_all => "PDLA::GSLSF::BESSEL not compiled.";
    }
 }
 

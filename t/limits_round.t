@@ -1,18 +1,18 @@
 
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test::More;
 
 BEGIN {
-  eval "use PDL::Slatec;";
+  eval "use PDLA::Slatec;";
   if ( !$@ ) {
-    eval "use PDL::Graphics::Limits;";
+    eval "use PDLA::Graphics::Limits;";
     plan tests => 37;
   } else {
-    plan skip_all => 'PDL::Slatec not available';
+    plan skip_all => 'PDLA::Slatec not available';
   }
 };
 
-*round_pow = \&PDL::Graphics::Limits::round_pow;
+*round_pow = \&PDLA::Graphics::Limits::round_pow;
 
 @round_tests =
  ( 

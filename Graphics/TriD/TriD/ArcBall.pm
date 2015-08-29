@@ -9,8 +9,8 @@
 #
 # This needs a faster implementation (?)
 
-package PDL::Graphics::TriD::QuaterController;
-use base qw(PDL::Graphics::TriD::ButtonControl);
+package PDLA::Graphics::TriD::QuaterController;
+use base qw(PDLA::Graphics::TriD::ButtonControl);
 use fields qw /Inv Quat/;
 
 sub new {
@@ -20,7 +20,7 @@ sub new {
 
   $this->{Inv} = $inv;
   $this->{Quat} = (defined($quat) ? $quat :
-			new PDL::Graphics::TriD::Quaternion(1,0,0,0));
+			new PDLA::Graphics::TriD::Quaternion(1,0,0,0));
   $win->add_resizecommand(sub {$this->set_wh(@_)});
   return $this;
 }
@@ -40,9 +40,9 @@ sub mouse_moved {
 	$this->{H} = $this->{Win}->{H};
 	$this->{W} = $this->{Win}->{W};
 
-	if($PDL::Graphics::TriD::verbose) {
-	  print "QuaterController: mouse-moved: $this: $x0,$y0,$x1,$y1,$this->{W},$this->{H},$this->{SC}\n" if($PDL::Graphics::TriD::verbose);
-	  if($PDL::Graphics::TriD::verbose > 1) {
+	if($PDLA::Graphics::TriD::verbose) {
+	  print "QuaterController: mouse-moved: $this: $x0,$y0,$x1,$y1,$this->{W},$this->{H},$this->{SC}\n" if($PDLA::Graphics::TriD::verbose);
+	  if($PDLA::Graphics::TriD::verbose > 1) {
 	    print "\tthis is:\n";
 	    foreach my $k(sort keys %$this) {
 	      print "\t$k\t=>\t$this->{$k}\n";
@@ -73,8 +73,8 @@ sub mouse_moved {
 #
 # Original ArcBall
 #
-package PDL::Graphics::TriD::ArcBall;
-use base qw/PDL::Graphics::TriD::QuaterController/;
+package PDLA::Graphics::TriD::ArcBall;
+use base qw/PDLA::Graphics::TriD::QuaterController/;
 
 # x,y to unit quaternion on the sphere.
 sub normxy2qua {
@@ -82,13 +82,13 @@ sub normxy2qua {
 	my $dist = sqrt ($x ** 2 + $y ** 2);
 	if($dist > 1.0) {$x /= $dist; $y /= $dist; $dist = 1.0;}
 	my $z = sqrt(1-$dist**2);
-	return PDL::Graphics::TriD::Quaternion->new(0,$x,$y,$z);
+	return PDLA::Graphics::TriD::Quaternion->new(0,$x,$y,$z);
 }
 
 # Tjl's version: a cone - more even change of
-package PDL::Graphics::TriD::ArcCone;
+package PDLA::Graphics::TriD::ArcCone;
 
-use base qw/PDL::Graphics::TriD::QuaterController/;
+use base qw/PDLA::Graphics::TriD::QuaterController/;
 
 # x,y to unit quaternion on the sphere.
 sub normxy2qua {
@@ -96,15 +96,15 @@ sub normxy2qua {
 	my $dist = sqrt ($x ** 2 + $y ** 2);
 	if($dist > 1.0) {$x /= $dist; $y /= $dist; $dist = 1.0;}
 	my $z = 1-$dist;
-	my $qua = PDL::Graphics::TriD::Quaternion->new(0,$x,$y,$z);
+	my $qua = PDLA::Graphics::TriD::Quaternion->new(0,$x,$y,$z);
 	$qua->normalize_this();
 	return $qua;
 }
 
 # Tjl's version2: a bowl -- angle is proportional to displacement.
-package PDL::Graphics::TriD::ArcBowl;
+package PDLA::Graphics::TriD::ArcBowl;
 
-use base qw/PDL::Graphics::TriD::QuaterController/;
+use base qw/PDLA::Graphics::TriD::QuaterController/;
 
 # x,y to unit quaternion on the sphere.
 sub normxy2qua {
@@ -112,7 +112,7 @@ sub normxy2qua {
 	my $dist = sqrt ($x ** 2 + $y ** 2);
 	if($dist > 1.0) {$x /= $dist; $y /= $dist; $dist = 1.0;}
 	my $z = cos($dist*3.142/2);
-	my $qua = PDL::Graphics::TriD::Quaternion->new(0,$x,$y,$z);
+	my $qua = PDLA::Graphics::TriD::Quaternion->new(0,$x,$y,$z);
 	$qua->normalize_this();
 	return $qua;
 }

@@ -1,12 +1,12 @@
 
 =head1 NAME
 
-PDL::Interpolate::Slatec - simple interface to SLATEC interpolation routines
+PDLA::Interpolate::Slatec - simple interface to SLATEC interpolation routines
 
 =head1 SYNOPSIS
 
- use PDL::Interpolate::Slatec;
- use PDL::Math;
+ use PDLA::Interpolate::Slatec;
+ use PDLA::Math;
 
  # somewhat pointless way to estimate cos and sin,
  # but is shows that you can thread if you want to
@@ -14,7 +14,7 @@ PDL::Interpolate::Slatec - simple interface to SLATEC interpolation routines
  my $x   = pdl( 0 .. 45 ) * 4 * 3.14159 / 180;
  my $y   = cat( sin($x), cos($x) );
  #
- my $obj = new PDL::Interpolate::Slatec( x => $x, y = $y );
+ my $obj = new PDLA::Interpolate::Slatec( x => $x, y = $y );
  #
  my $xi  = pdl( 0.5, 1.5, 2.5 );
  my $yi  = $obj->interpolate( $xi );
@@ -31,20 +31,20 @@ PDL::Interpolate::Slatec - simple interface to SLATEC interpolation routines
 
 =head1 DESCRIPTION
 
-Use the interface defined by L<PDL::Interpolate|PDL::Interpolate>
+Use the interface defined by L<PDLA::Interpolate|PDLA::Interpolate>
 to provide a simple way to use the SLATEC interpolation
-routines (e.g. see L<PDL::Slatec|PDL::Slatec>).
+routines (e.g. see L<PDLA::Slatec|PDLA::Slatec>).
 Hence the name for this library - as returned by the C<library>
 method - is C<"Slatec">.
 
 Currently, only the 
-L<piecewise cubic Hermite polynomial routines|PDL::Slatec/Piecewise_cubic_Hermite_interpol> 
+L<piecewise cubic Hermite polynomial routines|PDLA::Slatec/Piecewise_cubic_Hermite_interpol> 
 are available (C<type == "pch">).
 
 =head2 Attributes
 
 The following changes are made to the attributes 
-of L<PDL::Interpolate|PDL::Interpolate>:
+of L<PDLA::Interpolate|PDLA::Interpolate>:
 
  Attribute  Flag  Description
  bc         sgr   boundary conditions
@@ -71,7 +71,7 @@ as well as the function value, for a set of C<$xi>.
 If your data is monotonic, and you are not too bothered about
 edge effects, then the default value of C<bc> of C<"simple"> is for you.
 Otherwise, take a look at the description of
-L<PDL::Slatec::chic|PDL::Slatec/chic> and use a hash reference
+L<PDLA::Slatec::chic|PDLA::Slatec/chic> and use a hash reference
 for the C<bc> attribute, with the following keys:
 
 =over 3
@@ -91,7 +91,7 @@ Default = B<0>.
 A perl list of one or two elements. The first element defines how the
 boundary condition for the start of the array is to be calculated;
 it has a range of C<-5 .. 5>, as given for the C<ic> parameter
-of L<chic|PDL::Slatec/chic>. 
+of L<chic|PDLA::Slatec/chic>. 
 The second element, only used if options 2, 1, -1, or 2
 are chosen, contains the value of the C<vc> parameter.
 Default = B<[ 0 ]>.
@@ -120,16 +120,16 @@ C<routine> method.
 
 =cut
 
-package PDL::Interpolate::Slatec;
+package PDLA::Interpolate::Slatec;
 
-use PDL::Interpolate;
-use PDL::Slatec;
+use PDLA::Interpolate;
+use PDLA::Slatec;
 use Carp;
 
 use strict;
 use vars qw( @ISA );
 
-@ISA     = qw ( PDL::Interpolate );
+@ISA     = qw ( PDLA::Interpolate );
 
 ####################################################################
 #
@@ -143,7 +143,7 @@ sub new {
     my $class = ref($this) || $this;
     my $self  = $class->SUPER::new();  # note: do not send in values
 
-    # change from PDL::Interpolate to PDL::Interpolate::Slatec
+    # change from PDLA::Interpolate to PDLA::Interpolate::Slatec
     bless ($self, $class);
 
     # change class attributes
@@ -308,7 +308,7 @@ sub interpolate {
 
 =for ref
 
-Integrate the function stored in the PDL::Interpolate::Slatec
+Integrate the function stored in the PDLA::Interpolate::Slatec
 object. 
 
 The integration can either be between points of
@@ -408,11 +408,11 @@ sub integrate {
 Copyright (C) 2000 Doug Burke (burke@ifa.hawaii.edu).
 All rights reserved. There is no warranty. 
 You are allowed to redistribute this software / documentation as 
-described in the file COPYING in the PDL distribution.                                    
+described in the file COPYING in the PDLA distribution.                                    
 
 =head1 SEE ALSO
 
-L<PDL::Interpolate>, L<PDL>, perltoot(1).
+L<PDLA::Interpolate>, L<PDLA>, perltoot(1).
 
 =cut
 

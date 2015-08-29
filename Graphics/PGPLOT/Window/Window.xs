@@ -2,7 +2,7 @@
 /* 
    PGPLOT.xs  
 
-   A few routines in C to speed up PDL access to PGPLOT primitives.
+   A few routines in C to speed up PDLA access to PGPLOT primitives.
 
 */
 
@@ -26,7 +26,7 @@ static I32 PGPLOT_structure_version = 20000302;  /* The date the PGPLOT structur
 static PGPLOT_function_handle  *myhandle;
 SV *ptr;
 
-MODULE = PDL::Graphics::PGPLOT::Window     PACKAGE = PDL::Graphics::PGPLOT::Window 
+MODULE = PDLA::Graphics::PGPLOT::Window     PACKAGE = PDLA::Graphics::PGPLOT::Window 
 
 void
 pggapline(n,msgval,xpts,ypts)
@@ -111,7 +111,7 @@ BOOT:
 #define aTHX_
 #endif
 	if (ptr==NULL)
-	  Perl_croak(aTHX_ "This module requires PGPLOT version 2.16 or later.\nPlease install/upgrade PGPLOT (see the PDL/DEPENDENCIES file).");
+	  Perl_croak(aTHX_ "This module requires PGPLOT version 2.16 or later.\nPlease install/upgrade PGPLOT (see the PDLA/DEPENDENCIES file).");
 	myhandle = INT2PTR(PGPLOT_function_handle*,SvIV( ptr ));  
 
 

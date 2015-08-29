@@ -3,25 +3,25 @@
 #
 # t/gis_proj.t
 #
-# Test program for the PDL::GIS::Proj library
+# Test program for the PDLA::GIS::Proj library
 #
 # Judd Taylor, Orbital Systems, Ltd.
 # 18 March 2003
 #
 
 use strict;
-use PDL;
+use PDLA;
 use Test::More;
 
 BEGIN
 {
-    use PDL::Config;
-    if ( $PDL::Config{WITH_PROJ} )
+    use PDLA::Config;
+    if ( $PDLA::Config{WITH_PROJ} )
     {
-        eval( " use PDL::GIS::Proj; " );
+        eval( " use PDLA::GIS::Proj; " );
         if( $@ )
         {
-            plan skip_all => "PDL::GIS::Proj compiled, but not available.";
+            plan skip_all => "PDLA::GIS::Proj compiled, but not available.";
         }
         else
         {
@@ -30,7 +30,7 @@ BEGIN
     }
     else
     {
-        plan skip_all => "PDL::GIS::Proj module not compiled.";
+        plan skip_all => "PDLA::GIS::Proj module not compiled.";
     }
 }
 
@@ -43,7 +43,7 @@ sub tapprox
     return all($d < 1.0e-5);
 }
 
-use PDL::GIS::Proj;
+use PDLA::GIS::Proj;
 
 print "Testing forward transformation...\n";
 my $proj = "+proj=merc +ellps=WGS72 +lon_0=80.25w +lat_0=30n";

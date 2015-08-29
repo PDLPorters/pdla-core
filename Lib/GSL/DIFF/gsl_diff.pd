@@ -1,7 +1,7 @@
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::GSL::DIFF - PDL interface to numerical differentiation routines in GSL
+PDLA::GSL::DIFF - PDLA interface to numerical differentiation routines in GSL
 
 =head1 DESCRIPTION
 
@@ -10,8 +10,8 @@ GNU Scientific Library.
 
 =head1 SYNOPSIS
 
-   use PDL;
-   use PDL::GSL::DIFF;
+   use PDLA;
+   use PDLA::GSL::DIFF;
 
    my $x0 = 3.3;
 
@@ -74,12 +74,12 @@ Example:
 
 =head1 BUGS
 
-Feedback is welcome. Log bugs in the PDL bug database (the
+Feedback is welcome. Log bugs in the PDLA bug database (the
 database is always linked from L<http://pdl.perl.org>).
 
 =head1 SEE ALSO
 
-L<PDL>
+L<PDLA>
 
 The GSL documentation is online at
 
@@ -90,8 +90,8 @@ The GSL documentation is online at
 This file copyright (C) 2003 Andres Jordan <andresj@physics.rutgers.edu>
 All rights reserved. There is no warranty. You are allowed to redistribute 
 this software documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 The GSL differentiation routines were written by David Morrison.
 
@@ -118,13 +118,13 @@ sub gsldiff{
   my ($f,$x) = @_;  
   my ($res,$abserr);
   if($$opt{Method}=~/cent/i){
-   ($res,$abserr) = PDL::GSL::DIFF::diff_central($x,$f);
+   ($res,$abserr) = PDLA::GSL::DIFF::diff_central($x,$f);
   }
   elsif($$opt{Method}=~/back/i){
-    ($res,$abserr) = PDL::GSL::DIFF::diff_backward($x,$f);
+    ($res,$abserr) = PDLA::GSL::DIFF::diff_backward($x,$f);
   }
   elsif($$opt{Method}=~/forw/i){
-    ($res,$abserr) = PDL::GSL::DIFF::diff_forward($x,$f);
+    ($res,$abserr) = PDLA::GSL::DIFF::diff_forward($x,$f);
   }
   else{
     barf("Unknown differentiation method $method in gsldiff\n");

@@ -1,28 +1,28 @@
-package PDL::Graphics::TriD::OOGL;
+package PDLA::Graphics::TriD::OOGL;
 
-$PDL::Graphics::TriD::create_window_sub = sub {
-   return new PDL::Graphics::TriD::OOGL::Window;
+$PDLA::Graphics::TriD::create_window_sub = sub {
+   return new PDLA::Graphics::TriD::OOGL::Window;
 };
 
 
-package PDL::Graphics::TriD::Object;
+package PDLA::Graphics::TriD::Object;
 
-#use PDL::Graphics::OpenGL;
+#use PDLA::Graphics::OpenGL;
 
 BEGIN {
-   use PDL::Config;
-   if ($PDL::Config{USE_POGL}) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw(:all)";
+   use PDLA::Config;
+   if ($PDLA::Config{USE_POGL}) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw(:all)";
    }
 }
 
-use PDL::Graphics::OpenGL::Perl::OpenGL;
+use PDLA::Graphics::OpenGL::Perl::OpenGL;
 sub tooogl {
    my($this) = @_;
    join "\n",map { $_->togl() } (@{$this->{Objects}})
 }
 
-package PDL::Graphics::TriD::GL::Window;
+package PDLA::Graphics::TriD::GL::Window;
 use FileHandle;
 
 sub new {my($type) = @_;

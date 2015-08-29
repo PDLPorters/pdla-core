@@ -1,15 +1,15 @@
 #!/usr/bin/perl
 #
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test::More tests => 8;
 
 
 ########### Test of Subclassed-object copying for simple function cases ###########
 
 
-##  First define a PDL-derived object:
-package PDL::Derived;
-@PDL::Derived::ISA = qw/PDL/;
+##  First define a PDLA-derived object:
+package PDLA::Derived;
+@PDLA::Derived::ISA = qw/PDLA/;
 
 sub new {
    my $class = shift;
@@ -17,9 +17,9 @@ sub new {
    my $data = $_[0];
 
    my $self;
-   if(ref($data) eq 'PDL' ){ # if $data is an object (a pdl)
+   if(ref($data) eq 'PDLA' ){ # if $data is an object (a pdl)
 	   $self = $class->initialize;
-	   $self->{PDL} = $data;
+	   $self->{PDLA} = $data;
    }
    else{	# if $data not an object call inherited constructor
 	   $self = $class->SUPER::new($data);
@@ -28,11 +28,11 @@ sub new {
    return $self;
 }
 
-####### Initialize function. This over-ridden function is called by the PDL constructors
+####### Initialize function. This over-ridden function is called by the PDLA constructors
 sub initialize {
 	my $class = shift;
         my $self = {
-                PDL => PDL->null, 	# used to store PDL object
+                PDLA => PDLA->null, 	# used to store PDLA object
 		someThingElse => 42,
         };
 	$class = (ref $class ? ref $class : $class );
@@ -46,8 +46,8 @@ sub copy {
 	# setup the object
 	my $new = $self->initialize;
 	
-	# copy the PDL
-	$new->{PDL} = $self->{PDL}->SUPER::copy;
+	# copy the PDLA
+	$new->{PDLA} = $self->{PDLA}->SUPER::copy;
 
 	# copy the other stuff:
 	$new->{someThingElse} = $self->{someThingElse};
@@ -62,10 +62,10 @@ package main;
 
 ###### Testing Begins #########
 
-# Create New PDL::Derived Object
+# Create New PDLA::Derived Object
 #   (Initialize sets 'someThingElse' data member
 #     to 42)
-$im = new PDL::Derived [
+$im = new PDLA::Derived [
   [ 1, 2,  3,  3 , 5],
   [ 2,  3,  4,  5,  6],
   [13, 13, 13, 13, 13],

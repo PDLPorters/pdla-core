@@ -1,23 +1,23 @@
 
-package PDL::Graphics::TriD::LinesFOOOLD;
-@ISA=qw/PDL::Graphics::TriD::Object/;
+package PDLA::Graphics::TriD::LinesFOOOLD;
+@ISA=qw/PDLA::Graphics::TriD::Object/;
 
 BEGIN {
-   use PDL::Config;
-   if ( $PDL::Config{USE_POGL} ) {
-      eval "use OpenGL $PDL::Config{POGL_VERSION} qw(:all)";
-      eval 'use PDL::Graphics::OpenGL::Perl::OpenGL';
+   use PDLA::Config;
+   if ( $PDLA::Config{USE_POGL} ) {
+      eval "use OpenGL $PDLA::Config{POGL_VERSION} qw(:all)";
+      eval 'use PDLA::Graphics::OpenGL::Perl::OpenGL';
    } else {
-      eval 'use PDL::Graphics::OpenGL';
+      eval 'use PDLA::Graphics::OpenGL';
    }
 }
 
-use PDL::Lite;
+use PDLA::Lite;
 
 sub new {
 	my($type,$x,$y,$z,$color) = @_;
 	my @xdims = $x->dims;
-	$color = PDL->pdl(1) if !defined $color;
+	$color = PDLA->pdl(1) if !defined $color;
 	my $this = {
 		X => $x, Y => $y, Z => $z,
 		Color => $color,
@@ -33,7 +33,7 @@ sub get_boundingbox {
 		push @maxs, $this->{$_}->max();
 	}
 	print "LineBound: ",(join ',',@mins,@maxs),"\n";
-	return PDL::Graphics::TriD::BoundingBox->new( @mins,@maxs );
+	return PDLA::Graphics::TriD::BoundingBox->new( @mins,@maxs );
 }
 
 # XXX Color is ignored.
@@ -42,7 +42,7 @@ sub togl {
 	glDisable(GL_LIGHTING);
 	glBegin(&GL_LINE_STRIP);
 	my $first = 1;
-	PDL::threadover_n($this->{X},$this->{Y},$this->{Z},$this->{Color},sub {
+	PDLA::threadover_n($this->{X},$this->{Y},$this->{Z},$this->{Color},sub {
 		if(shift > 0) {
 			if(!$first) {
 			glEnd();

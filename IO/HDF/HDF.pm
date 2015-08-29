@@ -1,17 +1,17 @@
-package PDL::IO::HDF;
+package PDLA::IO::HDF;
 
 
 =head1 NAME
 
-PDL::IO::HDF - A PDL interface to the HDF4 library.
+PDLA::IO::HDF - A PDLA interface to the HDF4 library.
 
 =head1 SYNOPSIS
 
-  use PDL;
-  use PDL::IO::HDF;
+  use PDLA;
+  use PDLA::IO::HDF;
 
   # Open file 'foo.hdf' with all hdf interface:
-  my $HDF = PDL::IO::HDF->new("foo.hdf");
+  my $HDF = PDLA::IO::HDF->new("foo.hdf");
 
   # You can call functions from either the SD or VS interfaces:
   $HDF->{SD}->SDget("Foo_data");
@@ -39,11 +39,11 @@ interfaces, for that see the docs on those modules.
 our $VERSION = '2.0';
 $VERSION = eval $VERSION;
 
-use PDL::Primitive;
-use PDL::Basic;
+use PDLA::Primitive;
+use PDLA::Basic;
 
-use PDL::IO::HDF::SD;
-use PDL::IO::HDF::VS;
+use PDLA::IO::HDF::SD;
+use PDLA::IO::HDF::VS;
 
 #
 # Constants:
@@ -122,43 +122,43 @@ use constant {
 
 =item DFNT_UCHAR
 
-HDF's unsigned char ~= PDL's byte
+HDF's unsigned char ~= PDLA's byte
 
 =item DFNT_CHAR
 
-HDF's char ~= PDL's byte
+HDF's char ~= PDLA's byte
 
 =item DFNT_FLOAT32
 
-HDF's 32-bit float ~= PDL's float
+HDF's 32-bit float ~= PDLA's float
 
 =item DFNT_FLOAT64
 
-HDF's 64-bit float ~= PDL's double
+HDF's 64-bit float ~= PDLA's double
 
 =item DFNT_INT8
 
-HDF's 8-bit integer ~= PDL's byte
+HDF's 8-bit integer ~= PDLA's byte
 
 =item DFNT_UINT8
 
-HDF's 8-bit unsigned integer ~= PDL's byte
+HDF's 8-bit unsigned integer ~= PDLA's byte
 
 =item DFNT_INT16
 
-HDF's 16-bit integer ~= PDL's short
+HDF's 16-bit integer ~= PDLA's short
 
 =item DFNT_UINT16
 
-HDF's 16-bit unsigned integer ~= PDL's ushort
+HDF's 16-bit unsigned integer ~= PDLA's ushort
 
 =item DFNT_INT32
 
-HDF's 32-bit integer ~= PDL's long
+HDF's 32-bit integer ~= PDLA's long
 
 =item DFNT_INT64
 
-HDF's 32-bit integer ~= PDL's long
+HDF's 32-bit integer ~= PDLA's long
 
 =back
 
@@ -215,42 +215,42 @@ use constant FAIL => -1;
 
 # NOTE: Since the keys & values below are constants, we need the () around them:
 
-#typemap pour convertir typePDL->typeHDF
+#typemap pour convertir typePDLA->typeHDF
 $SDtypeTMAP = {
-    PDL::byte->[0]   => (DFNT_UINT8), 
-    PDL::short->[0]  => (DFNT_INT16),
-    PDL::ushort->[0] => (DFNT_UINT16), 
-    PDL::long->[0]   => (DFNT_INT32),
-    PDL::float->[0]  => (DFNT_FLOAT32), 
-    PDL::double->[0] => (DFNT_FLOAT64), 
-    #PDL::byte->[0]   => $DFNT_UCHAR  ###attention PDL::byte 2x
+    PDLA::byte->[0]   => (DFNT_UINT8), 
+    PDLA::short->[0]  => (DFNT_INT16),
+    PDLA::ushort->[0] => (DFNT_UINT16), 
+    PDLA::long->[0]   => (DFNT_INT32),
+    PDLA::float->[0]  => (DFNT_FLOAT32), 
+    PDLA::double->[0] => (DFNT_FLOAT64), 
+    #PDLA::byte->[0]   => $DFNT_UCHAR  ###attention PDLA::byte 2x
 };
 
-#typemap pour convertir typeHDF->typePDL
+#typemap pour convertir typeHDF->typePDLA
 $SDinvtypeTMAP = {
-    (DFNT_INT8)    => sub { PDL::byte(@_); }, #badtype
-    (DFNT_UINT8)   => sub { PDL::byte(@_); },
-    (DFNT_INT16)   => sub { PDL::short(@_); },
-    (DFNT_UINT16)  => sub { PDL::ushort(@_); },
-    (DFNT_INT32)   => sub { PDL::long(@_); },
-    (DFNT_INT64)   => sub { PDL::long(@_); }, #badtype
-    (DFNT_FLOAT32) => sub { PDL::float(@_); }, 
-    (DFNT_FLOAT64) => sub { PDL::double(@_); },
-    (DFNT_UCHAR)   => sub { PDL::byte(@_); },
-    (DFNT_CHAR)    => sub { PDL::byte(@_); } #badtype
+    (DFNT_INT8)    => sub { PDLA::byte(@_); }, #badtype
+    (DFNT_UINT8)   => sub { PDLA::byte(@_); },
+    (DFNT_INT16)   => sub { PDLA::short(@_); },
+    (DFNT_UINT16)  => sub { PDLA::ushort(@_); },
+    (DFNT_INT32)   => sub { PDLA::long(@_); },
+    (DFNT_INT64)   => sub { PDLA::long(@_); }, #badtype
+    (DFNT_FLOAT32) => sub { PDLA::float(@_); }, 
+    (DFNT_FLOAT64) => sub { PDLA::double(@_); },
+    (DFNT_UCHAR)   => sub { PDLA::byte(@_); },
+    (DFNT_CHAR)    => sub { PDLA::byte(@_); } #badtype
 };
 
 $SDinvtypeTMAP2 = {
-    (DFNT_INT8)    => PDL::byte,
-    (DFNT_UINT8)   => PDL::byte,
-    (DFNT_INT16)   => PDL::short,
-    (DFNT_UINT16)  => PDL::ushort,
-    (DFNT_INT32)   => PDL::long,
-    (DFNT_INT64)   => PDL::long,
-    (DFNT_FLOAT32) => PDL::float, 
-    (DFNT_FLOAT64) => PDL::double,
-    (DFNT_UCHAR)   => PDL::byte,
-    (DFNT_CHAR)    => PDL::byte,
+    (DFNT_INT8)    => PDLA::byte,
+    (DFNT_UINT8)   => PDLA::byte,
+    (DFNT_INT16)   => PDLA::short,
+    (DFNT_UINT16)  => PDLA::ushort,
+    (DFNT_INT32)   => PDLA::long,
+    (DFNT_INT64)   => PDLA::long,
+    (DFNT_FLOAT32) => PDLA::float, 
+    (DFNT_FLOAT64) => PDLA::double,
+    (DFNT_UCHAR)   => PDLA::byte,
+    (DFNT_CHAR)    => PDLA::byte,
 };
 
 sub new
@@ -260,8 +260,8 @@ sub new
  
     my $obj = {};
 
-    $obj->{SD} = PDL::IO::HDF::SD->new( $file );
-    $obj->{VS} = PDL::IO::HDF::VS->new( $file );
+    $obj->{SD} = PDLA::IO::HDF::SD->new( $file );
+    $obj->{VS} = PDLA::IO::HDF::VS->new( $file );
 
     bless $obj, $type;
 } # End of new()...
@@ -293,7 +293,7 @@ contribs of Olivier Archer olivier.archer@ifremer.fr
 
 =head1 SEE ALSO
 
-perl(1), PDL(1), PDL::IO::HDF::SD(1), PDL::IO::HDF::VS(1), constant(1).
+perl(1), PDLA(1), PDLA::IO::HDF::SD(1), PDLA::IO::HDF::VS(1), constant(1).
 
 =cut
 

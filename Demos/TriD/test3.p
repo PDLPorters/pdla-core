@@ -3,15 +3,15 @@ use Carp;
 
 $SIG{__DIE__} = sub {die Carp::longmess(@_);};
 
-use PDL;
+use PDLA;
 
-#$PDL::Graphics::TriD::verbose=1;
+#$PDLA::Graphics::TriD::verbose=1;
 
-use PDL::Graphics::TriD;
+use PDLA::Graphics::TriD;
 
-use PDL::Graphics::TriD::Image;
-use PDL::IO::Pic;
-use PDL::Graphics::TriD::GoBoard;
+use PDLA::Graphics::TriD::Image;
+use PDLA::IO::Pic;
+use PDLA::Graphics::TriD::GoBoard;
 
 
 
@@ -58,12 +58,12 @@ $gob = pdl [
 $gob2 = $gob->slice(":,1:2,1:2");
 $gob3 = $gob->slice(":,2:3,2:3");
 
-$b = new PDL::Graphics::TriD::GoBoard({Data => $gob});
+$b = new PDLA::Graphics::TriD::GoBoard({Data => $gob});
 $b->add_inlay($gob2,1,1,0.25);
 $b->add_inlay($gob3,2,2,0.5);
 
 if(1) {
-$win = PDL::Graphics::TriD::get_current_window();
+$win = PDLA::Graphics::TriD::get_current_window();
 $win->clear_objects();
 $win->add_object($b);
 $win->twiddle();
@@ -81,7 +81,7 @@ $x = sin($u*0.5 + $t * 0.1)/2+0.5;
 $y = cos($u*0.3 + $t * 0.27)/2+0.5;
 $z = cos($u*0.1 + $t * 0.56)/2+0.5;
 
-PDL::Graphics::TriD::imagrgb([$x,$y,$z]);
+PDLA::Graphics::TriD::imagrgb([$x,$y,$z]);
 snap "pic1.1";
 
 $x .= $t / 30;
@@ -113,7 +113,7 @@ print $foo;
 
 print "TOIMAG\n";
 
-PDL::Graphics::TriD::imag3d([$foo]);	# Use default values to make a 3D plot.
+PDLA::Graphics::TriD::imag3d([$foo]);	# Use default values to make a 3D plot.
 		# Stops here for rotating until user presses 'q'.
 snap "pic5";
 

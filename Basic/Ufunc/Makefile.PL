@@ -3,11 +3,11 @@ use warnings;
 use ExtUtils::MakeMaker;
 use Config;
 
-my @pack = (["ufunc.pd", qw(Ufunc PDL::Ufunc)]);
+my @pack = (["ufunc.pd", qw(Ufunc PDLA::Ufunc)]);
 
 if ($^O eq 'dec_osf') {
        if ($Config::Config{cc} =~ /^cc/) {
-               my $no_optimize = ($::PDL_OPTIONS{OPTIMIZE} && $::PDL_OPTIONS{OPTIMIZE})
+               my $no_optimize = ($::PDLA_OPTIONS{OPTIMIZE} && $::PDLA_OPTIONS{OPTIMIZE})
                                 || $Config::Config{optimize}
                                 || '-g2';
                $no_optimize =~ s/(\s|^)(-O)\d/$1${2}0/;

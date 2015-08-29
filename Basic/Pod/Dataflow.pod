@@ -1,6 +1,6 @@
 =head1 NAME
 
-PDL::Dataflow -- description of the dataflow philosophy
+PDLA::Dataflow -- description of the dataflow philosophy
 
 =head1 SYNOPSIS
 
@@ -48,7 +48,7 @@ murky.
 
 =head1 DESCRIPTION
 
-Dataflow is new to PDL2.0. The basic philosophy
+Dataflow is new to PDLA2.0. The basic philosophy
 behind dataflow is that
 
 	> $a = pdl 2,3,4;
@@ -103,14 +103,14 @@ Now, if $c were evaluated between the two resizes, an error condition
 of incompatible sizes would occur.
 
 What happens in the current version is that resizing $a raises
-a flag in $c: "PDL_PARENTDIMSCHANGED" and $b just raises the same flag
+a flag in $c: "PDLA_PARENTDIMSCHANGED" and $b just raises the same flag
 again. When $c is next evaluated, the flags are checked and it is found
 that a recalculation is needed.
 
 Of course, lazy evaluation can sometimes make debugging more painful
 because errors may occur somewhere where you'd not expect them.
-A better stack trace for errors is in the works for PDL, probably
-so that you can toggle a switch $PDL::traceevals and get a good trace
+A better stack trace for errors is in the works for PDLA, probably
+so that you can toggle a switch $PDLA::traceevals and get a good trace
 of where the error actually was.
 
 =head1 Families
@@ -137,7 +137,7 @@ concept must be introduced: families. Let us make a diagram:
 	/ |
        e  d
 
-This is what PDL actually has in memory after the first three lines.
+This is what PDLA actually has in memory after the first three lines.
 When $d is changed, we want $c to change but we don't want $e to change
 because it already is on the graph. It may not be clear now why you don't
 want it to change but if there were 40 lines of code between the 2nd
@@ -205,14 +205,14 @@ to bind events onto changed data. Therefore, we provide such a mechanism:
 	> $b = $a + 1;
 	> $c = $b * 2;
 	> $c->bind( sub { print "A now: $a, C now: $c\n" } )
-	> PDL::dowhenidle();
+	> PDLA::dowhenidle();
 	A now: [2,3,4], C now: [6 8 10]
 	> $a->set(0,1);
 	> $a->set(1,1);
-	> PDL::dowhenidle();
+	> PDLA::dowhenidle();
 	A now: [1,1,4], C now: [4 4 10]
 
-Notice how the callbacks only get called during PDL::dowhenidle.
+Notice how the callbacks only get called during PDLA::dowhenidle.
 An easy way to interface this to Perl event loop mechanisms
 (such as Tk) is being planned.
 

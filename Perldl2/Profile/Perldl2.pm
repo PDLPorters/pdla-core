@@ -1,4 +1,4 @@
-package PDL::Perldl2::Profile::Perldl2;
+package PDLA::Perldl2::Profile::Perldl2;
 #
 # Created on: Sun 25 Apr 2010 03:09:34 PM
 # Last saved: Fri 16 Dec 2011 03:19:27 PM 
@@ -7,7 +7,7 @@ package PDL::Perldl2::Profile::Perldl2;
 use Moose;
 use namespace::clean -except => [ 'meta' ];
 
-$PDL::Perldl2::Profile::Perldl2::VERSION = 0.008;
+$PDLA::Perldl2::Profile::Perldl2::VERSION = 0.008;
 
 with 'Devel::REPL::Profile';
 
@@ -28,7 +28,7 @@ sub plugins {
       NiceSlice
       PrintControl
       ReadLineHistory
-      PDLCommands
+      PDLACommands
    ); # CompletionDriver::Globals
 }
 
@@ -44,8 +44,8 @@ sub apply_profile {
       exec 'perldl';
    }
 
-   # add PDL::Perldl2 for plugin search
-   push @{$repl->_plugin_app_ns}, 'PDL::Perldl2';
+   # add PDLA::Perldl2 for plugin search
+   push @{$repl->_plugin_app_ns}, 'PDLA::Perldl2';
 
    foreach my $plug ($self->plugins) {
       if ($plug =~ 'CompletionDriver::INC') {
@@ -70,15 +70,15 @@ sub apply_profile {
    # do perldl stuff here
    $repl->eval('package main');
 
-   $repl->eval('use PDL');
-   $repl->eval('use PDL::Config');
-   $repl->eval('use PDL::Dbg');
-   $repl->eval('use PDL::Doc::Perldl');
-   $repl->eval('use PDL::IO::Dumper');
-   $repl->eval('use PDL::IO::FlexRaw');
-   $repl->eval('use PDL::IO::Pic');
-   $repl->eval('use PDL::Image2D');
-   $repl->eval('use PDL::AutoLoader');
+   $repl->eval('use PDLA');
+   $repl->eval('use PDLA::Config');
+   $repl->eval('use PDLA::Dbg');
+   $repl->eval('use PDLA::Doc::Perldl');
+   $repl->eval('use PDLA::IO::Dumper');
+   $repl->eval('use PDLA::IO::FlexRaw');
+   $repl->eval('use PDLA::IO::Pic');
+   $repl->eval('use PDLA::Image2D');
+   $repl->eval('use PDLA::AutoLoader');
    $repl->eval('no strict qw(vars)');
 
    # declare PERLDL package variables
@@ -111,7 +111,7 @@ sub apply_profile {
       #map {print  "$_: $h[$_]\n"} ($min..$#h);
       };');
 
-   # preliminary support for PDL demos
+   # preliminary support for PDLA demos
    $repl->eval( q{
       sub demo {
       local $_ = lc $_[0] ;
@@ -127,8 +127,8 @@ sub apply_profile {
       demo pgplot      # PGPLOT graphics output (Req.: PGPLOT)
       demo OOplot      # PGPLOT OO interface    (Req.: PGPLOT)
 
-      demo gnuplot     # Gnuplot graphics (requires PDL::Graphics::Gnuplot)
-      demo prima       # Prima graphics (requires PDL::Graphics::Prima)
+      demo gnuplot     # Gnuplot graphics (requires PDLA::Graphics::Gnuplot)
+      demo prima       # Prima graphics (requires PDLA::Graphics::Prima)
 
       demo transform   # Coordinate transformations (Req.: PGPLOT)
       demo cartography # Cartographic projections (Req.: PGPLOT)
@@ -140,22 +140,22 @@ EOD
       } # if: /^$/
 
       my %demos = (
-         'pdl' => 'PDL::Demos::General', # have to protect pdl as it means something
-         '3d' => 'PDL::Demos::TriD1',
-         '3d2' => 'PDL::Demos::TriD2',
-         '3dgal' => 'PDL::Demos::TriDGallery',
-         'pgplot' => 'PDL::Demos::PGPLOT_demo',
-         'ooplot' => 'PDL::Demos::PGPLOT_OO_demo', # note: lowercase
-         'bad' => 'PDL::Demos::BAD_demo',
-         'bad2' => 'PDL::Demos::BAD2_demo',
-         'transform' => 'PDL::Demos::Transform_demo',
-         'cartography' => 'PDL::Demos::Cartography_demo',
-         'gnuplot' => 'PDL::Demos::Gnuplot_demo',
-         'prima' => 'PDL::Demos::Prima',
+         'pdl' => 'PDLA::Demos::General', # have to protect pdl as it means something
+         '3d' => 'PDLA::Demos::TriD1',
+         '3d2' => 'PDLA::Demos::TriD2',
+         '3dgal' => 'PDLA::Demos::TriDGallery',
+         'pgplot' => 'PDLA::Demos::PGPLOT_demo',
+         'ooplot' => 'PDLA::Demos::PGPLOT_OO_demo', # note: lowercase
+         'bad' => 'PDLA::Demos::BAD_demo',
+         'bad2' => 'PDLA::Demos::BAD2_demo',
+         'transform' => 'PDLA::Demos::Transform_demo',
+         'cartography' => 'PDLA::Demos::Cartography_demo',
+         'gnuplot' => 'PDLA::Demos::Gnuplot_demo',
+         'prima' => 'PDLA::Demos::Prima',
       );
 
       if ( exists $demos{$_} ) {
-         require PDL::Demos::Screen; # Get the routines for screen demos.
+         require PDLA::Demos::Screen; # Get the routines for screen demos.
          my $name = $demos{$_};
          eval "require $name;"; # see docs on require for need for eval
          $name .= "::run";
@@ -190,9 +190,9 @@ EOD
       $repl->print("\n");
    }
 
-   $repl->print("Perldl2 Shell v$PDL::Perldl2::Profile::Perldl2::VERSION
-      PDL comes with ABSOLUTELY NO WARRANTY. For details, see the file
-      'COPYING' in the PDL distribution. This is free software and you
+   $repl->print("Perldl2 Shell v$PDLA::Perldl2::Profile::Perldl2::VERSION
+      PDLA comes with ABSOLUTELY NO WARRANTY. For details, see the file
+      'COPYING' in the PDLA distribution. This is free software and you
       are welcome to redistribute it under certain conditions, see
       the same file for details.\n");
 
@@ -213,7 +213,7 @@ EOD
 
    $repl->print("Type 'help' for online help\n");
    $repl->print("Type Ctrl-D or quit to exit\n");
-   $repl->print("Loaded PDL v$PDL::VERSION\n");
+   $repl->print("Loaded PDLA v$PDLA::VERSION\n");
 }
 
 1;
@@ -222,16 +222,16 @@ __END__
 
 =head1 NAME
 
-PDL::Perldl2::Profile::Perldl2 - profile for Perldl2 shell
+PDLA::Perldl2::Profile::Perldl2 - profile for Perldl2 shell
 
 =head1 SYNOPSIS
 
-    system> re.pl --profile=PDL::Perldl2::Profile::Perldl2  # unix-ish shell
-    system> re    --profile=PDL::Perldl2::Profile::Perldl2  # win32 CMD shell
+    system> re.pl --profile=PDLA::Perldl2::Profile::Perldl2  # unix-ish shell
+    system> re    --profile=PDLA::Perldl2::Profile::Perldl2  # win32 CMD shell
 
     Perldl2 Shell v0.008
-          PDL comes with ABSOLUTELY NO WARRANTY. For details, see the file
-          'COPYING' in the PDL distribution. This is free software and you
+          PDLA comes with ABSOLUTELY NO WARRANTY. For details, see the file
+          'COPYING' in the PDLA distribution. This is free software and you
           are welcome to redistribute it under certain conditions, see
           the same file for details.
     
@@ -250,7 +250,7 @@ PDL::Perldl2::Profile::Perldl2 - profile for Perldl2 shell
       LexEnv
       MultiLine::PPI
       NiceSlice
-      PDLCommands
+      PDLACommands
       Packages
       PrintControl
       ReadLineHistory
@@ -260,21 +260,21 @@ PDL::Perldl2::Profile::Perldl2 - profile for Perldl2 shell
     
     Type Ctrl-D or quit to exit
     
-    Loaded PDL v2.006
+    Loaded PDLA v2.006
     
     pdl> 
 
 
 =head1 DESCRIPTION
 
-This profile is for development of the new PDL shell (version 2).
+This profile is for development of the new PDLA shell (version 2).
 The preferred method to start the new shell is via the C<pdl2>
 command.  This documentation is provided for C<Devel::REPL> coders
 that may wish to use this profile directly for their development.
 
 =head1 SEE ALSO
 
-C<Devel::REPL>, C<Devel::REPL::Profile>, and C<PDL::Perldl>.
+C<Devel::REPL>, C<Devel::REPL::Profile>, and C<PDLA::Perldl>.
 
 =head1 AUTHOR
 

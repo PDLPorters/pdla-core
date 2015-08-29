@@ -40,11 +40,11 @@ EOI
 EOB
 }
 
-if (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==0) {
-  $msg = "\n   Will skip build of PDL::GSL::DIFF on this system   \n";
+if (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==0) {
+  $msg = "\n   Will skip build of PDLA::GSL::DIFF on this system   \n";
   $skip = 1;
-} elsif (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==1) {
-  print "\n   Will forcibly try and build PDL::GSL::DIFF on this system   \n\n";
+} elsif (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==1) {
+  print "\n   Will forcibly try and build PDLA::GSL::DIFF on this system   \n\n";
   $forcebuild=1;
 }
 
@@ -53,15 +53,15 @@ if (($skip && !$forcebuild) ||
   warn "trying to force GSL build but link test failed\n".
     "\t -- aborting GSL build\n" if $forcebuild;
   $msg ||=
-    "\n GSL Libraries not found... Skipping build of PDL::GSL::DIFF.\n";
+    "\n GSL Libraries not found... Skipping build of PDLA::GSL::DIFF.\n";
   write_dummy_make( $msg );
   return;
 } else {
-  print "\n   Building PDL::GSL::DIFF.", 
+  print "\n   Building PDLA::GSL::DIFF.", 
     "Turn off WITH_GSL if there are any problems\n\n";
 }
 
-my @pack = (["gsl_diff.pd", qw(DIFF PDL::GSL::DIFF)]);
+my @pack = (["gsl_diff.pd", qw(DIFF PDLA::GSL::DIFF)]);
 my %hash = pdlpp_stdargs_int(@pack);
 
 $hash{INC} .= " $GSL_includes";

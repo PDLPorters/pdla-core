@@ -1,4 +1,4 @@
-#define PDL_CORE      /* For certain ifdefs */
+#define PDLA_CORE      /* For certain ifdefs */
 #ifndef WIN32
 #define USE_MMAP
 #else
@@ -11,12 +11,12 @@
 #include <sys/mman.h>
 #endif
 
-/* Variable storing our the pthread ID for the main PDL thread.
+/* Variable storing our the pthread ID for the main PDLA thread.
  *  This is used to tell if we are in the main pthread, or in one of
- *  the pthreads spawned for PDL processing
+ *  the pthreads spawned for PDLA processing
  * This is only used when compiled with pthreads.
  */
-#ifdef PDL_PTHREAD
+#ifdef PDLA_PTHREAD
 static pthread_t pdl_main_pthreadID;
 static int done_pdl_main_pthreadID_init = 0;
 
@@ -59,7 +59,7 @@ void pdl__magic_rm(pdl *it,pdl_magic *mag)
 		}
 	}
 	if( !found ){
-		die("PDL:Magic not found: Internal error\n");
+		die("PDLA:Magic not found: Internal error\n");
 	}
 	return;
 }
@@ -82,7 +82,7 @@ int pdl__magic_isundestroyable(pdl *it)
 {
         pdl_magic **foo = (pdl_magic **)(&(it->magic));
 	while(*foo) {
-		if((*foo)->what & PDL_MAGIC_UNDESTROYABLE) {return 1;}
+		if((*foo)->what & PDLA_MAGIC_UNDESTROYABLE) {return 1;}
 		foo = &((*foo)->next);
 	}
 	return 0;
@@ -96,7 +96,7 @@ void *pdl__call_magic(pdl *it,int which)
 	pdl_magic **foo = (pdl_magic **)(&(it->magic));
 	while(*foo) {
 		if((*foo)->what & which) {
-			if((*foo)->what & PDL_MAGIC_DELAYED)
+			if((*foo)->what & PDLA_MAGIC_DELAYED)
 				pdl_add_delayed_magic(*foo);
 			else
 				ret = (void *)((*foo)->vtable->cast(*foo));
@@ -125,21 +125,21 @@ pdl_magic *pdl__print_magic(pdl *it)
         pdl_magic **foo = (pdl_magic **)(&(it->magic));
 	while(*foo) {
 	  printf("Magic %p\ttype: ",(void*)(*foo));
-		if((*foo)->what & PDL_MAGIC_MARKCHANGED)
-		  printf("PDL_MAGIC_MARKCHANGED");
-		else if ((*foo)->what & PDL_MAGIC_MUTATEDPARENT)
-		  printf("PDL_MAGIC_MUTATEDPARENT");
-		else if ((*foo)->what & PDL_MAGIC_THREADING)
-		  printf("PDL_MAGIC_THREADING");
+		if((*foo)->what & PDLA_MAGIC_MARKCHANGED)
+		  printf("PDLA_MAGIC_MARKCHANGED");
+		else if ((*foo)->what & PDLA_MAGIC_MUTATEDPARENT)
+		  printf("PDLA_MAGIC_MUTATEDPARENT");
+		else if ((*foo)->what & PDLA_MAGIC_THREADING)
+		  printf("PDLA_MAGIC_THREADING");
 		else
 		  printf("UNKNOWN");
-		if ((*foo)->what & (PDL_MAGIC_DELAYED|PDL_MAGIC_UNDESTROYABLE))
+		if ((*foo)->what & (PDLA_MAGIC_DELAYED|PDLA_MAGIC_UNDESTROYABLE))
 		  {
 		    printf(" qualifier(s): ");
-		    if ((*foo)->what & PDL_MAGIC_DELAYED)
-		      printf(" PDL_MAGIC_DELAYED");
-		    if ((*foo)->what & PDL_MAGIC_UNDESTROYABLE)
-		      printf(" PDL_MAGIC_UNDESTROYABLE");
+		    if ((*foo)->what & PDLA_MAGIC_DELAYED)
+		      printf(" PDLA_MAGIC_DELAYED");
+		    if ((*foo)->what & PDLA_MAGIC_UNDESTROYABLE)
+		      printf(" PDLA_MAGIC_UNDESTROYABLE");
 		  }
 		printf("\n");
 		foo = &((*foo)->next);
@@ -195,17 +195,17 @@ pdl_magic *pdl_add_svmagic(pdl *it,SV *func)
 {
 	AV *av;
 	pdl_magic_perlfunc *ptr = malloc(sizeof(pdl_magic_perlfunc));
-	ptr->what = PDL_MAGIC_MARKCHANGED | PDL_MAGIC_DELAYED;
+	ptr->what = PDLA_MAGIC_MARKCHANGED | PDLA_MAGIC_DELAYED;
 	ptr->vtable = &svmagic_vtable;
 	ptr->sv = newSVsv(func);
 	ptr->pdl = it;
 	ptr->next = NULL;
 	pdl__magic_add(it,(pdl_magic *)ptr);
-	if(it->state & PDL_ANYCHANGED)
+	if(it->state & PDLA_ANYCHANGED)
 		pdl_add_delayed_magic((pdl_magic *)ptr);
 /* In order to have our SV destroyed in time for the interpreter, */
 /* XXX Work this out not to memleak */
-	av = perl_get_av("PDL::disposable_svmagics",TRUE);
+	av = perl_get_av("PDLA::disposable_svmagics",TRUE);
 	av_push(av,ptr->sv);
 	return (pdl_magic *)ptr;
 }
@@ -219,7 +219,7 @@ pdl_magic *pdl_add_svmagic(pdl *it,SV *func)
 pdl_trans *pdl_find_mutatedtrans(pdl *it)
 {
 	if(!it->magic) return 0;
-	return pdl__call_magic(it,PDL_MAGIC_MUTATEDPARENT);
+	return pdl__call_magic(it,PDLA_MAGIC_MUTATEDPARENT);
 }
 
 static void *fammutmagic_cast(pdl_magic *mag)
@@ -236,7 +236,7 @@ struct pdl_magic_vtable familymutmagic_vtable = {
 pdl_magic *pdl_add_fammutmagic(pdl *it,pdl_trans *ft)
 {
 	pdl_magic_fammut *ptr = malloc(sizeof(pdl_magic_fammut));
-	ptr->what = PDL_MAGIC_MUTATEDPARENT;
+	ptr->what = PDLA_MAGIC_MUTATEDPARENT;
 	ptr->vtable = &familymutmagic_vtable;
 	ptr->ftr = ft;
 	ptr->pdl = it;
@@ -245,7 +245,7 @@ pdl_magic *pdl_add_fammutmagic(pdl *it,pdl_trans *ft)
 	return (pdl_magic *)ptr;
 }
 
-#ifdef PDL_PTHREAD
+#ifdef PDLA_PTHREAD
 
 /**************
  *
@@ -277,7 +277,7 @@ static void *pthread_perform(void *vp) {
 }
 
 int pdl_magic_thread_nthreads(pdl *it,int *nthdim) {
-	pdl_magic_pthread *ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDL_MAGIC_THREADING);
+	pdl_magic_pthread *ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDLA_MAGIC_THREADING);
 	if(!ptr) return 0;
 	*nthdim = ptr->nthdim;
 	return ptr->nthreads;
@@ -286,7 +286,7 @@ int pdl_magic_thread_nthreads(pdl *it,int *nthdim) {
 int pdl_magic_get_thread(pdl *it) { /* XXX -> only one thread can handle pdl at once */
 	pdl_magic_pthread *ptr;
 	int *p;
-	ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDL_MAGIC_THREADING);
+	ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDLA_MAGIC_THREADING);
 	if(!ptr) {die("Invalid pdl_magic_get_thread!");}
 	p = (int*)pthread_getspecific(ptr->key);
 	if(!p) {
@@ -304,7 +304,7 @@ void pdl_magic_thread_cast(pdl *it,void (*func)(pdl_trans *),pdl_trans *t, pdl_t
 						 after it is sent to croak */
 	SV * warn_msg;	  /* Similar deferred warn message. */
 
-	ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDL_MAGIC_THREADING);
+	ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDLA_MAGIC_THREADING);
 	if(!ptr) {
 		/* Magic doesn't exist, create it
 			Probably was deleted before the transformation performed, due to
@@ -315,7 +315,7 @@ void pdl_magic_thread_cast(pdl *it,void (*func)(pdl_trans *),pdl_trans *t, pdl_t
 		clearMagic = 1; /* Set flag to delete magic later */
 
 		/* Try to get magic again */
-		ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDL_MAGIC_THREADING);
+		ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDLA_MAGIC_THREADING);
 
 		if(!ptr) {die("Invalid pdl_magic_thread_cast!");}
 
@@ -387,7 +387,7 @@ void pdl_magic_thread_cast(pdl *it,void (*func)(pdl_trans *),pdl_trans *t, pdl_t
 /* Function to remove threading magic (added by pdl_add_threading_magic) */
 void pdl_rm_threading_magic(pdl *it)
 {
-	pdl_magic_pthread *ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDL_MAGIC_THREADING);
+	pdl_magic_pthread *ptr = (pdl_magic_pthread *)pdl__find_magic(it, PDLA_MAGIC_THREADING);
 
 	/* Don't do anything if threading magic not found */
 	if( !ptr) return;
@@ -399,7 +399,7 @@ void pdl_rm_threading_magic(pdl *it)
 	free( ptr );
 }
 
-/* Function to add threading magic (i.e. identify which PDL dimension should
+/* Function to add threading magic (i.e. identify which PDLA dimension should
    be pthreaded and how many pthreads to create
    Note: If nthdim and nthreads = -1 then any pthreading magic is removed */
 void pdl_add_threading_magic(pdl *it,int nthdim,int nthreads)
@@ -413,7 +413,7 @@ void pdl_add_threading_magic(pdl *it,int nthdim,int nthreads)
 	}
 
 	ptr = malloc(sizeof(pdl_magic_pthread));
-	ptr->what = PDL_MAGIC_THREADING;
+	ptr->what = PDLA_MAGIC_THREADING;
 	ptr->vtable = NULL;
 	ptr->next = NULL;
 	ptr->nthdim = nthdim;
@@ -532,7 +532,7 @@ struct pdl_magic_vtable deletedatamagic_vtable = {
 void pdl_add_deletedata_magic(pdl *it, void (*func)(pdl *, Size_t param), Size_t param)
 {
 	pdl_magic_deletedata *ptr = malloc(sizeof(pdl_magic_deletedata));
-	ptr->what = PDL_MAGIC_DELETEDATA;
+	ptr->what = PDLA_MAGIC_DELETEDATA;
 	ptr->vtable = &deletedatamagic_vtable;
 	ptr->pdl = it;
 	ptr->func = func;

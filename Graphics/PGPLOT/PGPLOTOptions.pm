@@ -1,6 +1,6 @@
 =head1 NAME
 
-PDL::Graphics::PGPLOTOptions - Setting PGPLOT options
+PDLA::Graphics::PGPLOTOptions - Setting PGPLOT options
 
 =head1 SYNOPSIS
 
@@ -8,7 +8,7 @@ use PGPLOTOptions qw('default_options');
 
 =head1 DESCRIPTION
 
-This package contains one function (at present) which returns PDL::Option
+This package contains one function (at present) which returns PDLA::Option
 objects for default settings for plot windows and plot commands. This
 should be complemented by functions that could affect this such as
 file reading commands etc.
@@ -43,7 +43,7 @@ plot colour to use on hardcopy devices.
 
 =item Axis
 
-The axis style to use. See the L<PDL::Graphics::PGPLOT::Window> documentation
+The axis style to use. See the L<PDLA::Graphics::PGPLOT::Window> documentation
 for details. It defaults to 'Normal' which is a labelled box. Valid arguments
 are 'Empty', 'Box', 'Normal', 'Axes', 'Grid', 'LogX', 'LogY', 'LogXY'.
 
@@ -94,7 +94,7 @@ emphasize graph titles in a multipanel plot.
 =item Border
 
 Adjust the spacing around the plot. See the documentation in
-L<PDL::Graphics::PGPLOT::Window> for details.
+L<PDLA::Graphics::PGPLOT::Window> for details.
 
 =item CharSize
 
@@ -115,16 +115,16 @@ plots with PlotPosition.
 =head2 Plot specific options
 
 
-For the moment see the C<PDL::Graphics::PGPLOT::Window> documentation for
+For the moment see the C<PDLA::Graphics::PGPLOT::Window> documentation for
 these.
 
 
 =cut
 
-package PDL::Graphics::PGPLOTOptions;
+package PDLA::Graphics::PGPLOTOptions;
 
 
-# use PDL::Core qw/:Func :Internal/;
+# use PDLA::Core qw/:Func :Internal/;
 use Exporter;
 use strict;
 use vars qw(@ISA @EXPORT_OK);
@@ -358,10 +358,10 @@ sub default_options {
 
 
   # Set up the two primary sets of options for PGPLOT commands.
-  my $window_options = PDL::Options->new($wo);
+  my $window_options = PDLA::Options->new($wo);
   $window_options->translation($wt);
 
-  my $general_options = PDL::Options->new($o);
+  my $general_options = PDLA::Options->new($o);
   $general_options->translation($t);
   $general_options->synonyms($s);
 
@@ -375,7 +375,7 @@ sub default_options {
 This function allows the user to set the default PGPLOT options. It
 is particularly useful in the C<.perldlrc> file since one can do
 
-  use PDL::Graphics::PGPLOTOptions ('set_pgplot_options');
+  use PDLA::Graphics::PGPLOTOptions ('set_pgplot_options');
   set_pgplot_options('Device' => '/xs', 'HardLW' => 3);
 
 for instance to set the default values. The main drawback is that the

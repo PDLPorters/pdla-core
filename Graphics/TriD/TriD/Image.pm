@@ -7,11 +7,11 @@
 # Y coordinate ((y+1)*q+1)*f. We need to use splitdim to obtain
 # a piddle of the imag dimensions from the flat piddle.
 
-package PDL::Graphics::TriD::Image;
-@ISA=qw/PDL::Graphics::TriD::Object/;
-use PDL::Lite;
+package PDLA::Graphics::TriD::Image;
+@ISA=qw/PDLA::Graphics::TriD::Object/;
+use PDLA::Lite;
 
-my $defaultvert = PDL->pdl([
+my $defaultvert = PDLA->pdl([
 	[0,0,0],
 	[1,0,0],
 	[1,1,0],
@@ -21,7 +21,7 @@ my $defaultvert = PDL->pdl([
 # r,g,b = 0..1
 sub new {
 	my($type,$color,$opts) = @_;
-	my $im = PDL::Graphics::TriD::realcoords(COLOR,$color);
+	my $im = PDLA::Graphics::TriD::realcoords(COLOR,$color);
 	my $this = {
 		Im => $im,
 		Opts => $opts,
@@ -30,7 +30,7 @@ sub new {
 	if(defined $opts->{Points}) {
 		$this->{Points} = $opts->{Points};
 		if("ARRAY" eq ref $this->{Points}) {
-			$this->{Points} = PDL->pdl($this->{Points});
+			$this->{Points} = PDLA->pdl($this->{Points});
 		}
 	}
 	bless $this,$type;
@@ -90,12 +90,12 @@ sub flatten {
 #		print "DIMS: ",(join ',',$this->{Im}->dims),"\n";
 	  }
 
-#	$PDL::debug=1;
+#	$PDLA::debug=1;
 	} else {
 	  $xxd=$txd=$xdr; $yyd=$tyd=$ydr;
 	}
 
-	my $p = PDL->zeroes(PDL::float(),3,$xxd,$yyd);
+	my $p = PDLA->zeroes(PDLA::float(),3,$xxd,$yyd);
 
 
 	if(defined $this->{Opts}{Bg}) {
@@ -125,7 +125,7 @@ sub flatten {
 		$ind++; # Just to keep even/odd correct
 	}
 #	$foop->dump;
-	print "ASSGNFOOP!\n" if $PDL::debug;
+	print "ASSGNFOOP!\n" if $PDLA::debug;
 
 	$foop .= $this->{Im};
 #	print "P: $p\n";

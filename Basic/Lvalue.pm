@@ -1,10 +1,10 @@
 =head1 NAME
 
-PDL::Lvalue - declare PDL lvalue subs
+PDLA::Lvalue - declare PDLA lvalue subs
 
 =head1 DESCRIPTION
 
-Declares a subset of PDL functions so that they
+Declares a subset of PDLA functions so that they
 can be used as lvalue subs. In particular, this allows
 simpler constructs such as
 
@@ -20,13 +20,13 @@ are currently regarded experimental.
 
 =head1 SYNOPSIS
 
- use PDL::Lvalue; # automatically done with all PDL loaders
+ use PDLA::Lvalue; # automatically done with all PDLA loaders
 
 =head1 FUNCTIONS
 
 =cut
 
-package PDL::Lvalue;
+package PDLA::Lvalue;
 
 # list of functions that can be used as lvalue subs
 # extend as necessary
@@ -36,27 +36,27 @@ my @funcs = qw/ clump diagonal dice dice_axis dummy flat
                 range rangeb reorder reshape sever slice
                 where whereND xchg /;
 
-my $prots = join "\n", map {"use attributes 'PDL', \\&PDL::$_, 'lvalue';"}
+my $prots = join "\n", map {"use attributes 'PDLA', \\&PDLA::$_, 'lvalue';"}
   @funcs;
 
 =head2 subs
 
 =for ref
 
-test if routine is a known PDL lvalue sub
+test if routine is a known PDLA lvalue sub
 
 =for example
 
-  print "slice is an lvalue sub" if PDL::Lvalue->subs('slice');
+  print "slice is an lvalue sub" if PDLA::Lvalue->subs('slice');
 
-returns the list of PDL lvalue subs if no routine name is given, e.g.
+returns the list of PDLA lvalue subs if no routine name is given, e.g.
 
-  @lvfuncs = PDL::Lvalue->subs;
+  @lvfuncs = PDLA::Lvalue->subs;
 
 It can be used in scalar context to find out if your
-PDL has lvalue subs:
+PDLA has lvalue subs:
 
-  print 'has lvalue subs' if PDL::Lvalue->subs;
+  print 'has lvalue subs' if PDLA::Lvalue->subs;
 
 =cut
 
@@ -73,7 +73,7 @@ sub subs {
 # print "defining lvalue subs:\n$prots\n";
 
 eval << "EOV" if ($^V and $^V >= 5.006007);
-{ package PDL;
+{ package PDLA;
   no warnings qw(misc);
   $prots
 }
@@ -84,8 +84,8 @@ EOV
 Copyright (C) 2001 Christian Soeller (c.soeller@auckland.ac.nz). All
 rights reserved. There is no warranty. You are allowed to redistribute
 this software / documentation under certain conditions. For details,
-see the file COPYING in the PDL distribution. If this file is
-separated from the PDL distribution, the copyright notice should be
+see the file COPYING in the PDLA distribution. If this file is
+separated from the PDLA distribution, the copyright notice should be
 included in the file.
 
 =cut

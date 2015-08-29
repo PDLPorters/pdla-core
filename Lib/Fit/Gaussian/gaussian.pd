@@ -2,7 +2,7 @@
 pp_addpm({At=>Top},<<'EOD');
 =head1 NAME
 
-PDL::Fit::Gaussian - routines for fitting gaussians
+PDLA::Fit::Gaussian - routines for fitting gaussians
 
 =head1 DESCRIPTION
 
@@ -24,8 +24,8 @@ reasonable looking gaussians and tests show correct parameters.
 
 =head1 SYNOPSIS
 
-        use PDL;
-        use PDL::Fit::Gaussian;
+        use PDLA;
+        use PDLA::Fit::Gaussian;
         ($cen, $pk, $fwhm, $back, $err, $fit) = fitgauss1d($x, $data);
         ($pk, $fwhm, $back, $err, $fit) = fitgauss1dr($r, $data);
 
@@ -204,8 +204,8 @@ Gaussian fitting code by Alison Offer
 (aro@aaocbn.aao.gov.au).  All rights reserved. There
 is no warranty. You are allowed to redistribute this software /
 documentation under certain conditions. For details, see the file
-COPYING in the PDL distribution. If this file is separated from the
-PDL distribution, the copyright notice should be included in the file.
+COPYING in the PDLA distribution. If this file is separated from the
+PDLA distribution, the copyright notice should be included in the file.
 
 
 =cut

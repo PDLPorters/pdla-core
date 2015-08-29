@@ -2,7 +2,7 @@
 # XXX DISABLED!
 use Test::More skip_all => 'Disabled';
 
-use PDL::LiteF;
+use PDLA::LiteF;
 
 kill INT,$$ if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
@@ -29,7 +29,7 @@ $a->set(1,6);
 
 ok( ((join ',',@cl) eq "-1,-1,-1"));
 
-PDL::dowhenidle();
+PDLA::dowhenidle();
 
 ok( ((join ',',@cl) eq "12,14,10"));
 
@@ -37,6 +37,6 @@ $a->set(2,7);
 
 ok( ((join ',',@cl) eq "12,14,10"));
 
-PDL::dowhenidle();
+PDLA::dowhenidle();
 
 ok( ((join ',',@cl) eq "12,14,16"));

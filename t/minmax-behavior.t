@@ -2,7 +2,7 @@ use Test::More tests => 3;
 
 use strict;
 use warnings;
-use PDL;
+use PDLA;
 
 # all calls to functions that handle finding minimum and maximum should return
 # the same values (i.e., BAD).  NOTE: The problem is that perl scalar values
@@ -11,7 +11,7 @@ use PDL;
 # pdls.
 #
 SKIP: {
-    skip 'Skipped: testing BAD values for minmax', 3 unless $PDL::Config{WITH_BADVAL};
+    skip 'Skipped: testing BAD values for minmax', 3 unless $PDLA::Config{WITH_BADVAL};
 
     my $bad_0dim = pdl(q|BAD|);
 

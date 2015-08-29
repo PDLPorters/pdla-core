@@ -8,19 +8,19 @@ use ExtUtils::MakeMaker;
 
 my $pthread_include = $Config::Config{usrinc};  # not good for win32
 my $pthread_library = '-lpthread';                                  # not good for MSVC
-my $pthread_define  = ' -DPDL_PTHREAD ';
+my $pthread_define  = ' -DPDLA_PTHREAD ';
 
 my $macos_braindamage_define = ($^O eq 'darwin') ? " -DMACOS_MZERO_BRAINDAMAGE " : "";
-my $badval_define = " -DBADVAL=$PDL::Config{WITH_BADVAL} -DBADVAL_USENAN=$PDL::Config{BADVAL_USENAN} -DBADVAL_PER_PDL=$PDL::Config{BADVAL_PER_PDL}";
+my $badval_define = " -DBADVAL=$PDLA::Config{WITH_BADVAL} -DBADVAL_USENAN=$PDLA::Config{BADVAL_USENAN} -DBADVAL_PER_PDLA=$PDLA::Config{BADVAL_PER_PDLA}";
 
-my $malloclib = $PDL::Config{MALLOCDBG}->{libs};
-my $mallocinc = $PDL::Config{MALLOCDBG}->{include};
+my $malloclib = $PDLA::Config{MALLOCDBG}->{libs};
+my $mallocinc = $PDLA::Config{MALLOCDBG}->{include};
 
 print "Trying to figure out POSIX threads support ...\n";
 
 # TODO: replace directory and file checks for pthread.h by Devel::CheckLib test
-if ( exists $PDL::Config{POSIX_THREADS_INC} and  defined $PDL::Config{POSIX_THREADS_INC} ) {
-    $pthread_include = $PDL::Config{POSIX_THREADS_INC};
+if ( exists $PDLA::Config{POSIX_THREADS_INC} and  defined $PDLA::Config{POSIX_THREADS_INC} ) {
+    $pthread_include = $PDLA::Config{POSIX_THREADS_INC};
     print "\t..setting \$pthread_include to $pthread_include\n";
 } elsif (-d $pthread_include) {
     print "\tSaw pthread.h. Fine.\n";
@@ -31,8 +31,8 @@ if ( exists $PDL::Config{POSIX_THREADS_INC} and  defined $PDL::Config{POSIX_THRE
 }
 
 # TODO: need to clean up per-platform logic herer
-if ( exists $PDL::Config{POSIX_THREADS_LIBS} and defined $PDL::Config{POSIX_THREADS_LIBS} ) {
-    $pthread_library = $PDL::Config{POSIX_THREADS_LIBS};
+if ( exists $PDLA::Config{POSIX_THREADS_LIBS} and defined $PDLA::Config{POSIX_THREADS_LIBS} ) {
+    $pthread_library = $PDLA::Config{POSIX_THREADS_LIBS};
     print "\tUsing POSIX_THREADS_LIBS from perldl.conf\n";
 } elsif ($Config::Config{libs} =~ /-lpthread/) {   # wrong
     print "\tFine, your perl was linked against pthread library.\n";
@@ -82,27 +82,27 @@ $pthread_include = $pthread_library = '' unless $pthread_include and $pthread_li
 
 {
     # TODO: use a Devel::CheckLib build/run test to verify working build params
-    my $conf = $PDL::Config{WITH_POSIX_THREADS};
+    my $conf = $PDLA::Config{WITH_POSIX_THREADS};
 
     if ((!defined($conf) or $conf)
 	and $pthread_include and $pthread_library) {
-	print "\t==> Will build PDL with POSIX thread support. Gifts to TJL :-)\n";
-	$PDL::Config{WITH_POSIX_THREADS} = 1;
+	print "\t==> Will build PDLA with POSIX thread support. Gifts to TJL :-)\n";
+	$PDLA::Config{WITH_POSIX_THREADS} = 1;
     } elsif($conf) {
 	print "\t==> I couldn't find pthread support. However, you have\n";
-	print "\t    turned on the forcing option in PDL_CONFIG so I guess I gotta do it\n";
+	print "\t    turned on the forcing option in PDLA_CONFIG so I guess I gotta do it\n";
     } else {
-	print "\t==> PDL will be built without POSIX thread support.\n";
-	print "\t==> *NOTE*: PDL threads are unrelated to perl threads (usethreads=y)!\n";
+	print "\t==> PDLA will be built without POSIX thread support.\n";
+	print "\t==> *NOTE*: PDLA threads are unrelated to perl threads (usethreads=y)!\n";
 	print "\t==> Enabling perl threads will not help!\n";
 	$pthread_define = '';
-	$PDL::Config{WITH_POSIX_THREADS} = 0;
+	$PDLA::Config{WITH_POSIX_THREADS} = 0;
     }
 }
 
-# isbigendian() is in PDL::Dev
+# isbigendian() is in PDLA::Dev
 print "Trying to figure out endian-ness of machine...";
-print " It is " . (PDL::Core::Dev::isbigendian() ? "big" : "little") . " endian\n";
+print " It is " . (PDLA::Core::Dev::isbigendian() ? "big" : "little") . " endian\n";
 
 sub nopl { my $txt = shift; $txt =~ s/[.]PL$//; return $txt}
 
@@ -157,12 +157,12 @@ undef &MY::postamble; # suppress warning
 *MY::postamble = sub {
 
     # nmake doesn't seem to do inference rules right so spell it out
-    my $pdlsections_g = sprintf <<'EOF', PDL::Core::Dev::genpp_cmdline(qw(pdlsections.g pdlsections.c));
+    my $pdlsections_g = sprintf <<'EOF', PDLA::Core::Dev::genpp_cmdline(qw(pdlsections.g pdlsections.c));
 
 pdlsections.c :: pdlsections.g Types.pm
 	%s
 EOF
-    my $text = PDL::Core::Dev::postamble() . "
+    my $text = PDLA::Core::Dev::postamble() . "
 
 pdlbadvalinit.c:: pdlbadvalinit.c.PL Types.pm\n"
 . make_from_PL( 'pdlbadvalinit.c' )
@@ -224,7 +224,7 @@ pdlcore.c:: pdlcore.c.PL Types.pm\n"
 my @cfiles = qw(pdlcore pdlapi pdlhash pdlthread pdlconv pdlmagic pdlsections);
 my $cobj = join ' ', map qq{$_\$(OBJ_EXT)}, @cfiles;
 WriteMakefile(
- 'NAME'	        => 'PDL::Core',
+ 'NAME'	        => 'PDLA::Core',
  'VERSION_FROM' => 'Version.pm',
   'PM'          => {
 		(map {($_,'$(INST_LIBDIR)/'.$_)} (
@@ -248,7 +248,7 @@ WriteMakefile(
 		   'Types.pm Version.pm Core.c '
 		   },
  'INC'          => join(' ',
-   PDL_INCLUDE(), map {length($_) ? qq{"$_"} : ()} $pthread_include, $mallocinc
+   PDLA_INCLUDE(), map {length($_) ? qq{"$_"} : ()} $pthread_include, $mallocinc
  ),
   depend => {
     'Core$(OBJ_EXT)' => '$(INST_ARCHLIB)$(DFSEP).exists pm_to_blib pdldataswitch.c pdlbadvalinit.c pdl.h pdlcore.h',

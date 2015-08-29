@@ -1,26 +1,26 @@
 #
-package PDL::Demos::Transform_demo;
+package PDLA::Demos::Transform_demo;
 
-use PDL;
-use PDL::Graphics::PGPLOT::Window;
-use PDL::Transform;
+use PDLA;
+use PDLA::Graphics::PGPLOT::Window;
+use PDLA::Transform;
 
 use File::Spec;
 
-PDL::Demos::Routines->import();
+PDLA::Demos::Routines->import();
 sub comment($);
 sub act($);
 sub output;
 
 sub run {
-  local($PDL::debug) = 0;
-  local($PDL::verbose) = 0;
+  local($PDLA::debug) = 0;
+  local($PDLA::verbose) = 0;
 
 ##$ENV{PGPLOT_XW_WIDTH}=0.6;
 $ENV{PGPLOT_DEV}=$^O =~ /MSWin32/ ? '/GW' : "/XWIN";
 
 # try and find m51.fits
-$d = File::Spec->catdir( "PDL", "Demos" );
+$d = File::Spec->catdir( "PDLA", "Demos" );
 $m51path = undef;
 foreach my $path ( @INC ) {
     my $check = File::Spec->catdir( $path, $d );
@@ -30,18 +30,18 @@ barf "Unable to find directory ${m51path} within the perl libraries.\n"
     unless defined $m51path;
 
 comment q|
-    This demo illustrates the PDL::Transform module.
+    This demo illustrates the PDLA::Transform module.
 
-    It requires PGPLOT support in PDL and makes use of the image of
+    It requires PGPLOT support in PDLA and makes use of the image of
     M51 kindly provided by the Hubble Heritage group at the 
     Space Telescope Science Institute.
 
 |;
 
 act q|
-    # PDL::Transform objects embody coordinate transformations. 
+    # PDLA::Transform objects embody coordinate transformations. 
 
-    use PDL::Transform;
+    use PDLA::Transform;
 
     # set up a simple linear scale-and-shift relation
   
@@ -50,7 +50,7 @@ act q|
 |;
 
 act q|
-    # The simplest way to use PDL::Transform is to transform a set of
+    # The simplest way to use PDLA::Transform is to transform a set of
     # vectors.  To do this you use the "apply" method.  
 
     # Define a few 2-vectors:
@@ -71,7 +71,7 @@ act q|
 |;
 
 act q|
-    # PDL::Transform is useful for data resampling, and that's perhaps
+    # PDLA::Transform is useful for data resampling, and that's perhaps
     # the best way to demonstrate it.  First, we do a little bit of prep work:
 
     # Read in an image ($m51path has been set up by this demo to
@@ -225,7 +225,7 @@ act q|
 
 act q|
     ##############################
-    # Note that you can use ->map and ->unmap as either PDL methods
+    # Note that you can use ->map and ->unmap as either PDLA methods
     # or transform methods; what to do is clear from context.
 
     # Original image
@@ -318,9 +318,9 @@ act q|
 
 comment q|
 
- This concludes the PDL::Transform demo.
+ This concludes the PDLA::Transform demo.
 
- Be sure to check the documentation for PDL::Transform::Cartography,
+ Be sure to check the documentation for PDLA::Transform::Cartography,
  which contains common perspective and mapping coordinate systems
  that are useful for work on the terrestrial and celestial spheres,
  as well as other planets &c.

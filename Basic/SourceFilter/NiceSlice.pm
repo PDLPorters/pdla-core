@@ -1,35 +1,35 @@
 BEGIN {
    my %engine_ok = (
-      'Filter::Util::Call' => 'PDL/NiceSlice/FilterUtilCall.pm',
-      'Filter::Simple'     => 'PDL/NiceSlice/FilterSimple.pm',
-      'Module::Compile'     => 'PDL/NiceSlice/ModuleCompile.pm',
+      'Filter::Util::Call' => 'PDLA/NiceSlice/FilterUtilCall.pm',
+      'Filter::Simple'     => 'PDLA/NiceSlice/FilterSimple.pm',
+      'Module::Compile'     => 'PDLA/NiceSlice/ModuleCompile.pm',
    );  # to validate names
 
-   ## $PDL::NiceSlice::engine = $engine_ok{'Filter::Simple'};  # default engine type
+   ## $PDLA::NiceSlice::engine = $engine_ok{'Filter::Simple'};  # default engine type
    ## TODO: Add configuration argument to perldl.conf
-   $PDL::NiceSlice::engine = $engine_ok{'Filter::Util::Call'};  # default engine type
+   $PDLA::NiceSlice::engine = $engine_ok{'Filter::Util::Call'};  # default engine type
 
-   if ( exists $ENV{PDL_NICESLICE_ENGINE} ) {
-      my $engine = $ENV{PDL_NICESLICE_ENGINE};
+   if ( exists $ENV{PDLA_NICESLICE_ENGINE} ) {
+      my $engine = $ENV{PDLA_NICESLICE_ENGINE};
       if ( exists $engine_ok{$engine} and $engine_ok{$engine} ) {
-         $PDL::NiceSlice::engine = $engine_ok{$engine};
-         warn "PDL::NiceSlice using engine '$engine'\n" if $PDL::verbose;
+         $PDLA::NiceSlice::engine = $engine_ok{$engine};
+         warn "PDLA::NiceSlice using engine '$engine'\n" if $PDLA::verbose;
       } elsif ( exists $engine_ok{$engine} and not $engine_ok{$engine} ) {
-         warn "PDL::NiceSlice using default engine\n" if $PDL::verbose;
+         warn "PDLA::NiceSlice using default engine\n" if $PDLA::verbose;
       } else {
-         die "PDL::NiceSlice: PDL_NICESLICE_ENGINE set to invalid engine '$engine'\n";
+         die "PDLA::NiceSlice: PDLA_NICESLICE_ENGINE set to invalid engine '$engine'\n";
       }
    }
 }
 
 no warnings;
 
-package PDL::NiceSlice;
+package PDLA::NiceSlice;
 
 our $VERSION = '1.001';
 $VERSION = eval $VERSION;
 
-$PDL::NiceSlice::debug = defined($PDL::NiceSlice::debug) ? $PDL::NiceSlice::debug : 0;
+$PDLA::NiceSlice::debug = defined($PDLA::NiceSlice::debug) ? $PDLA::NiceSlice::debug : 0;
 # replace all occurences of the form
 #
 #   $pdl(args);
@@ -43,14 +43,14 @@ $PDL::NiceSlice::debug = defined($PDL::NiceSlice::debug) ? $PDL::NiceSlice::debu
 # Modified 2-Oct-2001: don't modify $var(LIST) if it's part of a
 # "for $var(LIST)" or "foreach $var(LIST)" statement.  CED.
 #
-# Modified 5-Nov-2007: stop processing if we encounter m/^no\s+PDL\;:\;:NiceSlice\;\s*$/.
+# Modified 5-Nov-2007: stop processing if we encounter m/^no\s+PDLA\;:\;:NiceSlice\;\s*$/.
 
 # the next one is largely stolen from Regexp::Common
 my $RE_cmt = qr'(?:(?:\#)(?:[^\n]*)(?:\n))';
 
-require PDL::Version; # get PDL version number
+require PDLA::Version; # get PDLA version number
 # 
-# remove code for PDL versions earlier than 2.3
+# remove code for PDLA versions earlier than 2.3
 # 
 
 use Text::Balanced; # used to find parenthesis-delimited blocks 
@@ -167,10 +167,10 @@ my $prefixpat = qr/.*?  # arbitrary leading stuff
 # translates a single arg into corresponding slice format
 sub onearg ($) {
   my ($arg) = @_;
-  print STDERR "processing arg '$arg'\n" if $PDL::NiceSlice::debug;
+  print STDERR "processing arg '$arg'\n" if $PDLA::NiceSlice::debug;
   return q|'X'| if $arg =~ /^\s*:??\s*$/;     # empty arg or just colon
   # recursively process args for slice syntax
-  $arg = findslice($arg,$PDL::debug) if $arg =~ $prefixpat;
+  $arg = findslice($arg,$PDLA::debug) if $arg =~ $prefixpat;
   # no doubles colon are matched to avoid confusion with Perl's C<::>
   if ($arg =~ /(?<!:):(?!:)/) { # a start:stop:delta range
     my @args = splitprotected '(?<!:):(?!:)', $arg;
@@ -198,7 +198,7 @@ sub onearg ($) {
 # process the arg list
 sub procargs {
   my ($txt) = @_;
-  print STDERR "procargs: got '$txt'\n" if $PDL::NiceSlice::debug;
+  print STDERR "procargs: got '$txt'\n" if $PDLA::NiceSlice::debug;
   # $txt =~ s/^\s*\((.*)\)\s*$/$1/s; # this is now done by findslice
   # push @callstack, $txt; # for later error reporting
   my $args = $txt =~ /^\s*$/s ? '' :
@@ -210,7 +210,7 @@ sub procargs {
     ## 
     ## $args =~ s/\s//sg; # get rid of whitespace
   # pop @callstack; # remove from call stack
-  print STDERR "procargs: returned '($args)'\n" if $PDL::NiceSlice::debug;
+  print STDERR "procargs: returned '($args)'\n" if $PDLA::NiceSlice::debug;
   return "($args)";
 }
 
@@ -250,19 +250,19 @@ sub findslice {
       # to fix modifier parsing and allow >1 modifier
       # this code still needs polishing
       savearg $found; # error reporting
-      print STDERR "findslice: found '$found'\n" if $PDL::NiceSlice::debug;
+      print STDERR "findslice: found '$found'\n" if $PDLA::NiceSlice::debug;
       $found =~ s/^\s*\((.*)\)\s*$/$1/s;
       my ($slicearg,@mods) = splitprotected ';', $found;
       filterdie "more than 1 modifier group: @mods" if @mods > 1;
       # filterdie "invalid modifier $1"
       #	if $found =~ /(;\s*[[:graph:]]{2,}?\s*)\)$/;
-      print STDERR "MODS: " . join(',',@mods) . "\n" if $PDL::NiceSlice::debug;
+      print STDERR "MODS: " . join(',',@mods) . "\n" if $PDLA::NiceSlice::debug;
       my @post = (); # collects all post slice operations
       my @pre = ();
       if (@mods) {
 	(my $mod = $mods[0]) =~ s/\s//sg; # eliminate whitespace
 	my @modflags = split '', $mod;
-	print STDERR "MODFLAGS: @modflags\n" if $PDL::NiceSlice::debug;
+	print STDERR "MODFLAGS: @modflags\n" if $PDLA::NiceSlice::debug;
 	filterdie "more than 1 modifier incompatible with ?: @modflags"
 	  if @modflags > 1 && grep (/\?/, @modflags); # only one flag with where
 	my %seen = ();
@@ -351,18 +351,18 @@ sub perldlpp {
  local($_);
  ##############################
  # Backwards compatibility to before the two-parameter form. The only
- # call should be around line 206 of PDL::AutoLoader, but one never
+ # call should be around line 206 of PDLA::AutoLoader, but one never
  # knows....
  #    -- CED 5-Nov-2007
  if(!defined($txt)) { 
-     print "PDL::NiceSlice::perldlpp -- got deprecated one-argument form, from ".(join("; ",caller))."...\n";
+     print "PDLA::NiceSlice::perldlpp -- got deprecated one-argument form, from ".(join("; ",caller))."...\n";
      $txt = $class; 
-     $class = "PDL::NiceSlice";
+     $class = "PDLA::NiceSlice";
  }
 
  ## Debugging to track exactly what is going on -- left in, in case it's needed again
- if($PDL::debug > 1) {
-     print "PDL::NiceSlice::perldlpp - got:\n$txt\n";
+ if($PDLA::debug > 1) {
+     print "PDLA::NiceSlice::perldlpp - got:\n$txt\n";
      my $i;
      for $i(0..5){
 	 my($package,$filename,$line,$subroutine, $hasargs) = caller($i);
@@ -437,23 +437,23 @@ sub perldlpp {
                                                # we're stuffed
  }
 
- if($PDL::debug > 1) {
-     print "PDL::NiceSlice::perldlpp - returning:\n$new\n";
+ if($PDLA::debug > 1) {
+     print "PDLA::NiceSlice::perldlpp - returning:\n$new\n";
  }
  return $new;
 }
 
 BEGIN {
-   require "$PDL::NiceSlice::engine";
+   require "$PDLA::NiceSlice::engine";
 }
 
 =head1 NAME
 
-PDL::NiceSlice - toward a nicer slicing syntax for PDL
+PDLA::NiceSlice - toward a nicer slicing syntax for PDLA
 
 =head1 SYNOPSYS
 
-  use PDL::NiceSlice;
+  use PDLA::NiceSlice;
 
   $a(1:4) .= 2;             # concise syntax for ranges
   print $b((0),1:$end);     # use variables in the slice expression
@@ -478,39 +478,39 @@ PDL::NiceSlice - toward a nicer slicing syntax for PDL
 
 =head1 DESCRIPTION
 
-Slicing is a basic, extremely common operation, and PDL's
-L<slice|PDL::Slices/slice> method would be cumbersome to use in many
-cases.  C<PDL::NiceSlice> rectifies that by incorporating new slicing
+Slicing is a basic, extremely common operation, and PDLA's
+L<slice|PDLA::Slices/slice> method would be cumbersome to use in many
+cases.  C<PDLA::NiceSlice> rectifies that by incorporating new slicing
 syntax directly into the language via a perl I<source filter> (see
 L<the perlfilter man page|perlfilter>).  NiceSlice adds no new functionality, only convenient syntax.
 
 NiceSlice is loaded automatically in the perldl or pdl2 shell, but (to avoid
 conflicts with other modules) must be loaded explicitly in standalone
-perl/PDL scripts (see below).  If you prefer not to use a prefilter on
-your standalone scripts, you can use the L<slice|PDL::Slices/slice>
+perl/PDLA scripts (see below).  If you prefer not to use a prefilter on
+your standalone scripts, you can use the L<slice|PDLA::Slices/slice>
 method in those scripts,
 rather than the more compact NiceSlice constructs.
 
 =head1 Use in scripts and C<perldl> or C<pdl2> shell
 
 The new slicing syntax can be switched on and off in scripts
-and perl modules by using or unloading C<PDL::NiceSlice>.
+and perl modules by using or unloading C<PDLA::NiceSlice>.
 
 But now back to scripts and modules.
-Everything after C<use PDL::NiceSlice> will be translated
+Everything after C<use PDLA::NiceSlice> will be translated
 and you can use the new slicing syntax. Source filtering
 will continue until the end of the file is encountered.
 You can stop sourcefiltering before the end of the file
-by issuing a C<no PDL::NiceSlice> statement.
+by issuing a C<no PDLA::NiceSlice> statement.
 
 Here is an example:
 
-  use PDL::NiceSlice;
+  use PDLA::NiceSlice;
 
   # this code will be translated
   # and you can use the new slicing syntax
 
-  no PDL::NiceSlice;
+  no PDLA::NiceSlice;
 
   # this code won't
   # and the new slicing syntax will raise errors!
@@ -519,13 +519,13 @@ See also L<Filter::Simple> and F<example> in this distribution for
 further examples.
 
 NOTE: Unlike "normal" modules you need to include a
-C<use PDL::NiceSlice> call in each and every file that
+C<use PDLA::NiceSlice> call in each and every file that
 contains code that uses the new slicing syntax. Imagine
 the following situation: a file F<test0.pl>
 
    # start test0.pl
-   use PDL;
-   use PDL::NiceSlice;
+   use PDLA;
+   use PDLA::NiceSlice;
 
    $a = sequence 10;
    print $a(0:4),"\n";
@@ -542,7 +542,7 @@ that C<require>s a second file F<test1.pl>
    # end test1.pl
 
 Following conventional perl wisdom everything should be alright
-since we C<use>d C<PDL> and C<PDL::NiceSlice> already from within
+since we C<use>d C<PDLA> and C<PDLA::NiceSlice> already from within
 F<test0.pl> and by the time F<test1.pl> is C<require>d things should
 be defined and imported, etc. A quick test run will, however, produce
 something like the following:
@@ -554,14 +554,14 @@ something like the following:
 
 This can be fixed by adding the line
 
-  use PDL::NiceSlice;
+  use PDLA::NiceSlice;
 
 C<before> the code in F<test1.pl> that uses the
 new slicing syntax (to play safe just include the line
 near the top of the file), e.g.
 
    # begin corrected test1.pl
-   use PDL::NiceSlice;
+   use PDLA::NiceSlice;
    $aa = sequence 11;
    print $aa(0:7),"\n";
    1;
@@ -573,22 +573,22 @@ Now things proceed more smoothly
  [0 1 2 3 4]
  [0 1 2 3 4 5 6 7]
 
-Note that we don't need to issue C<use PDL> again.
-C<PDL::NiceSlice> is a somewhat I<funny> module in
+Note that we don't need to issue C<use PDLA> again.
+C<PDLA::NiceSlice> is a somewhat I<funny> module in
 that respect. It is a consequence of the way source
 filtering works in Perl (see also the IMPLEMENTATION
 section below).
 
-=head2 evals and C<PDL::NiceSlice>
+=head2 evals and C<PDLA::NiceSlice>
 
-Due to C<PDL::NiceSlice> being a source filter it won't work
+Due to C<PDLA::NiceSlice> being a source filter it won't work
 in the usual way within evals. The following will I<not> do what
 you want:
 
   $a = sequence 10;
   eval << 'EOE';
 
-  use PDL::NiceSlice;
+  use PDLA::NiceSlice;
   $b = $a(0:5);
 
   EOE
@@ -596,7 +596,7 @@ you want:
 
 Instead say:
 
-  use PDL::NiceSlice;
+  use PDLA::NiceSlice;
   $a = sequence 10;
   eval << 'EOE';
 
@@ -606,17 +606,17 @@ Instead say:
   print $b;
 
 Source filters I<must> be executed at compile time to be effective. And
-C<PDL::NiceFilter> is just a source filter (although it is not
+C<PDLA::NiceFilter> is just a source filter (although it is not
 necessarily obvious for the casual user).
 
 =head1 The new slicing syntax
 
-Using C<PDL::NiceSlice> slicing piddles becomes so much easier since, first of
+Using C<PDLA::NiceSlice> slicing piddles becomes so much easier since, first of
 all, you don't need to make explicit method calls. No
 
   $pdl->slice(....);
 
-calls, etc. Instead, C<PDL::NiceSlice> introduces two ways in which to
+calls, etc. Instead, C<PDLA::NiceSlice> introduces two ways in which to
 slice piddles without too much typing:
 
 =over 2
@@ -661,7 +661,7 @@ interfering with the current subref syntax, it will be treated as an
 invocation of the code reference C<$a> with argumentlist C<(4,5)>.
 
 The $a(ARGS) syntax collides in a minor way with the perl syntax.  In
-particular, ``foreach $var(LIST)'' appears like a PDL slicing call.  
+particular, ``foreach $var(LIST)'' appears like a PDLA slicing call.  
 NiceSlice avoids translating the ``for $var(LIST)'' and 
 ``foreach $var(LIST)'' constructs for this reason.  Since you
 can't use just any old lvalue expression in the 'foreach' 'for'
@@ -684,8 +684,8 @@ can write in plain Perl
   $sub = sub { print join ',', @_ };
   $sub->(1,'a');
 
-NOTE: Once C<use PDL::NiceSlice> is in effect (you can always switch it off with
-a line C<no PDL::NiceSlice;> anywhere in the script) the source filter will incorrectly
+NOTE: Once C<use PDLA::NiceSlice> is in effect (you can always switch it off with
+a line C<no PDLA::NiceSlice;> anywhere in the script) the source filter will incorrectly
 replace the above call to C<$sub> with an invocation of the slicing method.
 This is one of the pitfalls of using a source filter that doesn't know
 anything about the runtime type of a variable (cf. the
@@ -717,7 +717,7 @@ Similarly, if you have a list of piddles C<@pdls>:
 
 The argument list is a comma separated list. Each argument specifies
 how the corresponding dimension in the piddle is sliced. In contrast
-to usage of the L<slice|PDL::Slices/slice> method the arguments should
+to usage of the L<slice|PDLA::Slices/slice> method the arguments should
 I<not> be quoted. Rather freely mix literals (1,3,etc), perl
 variables and function invocations, e.g.
 
@@ -737,7 +737,7 @@ the following example:
   $a = sequence 10;
   $sl = $a(0:myfunc 1, 2);
   print $sl;
- PDL barfed: Error in slice:Too many dims in slice
+ PDLA barfed: Error in slice:Too many dims in slice
  Caught at file /usr/local/bin/perldl, line 232, pkg main
 
 
@@ -767,9 +767,9 @@ resolve this issue ;).
 =head2 Modifiers
 
 Following a suggestion originally put forward by Karl Glazebrook the
-latest versions of C<PDL::NiceSlice> implement I<modifiers> in slice
+latest versions of C<PDLA::NiceSlice> implement I<modifiers> in slice
 expressions. Modifiers are convenient shorthands for common variations
-on PDL slicing. The general syntax is
+on PDLA slicing. The general syntax is
 
     $pdl(<slice>;<modifier>)
 
@@ -797,7 +797,7 @@ which is quite different from the same slice expression without the modifier
 
 =item *
 
-C<|> : L<sever|PDL::Core/sever> the link to the piddle, e.g.
+C<|> : L<sever|PDLA::Core/sever> the link to the piddle, e.g.
 
    $a = sequence 10;
    $b = $a(0:2;|)++;  # same as $a(0:2)->sever++
@@ -809,7 +809,7 @@ C<|> : L<sever|PDL::Core/sever> the link to the piddle, e.g.
 =item *
 
 C<?> : short hand to indicate that this is really a
-L<where|PDL::Primitive/where> expression
+L<where|PDLA::Primitive/where> expression
 
 As expressions like
 
@@ -821,7 +821,7 @@ are used very often you can write that shorter as
 
 With the C<?>-modifier the expression preceding the modifier is I<not>
 really a slice expression (e.g. ranges are not allowed) but rather an
-expression as required by the L<where|PDL::Primitive/where> method.
+expression as required by the L<where|PDLA::Primitive/where> method.
 For example, the following code will raise an error:
 
   $a = sequence 10;
@@ -834,17 +834,17 @@ That's about all there is to know about this one.
 
 C<-> : I<squeeze> out any singleton dimensions. In less technical terms:
 reduce the number of dimensions (potentially) by deleting all
-dims of size 1. It is equivalent to doing a L<reshape|PDL::Core/reshape>(-1).
+dims of size 1. It is equivalent to doing a L<reshape|PDLA::Core/reshape>(-1).
 That can be very handy if you want to simplify
 the results of slicing operations:
 
   $a = ones 3, 4, 5;
   $b = $a(1,0;-); # easier to type than $a((1),(0))
   print $b->info;
- PDL: Double D [5]
+ PDLA: Double D [5]
 
 It also provides a unique opportunity to have smileys in your code!
-Yes, PDL gives new meaning to smileys.
+Yes, PDLA gives new meaning to smileys.
 
 =back
 
@@ -867,7 +867,7 @@ Repeating any modifier will raise an error:
  NiceSlice error: modifier | used twice or more
 
 Modifiers are still a new and experimental feature of
-C<PDL::NiceSlice>. I am not sure how many of you are actively using
+C<PDLA::NiceSlice>. I am not sure how many of you are actively using
 them. I<Please do so and experiment with the syntax>. I think
 modifiers are very useful and make life a lot easier.  Feedback is
 welcome as usual. The modifier syntax will likely be further tuned in
@@ -897,7 +897,7 @@ Examples:
   $a(::2);   # this won't work (in the way you probably intended)
   $a(:-1:2); # this will select every 2nd element in the 1st dim
 
-Just as with L<slice|PDL::Slices/slice> negative indices count from the end of the dimension
+Just as with L<slice|PDLA::Slices/slice> negative indices count from the end of the dimension
 backwards with C<-1> being the last element. If the start index is larger
 than the stop index the resulting piddle will have the elements in reverse
 order between these limits:
@@ -914,10 +914,10 @@ Note, however, that the corresponding dimension is not removed from
 the resulting piddle but rather reduced to size 1:
 
   print $a(5)->info
- PDL: Double D [1]
+ PDLA: Double D [1]
 
 If you want to get completely rid of that dimension enclose the index
-in parentheses (again similar to the L<slice|PDL::Slices/slice> syntax):
+in parentheses (again similar to the L<slice|PDLA::Slices/slice> syntax):
 
   print $a((5));
  5
@@ -946,13 +946,13 @@ these dimensions will be fully kept in the sliced piddle:
 
   $a = random 3,4,5;
   print $a->info;
- PDL: Double D [3,4,5]
+ PDLA: Double D [3,4,5]
   print $a((0))->info;
- PDL: Double D [4,5]
+ PDLA: Double D [4,5]
   print $a((0),:,:)->info;  # a more explicit way
- PDL: Double D [4,5]
+ PDLA: Double D [4,5]
   print $a((0),,)->info;    # similar
- PDL: Double D [4,5]
+ PDLA: Double D [4,5]
 
 =item * dummy dimensions
 
@@ -970,7 +970,7 @@ of indices. A simple example:
   $b = $a($idx);
 
 This way of selecting indices was previously only possible using
-L<dice|PDL::Slices/dice> (C<PDL::NiceSlice> attempts to unify the
+L<dice|PDLA::Slices/dice> (C<PDLA::NiceSlice> attempts to unify the
 C<slice> and C<dice> interfaces). Note that the indexing piddles must
 be 1D or 0D. Higher dimensional piddles as indices will raise an error:
 
@@ -1021,22 +1021,22 @@ The next one raises an error
 
 The problem is caused by using the 2-element piddle C<$rg(0:1)> as the
 stop index in the second argument C<:$rg(0:1)> that is interpreted as
-a range by C<PDL::NiceSlice>. You I<can> use multielement piddles as
+a range by C<PDLA::NiceSlice>. You I<can> use multielement piddles as
 index piddles as described above but not in ranges. And
-C<PDL::NiceSlice> treats any expression with unprotected C<:>'s as a
+C<PDLA::NiceSlice> treats any expression with unprotected C<:>'s as a
 range.  I<Unprotected> means as usual 
 I<"not occurring between matched parentheses">.
 
 =head1 IMPLEMENTATION
 
-C<PDL::NiceSlice> exploits the ability of Perl to use source filtering
+C<PDLA::NiceSlice> exploits the ability of Perl to use source filtering
 (see also L<perlfilter>). A source filter basically filters (or
 rewrites) your perl code before it is seen by the
-compiler. C<PDL::NiceSlice> searches through your Perl source code and when
+compiler. C<PDLA::NiceSlice> searches through your Perl source code and when
 it finds the new slicing syntax it rewrites the argument list
 appropriately and splices a call to the C<slice> method using the
 modified arg list into your perl code. You can see how this works in
-the L<perldl|perldl> or L<pdl2|PDL::Perldl2> shells by switching on
+the L<perldl|perldl> or L<pdl2|PDLA::Perldl2> shells by switching on
 reporting (see above how to do that).
 
 =head1 BUGS
@@ -1048,28 +1048,28 @@ above).
 
 =head2 The C<DATA> file handle
 
-I<Note>: To avoid clobbering the C<DATA> filehandle C<PDL::NiceSlice>
+I<Note>: To avoid clobbering the C<DATA> filehandle C<PDLA::NiceSlice>
 switches itself off when encountering the C<__END__> or C<__DATA__> tokens.
 This should not be a problem for you unless you use C<SelfLoader> to load
-PDL code including the new slicing from that section. It is even desirable
+PDLA code including the new slicing from that section. It is even desirable
 when working with L<Inline::Pdlpp|Inline::Pdlpp>, see below.
 
 =head2 Possible interaction with L<Inline::Pdlpp|Inline::Pdlpp>
 
-There is currently an undesired interaction between C<PDL::NiceSlice>
+There is currently an undesired interaction between C<PDLA::NiceSlice>
 and the new L<Inline::Pdlpp|Inline::Pdlpp> module (currently only in 
-PDL CVS). Since PP code generally
+PDLA CVS). Since PP code generally
 contains expressions of the type C<$var()> (to access piddles, etc)
-C<PDL::NiceSlice> recognizes those I<incorrectly> as
+C<PDLA::NiceSlice> recognizes those I<incorrectly> as
 slice expressions and does its substitutions. This is not a problem
 if you use the C<DATA> section for your Pdlpp code -- the recommended
 place for Inline code anyway. In that case
-C<PDL::NiceSlice> will have switched itself off before encountering any
+C<PDLA::NiceSlice> will have switched itself off before encountering any
 Pdlpp code (see above):
 
     # use with Inline modules
-  use PDL;
-  use PDL::NiceSlice;
+  use PDLA;
+  use PDLA::NiceSlice;
   use Inline Pdlpp;
 
   $a = sequence(10);
@@ -1082,16 +1082,16 @@ Pdlpp code (see above):
   ... inline stuff
 
 
-Otherwise switch C<PDL::NiceSlice> explicitly off around the
+Otherwise switch C<PDLA::NiceSlice> explicitly off around the
 Inline::Pdlpp code:
 
-  use PDL::NiceSlice;
+  use PDLA::NiceSlice;
 
   $a = sequence 10;
   $a(0:3)++;
   $a->inc;
 
-  no PDL::NiceSlice; # switch off before Pdlpp code
+  no PDLA::NiceSlice; # switch off before Pdlpp code
   use Inline Pdlpp => "Pdlpp source code";
 
 The cleaner solution is to always stick with the
@@ -1103,7 +1103,7 @@ the bottom.
 =head2 Bug reports
 
 Feedback and bug reports are welcome. Please include an example
-that demonstrates the problem. Log bug reports in the PDL
+that demonstrates the problem. Log bug reports in the PDLA
 bug database at
 
   http://sourceforge.net/p/pdl/bugs/
@@ -1116,7 +1116,7 @@ E<lt>pdl-devel@lists.sourceforge.netE<gt>.
 
 Copyright (c) 2001, 2002 Christian Soeller. All Rights Reserved.
 This module is free software. It may be used, redistributed
-and/or modified under the same terms as PDL itself
+and/or modified under the same terms as PDLA itself
 (see L<http://pdl.perl.org>).
 
 =cut

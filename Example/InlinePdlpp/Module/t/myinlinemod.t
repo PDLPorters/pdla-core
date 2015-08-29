@@ -8,7 +8,7 @@
 
 BEGIN { $| = 1; print "1..3\n"; }
 END {print "not ok 1\n" unless $loaded;}
-use PDL::MyInlineMod;
+use PDLA::MyInlineMod;
 $loaded = 1;
 print "ok 1\n";
 
@@ -18,7 +18,7 @@ print "ok 1\n";
 # (correspondingly "not ok 13") depending on the success of chunk 13
 # of the test code):
 
-use PDL::LiteF;
+use PDLA::LiteF;
 my $a = zeroes 10;
 my $b = $a->myinc;
 print "$b\n";

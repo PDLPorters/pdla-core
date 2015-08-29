@@ -1,4 +1,4 @@
-use PDL::LiteF;
+use PDLA::LiteF;
 
 use strict;
 use warnings;

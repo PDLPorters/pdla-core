@@ -27,11 +27,11 @@ my $skip = 0;
 my $msg = undef;
 my $forcebuild=0;
 
-if (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==0) {
-  $msg = "\n   Will skip build of PDL::GSLSF on this system   \n";
+if (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==0) {
+  $msg = "\n   Will skip build of PDLA::GSLSF on this system   \n";
   $skip = 1;
-} elsif (defined $PDL::Config{WITH_GSL} && $PDL::Config{WITH_GSL}==1) {
-  print "\n   Will forcibly try and build PDL::GSLSF on this system   \n\n";
+} elsif (defined $PDLA::Config{WITH_GSL} && $PDLA::Config{WITH_GSL}==1) {
+  print "\n   Will forcibly try and build PDLA::GSLSF on this system   \n\n";
   $forcebuild=1;
 }
 
@@ -40,16 +40,16 @@ if (($skip && !$forcebuild) ||
   warn "trying to force GSL build but link test failed\n".
     "\t -- aborting GSL build\n" if $forcebuild;
   $msg ||=
-    "\n GSL Libraries not found... Skipping build of PDL::GSLSF.\n";
+    "\n GSL Libraries not found... Skipping build of PDLA::GSLSF.\n";
   write_dummy_make( $msg );
   return;
 } else {
-  print "\n   Building PDL::GSLSF.", 
+  print "\n   Building PDLA::GSLSF.", 
     "Turn off WITH_GSL if there are any problems\n\n";
 }
 
 WriteMakefile(
-	'NAME' => 'PDL::GSLSF',
+	'NAME' => 'PDLA::GSLSF',
 	VERSION => '0.5',
 	# VERSION_FROM => '../../Basic/Core/Version.pm',
        #DIR =>  [ qw/airy bessel chebyshev clausen coulomb coupling dawson debye dilog elementary ellint elljac erf exp expint fermi_dirac gamma gegenbauer hyperg laguerre legendre log poly pow_int psi synchrotron transport trig zeta/ ],

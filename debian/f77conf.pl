@@ -1,6 +1,6 @@
 package F77Conf;
 # a minimal hardcoded config designed for debian so that we don't need
-# ExtUtils::F77 when building PDL
+# ExtUtils::F77 when building PDLA
 
 print "Config   ",__PACKAGE__->config(),"\n";
 print "Compiler ",__PACKAGE__->compiler(),"\n";

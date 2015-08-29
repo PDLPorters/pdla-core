@@ -1,11 +1,11 @@
 # Test if we can still do scopes ok - multiple uses etc..
-# Also see that PDL loaders get the correct symbols.
+# Also see that PDLA loaders get the correct symbols.
 use Test::More tests => 10;
 
 package A;
 our $a;
 # note "A: ",%A::,"\n";
-use PDL;
+use PDLA;
 
 # $a = zeroes 5,5;
 
@@ -19,7 +19,7 @@ $a = zeroes 5,5;
 ::ok((bless {},A)->can("zeroes"));
 
 package B;
-use PDL;
+use PDLA;
 
 #note "B: ",%B::,"\n";
 #note "B: ",%B::,"\n";
@@ -28,19 +28,19 @@ use PDL;
 ::ok((bless {},B)->can("zeroes"));
 
 package C;
-use PDL::Lite;
+use PDLA::Lite;
 ::ok(!((bless {},C)->can("zeroes")));
 
 package D;
-use PDL::Lite;
+use PDLA::Lite;
 ::ok(!((bless {},D)->can("zeroes")));
 
 package E;
-use PDL::LiteF;
+use PDLA::LiteF;
 ::ok((bless {},E)->can("zeroes"));
 
 package F;
-use PDL::LiteF;
+use PDLA::LiteF;
 ::ok((bless {},F)->can("zeroes"));
 
 ::ok(!((bless {},C)->can("imag")));

@@ -3,15 +3,15 @@
 use strict;
 $|++;
 
-use PDL::Config;
+use PDLA::Config;
 
 BEGIN {
-   if ( not $PDL::Config{PDLDOC_IGNORE_AUTOLOADER} ) {
-      require PDL::AutoLoader;
+   if ( not $PDLA::Config{PDLADOC_IGNORE_AUTOLOADER} ) {
+      require PDLA::AutoLoader;
    }
 }
 
-use PDL::Doc::Perldl;
+use PDLA::Doc::Perldl;
 use File::Basename;
 
 our $VERSION = '0.3';
@@ -25,7 +25,7 @@ my $name = basename( $0 );
 my $usage = <<"EOH";
 Usage: $name [-a] [-b] [-h] [-s] [-u] <string>
 
-This program provides command-line access to the PDL documentation.
+This program provides command-line access to the PDLA documentation.
 If no flag is specified, -h is assumed.
 
   -a (apropos) searches the documentation for the string
@@ -54,7 +54,7 @@ __END__
 
 =head1 NAME
 
-pdldoc - shell interface to PDL documentation
+pdldoc - shell interface to PDLA documentation
 
 =head1 SYNOPSIS
 
@@ -68,10 +68,10 @@ B<pdldoc> [B<-a>] [B<-b>] [B<-h>] [B<-s>] [B<-u>] <text>
 
 The aim of B<pdldoc> is to provide the same functionality
 as the C<apropos>, C<help>, C<sig>, C<badinfo>,
-and C<usage> commands available in the L<perldl|PDL::perldl>
+and C<usage> commands available in the L<perldl|PDLA::perldl>
 and L<pdl2|pdl2> shells.
 
-Think of it as the PDL equivalent of C<perldoc -f>.
+Think of it as the PDLA equivalent of C<perldoc -f>.
 
 =head1 OPTIONS
 
@@ -79,12 +79,12 @@ Think of it as the PDL equivalent of C<perldoc -f>.
 
 =item B<-h> help
 
-print documentation about a PDL function or module or show a PDL manual.
+print documentation about a PDLA function or module or show a PDLA manual.
 This is the default option.
 
 =item B<-a> apropos
 
-Regex search PDL documentation database.
+Regex search PDLA documentation database.
 
 =item B<-b> badinfo
 
@@ -92,17 +92,17 @@ Information on the support for bad values provided by the function.
 
 =item B<-s> sig
 
-prints signature of PDL function.
+prints signature of PDLA function.
 
 =item B<-u> usage
 
-Prints usage information for a PDL function.
+Prints usage information for a PDLA function.
 
-=item C<$PDL::Config{PDLDOC_IGNORE_AUTOLOADER}>
+=item C<$PDLA::Config{PDLADOC_IGNORE_AUTOLOADER}>
 
-This PDL configuration variable may be set in the perldl.conf
+This PDLA configuration variable may be set in the perldl.conf
 file to disable runtime search for documentation in
-L<PDL::AutoLoader|PDL::AutoLoader> files.
+L<PDLA::AutoLoader|PDLA::AutoLoader> files.
 
 =back
 

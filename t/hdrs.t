@@ -1,5 +1,5 @@
 use Test::More tests => 9;
-use PDL::LiteF;
+use PDLA::LiteF;
 use Test::Deep;
 use Data::Dumper;
 
@@ -8,7 +8,7 @@ use warnings;
 
 $|=1;
 
-#  PDL::Core::set_debugging(1);
+#  PDLA::Core::set_debugging(1);
 kill 'INT',$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
 
 my $pa = zeroes(20);

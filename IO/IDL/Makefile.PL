@@ -8,7 +8,7 @@ undef &MY::postamble; # suppress warning
 *MY::postamble = sub { return ""; };
 
 WriteMakefile(
-     NAME => "PDL::IO::IDL",
+     NAME => "PDLA::IO::IDL",
      'VERSION_FROM' => '../../Basic/Core/Version.pm',
     (eval ($ExtUtils::MakeMaker::VERSION) >= 6.57_02 ? ('NO_MYMETA' => 1) : ()),
 );

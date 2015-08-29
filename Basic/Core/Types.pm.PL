@@ -11,7 +11,7 @@ use File::Basename qw(&basename &dirname);
 
 # Figure out the 4 byte integer type on this machine
 
-sub packtypeof_PDL_Indx {
+sub packtypeof_PDLA_Indx {
    if ($Config{'ivsize'} == 8) {
       return 'q*';
    }
@@ -23,18 +23,18 @@ sub packtypeof_PDL_Indx {
    }
 }
 
-sub typeof_PDL_Indx {
-   warn "Types.pm.PL: using typedef $Config{'ivtype'} PDL_Indx\n";
+sub typeof_PDLA_Indx {
+   warn "Types.pm.PL: using typedef $Config{'ivtype'} PDLA_Indx\n";
    return $Config{'ivtype'} 
 }
 
-sub typeof_PDL_Long {
+sub typeof_PDLA_Long {
    return 'int'  if $Config{'intsize'}==4;
    return 'long' if $Config{'longsize'}==4;
    die "Can not find an integer datatype of size 4 bytes!!!\n";
 }
 
-sub typeof_PDL_i64 {
+sub typeof_PDLA_i64 {
   return $Config{i64type} or
     die "Can not find an integer 64 bit type";
 }
@@ -53,7 +53,7 @@ for (@ARGV) {
 my @types = (
 	     {
 	      identifier => 'B',
-	      pdlctype => 'PDL_Byte',# to be defined in pdl.h
+	      pdlctype => 'PDLA_Byte',# to be defined in pdl.h
 	      realctype => 'unsigned char',
 	      ppforcetype => 'byte', # for some types different from ctype
 	      usenan => 0,           # do we need NaN handling for this type?
@@ -62,7 +62,7 @@ my @types = (
 	     },
 	     {
 	      identifier => 'S',
-	      pdlctype => 'PDL_Short',
+	      pdlctype => 'PDLA_Short',
 	      realctype => 'short',
 	      ppforcetype => 'short',
 	      usenan => 0,
@@ -72,7 +72,7 @@ my @types = (
 	     {
 	      identifier => 'US',
 	      onecharident => 'U',   # only needed if different from identifier
-	      pdlctype => 'PDL_Ushort',
+	      pdlctype => 'PDLA_Ushort',
 	      realctype => 'unsigned short',
 	      ppforcetype => 'ushort',
 	      usenan => 0,
@@ -81,8 +81,8 @@ my @types = (
 	     },
 	     {
 	      identifier => 'L',
-	      pdlctype => 'PDL_Long',
-	      realctype => &typeof_PDL_Long,
+	      pdlctype => 'PDLA_Long',
+	      realctype => &typeof_PDLA_Long,
 	      ppforcetype => 'int',
 	      usenan => 0,
 	      packtype => 'l*',
@@ -90,18 +90,18 @@ my @types = (
 	     },
 
 #
-# The PDL_Indx type will be either the same as PDL_Long or, probably,
-# the same as PDL_LongLong depending on the platform.  Will need to
+# The PDLA_Indx type will be either the same as PDLA_Long or, probably,
+# the same as PDLA_LongLong depending on the platform.  Will need to
 # determine the actual type at build time.
 
        {
         identifier => 'IND',
         onecharident => 'N',   # only needed if different from identifier
-        pdlctype => 'PDL_Indx',
-        realctype => &typeof_PDL_Indx,
+        pdlctype => 'PDLA_Indx',
+        realctype => &typeof_PDLA_Indx,
         ppforcetype => 'indx',
         usenan => 0,
-        packtype => &packtypeof_PDL_Indx,
+        packtype => &packtypeof_PDLA_Indx,
         defaultbadval => 'LONG_MIN',
        },
 #
@@ -112,8 +112,8 @@ my @types = (
        {
 	identifier => 'LL',
 	onecharident => 'Q',   # only needed if different from identifier
-	pdlctype => 'PDL_LongLong',
-	realctype => &typeof_PDL_i64,
+	pdlctype => 'PDLA_LongLong',
+	realctype => &typeof_PDLA_i64,
 	ppforcetype => 'longlong',
 	usenan => 0,
 	packtype => 'q*',
@@ -127,7 +127,7 @@ my @types = (
 
 	      {
 		  identifier => 'F',
-		  pdlctype => 'PDL_Float',
+		  pdlctype => 'PDLA_Float',
 		  realctype => 'float',
 		  ppforcetype => 'float',
 		  usenan => 1,
@@ -136,7 +136,7 @@ my @types = (
 	      },
 	      {
 		  identifier => 'D',
-		  pdlctype => 'PDL_Double',
+		  pdlctype => 'PDLA_Double',
 		  realctype => 'double',
 		  ppforcetype => 'double',
 		  usenan => 1,
@@ -145,7 +145,7 @@ my @types = (
 	      },
 	      {
 		  identifier => 'A',
-		  pdlctype => 'PDL_Anyval',
+		  pdlctype => 'PDLA_Anyval',
 		  realctype => 'double',
 		  ppforcetype => 'anyval',
 		  usenan => 0,
@@ -165,7 +165,7 @@ sub checktypehas {
 sub gentypevars {
   my @types = @_;
   checktypehas 'identifier', @types;
-  my @ret = map {"\$PDL_$_->{identifier}"} @types;
+  my @ret = map {"\$PDLA_$_->{identifier}"} @types;
   return wantarray ? @ret : $ret[0];
 }
 
@@ -177,7 +177,7 @@ sub genexports {
 sub gentypenames {
   my @types = @_;
   checktypehas 'identifier', @types;
-  my @ret = map {"PDL_$_->{identifier}"} @types;
+  my @ret = map {"PDLA_$_->{identifier}"} @types;
   return wantarray ? @ret : $ret[0];
 }
 
@@ -193,7 +193,7 @@ sub convertfunc {
   return $type->{'convertfunc'} if exists $type->{'convertfunc'};
   checktypehas 'pdlctype', $type;
   my $cfunc = $type->{pdlctype};
-  $cfunc =~ s/PDL_//;
+  $cfunc =~ s/PDLA_//;
   return lc $cfunc;
 }
 
@@ -226,7 +226,7 @@ sub gentypehashcode {
   local $Data::Dumper::Pad = "\t\t";
   my $i = 0;
   my $perlcode = '';
-  $perlcode .= "%PDL::Types::typehash = (\n";
+  $perlcode .= "%PDLA::Types::typehash = (\n";
   for my $type (@types) {
     print STDOUT "making ".gentypenames($type)."...\n";
     $perlcode .= "\t".gentypenames($type)." =>\n";
@@ -275,7 +275,7 @@ print OUT <<'!NO!SUBS!';
 
 ### Generated from Types.pm.PL automatically - do not modify! ###
 
-package PDL::Types;
+package PDLA::Types;
 require Exporter;
 use Carp;
 
@@ -314,23 +314,23 @@ print OUT gentypehashcode @types;
 print OUT <<'!NO!SUBS!';
 
 # Cross-reference by common names
-%PDL::Types::typenames = ();
-for my $k(keys %PDL::Types::typehash) {
-    my $n = $PDL::Types::typehash{$k}->{'numval'};
-    $PDL::Types::typenames{$k} = $n;
-    $PDL::Types::typenames{$n} = $n;
-    $PDL::Types::typenames{$PDL::Types::typehash{$k}->{ioname}} = $n;
-    $PDL::Types::typenames{$PDL::Types::typehash{$k}->{ctype}} = $n;
+%PDLA::Types::typenames = ();
+for my $k(keys %PDLA::Types::typehash) {
+    my $n = $PDLA::Types::typehash{$k}->{'numval'};
+    $PDLA::Types::typenames{$k} = $n;
+    $PDLA::Types::typenames{$n} = $n;
+    $PDLA::Types::typenames{$PDLA::Types::typehash{$k}->{ioname}} = $n;
+    $PDLA::Types::typenames{$PDLA::Types::typehash{$k}->{ctype}} = $n;
 }
 
 
 =head1 NAME
 
-PDL::Types - define fundamental PDL Datatypes
+PDLA::Types - define fundamental PDLA Datatypes
 
 =head1 SYNOPSIS
 
- use PDL::Types;
+ use PDLA::Types;
 
  $pdl = ushort( 2.0, 3.0 );
  print "The actual c type used to store ushort's is '" .
@@ -339,18 +339,18 @@ PDL::Types - define fundamental PDL Datatypes
 
 =head1 DESCRIPTION
 
-Internal module - holds all the PDL Type info.  The type info can be
-accessed easily using the C<PDL::Type> object returned by
-the L<type|PDL::Core/type> method.
+Internal module - holds all the PDLA Type info.  The type info can be
+accessed easily using the C<PDLA::Type> object returned by
+the L<type|PDLA::Core/type> method.
 
 Skip to the end of this document to find out how to change
-the set of types supported by PDL.
+the set of types supported by PDLA.
 
 =head1 Support functions
 
 A number of functions are available for module writers
 to get/process type information. These are used in various
-places (e.g. C<PDL::PP>, C<PDL::Core>) to generate the
+places (e.g. C<PDLA::PP>, C<PDLA::Core>) to generate the
 appropriate type loops, etc.
 
 =head2 typesrtkeys
@@ -397,12 +397,12 @@ whose C<$in_key> is equal to C<$value>, and return that type's value
 for C<$out_key>. For example:
 
  # Does byte type use nan?
- $uses_nan = PDL::Types::mapfld(byte => 'ppforcetype', 'usenan');
+ $uses_nan = PDLA::Types::mapfld(byte => 'ppforcetype', 'usenan');
  # Equivalent:
  $uses_nan = byte->usenan;
  
  # What is the actual C type for the value that we call 'long'?
- $type_name = PDL::Types::mapfld(long => 'convertfunc', 'realctype');
+ $type_name = PDLA::Types::mapfld(long => 'convertfunc', 'realctype');
  # Equivalent:
  $type_name = long->realctype;
 
@@ -411,7 +411,7 @@ should only use mapfld if you were given the type index (in which case the
 actual type is not immediately obvious):
 
  $type_index = 4;
- $type_name = PDL::Types::mapfld($type_index => numval, 'realctype');
+ $type_name = PDLA::Types::mapfld($type_index => numval, 'realctype');
 
 =cut
 
@@ -434,8 +434,8 @@ things.
 
 sub typesynonyms {
   my $add = join "\n",
-      map {"#define PDL_".typefld($_,'ppsym')." ".typefld($_,'sym')}
-        grep {"PDL_".typefld($_,'ppsym') ne typefld($_,'sym')} typesrtkeys;
+      map {"#define PDLA_".typefld($_,'ppsym')." ".typefld($_,'sym')}
+        grep {"PDLA_".typefld($_,'ppsym') ne typefld($_,'sym')} typesrtkeys;
   print "adding...\n$add\n";
   return "$add\n";
 }
@@ -450,7 +450,7 @@ return C header text for F<pdl.h> and F<pdlsimple.h>.
 
 sub datatypes_header {
     require Config;
-    $PDL_Indx_type = $Config::Config{'ivtype'};
+    $PDLA_Indx_type = $Config::Config{'ivtype'};
     warn "Using new 64bit index support\n" if $Config::Config{'ivsize'}==8;
 
     my $enum = '';
@@ -462,7 +462,7 @@ sub datatypes_header {
     chop $enum;
     chop $enum;
 
-    my $indx_type = typefld('PDL_IND','realctype');
+    my $indx_type = typefld('PDLA_IND','realctype');
     $typedefs .= '#define IND_FLAG ';
     if ($indx_type eq 'long'){
 	$typedefs .= qq|"ld"|;
@@ -473,11 +473,11 @@ sub datatypes_header {
     }
     $typedefs .= "\n\n";
 
-    my $PDL_DATATYPES = <<"EOD";
+    my $PDLA_DATATYPES = <<"EOD";
 
 /*****************************************************************************/
 /*** This section of .h file generated automatically by ***/
-/*** PDL::Types::datatypes_header() - don't edit manually ***/
+/*** PDLA::Types::datatypes_header() - don't edit manually ***/
 
 /* Data types/sizes [must be in order of complexity] */
 
@@ -487,20 +487,20 @@ enum pdl_datatypes { $enum };
 
 $typedefs
 
-/* typedef $PDL_Indx_type    PDL_Indx; */
+/* typedef $PDLA_Indx_type    PDLA_Indx; */
 
 /*****************************************************************************/
 
 EOD
 
-    $PDL_DATATYPES .= "\n".typesynonyms()."\n";
-    $PDL_DATATYPES;
+    $PDLA_DATATYPES .= "\n".typesynonyms()."\n";
+    $PDLA_DATATYPES;
 }
 
-=head1 PDL::Type OBJECTS
+=head1 PDLA::Type OBJECTS
 
-This module declares one class - C<PDL::Type> - objects of this class
-are returned by the L<type|PDL::Core/type> method of a piddle.  It has
+This module declares one class - C<PDLA::Type> - objects of this class
+are returned by the L<type|PDLA::Core/type> method of a piddle.  It has
 several methods, listed below, which provide an easy way to access
 type information:
 
@@ -511,26 +511,26 @@ you can compare and print type objects, e.g.
   die "must be double" if $type != double;
 
 For further examples check again the
-L<type|PDL::Core/type> method.
+L<type|PDLA::Core/type> method.
 
 =over 4
 
 =item enum
 
-Returns the number representing this datatype (see L<get_datatype|PDL::Core/PDL::get_datatype>).
+Returns the number representing this datatype (see L<get_datatype|PDLA::Core/PDLA::get_datatype>).
 
 =item symbol
 
-Returns one of 'PDL_B', 'PDL_S', 'PDL_US', 'PDL_L', 'PDL_LL', 'PDL_F' 
-or 'PDL_D'.
+Returns one of 'PDLA_B', 'PDLA_S', 'PDLA_US', 'PDLA_L', 'PDLA_LL', 'PDLA_F' 
+or 'PDLA_D'.
 
 =item ctype
 
-Returns the macro used to represent this type in C code (eg 'PDL_Long').
+Returns the macro used to represent this type in C code (eg 'PDLA_Long').
 
 =item ppsym
 
-The letter used to represent this type in PP code code (eg 'U' for L<ushort|PDL::Core/ushort>).
+The letter used to represent this type in PP code code (eg 'U' for L<ushort|PDLA::Core/ushort>).
 
 =item realctype
 
@@ -538,12 +538,12 @@ The actual C type used to store this type.
 
 =item shortctype
 
-The value returned by C<ctype> without the 'PDL_' prefix.
+The value returned by C<ctype> without the 'PDLA_' prefix.
 
 =item badvalue
 
 The special numerical value used to represent bad values for this type.
-See L<badvalue routine in PDL::Bad|PDL::Bad/badvalue> for more details.
+See L<badvalue routine in PDLA::Bad|PDLA::Bad/badvalue> for more details.
 
 =cut
 
@@ -552,7 +552,7 @@ See L<badvalue routine in PDL::Bad|PDL::Bad/badvalue> for more details.
 =pod
 
 You happen to be reading this on CPAN, but if you were reading this on your
-own machine and your PDL did not have support for bad values, you would see
+own machine and your PDLA did not have support for bad values, you would see
 a small paragraph saying:
 
 =cut
@@ -578,7 +578,7 @@ print OUT <<'!NO!SUBS!';
 The default special numerical value used to represent bad values for this
 type. (You can change the value that represents bad values for each type
 during runtime.) See the
-L<orig_badvalue routine in PDL::Bad|PDL::Bad/orig_badvalue> for more details.
+L<orig_badvalue routine in PDLA::Bad|PDLA::Bad/orig_badvalue> for more details.
 
 =cut
 
@@ -587,7 +587,7 @@ L<orig_badvalue routine in PDL::Bad|PDL::Bad/orig_badvalue> for more details.
 =pod
 
 You happen to be reading this on CPAN, but if you were reading this on your
-own machine and your PDL did not have support for bad values, you would see
+own machine and your PDLA did not have support for bad values, you would see
 a small paragraph saying:
 
 =cut
@@ -612,36 +612,36 @@ print OUT <<'!NO!SUBS!';
 =cut
 
 {
-    package PDL::Type;
+    package PDLA::Type;
     sub new {
         my($type,$val) = @_;
-        if("PDL::Type" eq ref $val) { return bless [@$val],$type; }
-        if(ref $val and $val->isa(PDL)) {
+        if("PDLA::Type" eq ref $val) { return bless [@$val],$type; }
+        if(ref $val and $val->isa(PDLA)) {
             if($val->getndims != 0) {
-              PDL::Core::barf(
+              PDLA::Core::barf(
                 "Can't make a type out of non-scalar piddle $val!");
             }
             $val = $val->at;
         }
-      PDL::Core::barf("Can't make a type out of non-scalar $val!".
+      PDLA::Core::barf("Can't make a type out of non-scalar $val!".
           (ref $val)."!") if ref $val;
 
-	if(length($PDL::Types::typenames{$val})) {
+	if(length($PDLA::Types::typenames{$val})) {
 	    $val =~ s/^\s*//o;
 	    $val =~ s/\s*$//o;
-	    return bless [$PDL::Types::typenames{$val}],$type;
+	    return bless [$PDLA::Types::typenames{$val}],$type;
 	} else {
 	    die("Unknown type string '$val' (should be one of ".
-                            join(",",map { $PDL::Types::typehash{$_}->{ioname} } @names).
+                            join(",",map { $PDLA::Types::typehash{$_}->{ioname} } @names).
 			    ")\n");
 	}
     }
 
 sub enum   { return $_[0]->[0]; }
-sub symbol { return $PDL::Types::names[ $_[0]->enum ]; }
-sub PDL::Types::types { # return all known types as type objects
-  map { new PDL::Type PDL::Types::typefld($_,'numval') } 
-      PDL::Types::typesrtkeys();
+sub symbol { return $PDLA::Types::names[ $_[0]->enum ]; }
+sub PDLA::Types::types { # return all known types as type objects
+  map { new PDLA::Type PDLA::Types::typefld($_,'numval') } 
+      PDLA::Types::typesrtkeys();
 }
 
 !NO!SUBS!
@@ -650,7 +650,7 @@ foreach my $name ( qw( ctype ppsym realctype ppforcetype convertfunc
 		       sym numval usenan ioname defbval) ) {
   print OUT << "EOS";
 sub $name {
-  return \$PDL::Types::typehash{\$_[0]->symbol}->{$name};
+  return \$PDLA::Types::typehash{\$_[0]->symbol}->{$name};
 }
 EOS
 }
@@ -666,14 +666,14 @@ if ( $bvalflag ) {
 no strict 'refs';
 sub badvalue {
   my ( $self, $val ) = @_;
-  my $name = "PDL::_badvalue_int" . $self->enum();
+  my $name = "PDLA::_badvalue_int" . $self->enum();
   if ( defined $val ) { return &{$name}( $val )->sclr; }
   else                { return &{$name}()->sclr; }
 }
 
 sub orig_badvalue {
   my $self = shift;
-  my $name = "PDL::_default_badvalue_int" . $self->enum();
+  my $name = "PDLA::_default_badvalue_int" . $self->enum();
   return &{$name}()->sclr;
 }
 use strict 'refs';
@@ -690,7 +690,7 @@ sub orig_badvalue { return undef; }
 
 print OUT <<'!NO!SUBS!';
 
-sub shortctype { my $txt = $_[0]->ctype; $txt =~ s/PDL_//; return $txt; }
+sub shortctype { my $txt = $_[0]->ctype; $txt =~ s/PDLA_//; return $txt; }
 
 # make life a bit easier
 use overload (
@@ -706,7 +706,7 @@ use overload (
 	     );
 
 
-} # package: PDL::Type
+} # package: PDLA::Type
 # Return
 1;
 
@@ -714,7 +714,7 @@ __END__
 
 =head1 Adding/removing types
 
-You can change the types that PDL knows about by editing entries in
+You can change the types that PDLA knows about by editing entries in
 the definition of the variable C<@types> that appears close to the
 top of the file F<Types.pm.PL> (i.e. the file from which this module
 was generated).
@@ -727,7 +727,7 @@ taken from the actual code that defines the C<ushort> type:
 	     {
 	      identifier => 'US',
 	      onecharident => 'U',   # only needed if different from identifier
-	      pdlctype => 'PDL_Ushort',
+	      pdlctype => 'PDLA_Ushort',
 	      realctype => 'unsigned short',
 	      ppforcetype => 'ushort',
 	      usenan => 0,
@@ -737,7 +737,7 @@ taken from the actual code that defines the C<ushort> type:
 Before we start to explain the fields please take this important
 message on board:
 I<entries must be listed in order of increasing complexity>. This
-is critical to ensure that PDL's type conversion works correctly.
+is critical to ensure that PDLA's type conversion works correctly.
 Basically, a less complex type will be converted to a more complex
 type as required.
 
@@ -814,12 +814,12 @@ type entries to automate this. This requires changes to those IO
 modules first though.
 
 You should also make sure that any type macros in PP files
-(i.e. C<$TBSULFD...>) are updated to reflect the new type. PDL::PP::Dump
+(i.e. C<$TBSULFD...>) are updated to reflect the new type. PDLA::PP::Dump
 has a mode to check for type macros requiring updating. Do something like
 
-    find . -name \*.pd -exec perl -Mblib=. -M'PDL::PP::Dump=typecheck' {} \;
+    find . -name \*.pd -exec perl -Mblib=. -M'PDLA::PP::Dump=typecheck' {} \;
 
-from the PDL root directory I<after> updating F<Types.pm.PL> to check
+from the PDLA root directory I<after> updating F<Types.pm.PL> to check
 for such places.
 
 =cut

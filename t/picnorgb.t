@@ -1,7 +1,7 @@
-use PDL::LiteF;
-use PDL::IO::Pic;
-use PDL::ImageRGB;
-use PDL::Dbg;
+use PDLA::LiteF;
+use PDLA::IO::Pic;
+use PDLA::ImageRGB;
+use PDLA::Dbg;
 use File::Temp qw(tempdir);
 use File::Spec;
 
@@ -18,14 +18,14 @@ sub tapprox {
 
 sub rpic_unlink {
   my $file = shift;
-  my $pdl = PDL->rpic($file);
+  my $pdl = PDLA->rpic($file);
   unlink $file;
   return $pdl;
 }
 
 sub rgb { $_[0]->getndims == 3 && $_[0]->getdim(0) == 3 }
 
-$PDL::debug = 1;
+$PDLA::debug = 1;
 $iform = 'PNMRAW'; # change to PNMASCII to use ASCII PNM intermediate
                    # output format
 
@@ -43,7 +43,7 @@ $iform = 'PNMRAW'; # change to PNMASCII to use ASCII PNM intermediate
 # netpbm has too many bugs on various platforms
 @allowed = ();
 for ('PNM') { push @allowed, $_
-	if PDL->rpiccan($_) && defined $formats{$_} }
+	if PDLA->rpiccan($_) && defined $formats{$_} }
 
 $ntests = 3 * @allowed;  # -1 due to TIFF converter
 $ntests-- if grep /^TIFF$/, @allowed;
@@ -60,11 +60,11 @@ $im2 = byte $im1/256;
 # make the resulting file at least 12 byte long
 # otherwise we run into a problem when reading the magic (Fix!)
 # FIXME
-$im3 = PDL::byte [[0,0,255,255,12,13],[1,4,5,6,11,124],
+$im3 = PDLA::byte [[0,0,255,255,12,13],[1,4,5,6,11,124],
 	     [100,0,0,0,10,10],[2,1,0,1,0,14],[2,1,0,1,0,14],
 	     [2,1,0,1,0,14]];
 
-if ($PDL::debug) {
+if ($PDLA::debug) {
   note $im1;
   $im1->px;
   note $im2;
@@ -102,7 +102,7 @@ foreach $format (sort @allowed) {
 
         if ($format ne 'TIFF') {
           $scale = ($form->[2] || rgb($in1) ? $im1->dummy(0,3) : $im1);
-          $comp = $scale / PDL::ushort($form->[1]);
+          $comp = $scale / PDLA::ushort($form->[1]);
           ok($usherr || tapprox($comp,$in1,$form->[3]));
         }
         $comp = ($form->[2] || rgb($in2) ? $im2->dummy(0,3) : $im2);
@@ -111,7 +111,7 @@ foreach $format (sort @allowed) {
         $comp = $comp->ushort*$in3->max if $format eq 'SGI' && $in3->max > 0;
         ok(tapprox($comp,$in3));
 
-        if ($PDL::debug) {
+        if ($PDLA::debug) {
           note $in1->px unless $format eq 'TIFF';
           note $in2->px;
           note $in3->px;
@@ -120,5 +120,5 @@ foreach $format (sort @allowed) {
 }
 
 use Data::Dumper;
-note "Dumping diagnostic PDL::IO::Pic converter data...\n";
-note Dumper(\%PDL::IO::Pic::converter);
+note "Dumping diagnostic PDLA::IO::Pic converter data...\n";
+note Dumper(\%PDLA::IO::Pic::converter);
