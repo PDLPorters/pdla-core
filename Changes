@@ -1,6 +1,9 @@
-v2.013002 
+v2.013002 Sat Aug 29 21:58:05 BST 2015
  - fixup $VERSION in PDLA::Core
  - "make core[test]" now can do parallel build which will be quicker
+ - use Alien::HDF4
+ - big test cleanup
+ - improve PDLA::Graphics::PGPLOT build robustness
 
 v2.013001 2015-08-29 19:00:00+01:00
  - TODO fragile t/lut.t test

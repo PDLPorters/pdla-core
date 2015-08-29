@@ -146,7 +146,7 @@ start-up modules.
 
 
 # set the version:
-$PDLA::VERSION = '2.013001';
+$PDLA::VERSION = '2.013002';
 
 # Main loader of standard PDLA package
 
