@@ -4,10 +4,11 @@
 
 | OS      |  Build status |
 |:-------:|--------------:|
-| Linux   | [![Build Status](https://travis-ci.org/PDLAPorters/pdl.png?branch=master)](https://travis-ci.org/PDLAPorters/pdl) |
-| Windows | [![Build status](https://ci.appveyor.com/api/projects/status/96mjqd4fymv0h8yw/branch/master?svg=true)](https://ci.appveyor.com/project/zmughal/pdl/branch/master) |
+| Linux   | [![Build Status](https://travis-ci.org/PDLPorters/pdla.png?branch=master)](https://travis-ci.org/PDLPorters/pdla) |
+| Windows | [![Build status](https://ci.appveyor.com/api/projects/status/v00vur37t6o5k0r8/branch/master?svg=true)](https://ci.appveyor.com/project/zmughal/pdla/branch/master) |
 
-[![Coverage Status](https://coveralls.io/repos/PDLAPorters/pdl/badge.png?branch=master)](https://coveralls.io/r/PDLAPorters/pdl?branch=master)
+
+[![Coverage Status](https://coveralls.io/repos/PDLPorters/pdla/badge.png?branch=master)](https://coveralls.io/r/PDLPorters/pdla?branch=master)
 [![CPAN version](https://badge.fury.io/pl/PDLA.svg)](https://metacpan.org/pod/PDLA)
 
 PDLA ("Perl Data Language") gives standard Perl the ability to *compactly* store and *speedily* manipulate the large N-dimensional data arrays which are the bread and butter of scientific computing.
