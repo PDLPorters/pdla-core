@@ -1,3 +1,6 @@
+v2.013003 Sat Aug 29 22:28:17 BST 2015
+ - fixup $VERSION in PDLA::Core more
+
 v2.013002 Sat Aug 29 21:58:05 BST 2015
  - fixup $VERSION in PDLA::Core
  - "make core[test]" now can do parallel build which will be quicker
