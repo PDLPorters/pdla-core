@@ -42,7 +42,6 @@ Basic/Gen/PP/Dims.pm
 Basic/Gen/PP/PDLACode.pm
 Basic/Gen/PP/PdlParObj.pm
 Basic/Gen/PP/Signature.pm
-Basic/Gen/PP/Struct.pm
 Basic/Gen/PP/SymTab.pm
 Basic/Gen/PP/Var.pm
 Basic/Gen/PP/XS.pm
