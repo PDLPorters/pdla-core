@@ -1,3 +1,10 @@
+v2.013001 2015-08-29 19:00:00+01:00
+ - TODO fragile t/lut.t test
+ - stop claiming packages C::StructObj C::StructType C::Type C::Var Inline::MakePdlppInstallable Inline::Pdlpp SymTab Win32::DDE::Netscape XS
+
+v2.013-PDLA 2015-08-29 04:00:00+01:00
+ - rename all PDL -> PDLA
+
 v2.013 2015-08-14 08:37:15-04:00
 
 General Notes:
