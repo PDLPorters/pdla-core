@@ -1529,7 +1529,7 @@ sub OtherPars_nft {
 	    my ($ctype,$dim) = ($1,$2);
 	    $ctype =~ s/(\S+)\s+$/$1/; # get rid of trailing ws
 	    print "OtherPars: setting dim '$dim' from '$ctype'\n" if $::PP_VERBOSE;
-	    $type = C::Type->new(undef,$ctype);
+	    $type = PDLA::PP::CType->new(undef,$ctype);
 	    croak "can't set unknown dimension"
 		unless defined($dimobjs->{$dim});
 	    $dimobjs->{$dim}->set_from($type);
@@ -1537,7 +1537,7 @@ sub OtherPars_nft {
 	    # It is a piddle -> make it a controlling one.
 	    die("Not supported yet");
 	} else {
-	    $type = C::Type->new(undef,$_);
+	    $type = PDLA::PP::CType->new(undef,$_);
 	}
 	my $name = $type->protoname;
         if ($name =~ /$INVALID_OTHERPARS_RE/) {
@@ -1551,7 +1551,7 @@ sub OtherPars_nft {
 
 sub NXArgs {
 	my($parnames,$parobjs,$onames,$oobjs) = @_;
-	my $pdltype = C::Type->new(undef,"pdl *__foo__");
+	my $pdltype = PDLA::PP::CType->new(undef,"pdl *__foo__");
 	my $nxargs = [
 		( map {[$_,$pdltype]} @$parnames ),
 		( map {[$_,$oobjs->{$_}]} @$onames )
@@ -1768,7 +1768,7 @@ sub MkPrivStructInit {
 
 sub MkDefSyms {
     return PDLA::PP::SymTab->new(
-		       _PDLA_ThisTrans => ["__privtrans",C::Type->new(undef,"$_[0] *foo")],
+		       _PDLA_ThisTrans => ["__privtrans",PDLA::PP::CType->new(undef,"$_[0] *foo")],
 		      );
 }
 
