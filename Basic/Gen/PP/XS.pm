@@ -1,4 +1,4 @@
-package XS;
+package PDLA::PP::XS;
 
 sub mkproto {
 	my($name,$pars) = @_;

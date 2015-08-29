@@ -2817,7 +2817,7 @@ sub make_redodims_thread {
 
 sub XSHdr {
 	my($xsname,$nxargs) = @_;
-	return XS::mkproto($xsname,$nxargs);
+	return PDLA::PP::XS::mkproto($xsname,$nxargs);
 }
 
 ###########################################################
