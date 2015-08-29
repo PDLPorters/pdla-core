@@ -704,7 +704,7 @@ sub scan {
   my @namelines = split("\n",$outfile_text);
   my ($name,$does);
   for (@namelines) {
-     if (/^(PDLA) (-) (.*)/ or  /^\s*(Inline::Pdlpp)\s*(-*)?\s*(.*)\s*$/ or /\s*(PDLA::[\w:]*)\s*(-*)?\s*(.*)\s*$/) {
+     if (/^(PDLA) (-) (.*)/ or  /^\s*(Inline::Pdlapp)\s*(-*)?\s*(.*)\s*$/ or /\s*(PDLA::[\w:]*)\s*(-*)?\s*(.*)\s*$/) {
 	$name = $1; $does = $3;
      }
      if (/^\s*([a-z][a-z0-9]*) (-+) (.*)/) { # lowercase shell script name

@@ -12,7 +12,7 @@ SKIP: {
    eval { Inline->VERSION(0.43) };
    is $@, '', 'at least 0.43' or skip "Skipped: not got Inline >= 0.43", 3;
    # use Inline 'INFO'; # use to generate lots of info
-   eval { Inline->bind(Pdlpp => <<'EOF') };
+   eval { Inline->bind(Pdlapp => <<'EOF') };
 # simple PP definition
 
 pp_def('testinc',

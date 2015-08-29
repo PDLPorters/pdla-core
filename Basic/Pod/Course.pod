@@ -152,7 +152,7 @@ A collection of some of Tuomas's ideas for making good use of PDLA.
 
 Explains what bad values are and how and why they are implemented.
 
-=item * Selections from L<Inline::Pdlpp|Inline::Pdlpp>
+=item * Selections from L<Inline::Pdlapp|Inline::Pdlapp>
 
 Although writing PDLA::PP code is considered an Advanced topic, and is
 covered in the next section, you should be aware that it is possible 
@@ -338,11 +338,11 @@ problems.
 Lite-weight replacements for C<use PDLA>, from the standpoint of
 namespace pollution and load time.
 
-=item * L<Inline::Pdlpp|Inline::Pdlpp>
+=item * L<Inline::Pdlapp|Inline::Pdlapp>
 
 This was mentioned earlier.  Before you begin reading about L<PDLA::PP|PDLA::PP>
 (next), you should remind yourself about how to use this.
-L<Inline::Pdlpp|Inline::Pdlpp> will help you experiment with L<PDLA::PP|PDLA::PP> without having
+L<Inline::Pdlapp|Inline::Pdlapp> will help you experiment with L<PDLA::PP|PDLA::PP> without having
 to go through the trouble of building a module and constructing
 makefiles (but see L<PDLA::pptemplate|PDLA::pptemplate> for help on that).
 

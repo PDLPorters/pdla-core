@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use PDLA;
-use Inline qw{Pdlpp};
+use Inline qw{Pdlapp};
 
 my $v = pdl(1)->pdl_core_version()->at(0);
 
@@ -14,7 +14,7 @@ EOPM
 
 __DATA__
 
-__Pdlpp__
+__Pdlapp__
 
 pp_def('pdl_core_version',
 	Pars => 'dummy(); int [o] pcv();',

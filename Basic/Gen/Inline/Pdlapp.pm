@@ -1,4 +1,4 @@
-package Inline::Pdlpp;
+package Inline::Pdlapp;
 
 use strict;
 use warnings;
@@ -9,7 +9,7 @@ use Carp;
 use Cwd qw(cwd abs_path);
 use PDLA::Core::Dev;
 
-$Inline::Pdlpp::VERSION = '0.4';
+$Inline::Pdlapp::VERSION = '0.4';
 use base qw(Inline::C);
 
 #==============================================================================
@@ -17,8 +17,8 @@ use base qw(Inline::C);
 #==============================================================================
 sub register {
     return {
-	    language => 'Pdlpp',
-	    aliases => ['pdlpp','PDLAPP'],
+	    language => 'Pdlapp',
+	    aliases => ['pdlapp','PDLAPP'],
 	    type => 'compiled',
 	    suffix => $Config{dlext},
 	   };
@@ -64,7 +64,7 @@ sub add_text { goto &Inline::C::add_text }
 #==============================================================================
 sub build {
     my $o = shift;
-    # $o->parse; # no parsing in pdlpp
+    # $o->parse; # no parsing in pdlapp
     $o->get_maps; # get the typemaps
     $o->write_PD;
     # $o->write_Inline_headers; # shouldn't need this one either
@@ -232,11 +232,11 @@ __END__
 
 =head1 NAME
 
-Inline::Pdlpp - Write PDLA Subroutines inline with PDLA::PP
+Inline::Pdlapp - Write PDLA Subroutines inline with PDLA::PP
 
 =head1 DESCRIPTION
 
-C<Inline::Pdlpp> is a module that allows you to write PDLA subroutines
+C<Inline::Pdlapp> is a module that allows you to write PDLA subroutines
 in the PDLA::PP style. The big benefit compared to plain C<PDLA::PP> is
 that you can write these definitions inline in any old perl script
 (without the normal hassle of creating Makefiles, building, etc).
@@ -247,22 +247,22 @@ these docs are complete C<;)>.
 
 For more information on Inline in general, see L<Inline>.
 
-Some example scripts demonstrating C<Inline::Pdlpp> usage can be
-found in the F<Example/InlinePdlpp> directory.
+Some example scripts demonstrating C<Inline::Pdlapp> usage can be
+found in the F<Example/InlinePdlapp> directory.
 
 
-C<Inline::Pdlpp> is a subclass of L<Inline::C>. Most Kudos goes to Brian I.
+C<Inline::Pdlapp> is a subclass of L<Inline::C>. Most Kudos goes to Brian I.
 
 =head1 Usage
 
-You never actually use C<Inline::Pdlpp> directly. It is just a support module
+You never actually use C<Inline::Pdlapp> directly. It is just a support module
 for using C<Inline.pm> with C<PDLA::PP>. So the usage is always:
 
-    use Inline Pdlpp => ...;
+    use Inline Pdlapp => ...;
 
 or
 
-    bind Inline Pdlpp => ...;
+    bind Inline Pdlapp => ...;
 
 =head1 Examples
 
@@ -272,9 +272,9 @@ that illustrate typical usage.
 =head2 A simple example
 
    # example script inlpp.pl
-   use PDLA; # must be called before (!) 'use Inline Pdlpp' calls
+   use PDLA; # must be called before (!) 'use Inline Pdlapp' calls
 
-   use Inline Pdlpp; # the actual code is in the __Pdlpp__ block below
+   use Inline Pdlapp; # the actual code is in the __Pdlapp__ block below
 
    $a = sequence 10;
    print $a->inc,"\n";
@@ -282,7 +282,7 @@ that illustrate typical usage.
 
    __DATA__
 
-   __Pdlpp__
+   __Pdlapp__
 
    pp_def('inc',
 	  Pars => 'i();[o] o()',
@@ -305,8 +305,8 @@ If you call this script it should generate output similar to this:
    [1 2 3 4 5 6 7 8 9 10]
    [3628800 3628800 3628800 3628800 3628800 3628800 3628800 3628800 3628800 3628800]
 
-Usage of C<Inline::Pdlpp> in general is similar to C<Inline::C>.
-In the absence of full docs for C<Inline::Pdlpp> you might want to compare
+Usage of C<Inline::Pdlapp> in general is similar to C<Inline::C>.
+In the absence of full docs for C<Inline::Pdlapp> you might want to compare
 L<Inline::C>.
 
 =head2 Code that uses external libraries, etc
@@ -321,9 +321,9 @@ keywords are largely equivalent to those used with C<Inline::C>. Please
 see below for further details on the usage of C<INC>,
 C<LIBS>, C<AUTO_INCLUDE> and C<BOOT>.
 
-   use PDLA; # this must be called before (!) 'use Inline Pdlpp' calls
+   use PDLA; # this must be called before (!) 'use Inline Pdlapp' calls
 
-   use Inline Pdlpp => Config =>
+   use Inline Pdlapp => Config =>
      INC => "-I$ENV{HOME}/include",
      LIBS => "-L$ENV{HOME}/lib -lnr -lm",
      # code to be included in the generated XS
@@ -338,17 +338,17 @@ C<LIBS>, C<AUTO_INCLUDE> and C<BOOT>.
      croak("NR runtime error: %s",err_txt);
    }
    EOINC
-   # install our error handler when loading the Inline::Pdlpp code
+   # install our error handler when loading the Inline::Pdlapp code
    BOOT => 'set_nr_err_handler(nr_barf);';
 
-   use Inline Pdlpp; # the actual code is in the __Pdlpp__ block below
+   use Inline Pdlapp; # the actual code is in the __Pdlapp__ block below
 
    $a = zeroes(10) + 30;;
    print $a->poidev(5),"\n";
 
    __DATA__
 
-   __Pdlpp__
+   __Pdlapp__
 
    pp_def('poidev',
 	   Pars => 'xm(); [o] pd()',
@@ -358,11 +358,11 @@ C<LIBS>, C<AUTO_INCLUDE> and C<BOOT>.
    );
 
 
-=head1 Pdlpp Configuration Options
+=head1 Pdlapp Configuration Options
 
 For information on how to specify Inline configuration options, see
 L<Inline>. This section describes each of the configuration options
-available for Pdlpp. Most of the options correspond either to MakeMaker or
+available for Pdlapp. Most of the options correspond either to MakeMaker or
 XS options of the same name. See L<ExtUtils::MakeMaker> and L<perlxs>.
 
 =head2 AUTO_INCLUDE
@@ -372,7 +372,7 @@ added onto the defaults. A newline char will be automatically added.
 Does essentially the same as a call to C<pp_addhdr>. For short
 bits of code C<AUTO_INCLUDE> is probably syntactically nicer.
 
-    use Inline Pdlpp => Config => AUTO_INCLUDE => '#include "yourheader.h"';
+    use Inline Pdlapp => Config => AUTO_INCLUDE => '#include "yourheader.h"';
 
 =head2 BLESS
 
@@ -380,7 +380,7 @@ Same as C<pp_bless> command. Specifies the package (i.e. class)
 to which your new I<pp_def>ed methods will be added. Defaults
 to C<PDLA> if omitted.
 
-    use Inline Pdlpp => Config => BLESS => 'PDLA::Complex';
+    use Inline Pdlapp => Config => BLESS => 'PDLA::Complex';
 
 =head2 BOOT
 
@@ -401,7 +401,7 @@ Specify extra compiler flags.
 
 Specifies an include path to use. Corresponds to the MakeMaker parameter.
 
-    use Inline Pdlpp => Config => INC => '-I/inc/path';
+    use Inline Pdlapp => Config => INC => '-I/inc/path';
 
 =head2 LD
 
@@ -420,11 +420,11 @@ respecify them here.
 Specifies external libraries that should be linked into your
 code. Corresponds to the MakeMaker parameter.
 
-    use Inline Pdlpp => Config => LIBS => '-lyourlib';
+    use Inline Pdlapp => Config => LIBS => '-lyourlib';
 
 or
 
-    use Inline Pdlpp => Config => LIBS => '-L/your/path -lyourlib';
+    use Inline Pdlapp => Config => LIBS => '-L/your/path -lyourlib';
 
 =head2 MAKE
 
@@ -435,7 +435,7 @@ Specify the name of the 'make' utility to use.
 Specifies a user compiled object that should be linked in. Corresponds
 to the MakeMaker parameter.
 
-    use Inline Pdlpp => Config => MYEXTLIB => '/your/path/yourmodule.so';
+    use Inline Pdlapp => Config => MYEXTLIB => '/your/path/yourmodule.so';
 
 =head2 OPTIMIZE
 
@@ -448,7 +448,7 @@ C code using a debugger like gdb.
 
 Specifies extra typemap files to use. Corresponds to the MakeMaker parameter.
 
-    use Inline Pdlpp => Config => TYPEMAPS => '/your/path/typemap';
+    use Inline Pdlapp => Config => TYPEMAPS => '/your/path/typemap';
 
 =head2 NOISY
 
@@ -472,30 +472,30 @@ According to Brian Ingerson (of Inline fame) the workaround is
 to include an C<Inline-E<gt>init> call in your script, e.g.
 
   use PDLA;
-  use Inline Pdlpp;
+  use Inline Pdlapp;
   Inline->init;
 
   # perl code
 
   __DATA__
-  __Pdlpp__
+  __Pdlapp__
 
   # pp code
 
-=head2 C<PDLA::NiceSlice> and C<Inline::Pdlpp>
+=head2 C<PDLA::NiceSlice> and C<Inline::Pdlapp>
 
 There is currently an undesired interaction between
-L<PDLA::NiceSlice|PDLA::NiceSlice> and C<Inline::Pdlpp>.
+L<PDLA::NiceSlice|PDLA::NiceSlice> and C<Inline::Pdlapp>.
 Since PP code generally contains expressions
 of the type C<$var()> (to access piddles, etc)
 L<PDLA::NiceSlice|PDLA::NiceSlice> recognizes those incorrectly as
 slice expressions and does its substitutions. For the moment
 (until hopefully the parser can deal with that) it is best to
 explicitly switch L<PDLA::NiceSlice|PDLA::NiceSlice> off before
-the section of inlined Pdlpp code. For example:
+the section of inlined Pdlapp code. For example:
 
   use PDLA::NiceSlice;
-  use Inline::Pdlpp;
+  use Inline::Pdlapp;
 
   $a = sequence 10;
   $a(0:3)++;

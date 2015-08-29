@@ -1,4 +1,4 @@
-package Inline::MakePdlppInstallable;
+package Inline::MakePdlappInstallable;
 
 # just a dummy package
 
@@ -8,7 +8,7 @@ package   # have to break this up so the
 
 #==============================================================================
 # override the original Inline::install method
-# to allow Inline::Pdlpp code to be installed
+# to allow Inline::Pdlapp code to be installed
 #
 # this is a hack !
 #
@@ -17,8 +17,8 @@ package   # have to break this up so the
 #
 # use as follows in modules containing inlined PDLA::PP code:
 #
-#   use Inline::MakePdlppInstallable;
-#   use Inline Pdlpp => ....
+#   use Inline::MakePdlappInstallable;
+#   use Inline Pdlapp => ....
 #
 # hopefully Inline will establishe a proper mechanism soon
 # to allow installation of non-C modules -- at least Brian Ingerson
@@ -33,7 +33,7 @@ sub install {
     # print STDERR "in redefined Inline::install\n";
     croak M64_install_not_c($o->{API}{language_id})
       unless uc($o->{API}{language_id}) eq 'C' ||
-	uc($o->{API}{language_id}) eq 'PDLAPP'; # also allow Pdlpp !
+	uc($o->{API}{language_id}) eq 'PDLAPP'; # also allow Pdlapp !
     croak M36_usage_install_main()
       if ($o->{API}{pkg} eq 'main');
     croak M37_usage_install_auto()

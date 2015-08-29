@@ -1,8 +1,8 @@
 use blib; # we're inside the dist tree
-use PDLA;  # this must be called before (!) 'use Inline Pdlpp' calls
+use PDLA;  # this must be called before (!) 'use Inline Pdlapp' calls
 
 use PDLA::NiceSlice; # only used to demonstrate how to switch off below
-use Inline Pdlpp; # the actual code is in the __Pdlpp__ block below
+use Inline Pdlapp; # the actual code is in the __Pdlapp__ block below
 
 $a = sequence 10;
 print $a(0:4),"\n";
@@ -13,7 +13,7 @@ no PDLA::NiceSlice; # disable NiceSlice before(!) the data section
 
 __END__
 
-__Pdlpp__
+__Pdlapp__
 
 # a silly function, really ;)
 pp_def('inc',

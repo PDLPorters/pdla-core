@@ -1,6 +1,6 @@
 use blib;
-use PDLA; # this must be called before (!) 'use Inline Pdlpp' calls
-use Inline Pdlpp; # the actual code is in the __Pdlpp__ block below
+use PDLA; # this must be called before (!) 'use Inline Pdlapp' calls
+use Inline Pdlapp; # the actual code is in the __Pdlapp__ block below
 
 $a = sequence 10;
 print $a->inc,"\n";
@@ -8,7 +8,7 @@ print $a->inc->dummy(1,10)->tcumul,"\n";
 
 __DATA__
 
-__Pdlpp__
+__Pdlapp__
 
 # a rather silly increment function
 pp_def('inc',

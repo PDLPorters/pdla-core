@@ -20,8 +20,8 @@ undef &MY::postamble; # suppress warning
   if (!$@) {
      $text .= << "EOPS" ;
 
-PP-Inline.pod: ../Gen/Inline/Pdlpp.pm
-\t\$(PERLRUN) -MPod::Select -e "podselect('../Gen/Inline/Pdlpp.pm');" > PP-Inline.pod
+PP-Inline.pod: ../Gen/Inline/Pdlapp.pm
+\t\$(PERLRUN) -MPod::Select -e "podselect('../Gen/Inline/Pdlapp.pm');" > PP-Inline.pod
 
 EOPS
 

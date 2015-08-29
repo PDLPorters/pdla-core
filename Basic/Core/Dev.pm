@@ -350,7 +350,7 @@ EOF
 
 # Standard PDLA postamble
 #
-# This is called via .../Gen/Inline/Pdlpp.pm, in the case that the INTERNAL
+# This is called via .../Gen/Inline/Pdlapp.pm, in the case that the INTERNAL
 # flag for the compilation is off (grep "ILSM" in that file to find the reference).
 # If it's ON, then postamble_int gets called instead.
 

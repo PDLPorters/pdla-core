@@ -42,7 +42,7 @@ BEGIN {
 
 SKIP: {
 # use Inline 'INFO'; # use to generate lots of info
-eval { Inline->bind(Pdlpp => <<'EOF') };
+eval { Inline->bind(Pdlapp => <<'EOF') };
 # simple PP definition with user irritation tests :-)
 
 pp_def('testinc',

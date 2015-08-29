@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-PDLA::MyInlineMod - a simple PDLA module containing inlined Pdlpp code
+PDLA::MyInlineMod - a simple PDLA module containing inlined Pdlapp code
 
 =head1 SYNOPSIS
 
@@ -13,7 +13,7 @@ PDLA::MyInlineMod - a simple PDLA module containing inlined Pdlpp code
 
 =head1 DESCRIPTION
 
-A simple example module that demonstrates the usage of inlined Pdlpp
+A simple example module that demonstrates the usage of inlined Pdlapp
 in a module that can be installed in the usual way.
 
 =head1 FUNCTIONS
@@ -42,15 +42,15 @@ $VERSION = '0.60'; # Inline requires this to be a *string* that matches
 use PDLA::LiteF;
 
 # quirk 1 follows
-use Inline::MakePdlppInstallable;  # allow installation of this module
+use Inline::MakePdlappInstallable;  # allow installation of this module
 
-use Inline Pdlpp => DATA => # inlined PP code is below in DATA section
+use Inline Pdlapp => DATA => # inlined PP code is below in DATA section
   NAME => PDLA::MyInlineMod,    # required info for module installation
   VERSION => $VERSION;      # ditto, see Inline-FAQ for more info
 
 # quirk 2 follows
 Inline->init;               # you need this if you want to 'use' your module
-                            # from within perldl or pdl2 and your Pdlpp code
+                            # from within perldl or pdl2 and your Pdlapp code
                             # resides in the DATA section (as in this example)
 
 # following required to make exported functions work!
@@ -63,7 +63,7 @@ Inline->init;               # you need this if you want to 'use' your module
 
 __DATA__
 
-__Pdlpp__
+__Pdlapp__
 
 # some simple functions to test the whole thing
 
@@ -113,7 +113,7 @@ perl(1).
 
 L<Inline>.
 
-L<Inline::Pdlpp>.
+L<Inline::Pdlapp>.
 
 =cut
 

@@ -112,7 +112,7 @@ sub fix_pp_inline ($) {
     # assume that links do not break across a line
     while ( <$ifh> ) {
 	#fix the links
-	s|a href="../Inline/Pdlpp.html"|a href="./PP-Inline.html"|g;
+	s|a href="../Inline/Pdlapp.html"|a href="./PP-Inline.html"|g;
 	print $ofh $_;
     }
     $ifh->close;

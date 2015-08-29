@@ -1052,38 +1052,38 @@ I<Note>: To avoid clobbering the C<DATA> filehandle C<PDLA::NiceSlice>
 switches itself off when encountering the C<__END__> or C<__DATA__> tokens.
 This should not be a problem for you unless you use C<SelfLoader> to load
 PDLA code including the new slicing from that section. It is even desirable
-when working with L<Inline::Pdlpp|Inline::Pdlpp>, see below.
+when working with L<Inline::Pdlapp|Inline::Pdlapp>, see below.
 
-=head2 Possible interaction with L<Inline::Pdlpp|Inline::Pdlpp>
+=head2 Possible interaction with L<Inline::Pdlapp|Inline::Pdlapp>
 
 There is currently an undesired interaction between C<PDLA::NiceSlice>
-and the new L<Inline::Pdlpp|Inline::Pdlpp> module (currently only in 
+and the new L<Inline::Pdlapp|Inline::Pdlapp> module (currently only in 
 PDLA CVS). Since PP code generally
 contains expressions of the type C<$var()> (to access piddles, etc)
 C<PDLA::NiceSlice> recognizes those I<incorrectly> as
 slice expressions and does its substitutions. This is not a problem
-if you use the C<DATA> section for your Pdlpp code -- the recommended
+if you use the C<DATA> section for your Pdlapp code -- the recommended
 place for Inline code anyway. In that case
 C<PDLA::NiceSlice> will have switched itself off before encountering any
-Pdlpp code (see above):
+Pdlapp code (see above):
 
     # use with Inline modules
   use PDLA;
   use PDLA::NiceSlice;
-  use Inline Pdlpp;
+  use Inline Pdlapp;
 
   $a = sequence(10);
   print $a(0:5);
 
   __END__
 
-  __Pdlpp__
+  __Pdlapp__
 
   ... inline stuff
 
 
 Otherwise switch C<PDLA::NiceSlice> explicitly off around the
-Inline::Pdlpp code:
+Inline::Pdlapp code:
 
   use PDLA::NiceSlice;
 
@@ -1091,13 +1091,13 @@ Inline::Pdlpp code:
   $a(0:3)++;
   $a->inc;
 
-  no PDLA::NiceSlice; # switch off before Pdlpp code
-  use Inline Pdlpp => "Pdlpp source code";
+  no PDLA::NiceSlice; # switch off before Pdlapp code
+  use Inline Pdlapp => "Pdlapp source code";
 
 The cleaner solution is to always stick with the
 C<DATA> way of including your C<Inline> code as
 in the first example. That way you keep your nice Perl
-code at the top and all the ugly Pdlpp stuff etc at
+code at the top and all the ugly Pdlapp stuff etc at
 the bottom.
 
 =head2 Bug reports
