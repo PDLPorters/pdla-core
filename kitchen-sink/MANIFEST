@@ -491,5 +491,6 @@ t/plplot_no_fork.win32
 t/poly.t
 t/proj_transform.t
 t/proj_transform2.t
+t/simplex.t
 t/slatec.t
 t/slatec-polyfit-weight.t
