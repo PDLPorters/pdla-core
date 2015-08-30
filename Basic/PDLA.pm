@@ -141,9 +141,8 @@ start-up modules.
 
 =cut
 
-
 # set the version:
-$PDLA::VERSION = '2.013003';
+$PDLA::VERSION = '2.013004';
 
 # Main loader of standard PDLA package
 
