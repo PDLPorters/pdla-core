@@ -5,10 +5,9 @@ package PDLA::Core;
 use strict;
 use warnings;
 use PDLA::Exporter;
-require PDLA; # for $VERSION
 use DynaLoader;
 our @ISA    = qw( PDLA::Exporter DynaLoader );
-our $VERSION = $PDLA::VERSION;
+our $VERSION = "2.014005";
 bootstrap PDLA::Core $VERSION;
 use PDLA::Types ':All';
 

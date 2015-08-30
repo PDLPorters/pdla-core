@@ -143,9 +143,7 @@ start-up modules.
 
 =cut
 
-# set the version in way that PAUSE will like
-{ package PDLA::Core; our $VERSION = '2.013005'; }
-our $VERSION = $PDLA::Core::VERSION;
+our $VERSION = '2.013005';
 
 # Main loader of standard PDLA package
 
