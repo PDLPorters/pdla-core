@@ -445,8 +445,6 @@ my %makefile_hash = (
                 'Carp'            => 1.20,    # EU::MM seems to need this not to crash
                 'ExtUtils::MakeMaker' => 6.56,
                 'File::Path'          => 0,
-                'ExtUtils::Depends' => '0.402',
-                'Alien::HDF4' => 0,
               },
               TEST_REQUIRES => {
                 'CPAN::Meta' => '2.120900',
@@ -466,12 +464,11 @@ my %makefile_hash = (
 	      'PM' => { @podpms }, #so that the script docs are picked up
               'META_MERGE' => {
                  resources => {
-                    homepage => 'http://pdl.perl.org/',
-                    bugtracker  => 'http://sourceforge.net/p/pdl/bugs/',
+                    homepage => 'http://pdlporters.github.io',
                     repository  => {
-                       url => 'git://git.code.sf.net/p/pdl/code',
+                       url => 'git://github.com/PDLPorters/pdla-core',
                        type => 'git',
-                       web => 'http://sourceforge.net/p/pdl/code/ci/master/tree/',
+                       web => 'https://github.com/PDLPorters/pdla-core',
                     },
                  },
               },
