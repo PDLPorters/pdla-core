@@ -7,7 +7,7 @@ use warnings;
 use PDLA::Exporter;
 use DynaLoader;
 our @ISA    = qw( PDLA::Exporter DynaLoader );
-our $VERSION = "2.014005";
+our $VERSION = "2.013006";
 bootstrap PDLA::Core $VERSION;
 use PDLA::Types ':All';
 
