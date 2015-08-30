@@ -1,3 +1,6 @@
+v2.013005 Sun Aug 30 03:43:01 BST 2015
+ - minor tweak to how $VERSION recorded/used
+
 v2.013004 Sun Aug 30 03:00:57 BST 2015
  - PDLA::Core to separate distro and repo
 

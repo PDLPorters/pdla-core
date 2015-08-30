@@ -1,3 +1,5 @@
+package PDLA;
+
 =head1 NAME
 
 PDLA - the Perl Data Language
@@ -141,8 +143,9 @@ start-up modules.
 
 =cut
 
-# set the version:
-$PDLA::VERSION = '2.013004';
+# set the version in way that PAUSE will like
+{ package PDLA::Core; our $VERSION = '2.013005'; }
+our $VERSION = $PDLA::Core::VERSION;
 
 # Main loader of standard PDLA package
 
@@ -175,11 +178,6 @@ EOD
 die $@ if $@;
 
 }
-
-
-# Dummy Package PDLA Statement. This is only needed so CPAN
-# properly recognizes the PDLA package.
-package PDLA;
 
 # support: use Inline with => 'PDLA';
 # Returns a hash containing parameters accepted by recent versions of

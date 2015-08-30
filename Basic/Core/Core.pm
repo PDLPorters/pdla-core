@@ -8,8 +8,7 @@ use PDLA::Exporter;
 require PDLA; # for $VERSION
 use DynaLoader;
 our @ISA    = qw( PDLA::Exporter DynaLoader );
-our $VERSION = '2.013'; # PAUSE insists - below is the real one
-$VERSION = $PDLA::VERSION;
+our $VERSION = $PDLA::VERSION;
 bootstrap PDLA::Core $VERSION;
 use PDLA::Types ':All';
 
