@@ -1,13 +1,5 @@
-use Test::More;
+use Test::More tests => 1;
 use Devel::Symdump;
-
-if ($^V lt 'v5.14.0') {
-    plan skip_all => 'perl version is less than 5.14, and we need package block syntax for this test';
-}
-else {
-    plan tests => 1;
-}
-
 
 {
     package mk1;
