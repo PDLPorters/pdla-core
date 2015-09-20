@@ -9,7 +9,8 @@ else {
 }
 
 
-package mk1 {
+{
+    package mk1;
     #BEGIN {print "Loading mk1\n"};
     use PDLA::Lite;
 
@@ -18,7 +19,8 @@ package mk1 {
     }
 }
 
-package mk2 {
+{
+    package mk2;
     #BEGIN {print "Loading mk2\n"};
     use PDLA::Lite;
 
