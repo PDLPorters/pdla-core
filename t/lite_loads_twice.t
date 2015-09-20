@@ -1,5 +1,5 @@
-use Test::More tests => 1;
-use Devel::Symdump;
+use Test::More tests => 10;
+#use Devel::Symdump;
 
 {
     package mk1;
