@@ -451,6 +451,7 @@ my %makefile_hash = (
                 'Test::Exception' => 0,
                 'Test::Warn' => 0,  # for t/pptest.t
                 'Test::Deep' => 0,
+                'Devel::Symdump' => 0, # for t/lite_loads_twice.t
               },
               BUILD_REQUIRES => {
                 'ExtUtils::MakeMaker' => 0,
