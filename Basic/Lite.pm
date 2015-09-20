@@ -49,8 +49,6 @@ use PDLA::Lvalue;
 
 $VERSION = $PDLA::Version::VERSION;
 
-require Exporter;
-
 @ISA = qw( PDLA::Exporter );
 
 @EXPORT = qw( piddle pdl null barf ); # Only stuff always exported!
