@@ -21,19 +21,18 @@ use Devel::Symdump;
     }
 }
 
-my $obj = Devel::Symdump->rnew(__PACKAGE__); 
-my @sub_names = grep {$_ =~ /mk[12]/} $obj->functions();
+#my $obj = Devel::Symdump->rnew(__PACKAGE__); 
+#my @sub_names = grep {$_ =~ /mk[12]/} $obj->functions();
 
-print join ' ', @sub_names, "\n";
+#print join ' ', @sub_names, "\n";
 
 
-my %sub_hash;
-@sub_hash{@sub_names} = undef;
+#my %sub_hash;
+#@sub_hash{@sub_names} = undef;
 
-my %expected;
+#my %expected;
 foreach my $name (qw /x barf pdl piddle null/) {
-    $expected{'mk1::' . $name} = undef;
-    $expected{'mk2::' . $name} = undef;
+    ok (mk1->can($name), "Sub loaded: mk1::" . $name);
+    ok (mk2->can($name), "Sub loaded: mk2::" . $name);
 }
 
-is_deeply (\%sub_hash, \%expected, 'expected subs in namespaces');
