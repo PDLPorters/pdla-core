@@ -265,6 +265,7 @@ t/bad.t
 t/badvalue_scalar_cmp.t
 t/basic.t
 t/bess.t
+t/bigmem.t
 t/bool.t
 t/clump.t
 t/complex.t

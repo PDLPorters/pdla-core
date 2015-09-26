@@ -1,3 +1,7 @@
+2.014000 
+ - support for 64bit indexing - needs testing for piddles with more than 2**32
+   elements but all checks pass so far.
+
 2.013009 2019-04-19
  - fix non-PDLA-ed test
 
