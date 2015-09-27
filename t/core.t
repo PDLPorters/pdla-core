@@ -13,7 +13,7 @@ BEGIN {
     eval {
         require PDLA::LiteF;
     } or BAIL_OUT("PDLA::LiteF failed: $@");
-    plan tests => 58;
+    plan tests => 60;
     PDLA::LiteF->import;
 }
 $| = 1;
@@ -82,6 +82,12 @@ ok $d->reshape(-1)->ndims==0, "reshape(-1) on 0-dim PDLA gives 0-dim PDLA";
 ok $d->reshape(1)->ndims==1, "reshape(1) on 0-dim PDLA gives 1-dim PDLA";
 ok $d->reshape(1)->reshape(-1)->ndims==0, "reshape(-1) on 1-dim, 1-element PDLA gives 0-dim PDLA";
 
+# reshape test related to bug SF#398 "$pdl->hdr items are lost after $pdl->reshape"
+$c = ones(25);
+$c->hdr->{demo} = "yes";
+is($c->hdr->{demo}, "yes", "hdr before reshape");
+$c->reshape(5,5);
+is($c->hdr->{demo}, "yes", "hdr after reshape");
 
 
 
