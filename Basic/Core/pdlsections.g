@@ -230,11 +230,6 @@ PDLA_Anyval pdl_at( void* x, int datatype, PDLA_Indx* pos, PDLA_Indx* dims,
 
    ENDGENERICLOOP
 
-#ifdef MACOS_MZERO_BRAINDAMAGE
-    if(!result)
-        result=0;
-#endif
-
    return result;
 }
 
