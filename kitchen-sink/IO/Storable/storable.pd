@@ -192,6 +192,7 @@ sub pdlunpack {
                     $PDLA::Types::PDLA_S,
                     $PDLA::Types::PDLA_U,
                     $PDLA::Types::PDLA_L,
+                    $PDLA::Types::PDLA_N,
                     $PDLA::Types::PDLA_LL,
                     $PDLA::Types::PDLA_F,
                     $PDLA::Types::PDLA_D);

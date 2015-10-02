@@ -142,6 +142,7 @@ start-up modules.
    use PDLA::IO::Misc;
    use PDLA::IO::FITS;
    use PDLA::IO::Pic;
+   use PDLA::IO::Storable;
    use PDLA::Lvalue;
 
 =cut
@@ -179,6 +180,10 @@ use PDLA::IO::Pic;           # rpic/wpic
 # Load this so config/install info is available
 
 use PDLA::Config;
+
+# Load this to avoid mysterious Storable segfaults
+
+use PDLA::IO::Storable;
 
 EOD
 
