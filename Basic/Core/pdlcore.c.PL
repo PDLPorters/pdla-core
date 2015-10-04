@@ -301,13 +301,8 @@ int pdl_whichdatatype_double (NV nv) {
         TESTTYPE(PDLA_F,PDLA_Float)
         TESTTYPE(PDLA_D,PDLA_Double)
 
-        if( !finite(nv) ) { return PDLA_D; }
-#if NVSIZE > 8
-        warn("Precision loss due to 'long double' to 'PDLA_D' conversion!");
+        /* Default return type PDLA_Double */
         return PDLA_D;
-#else
-        croak("Something's gone wrong: %lf cannot be converted by whichdatatype_double",  nv);
-#endif 
 }
 
 
