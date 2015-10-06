@@ -6,6 +6,11 @@
    Loss of precision will be warned on "use PDLA;"
  - Skipping t/bigmem.t to avoid OOM CPAN Testers fails.
  - Minor fixes to C code to meet stricter compiler and C99 requirements.
+ - A new ipow() routine for integer exponentiation
+ - Corrected return types of intover, borover, bandover,
+   nbadover, and ngoodover.
+ - Fixed compile problem in clang from using finite()
+   on an integer datatype.
 
 2.013009 2019-04-19
  - fix non-PDLA-ed test
