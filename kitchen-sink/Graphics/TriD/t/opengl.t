@@ -20,19 +20,9 @@ BEGIN {
    use PDLA::Config;
    if ( $PDLA::Config{WITH_3D} ) {  # check if compiled
       if ( $PDLA::Config{USE_POGL} ) {  # check if using Perl OpenGL
-         if ( hasDISPLAY or exists($ENV{'PDLA_INT'}) ) {
-            if ( $ENV{AUTOMATED_TESTING} or $ENV{CI_TESTING} ) {
-               plan tests => 2;
-            } else {
-               plan tests => 4;
-            }
-            use_ok("OpenGL $PDLA::Config{POGL_VERSION}", qw(:all));
-            use_ok('PDLA::Graphics::OpenGL::Perl::OpenGL');
-         } else {  # no DISPLAY
-            plan tests => 2;
-            use_ok("OpenGL $PDLA::Config{POGL_VERSION}", qw(:all));
-            use_ok('PDLA::Graphics::OpenGL::Perl::OpenGL');
-         }
+         plan tests => 2;
+         use_ok("OpenGL $PDLA::Config{POGL_VERSION}", qw(:all));
+         use_ok('PDLA::Graphics::OpenGL::Perl::OpenGL');
       } else {
          plan skip_all => 'Non-POGL TriD graphics not supported';
       }
@@ -42,35 +32,5 @@ BEGIN {
 }
 
 #
-# Try opening 2 GL windows
+# TODO: add runtime tests
 #
-
-SKIP: {
-
-   if ( hasDISPLAY and OpenGL::_have_glx ) {
-      eval  { OpenGL::glpDisplay($ENV{DISPLAY}) };
-      skip "can't open X display", 2 if $@;
-   } elsif ( $ENV{AUTOMATED_TESTING} or $ENV{CI_TESTING} ) {
-      skip "don't open try GL windows if \$AUTOMATED_TESTING or \$CI_TESTING is set", 2;
-   } else {
-
-      my $numwins = 2;
-      my @windows;
-      my $opt;
-      $opt->{width} = 90;
-      $opt->{height} = 90;
-
-      foreach(0..$numwins-1){
-         $opt->{x} = ($numwins % 10) *100;
-         $opt->{y} = int($numwins / 10) *100;
-         my $win=eval 'PDLA::Graphics::OpenGL::OO->new($opt)';
-         if (! defined($win) ) {
-            skip "$@", 2 if $@ =~ /display mode not possible/;
-         } else {
-            isa_ok($win, 'PDLA::Graphics::OpenGL::OO');
-         }
-         push @windows, $win;
-      }
-
-   }
-}
