@@ -21,7 +21,7 @@ BEGIN {
    if ( $PDLA::Config{WITH_3D} ) {  # check if compiled
       if ( $PDLA::Config{USE_POGL} ) {  # check if using Perl OpenGL
          if ( hasDISPLAY or exists($ENV{'PDLA_INT'}) ) {
-            if ( $ENV{AUTOMATED_TESTING} ) {
+            if ( $ENV{AUTOMATED_TESTING} or $ENV{CI_TESTING} ) {
                plan tests => 2;
             } else {
                plan tests => 4;
