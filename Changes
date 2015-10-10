@@ -11,6 +11,9 @@
    nbadover, and ngoodover.
  - Fixed compile problem in clang from using finite()
    on an integer datatype.
+ - Mark some failing tests in t/primitive.t as TODO
+   to avoid CPAN Testers failures.
+ - Add IPC::Cmd to TEST_REQUIRES
 
 2.013009 2019-04-19
  - fix non-PDLA-ed test
