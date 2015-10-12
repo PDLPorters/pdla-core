@@ -1,18 +1,71 @@
 2.014000 
- - full support for 64bit indexing operations with 64bit integers (PDLA_Indx).
- - Clean up to handle perls with long double NVs
- - More clean-up to handle perls with long double NVs
-   Loss of precision will be warned on "use PDLA;"
+ - PDLA can now create and use piddles having more
+   than 2**32 elements.  Of particular use is that
+   you can now use PDLA::IO::FlexRaw to memory map
+   piddles from files on disk which can allow for
+   simplified processing and IO on extremely large
+   data.
+ - PDLA now detects when your perl installation has been
+   built with floating point longer than 8 bytes and gives
+   a one time warning that precision will be lost converting
+   from perl NV to PDLA_Doubles.  This warning is given on
+   "use PDLA;"
  - Skipping t/bigmem.t to avoid OOM CPAN Testers fails.
  - Minor fixes to C code to meet stricter compiler and C99 requirements.
- - A new ipow() routine for integer exponentiation
- - Corrected return types of intover, borover, bandover,
-   nbadover, and ngoodover.
- - Fixed compile problem in clang from using finite()
-   on an integer datatype.
+ - A new ipow() method has been added with 64bit integer
+   support.  ipow() calculates the integer exponentiation
+   of a value by successive multiplications.  This allows
+   one to avoid loss of significance in integer exponents.
+   pow() converts the value to double and will always have
+   <52bits precision.
+ - Corrected return types of intover, borover, bandover
+ - nbadover and ngoodover now return indx type (PDLA_Indx)
+ - Fixed compile problem in clang from using finite() on an integer datatype.
  - Mark some failing tests in t/primitive.t as TODO
    to avoid CPAN Testers failures.
  - Add IPC::Cmd to TEST_REQUIRES
+ - Implement PDLA_Anyval data type as union to support 64bit indexing
+   This adds a union data type to add 64bit integer support to
+   the original PDLA-2.x types which assumed that double was
+   capable of holding all the "lesser" types.  With the PDLA_Anyval
+   type, we can correctly handle 64bit integer data types and
+   avoid errors and loss of precision due to conversions to or
+   from PDLA_Double.  Special thanks to kmx and zowie for their
+   help to complete and debug this implementation.
+ - Due to the new PDLA_Anyval type changes, existing
+   PDLA::PP modules may need to be updated to support
+   the new PDLA Core version 12 API.  Authors, please
+   see PDLA::API for macros to ease the porting.
+   Users, be aware that some modules may not work
+   until they are updated by their maintainers.
+ - Many fixes to the build process to make PDLA more robust
+   to build, test, and install.  This takes advantage of new
+   automated CI testing via Travis CI on the github site.
+   Thanks much to Ed and Zakariyya for their work to get
+   this started and maintained.  This CI testing makes
+   this the best tested and best testing PDLA release ever!
+ - Various documentation clean-ups and work to improve
+   on-line viewing at http://metacpan.org and others.
+   (Thanks kmx and Derek!)
+ - "use PDLA" now includes "use PDLA::IO::Storable"
+   This avoids a hard to diagnose crash that can
+   occur when a user tries using Storable without the
+   necessary "use PDLA::IO::Storable".
+ - MANY sf.net bugs fixed:
+
+   400  dataflow slice crash around 2**31 boundary
+   399  Small doc fixes
+   398  $pdl->hdr items are lost after $pdl->reshape
+   396  online docs for modules only work first time in PDLA shells
+   395  ipow (integer exponentiation) support for 64bit index support
+   394  demo cartography fails
+   383  gcc/#gfortran 4.9.2 needs -lquadmath
+   378  where on dice of pdl bad results
+   376  PDLA Segmentation fault working with Storable restored PDLA
+   347  t/#pdl_from_string.t has a failure if BADVAL_NAN=1
+   346  ExtUtils::F77 dependency causing problems for CPAN install
+   343  longlong constructor and display lose digits due to...
+   340  orover of byte data returns long type
 
 2.013009 2019-04-19
  - fix non-PDLA-ed test
