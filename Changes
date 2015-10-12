@@ -1,6 +1,5 @@
 2.014000 
- - support for 64bit indexing - needs testing for piddles with more than 2**32
-   elements but all checks pass so far.
+ - full support for 64bit indexing operations with 64bit integers (PDLA_Indx).
  - Clean up to handle perls with long double NVs
  - More clean-up to handle perls with long double NVs
    Loss of precision will be warned on "use PDLA;"
