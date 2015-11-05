@@ -1614,8 +1614,6 @@ the usual cases. The following example demonstrates typical usage:
 sub PDLA::clump {
   my $ndims = $_[0]->getndims;
   if ($#_ < 2) {
-    return &PDLA::_clump_int($_[0],$_[1]) # Truncate clumping to actual dims
-      if $_[1] > $ndims;
     return &PDLA::_clump_int(@_);
   } else {
     my ($this,@dims) = @_;
