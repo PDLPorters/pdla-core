@@ -1209,22 +1209,19 @@ setdims(x,dims_arg)
        int i;
 	CODE:
 	{
+	        /* This mask avoids all kinds of subtle dereferencing bugs (CED 11/2015) */
+		if(x->trans || x->vafftrans || x->children.next){
+		  pdl_barf("Can't setdims on a PDLA that already has children");
+		}
+
+		/* not sure if this is still necessary with the mask above... (CED 11/2015)  */
 		pdl_children_changesoon(x,PDLA_PARENTDIMSCHANGED|PDLA_PARENTDATACHANGED);
 		dims = pdl_packdims(dims_arg,&ndims);
 		pdl_reallocdims(x,ndims);
 		for(i=0; i<ndims; i++) x->dims[i] = dims[i];
 		pdl_resize_defaultincs(x);
 		x->threadids[0] = ndims;
- /* make null != dims = [0] */
-#ifndef ELIFJELFIJSEJIF
 		x->state &= ~PDLA_NOMYDIMS;
-#else
-		   if(ndims == 1 && dims[0] == 0) {
-			x->state |= PDLA_NOMYDIMS;
-		   } else {
-			x->state &= ~PDLA_NOMYDIMS;
-		   }
-#endif
 		pdl_changed(x,PDLA_PARENTDIMSCHANGED|PDLA_PARENTDATACHANGED,0);
 	}
 
