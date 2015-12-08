@@ -2617,9 +2617,10 @@ preserves dataflow:
   ]
  ]
 
-Note: an explicit copy of slices is generally forced - this is the
-only way (for now) of stopping a crash if C<$x> is a slice.
-Important: Physical piddles are changed inplace!
+Important: Piddles are changed inplace!  
+
+Note: If C<$x> is connected to any other PDLA (e.g. if it is a slice)
+then the connection is first severed.
 
 =for example
 
@@ -2642,6 +2643,7 @@ sub PDLA::reshape{
 	return $_[0]->slice( map { $_==1 ? [0,0,0] : [] } $_[0]->dims);
     }
     my $pdl = topdl($_[0]);
+    $pdl->sever;
     my $nelem = $pdl->nelem;
     my @dims = grep defined, @_[1..$#_];
     for my $dim(@dims) { barf "reshape: invalid dim size '$dim'" if $dim < 0 }
