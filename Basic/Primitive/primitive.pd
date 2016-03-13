@@ -3616,17 +3616,17 @@ sub PDLA::whichND {
   # Scalar context: generate an N-D index piddle
 
   unless($mask->nelem) {
-      return PDLA::new_from_specification('PDLA',$mask->ndims,0);
+      return PDLA::new_from_specification('PDLA',indx,$mask->ndims,0);
   }
   
   unless($mask->getndims) {
-    return $mask ? pdl(0) : PDLA::new_from_specification('PDLA',0);
+    return $mask ? pdl(indx,0) : PDLA::new_from_specification('PDLA',indx,0);
   }
   
-  $ind = $mask->flat->which->dummy(0,$mask->getndims)->long->make_physical;
+  $ind = $mask->flat->which->dummy(0,$mask->getndims)->make_physical;
   if($ind->nelem==0) {
       # In the empty case, explicitly return the correct type of structured empty
-      return PDLA::new_from_specification('PDLA',$mask->ndims, 0);
+      return PDLA::new_from_specification('PDLA',indx,$mask->ndims, 0);
   }
 
   my $mult = ones($mask->getndims)->long;
