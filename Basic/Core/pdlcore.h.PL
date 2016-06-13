@@ -153,7 +153,7 @@ for my $in ( keys %PDLA_DATATYPES ) {
   (my $type = $PDLA_DATATYPES{$in}) =~ s/^PDLA_//;
   print OUT <<"!WITH!SUBS!";
 PDLA_Indx pdl_setav_$type(PDLA_$type* pdata, AV* av,
-	PDLA_Indx* pdims, PDLA_Long ndims, int level, PDLA_$type undefval);
+	PDLA_Indx* pdims, PDLA_Long ndims, int level, PDLA_$type undefval, pdl *p);
 !WITH!SUBS!
 }
 
