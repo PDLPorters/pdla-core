@@ -1077,6 +1077,11 @@ PDLA_Indx pdl_kludge_copy_$type(PDLA_Indx poff, // Offset into the dest data arr
       pdlsiz = source_pdl->dims[pdldim];
     }
 
+#if BADVAL
+    /* This is used inside the switch in order to detect badvalues. */
+    PDLA_Anyval source_badval = PDLA.get_pdl_badvalue(source_pdl);
+#endif /* BADVAL */
+
     /* This is the actual data-copying code. It is generated with a Perl loop, to
      * ensure that all current PDLA types get treated. */
 
@@ -1084,12 +1089,23 @@ PDLA_Indx pdl_kludge_copy_$type(PDLA_Indx poff, // Offset into the dest data arr
 !WITH!SUBS!
 
         # perl loop to emit code for all the PDLA types -- ctype gets the C type of 
-        # the source PDLA, and switch_type gets the Perl name.
+        # the source PDLA, switch_type gets the Perl name, ppsym gets
+        # the symbol need to retrieve from a PDLA_Anyval, and type_usenan is a
+        # boolean indicating whether this type handles NaNs.
         foreach my $switch_type (keys %PDLA::Types::typehash) {
 
 	    my $ctype = $PDLA::Types::typehash{$switch_type}{ctype};
 	    my $stype = $PDLA::Types::typehash{$switch_type}{ctype};
 	    $stype =~ s/PDLA_//;
+	    my $ppsym = $PDLA::Types::typehash{$switch_type}{ppsym};
+	    my $type_usenan = $PDLA::Types::typehash{$switch_type}{usenan};
+
+	    my $comp_for_nan =
+	          $type_usenan
+	          # if not equal, check if both are NaN
+	        ? "( !finite( (($ctype *)pptr)[i] ) && !finite(source_badval.value.$ppsym) )"
+	          # otherwise it must be false
+	        : '0';
 
         print OUT <<"!WITH!SUBS!";
 
@@ -1100,10 +1116,10 @@ PDLA_Indx pdl_kludge_copy_$type(PDLA_Indx poff, // Offset into the dest data arr
         for(; i<pdlsiz; i++) {
 #if BADVAL
           if(source_pdl->has_badvalue || (source_pdl->state & PDLA_BADVAL)) {
-              if( (($ctype *)pptr)[i] == PDLA.bvals.$stype ) {
+              /* Retrieve directly from .value.* instead of using ANYVAL_EQ_ANYVAL */
+              if( (($ctype *)pptr)[i] == source_badval.value.$ppsym || $comp_for_nan ) {
                   /* bad value in source PDLA -- use our own type's bad value instead */
                   pdata[i] = PDLA.bvals.$type;
-                  p->has_badvalue=1;
                   p->state |= PDLA_BADVAL;
               } else {
                   pdata[i] = (PDLA_$type) ((${ctype} *)pptr)[i];
