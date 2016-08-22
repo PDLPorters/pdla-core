@@ -6,9 +6,6 @@ use strict;
 use PDLA::LiteF;
 use PDLA::IO::Misc;
 
-use PDLA::Core ':Internal'; # For howbig()
-use PDLA::Config;
-
 use File::Temp qw( tempfile tempdir );
 
 kill 'INT',$$  if $ENV{UNDER_DEBUGGER}; # Useful for debugging.
