@@ -15,7 +15,7 @@ Perl Data Language v2.0.
 
 =head2 Help
 
-Use C<help help> within I<perldla> or I<pdla2> or use the C<pdladoc>
+Use C<help help> within I<perldl> or I<pdl2> or use the C<pdldoc>
 program from the command line for access to the PerlDL documentation.
 HTML versions of the pages should also be present, in the
 F<HtmlDocs/PDLA> directory of the PDLA distribution. To find this 
@@ -39,7 +39,7 @@ try the command
 
 somewhere. This spews out a huge amount of debug info for PDLA
 into STDOUT. Plans for the future include making it possible to
-redirect the output, and also making it possible to select mesages
+redirect the output, and also making it possible to select messages
 with more precision.
 
 Many of the messages come from C<Basic/Core/pdlapi.c> and you

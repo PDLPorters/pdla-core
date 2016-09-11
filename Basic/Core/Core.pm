@@ -7,7 +7,7 @@ use warnings;
 use PDLA::Exporter;
 use DynaLoader;
 our @ISA    = qw( PDLA::Exporter DynaLoader );
-our $VERSION = "2.016000";
+our $VERSION = '2.016000';
 bootstrap PDLA::Core $VERSION;
 use PDLA::Types ':All';
 use Config;
@@ -262,7 +262,7 @@ Whether to insert commas when printing pdls
 =over 4
 
 The default print format for floats, doubles, and indx values,
-repectively.  The default default values are:
+respectively.  The default default values are:
 
   $PDLA::floatformat  = "%7g";
   $PDLA::doubleformat = "%10.8g";
@@ -1487,7 +1487,7 @@ They do not have their own copy of
 data but instead store only access information to some (or all) of another
 piddle's data.
 
-Note: this function should not be used unless absolutely neccessary
+Note: this function should not be used unless absolutely necessary
 since otherwise memory requirements might be severly increased. Instead
 of writing your own XS code with the need to call C<make_physical> you
 might want to consider using the PDLA preprocessor
@@ -3028,7 +3028,7 @@ Set a single value inside a piddle
 C<@position> is a coordinate list, of size equal to the
 number of dimensions in the piddle. Occasionally useful,
 mainly provided for backwards compatibility as superseded
-by use of L<slice|PDLA::Slices/slice> and assigment operator C<.=>.
+by use of L<slice|PDLA::Slices/slice> and assignment operator C<.=>.
 
 =for example
 

@@ -48,7 +48,7 @@ PDLA::NiceSlice    Text::Balanced >= 1.89  A nicer way to index piddles.
                   Module::Compile         implementation under development.
 
 
-Inline::Pdlapp     Inline >= 0.68          This module allows to define fast
+Inline::Pdlapp     Inline >= 0.68          This module allows defining fast
                   Inline::C >= 0.62       PP code inline in your scripts.
 
                                           NOTE: Though Inline is listed as as

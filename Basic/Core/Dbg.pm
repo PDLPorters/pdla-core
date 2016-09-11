@@ -12,7 +12,7 @@ PDLA::Dbg - functions to support debugging of PDLA scripts
 
 =head1 DESCRIPTION
 
-This packages implements a couple of functions that should come in
+These packages implements a couple of functions that should come in
 handy when debugging your PDLA scripts. They make a lot of sense while
 you're doing rapid prototyping of new PDLA code, let's say inside the
 perldla or pdla2 shell.
