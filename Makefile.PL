@@ -536,7 +536,7 @@ doc_perl_install ::
 # support the `$<` variable in explicit rules
 $text .= <<EOT if $^O !~ /MSWin/;
 pdla$Config::Config{exe_ext} : pdla.c
-	\$(CC) pdla.c -o \$\@
+	\$(CC) \$(CFLAGS) \$(CPPFLAGS) pdla.c -o \$\@
 EOT
 
 $text .= << 'EOT' if $^O =~ /MSWin/;
