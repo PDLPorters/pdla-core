@@ -509,21 +509,21 @@ doctest ::
 
 doc_site_install ::
 	$(NOECHO) $(ECHO) "doc_site_install: Building PDLA documentation database ..."
-	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(INSTALLSITEARCH)"
+	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(DESTDIR)$(INSTALLSITEARCH)"
 %HTML%	$(NOECHO) $(ECHO) "doc_site_install: Building PDLA documentation web pages ..."
-%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLSITEARCH)$(DFSEP)PDLA"
+%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(DESTDIR)$(INSTALLSITEARCH)$(DFSEP)PDLA"
 
 doc_vendor_install ::
 	$(NOECHO) $(ECHO) "doc_vendor_install: Building PDLA documentation database ..."
-	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(INSTALLVENDORARCH)"
+	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(DESTDIR)$(INSTALLVENDORARCH)"
 %HTML%	$(NOECHO) $(ECHO) "doc_vendor_install: Building PDLA documentation web pages ..."
-%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLVENDORARCH)$(DFSEP)PDLA"
+%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(DESTDIR)$(INSTALLVENDORARCH)$(DFSEP)PDLA"
 
 doc_perl_install ::
 	$(NOECHO) $(ECHO) "doc_perl_install: Building PDLA documentation database ..."
-	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(INSTALLARCHLIB)"
+	$(NOECHO) $(PERLRUNINST) Doc$(DFSEP)scantree.pl "$(DESTDIR)$(INSTALLARCHLIB)"
 %HTML%	$(NOECHO) $(ECHO) "doc_perl_install: Building PDLA documentation web pages ..."
-%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(INSTALLARCHLIB)$(DFSEP)PDLA"
+%HTML%	$(NOECHO) $(PERL) Doc$(DFSEP)mkhtmldoc.pl "$(DESTDIR)$(INSTALLARCHLIB)$(DFSEP)PDLA"
 ';
 
   if(defined $PDLA::Config{HTML_DOCS} && !$PDLA::Config{HTML_DOCS}){
