@@ -2899,7 +2899,7 @@ $sliceb_data_kludge = <<'KLUDGE';
       switch( p->datatype ) {
 KLUDGE
 
-for my $type(keys %PDLA::Types::typehash) {
+for my $type( PDLA::Types::typesrtkeys()) {
     $sliceb_data_kludge .=
 "        case $type: nn = *( ($PDLA::Types::typehash{$type}->{realctype} *)(p->data) ); break;\n";
 }

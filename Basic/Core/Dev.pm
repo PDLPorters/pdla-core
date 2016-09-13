@@ -311,7 +311,7 @@ sub flushgeneric {  # Construct the generic code switch
 
    print $indent,"switch ($loopvar) {\n\n";
 
-   for $case (keys %PDLA_DATATYPES) {
+   for $case (PDLA::Types::typesrtkeys()){
 
      $type = $PDLA_DATATYPES{$case};
 
@@ -764,7 +764,7 @@ sub generate_core_flags {
     # access (read, if set is true then write as well; if postset true then
     #         read first and write new value after that)
     # to piddle's state
-    foreach my $name ( keys %flags ) {
+    foreach my $name ( sort keys %flags ) {
         my $flag = "PDLA_" . ($flags{$name}{FLAG} || uc($name));
         if ( $flags{$name}{set} ) {
             print <<"!WITH!SUBS!";

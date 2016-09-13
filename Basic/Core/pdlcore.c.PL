@@ -430,7 +430,7 @@ print OUT <<'!NO!SUBS!';
 
    if(SvTYPE(SvRV(sv)) == SVt_PVHV) {
         HV *hash = (HV*)SvRV(sv);
-        SV **svp = hv_fetchs(hash,"PDLA",0);
+        SV **svp = hv_fetch(hash,"PDLA",4,0);
         if(svp == NULL) {
                 croak("Hash given as a pdl - but not {PDLA} key!");
         }
@@ -971,7 +971,7 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
 # Perl snippet autogenerates switch statement to distribute
 # pdl_setav calls...
 #
-  for my $type(sort keys %PDLA_DATATYPES){
+  for my $type(typesrtkeys()){
     my $t2 = $PDLA_DATATYPES{$type};
     $t2 =~ s/PDLA_//;
     print OUT <<"!WITH!SUBS!";
@@ -1032,7 +1032,7 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
  */
 !NO!SUBS!
 
-for my $in ( keys %PDLA_DATATYPES ) {
+for my $in ( typesrtkeys() ) {
 
   (my $type = $PDLA_DATATYPES{$in}) =~ s/^PDLA_//;
 
@@ -1092,7 +1092,7 @@ PDLA_Indx pdl_kludge_copy_$type(PDLA_Indx poff, // Offset into the dest data arr
         # the source PDLA, switch_type gets the Perl name, ppsym gets
         # the symbol need to retrieve from a PDLA_Anyval, and type_usenan is a
         # boolean indicating whether this type handles NaNs.
-        foreach my $switch_type (keys %PDLA::Types::typehash) {
+        foreach my $switch_type ( typesrtkeys() ) {
 
 	    my $ctype = $PDLA::Types::typehash{$switch_type}{ctype};
 	    my $stype = $PDLA::Types::typehash{$switch_type}{ctype};

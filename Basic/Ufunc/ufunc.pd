@@ -126,7 +126,7 @@ my %over =
      prodover => { name => 'product', op => '*=', init => 1, },
      );
 
-foreach my $func ( keys %over ) {
+foreach my $func ( sort keys %over ) {
 
     # creates $func and cumu$func functions
     # and d$func and dcumu$func functions, which
@@ -243,7 +243,7 @@ foreach my $func ( keys %over ) {
 
      );
 
-foreach my $func ( keys %over ) {
+foreach my $func ( sort keys %over ) {
 
     my $def   = $over{$func}{def};
     my $txt   = $over{$func}{txt};
@@ -438,7 +438,7 @@ EOD
 # note: we export them to the PDLA Core structure for use in
 #       other modules (eg Image2D)
 
-for (keys %PDLA::Types::typehash) {
+for ( PDLA::Types::typesrtkeys() ) {
     my $ctype = $PDLA::Types::typehash{$_}{ctype};
     my $ppsym = $PDLA::Types::typehash{$_}{ppsym};
 
@@ -1262,8 +1262,7 @@ Vectors with bad components should be moved to the end of the array:
 sub generic_qsortvec_ind {
     my $pdl = shift;
     my $ndim = shift;
-    return '$TBSULNQFD(pdl_qsortvec_ind_B,pdl_qsortvec_ind_S,pdl_qsortvec_ind_U,
-             pdl_qsortvec_ind_L,pdl_qsortvec_ind_N,pdl_qsortvec_ind_Q,pdl_qsortvec_ind_F,pdl_qsortvec_ind_D) ($P(' . $pdl . '), $P(indx), '. $ndim.', 0, nn);';
+    return '$TBSULNQFD(pdl_qsortvec_ind_B,pdl_qsortvec_ind_S,pdl_qsortvec_ind_U,pdl_qsortvec_ind_L,pdl_qsortvec_ind_N,pdl_qsortvec_ind_Q,pdl_qsortvec_ind_F,pdl_qsortvec_ind_D) ($P(' . $pdl . '), $P(indx), '. $ndim.', 0, nn);';
 }
 
 pp_def(
