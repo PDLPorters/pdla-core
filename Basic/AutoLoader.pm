@@ -29,7 +29,7 @@ B<Note>: This variable is unrelated to Perl's C<PERL5LIB>.
 
 If you add a leading '+' on a directory name, PDLA will search the
 entire directory tree below that point. Internally, PDLA stores the
-dirctory list in the variable C<@PDLALIB>, which can be modified at
+directory list in the variable C<@PDLALIB>, which can be modified at
 run time.
 
 For example, in csh:
