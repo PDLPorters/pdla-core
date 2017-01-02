@@ -404,6 +404,7 @@ my %makefile_hash = (
                 'Carp'            => 1.20,    # EU::MM seems to need this not to crash
                 'ExtUtils::MakeMaker' => 6.56,
                 'File::Path'          => 0,
+                'ExtUtils::ParseXS'   => 3.01, # avoids 2.21, known broken
               },
               TEST_REQUIRES => {
                 'CPAN::Meta' => '2.120900',
@@ -414,7 +415,6 @@ my %makefile_hash = (
               },
               BUILD_REQUIRES => {
                 'ExtUtils::MakeMaker' => 0,
-                'ExtUtils::ParseXS'   => 3.01, # avoids 2.21, known broken
                 'File::Path'          => 0,
               },
               'MIN_PERL_VERSION' => '5.010',
