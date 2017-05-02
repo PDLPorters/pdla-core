@@ -2745,7 +2745,7 @@ sub PDLA::convert {
 
 =for ref
 
-byte|short|ushort|long|longlong|float|double (shorthands to convert datatypes)
+byte|short|ushort|long|indx|longlong|float|double (shorthands to convert datatypes)
 
 =for usage
 
