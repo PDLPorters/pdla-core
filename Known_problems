@@ -70,7 +70,7 @@ The following issues have been reported with this version of PDLA:
 
 
 - The following SourceForge bugs are outstanding at time of the
-  PDLA-2.017_02 release:
+  PDLA-2.017_99 release:
 
   435   PDLA-LinearAlgebra-0.12 undefined reference to dggsvd_ + sggsvd_
 
