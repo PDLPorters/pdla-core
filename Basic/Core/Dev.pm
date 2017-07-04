@@ -37,6 +37,8 @@ use English; require Exporter;
                 pdlpp_mkgen
 		 );
 
+my $quotation_mark = $^O =~ /MSWin32/i ? '"' : "'";
+
 # Installation locations
 # beware: whereami_any now appends the /Basic or /PDLA directory as appropriate
 
@@ -45,7 +47,6 @@ use English; require Exporter;
 # print STDERR "executing PDLA::Core::Dev from",join(',',caller),"\n";
 
 # Return library locations
-
 
 sub PDLA_INCLUDE { '"-I'.whereami_any().'/Core"' };
 sub PDLA_TYPEMAP { whereami_any().'/Core/typemap.pdl' };
@@ -436,7 +437,7 @@ $pref\$(OBJ_EXT): $pref.c
 
 install ::
 	\@echo "Updating PDLA documentation database...";
-	\$(ABSPERLRUN) -e 'exit if \$\$ENV{DESTDIR}; use PDLA::Doc; eval { PDLA::Doc::add_module(q{$mod}); }; ';
+	\$(ABSPERLRUN) -e ${quotation_mark}exit if \$\$ENV{DESTDIR}; use PDLA::Doc; eval { PDLA::Doc::add_module(q{$mod}); }; ${quotation_mark};
 |
 	} (@_)
 }
