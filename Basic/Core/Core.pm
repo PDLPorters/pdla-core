@@ -3154,7 +3154,7 @@ sub PDLA::sclr {
 concatenate piddles to N+1 dimensional piddle
 
 Takes a list of N piddles of same shape as argument,
-returns a single piddle of dimension N+1
+returns a single piddle of dimension N+1.
 
 =for example
 
@@ -3184,8 +3184,15 @@ docs will also say this:
 
 The output piddle is set bad if any input piddles have their bad flag set.
 
-Similar functions include L<append|PDLA::Primitive/append> and
-L<glue|PDLA::Primitive/glue>.
+Similar functions include L<append|PDLA::Primitive/append>, which
+appends only two piddles along their first dimension, and
+L<glue|PDLA::Primitive/glue>, which can append more than two piddles
+along an arbitary dimension.
+
+Also consider the generic constructor L<pdl|pdl>, which can handle
+piddles of different sizes (with zero-padding), and will return a
+piddle of type 'double' by default, but may be considerably faster (up
+to 10x) than cat.
 
 =cut
 
@@ -3195,7 +3202,7 @@ sub PDLA::cat {
 	$@ = '';
 	eval {
 		$res = $_[0]->initialize;
-		$res->set_datatype($_[0]->get_datatype);
+		$res->set_datatype((sort {$b<=>$a} map{$_->get_datatype} @_)[0] );
 
 		my @resdims = $_[0]->dims;
 		for my $i(0..$#_){
