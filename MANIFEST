@@ -295,6 +295,7 @@ t/inlinepdlpp.t
 t/interpol.t
 t/lgamma.t
 t/limits_normalize_dsets.t
+t/lite_loads_twice.t
 t/lvalue.t
 t/magic.t
 t/matmult.t
