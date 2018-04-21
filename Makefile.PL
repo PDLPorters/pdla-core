@@ -232,7 +232,7 @@ our \$VERSION='$PDLA::VERSION';
 \$VERSION = eval \$VERSION;
 1;
 EOVF
-  $fh->close();
+  close $fh;
 }
 
 sub make_Types_pm {
