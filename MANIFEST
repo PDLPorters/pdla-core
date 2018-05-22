@@ -232,8 +232,6 @@ debian/perldl.conf
 debian/rules
 debian/source/format
 debian/write_config_debian.pl
-inc/Carp.pm
-inc/Carp/Heavy.pm
 m51.fits
 macosx/README
 pdla.c
