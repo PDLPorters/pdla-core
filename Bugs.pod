@@ -162,8 +162,7 @@ Email a patch to the pdl-devel mailing list.
 
 Patches should be made against the latest released
 PDLA or, ideally, against the current git sources
-which you can browse and check out at
-L<https://github.com/PDLPorters/pdla-core>.
+which you can browse and check out at L<https://github.com/PDLPorters/pdla-core>.
 
 Thanks,
 The PDLA developers.
