@@ -130,7 +130,7 @@ for info on how to subscribe to this list.
 
 BEFORE you report a bug make sure you got the latest
 release version of PDLA, always available from CPAN,
-check L<http://search.cpan.org/search?dist=PDLA>.
+check L<http://metacpan.org/pod/PDLA>.
 
 Also, you can check the FAQ at L<http://pdl.perl.org/?docs=FAQ&title=PDLA::FAQ>.
 and the mailing list archives for hints. You can find links to the
