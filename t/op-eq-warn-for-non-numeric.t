@@ -9,7 +9,7 @@ use warnings;
 ## Name: "isn't numeric in null operation" warning could be more helpful
 ##
 ## <http://sourceforge.net/p/pdl/bugs/332/>
-## <https://github.com/PDLAPorters/pdl/issues/33>
+## <https://github.com/PDLPorters/pdl/issues/33>
 
 use PDLA::Config;
 use PDLA::LiteF;

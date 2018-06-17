@@ -7,7 +7,7 @@ PDLA::AutoLoader - MatLab style AutoLoader for PDLA
 
  use PDLA::AutoLoader;
  $x = func1(...);   # Load file func1.pdl
- $b = func2(...);   # Load file func2.pdl
+ $y = func2(...);   # Load file func2.pdl
 
  $PDLA::AutoLoader::Rescan = 1; # Enable re-scanning
 

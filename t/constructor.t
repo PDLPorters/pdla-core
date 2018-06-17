@@ -200,18 +200,18 @@ my $d = pdl(@c);
      
      $x = pdl(3,4,5);
      $x=$x->setbadif($x==4);
-     eval '$b = pdl($x,5);';
+     eval '$y = pdl($x,5);';
      ok(!$@, "a badvalue PDLA works in the constructor");
 
-     ok( $b->badflag, "bad value propagates from inner PDLA to constructed PDLA" );
-     ok( $b->slice("(1),(0)") == $b->badvalue, "bad value was passed in" );
-     ok( $b->at(1,1) == 0, "padding was correct" );
+     ok( $y->badflag, "bad value propagates from inner PDLA to constructed PDLA" );
+     ok( $y->slice("(1),(0)") == $y->badvalue, "bad value was passed in" );
+     ok( $y->at(1,1) == 0, "padding was correct" );
 
-     eval '$b = pdl(short, $x, 5);';
+     eval '$y = pdl(short, $x, 5);';
      
      ok(!$@, "constructed a short PDLA");
-     ok( $b->slice("(1),(0)") == $b->badvalue, "bad value was translated" );
-     ok( $b->at(1,1) == 0, "padding was correct");
+     ok( $y->slice("(1),(0)") == $y->badvalue, "bad value was translated" );
+     ok( $y->at(1,1) == 0, "padding was correct");
 
 }
 

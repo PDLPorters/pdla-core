@@ -356,9 +356,9 @@ $indices = ndcoords($type,@dimlist);
   ]
 
   pdla> $w = zeroes(byte,2,3);        # $w is a 2x3 byte piddle
-  pdla> $b = ndcoords($w);            # $b inherits $w's type
-  pdla> $c = ndcoords(long,$w->dims); # $c is a long piddle, same dims as $b
-  pdla> help $b;
+  pdla> $y = ndcoords($w);            # $y inherits $w's type
+  pdla> $c = ndcoords(long,$w->dims); # $c is a long piddle, same dims as $y
+  pdla> help $y;
   This variable is   Byte D [2,2,3]              P            0.01Kb
   pdla> help $c;
   This variable is   Long D [2,2,3]              P            0.05Kb
@@ -519,7 +519,7 @@ Create array filled with a sequence of values
 
 =for usage
 
- $w = sequence($b); $w = sequence [OPTIONAL TYPE], @dims;
+ $w = sequence($y); $w = sequence [OPTIONAL TYPE], @dims;
 
 etc. see L<zeroes|PDLA::Core/zeroes>.
 
@@ -739,7 +739,7 @@ transpose rows and columns.
 
 =for usage
 
- $b = transpose($w);
+ $y = transpose($w);
 
 =for example
 

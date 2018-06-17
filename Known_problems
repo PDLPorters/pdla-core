@@ -92,7 +92,7 @@ The following issues have been reported with this version of PDLA:
   GH#147 SF#397 PDLA::FFT not 64bit integer safe (and more)
   GH#139        make Makefile.PL consumable to linux vendors cat:build cat:cleanup
   GH#127        Make sure all uses of approx() in the tests have the tolerance argument cat:cleanup cat:testing
-  GH#126 SF#392 Inline Pdlpp doesn't work in clean build tree
+  GH#126 SF#392 Inline Pdlapp doesn't work in clean build tree
   GH#125 SF#391 Operators called in the form "explicit call with trailing 0" give syntax error
   
          SF#387 PDLA::IO::HDF5 wrong API function, H5Eset_auto1 has been called

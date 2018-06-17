@@ -460,9 +460,9 @@ foreach my $append (qw(2 e l)) {
 # ]
 
 # Basic 1D array
-# pdla> p $b = pdl [ 1, 2, 3, 4, 5, 6 ]
-# pdla> p $b = pdl q[ 1 2 3 4 5 6 ]
-# pdla> p $b = pdl q[1,2,3,4,5,6]
+# pdla> p $y = pdl [ 1, 2, 3, 4, 5, 6 ]
+# pdla> p $y = pdl q[ 1 2 3 4 5 6 ]
+# pdla> p $y = pdl q[1,2,3,4,5,6]
 # [1 2 3 4 5 6]
 
 # 1D array with signs

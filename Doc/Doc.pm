@@ -294,7 +294,7 @@ the end of the current paragraph is accepted, for example:
          ($x,$y) = $x->func(1,3);  # this is part of the accepted info
          $x = func($x,0,1);        # this as well
 
-         $x = func($x,$b);         # but this isn't
+         $x = func($x,$y);         # but this isn't
 
 To make the resulting pod documentation also easily digestible for the
 existing pod filters (pod2man, pod2text, pod2html, etc) the actual
@@ -704,7 +704,7 @@ sub scan {
   my @namelines = split("\n",$outfile_text);
   my ($name,$does);
   for (@namelines) {
-     if (/^(PDLA) (-) (.*)/ or  /^\s*(Inline::Pdlpp)\s*(-*)?\s*(.*)\s*$/ or /\s*(PDLA::[\w:]*)\s*(-*)?\s*(.*)\s*$/) {
+     if (/^(PDLA) (-) (.*)/ or  /^\s*(Inline::Pdlapp)\s*(-*)?\s*(.*)\s*$/ or /\s*(PDLA::[\w:]*)\s*(-*)?\s*(.*)\s*$/) {
 	$name = $1; $does = $3;
      }
      if (/^\s*([a-z][a-z0-9]*) (-+) (.*)/) { # lowercase shell script name

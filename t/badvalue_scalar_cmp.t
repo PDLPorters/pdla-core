@@ -16,7 +16,7 @@ use PDLA::LiteF;
 ## Name: scalar PDLA with badvalue always compares BAD with perl scalars
 ##
 ## <http://sourceforge.net/p/pdl/bugs/390/>
-## <https://github.com/PDLAPorters/pdl/issues/124>
+## <https://github.com/PDLPorters/pdl/issues/124>
 
 plan tests => 5;
 

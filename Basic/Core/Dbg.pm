@@ -40,7 +40,7 @@ Print info about a piddle (or all known piddles)
 =for example
 
     pdla> PDLA->px
-    pdla> $b += $x->clump(2)->px('clumptest')->sumover
+    pdla> $y += $x->clump(2)->px('clumptest')->sumover
     pdla> $x->px('%C (%A) Type: %T') # prints nothing unless $PDLA::debug
     pdla> $PDLA::debug = 1
     pdla>  $x->px('%C (%A) Type: %T')
