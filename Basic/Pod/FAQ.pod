@@ -68,7 +68,7 @@ initiator of the PDLA project:
     The PDLA concept is to give standard perl5 the ability
     to COMPACTLY store and SPEEDILY manipulate the large
     N-dimensional data sets which are the bread and butter
-    of scientific computing. e.g. $x=$y+$c can add two
+    of scientific computing. e.g. $x=$y+$z can add two
     2048x2048 images in only a fraction of a second.
 
 
@@ -266,8 +266,10 @@ The CPAN archives contains not only the PDLA distribution but
 also just about everything else that is Perl-related.  CPAN is
 mirrored by dozens of sites all over the world.  The main site
 is L<http://www.cpan.org>, and local CPAN sites (mirrors) can be
-found there. PDLA's homepage is at L<http://pdl.perl.org> and the
-latest version can also be downloaded from there.
+found there. Within CPAN you find the latest released version of
+PDLA in the directory /modules/by-module/PDLA/. PDLA's homepage is at
+L<http://pdl.perl.org> and the latest version can also be downloaded
+from there.
 
 
 =head2 Q: 2.8    What do I have to pay to get PDLA?  
