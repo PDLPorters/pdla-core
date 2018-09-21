@@ -3594,10 +3594,10 @@ with nonzero values in a mask PDLA.
 
 =for example
 
- pdla> $x=sequence(10,10,3,4)
- pdla> ($x, $y, $z, $w)=whichND($x == 203); p $x, $y, $z, $w
+ pdla> $s=sequence(10,10,3,4)
+ pdla> ($x, $y, $z, $w)=whichND($s == 203); p $x, $y, $z, $w
  [3] [0] [2] [0]
- pdla> print $x->at(list(cat($x,$y,$z,$w)))
+ pdla> print $s->at(list(cat($x,$y,$z,$w)))
  203
 
 =cut
