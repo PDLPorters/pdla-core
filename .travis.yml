@@ -15,6 +15,7 @@ matrix:
 #    - perl: "5.16"
 #    - perl: "5.18"
     - perl: "blead"
+    - perl: "blead-dbg"
     # this is commented out because we test Perl v5.20 under all BADVAL configurations including the default below
     #- perl: "5.20"
     - perl: "5.20"
@@ -31,6 +32,7 @@ matrix:
       env: CC="clang" # use `clang` instead of `gcc` default
   allow_failures:
     - perl: blead
+    - perl: blead-dbg
 before_install:
   # clang is already installed in Travis-CI environment. Using PERL_MM_OPT does not work with subdirectory Makefile.PLs so we override Config.pm
   # Also, both $Config{cc} and $Config{ld} need to be set because under ELF environments (such as Travis-CI's Ubuntu), this is what Perl's Config.pm does.
