@@ -2187,7 +2187,7 @@ sub PDLA::nslice_if_pdl {
 
 =for ref
 
-c<nslice> was an internally used interface for L<PDLA::NiceSlice|PDLA::NiceSlice>,
+C<nslice> was an internally used interface for L<PDLA::NiceSlice|PDLA::NiceSlice>,
 but is now merely a springboard to L<PDLA::Slice|PDLA::Slice>.  It is deprecated
 and likely to disappear in PDLA 3.0.
 
