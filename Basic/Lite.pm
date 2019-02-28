@@ -31,11 +31,9 @@ Access to other functions is by method syntax, viz:
 
 =cut
 
-# Load the fundamental PDLA packages, no imports
-# Because there are no imports, we do not need
-# the usual 'eval in the user's namespace' routine.
+package PDLA::Lite;
 
-use PDLA::Core '';
+use PDLA::Core qw(pdl piddle barf null);
 use PDLA::Ops '';
 use PDLA::Primitive '';
 use PDLA::Ufunc '';
@@ -45,7 +43,6 @@ use PDLA::Bad '';
 use PDLA::Version ;  # Doesn't export anything - no need for ''
 use PDLA::Lvalue;
 
-package PDLA::Lite;
 $VERSION = $PDLA::Version::VERSION;
 
 @ISA = qw( PDLA::Exporter );
