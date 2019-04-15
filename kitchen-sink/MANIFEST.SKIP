@@ -99,8 +99,3 @@ Libtmp/PCA/PCA*
 ^Libtmp/Transform/Transform\.pm
 ^Libtmp/Transform/Transform\.xs
 ^Padre/readline-fix
-^Perldl2/logo3d.pdl
-^Perldl2/pdl2.pod$
-^Perldl2/tctrl-c.pl
-^Perldl2/trgnu-ctrl-c.txt$
-^Perldl2/work
