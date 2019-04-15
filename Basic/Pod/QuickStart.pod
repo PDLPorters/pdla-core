@@ -42,11 +42,11 @@ data to be easily played with and visualised.
 =head2 Help
 
 PDLA contains extensive documentation, available both within the
-I<perldla> or I<pdl2> shells and from the command line, using the C<pdldoc> program.
+I<perldla> or I<pdl2> shells and from the command line, using the C<pdladoc> program.
 For further information try either of:
 
  pdla> help help
- $ pdldoc
+ $ pdladoc
 
 HTML copies of the documentation should also be available. 
 To find their location, try the following:
@@ -426,7 +426,7 @@ e.g.:
   the same file for details.
  ReadLines, NiceSlice, MultiLines  enabled
  Reading PDLA/default.perldlrc...
- Found docs database /home/pdl/dev/lib/perl5/site_perl/PDLA/pdldoc.db
+ Found docs database /home/pdl/dev/lib/perl5/site_perl/PDLA/pdladoc.db
  Type 'help' for online help
  Type 'demo' for online demos
  Loaded PDLA v2.4.9_003 (supports bad values)

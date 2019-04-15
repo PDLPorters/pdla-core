@@ -115,8 +115,8 @@ RCS
 ^patch
 ^pdla$
 ^pdl.*-log.txt$
-^pdldoc.db$
-^pdldoc.pod
+^pdladoc.db$
+^pdladoc.pod
 ^perl$
 ^perldl.conf-fast
 ^perldl.conf-orig

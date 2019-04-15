@@ -242,7 +242,7 @@ inc/Carp/Heavy.pm
 m51.fits
 macosx/README
 pdla.c
-pdldoc
+pdladoc
 perldla
 perldl.conf
 t/00-report-prereqs.t

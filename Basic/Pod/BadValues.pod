@@ -136,7 +136,7 @@ it has been.
 
 To find out if a routine supports bad values, use the C<badinfo> command in
 L<perldla|PDLA::perldla> or L<pdl2|PDLA::Perldl2> or the C<-b> option to
-L<pdldoc|PDLA::pdldoc>.  This facility is currently a 'proof of concept'
+L<pdladoc|PDLA::pdladoc>.  This facility is currently a 'proof of concept'
 (or, more realistically, a quick hack) so expect it to be rough around the edges.
 
 Each piddle contains a flag - accessible via C<$pdl-E<gt>badflag> - to say 
@@ -591,7 +591,7 @@ not sufficient, there's the C<BadDoc> option. For code written at
 the Perl level - i.e. in a .pm file - use the C<=for bad> pod directive.
 
 This information will be available via man/pod2man/html documentation. It's also
-accessible from the C<perldla> or C<pdl2> shells - using the C<badinfo> command - and the C<pdldoc>
+accessible from the C<perldla> or C<pdl2> shells - using the C<badinfo> command - and the C<pdladoc>
 shell command - using the C<-b> option.
 
 This support is at a very early stage - i.e. not much thought has gone into it:

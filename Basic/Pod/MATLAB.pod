@@ -665,7 +665,7 @@ numbers (as would be read using the MATLAB I<load> command)
 one uses the PDLA I<rcols> in L<PDLA::IO::Misc>.  For a general
 review of the IO functionality available in PDLA, see the
 documentation for L<PDLA::IO>, e.g., C<help PDLA::IO> in the I<pdl2>
-shell or C< pdldoc PDLA::IO > from the shell command line.
+shell or C< pdladoc PDLA::IO > from the shell command line.
 
 =head2 Data structures
 

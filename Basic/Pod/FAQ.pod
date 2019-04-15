@@ -535,7 +535,7 @@ To guarantee a completely clean installation of PDLA, you will need
 to first delete the current installation files and folders.  These
 will be all directories named C<PDLA> in the Perl C<@INC> path,
 files named C<*Pdlapp*> in any C<Inline> directories, and the 
-programs C<pdl, pdldoc, pdl2, perldla, and pptemplate>.  Then just build
+programs C<pdl, pdladoc, pdl2, perldla, and pptemplate>.  Then just build
 and install as usual.  This is much easier to keep track of if you
 always install C<PDLA> into a non-standard location.  See Q: 4.4 above.
 

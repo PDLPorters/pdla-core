@@ -54,19 +54,19 @@ __END__
 
 =head1 NAME
 
-pdldoc - shell interface to PDLA documentation
+pdladoc - shell interface to PDLA documentation
 
 =head1 SYNOPSIS
 
-B<pdldoc> <text>
+B<pdladoc> <text>
 
 =cut
 
-B<pdldoc> [B<-a>] [B<-b>] [B<-h>] [B<-s>] [B<-u>] <text>
+B<pdladoc> [B<-a>] [B<-b>] [B<-h>] [B<-s>] [B<-u>] <text>
 
 =head1 DESCRIPTION
 
-The aim of B<pdldoc> is to provide the same functionality
+The aim of B<pdladoc> is to provide the same functionality
 as the C<apropos>, C<help>, C<sig>, C<badinfo>,
 and C<usage> commands available in the L<perldl|PDLA::perldl>
 and L<pdl2|pdl2> shells.
@@ -108,7 +108,7 @@ L<PDLA::AutoLoader|PDLA::AutoLoader> files.
 
 =head1 VERSION
 
-This is pdldoc version 0.3.
+This is pdladoc version 0.3.
 
 =head1 AUTHOR
 

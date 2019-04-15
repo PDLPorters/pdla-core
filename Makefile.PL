@@ -419,10 +419,10 @@ push @prereq, ('OpenGL' => $PDLA::Config{POGL_VERSION}) if $PDLA::Config{USE_POG
 
 # push @prereq, ('ExtUtils::F77' => 1.10) unless $seen_f77conf;
 
-my @exe_files = qw(perldla pdldoc);
+my @exe_files = qw(perldla pdladoc);
 push @exe_files, "pdla$Config{exe_ext}" if $^O !~ /MSWin/;
 my @cleanup = ("pdla$Config{exe_ext}", qw(
-    pdldoc.db pdldoc.pod perldla.pod Changes.new
+    pdladoc.db pdladoc.pod perldla.pod Changes.new
     t/callext$(OBJ_EXT) t/callext.$(DLEXT)
 ));
 

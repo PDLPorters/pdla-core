@@ -105,7 +105,7 @@ L<pdl2|PDLA::pdl2> - Simple shell (version 2) for PDLA
 
 =item *
 
-L<pdldoc|PDLA::pdldoc> - shell interface to PDLA documentation
+L<pdladoc|PDLA::pdladoc> - shell interface to PDLA documentation
 
 =item *
 

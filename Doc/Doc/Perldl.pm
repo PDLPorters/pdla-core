@@ -7,7 +7,7 @@ PDLA::Doc::Perldl - commands for accessing PDLA doc database from 'perldla' shel
 This module provides a simple set of functions to
 access the PDLA documentation of database, for use
 from the I<perldla> or I<pdl2> shells as well as the
-I<pdldoc> command-line program.
+I<pdladoc> command-line program.
 
 Autoload files are also matched, via a search of the PDLALIB autoloader
 tree.  That behavior can be switched off with the variable 
@@ -54,14 +54,14 @@ my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
 sub FindStdFile {
   my ($d,$f);
   for $d (@INC) {
-      $f = $d."/PDLA/pdldoc.db";
+      $f = $d."/PDLA/pdladoc.db";
       if (-f $f) {
          print "Found docs database $f\n" if $PDLA::verbose;
 	 print "Type 'help' for online help\n" if $PDLA::verbose;
          return $f;
       }
   }
-  warn "Unable to find PDLA/pdldoc.db in ".join(":",@INC)."\n";
+  warn "Unable to find PDLA/pdladoc.db in ".join(":",@INC)."\n";
 }
 
 # used to find out how wide the screen should be

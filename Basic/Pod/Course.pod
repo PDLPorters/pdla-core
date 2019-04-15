@@ -315,10 +315,10 @@ Perl would have tons of these sorts of modules lying around, but I
 couldn't find any.)  Note this module does not depend on PDLA for its
 usage or installation.
 
-=item * L<PDLA::pdldoc|PDLA::pdldoc>
+=item * L<PDLA::pdladoc|PDLA::pdladoc>
 
 Ever fired-up the perldla shell just to look up the help for a particular
-function?  You can use C<pdldoc> instead.  This shell script extracts
+function?  You can use C<pdladoc> instead.  This shell script extracts
 information from the help index without needing to start the perldla
 shell.
 

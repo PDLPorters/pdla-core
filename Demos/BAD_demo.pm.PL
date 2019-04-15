@@ -220,7 +220,7 @@ comment q|
 
     To find out the status of a particular routine, use the 'badinfo'
     command in perldla or pdl2 shell (this information is also included
-    when you do 'help'), or the '-b' switch of pdldoc.
+    when you do 'help'), or the '-b' switch of pdladoc.
 
 |;
 
