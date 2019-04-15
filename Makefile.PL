@@ -463,15 +463,18 @@ my %makefile_hash = (
 	      'EXE_FILES' => \@exe_files,
 	      'PM' => { @podpms }, #so that the script docs are picked up
               'META_MERGE' => {
-                 "meta-spec" => { version => 2 },
-                 resources => {
-                    homepage => 'http://pdlporters.github.io',
-                    repository  => {
-                       url => 'git://github.com/PDLPorters/pdla-core',
-                       type => 'git',
-                       web => 'https://github.com/PDLPorters/pdla-core',
-                    },
-                 },
+                "meta-spec" => { version => 2 },
+                resources => {
+                  homepage => 'http://pdlporters.github.io',
+                  bugtracker  => {web=>'https://github.com/PDLPorters/pdla-core/issues'},
+                  repository  => {
+                    url => 'git://github.com/PDLPorters/pdla-core',
+                    type => 'git',
+                    web => 'https://github.com/PDLPorters/pdla-core',
+                  },
+                  x_IRC => 'irc://irc.perl.org/#pdl',
+                },
+                no_index => { file => ['Doc/scantree.pl'] },
               },
 	      'OPTIMIZE'  => $PDLA::Config{OPTIMIZE} || $Config{optimize},
 	      'CCFLAGS' => $ccflags,
