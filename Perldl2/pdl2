@@ -20,14 +20,14 @@ BEGIN {
    my $minversion = "1.003011";
    eval " use Devel::REPL $minversion ";
    if ($@) {
-      my ($perldl) = $0;
-      $perldl =~ s/pdl2$/perldl/;
-      warn "pdl2: Devel::REPL version $minversion not found, running '$perldl' instead...\n";
-      do $perldl;
-      warn "pdl2: could not 'do $perldl'\n";
-      $perldl =~ s{^[^/\\]*[/\\]}{};
-      do $perldl;
-      die "pdl2: could not 'do $perldl'\n";
+      my ($perldla) = $0;
+      $perldla =~ s/pdla2$/perldla/;
+      warn "pdl2: Devel::REPL version $minversion not found, running '$perldla' instead...\n";
+      do $perldla;
+      warn "pdl2: could not 'do $perldla'\n";
+      $perldla =~ s{^[^/\\]*[/\\]}{};
+      do $perldla;
+      die "pdla2: could not 'do $perldla'\n";
    }
 }
 
@@ -53,7 +53,7 @@ Use PDLA interactively:
 =head1 DESCRIPTION
 
 The C<pdl2> program, also known as the Perldl2 shell, is a second
-generation version of the original C<perldl> interactive PDLA shell.
+generation version of the original C<perldla> interactive PDLA shell.
 It attempts to be backward compatible in usage while providing
 improved features, better support for Perl syntax, and an more
 easily extended framework based on the L<Devel::REPL|Devel::REPL> shell.
@@ -61,11 +61,11 @@ easily extended framework based on the L<Devel::REPL|Devel::REPL> shell.
 If you have L<Devel::REPL|Devel::REPL> version 1.003011 or later, then C<pdl2>
 will start with full functionality.  If L<Devel::REPL|Devel::REPL> is not
 installed or found then C<pdl2> will print a warning and run
-the legacy C<perldl> shell command instead.
+the legacy C<perldla> shell command instead.
 
 By default, command lines beginning with the default prompt
-of either C<pdl2> or C<perldl> (one of 'pdla> ', 'PDLA> ', or
-'perldl> ') will have the prefix string and surrounding
+of either C<pdl2> or C<perldla> (one of 'pdla> ', 'PDLA> ', or
+'perldla> ') will have the prefix string and surrounding
 whitespace stripped.  This allows for easy cut-and-paste
 from sample PDLA shell sessions or other examples into another
 PDLA shell session.
@@ -105,7 +105,7 @@ C<do_print> routine allows you to toggle between the default
 =item $PDLA::toolongtoprint
 
 The maximal size pdls to print (defaults to 10000 elements).
-This is not just a C<perldl> or C<pdl2> variable but it is
+This is not just a C<perldla> or C<pdl2> variable but it is
 something that is usually needed in an interactive debugging
 session.
 
@@ -113,6 +113,6 @@ session.
 
 =head1 SEE ALSO
 
-L<perldl>, L<Devel::REPL>
+L<perldla>, L<Devel::REPL>
 
 =cut

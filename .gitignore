@@ -127,5 +127,5 @@ pdla
 pdldoc.pod
 perldl.conf-fast
 perldl.conf-orig
-perldl.pod
+perldla.pod
 t/*.dll*

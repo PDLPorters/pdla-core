@@ -35,14 +35,14 @@ double precision floats. And because of the Object-Oriented nature
 of PDLA new customised datatypes can be derived from them.
 
 As well as the PDLA modules, that can be used by normal Perl programs, PerlDL
-comes with a command line Perl shell, called 'perldl', which supports command
+comes with a command line Perl shell, called 'perldla', which supports command
 line editing. In combination with the various PDLA graphics modules this allows
 data to be easily played with and visualised.
 
 =head2 Help
 
 PDLA contains extensive documentation, available both within the
-I<perldl> or I<pdl2> shells and from the command line, using the C<pdldoc> program.
+I<perldla> or I<pdl2> shells and from the command line, using the C<pdldoc> program.
 For further information try either of:
 
  pdla> help help
@@ -117,7 +117,7 @@ And the empty C<qw()>  quotes are recognised as meaning 'nothing'.
 You can also specify a list of functions to import in the normal
 Perl way.
 
-There is also an interactive shell, C<perldl> or C<pdl2>, see I<perldl>
+There is also an interactive shell, C<perldla> or C<pdl2>, see I<perldla>
 or L<pdl2|PDLA::Perldl2> for details.
 
 =head2 To create a new PDLA variable
@@ -411,14 +411,14 @@ One can also write PDLA extensions as normal Perl modules.
 
 =head2 PDLA shells
 
-The Perl script C<pdl2> (or C<perldl>) provides a simple command line interface
+The Perl script C<pdl2> (or C<perldla>) provides a simple command line interface
 to PDLA.  If the latest Readlines/ReadKey modules have been installed C<pdl2>
 detects this and enables command line recall and editing.
 See the man page for details.
 
 e.g.:
 
- % perldl
+ % perldla
  perlDL shell v1.354
   PDLA comes with ABSOLUTELY NO WARRANTY. For details, see the file
   'COPYING' in the PDLA distribution. This is free software and you

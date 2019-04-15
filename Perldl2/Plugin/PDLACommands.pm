@@ -5,7 +5,7 @@ use Devel::REPL::Plugin;
 use namespace::clean -except => [ 'meta' ];
 
 # The atomic option---need to deconflict Turtle command injection
-# using qr{\#} and perldl's usage for command escapes.  Just
+# using qr{\#} and perldla's usage for command escapes.  Just
 # exclude for now to get things working
 excludes 'Turtles';
 
@@ -14,7 +14,7 @@ around 'read' => sub {
    my $orig = shift;
    my ($self, @args) = @_;
 
-   # using $lines here because that is the usage from perldl
+   # using $lines here because that is the usage from perldla
    # and I want to cut and paste existing code if possible
    my $lines = $self->$orig(@args);
 
@@ -66,13 +66,13 @@ __END__
 
 =head1 NAME
 
-PDLA::Perldl2::Plugin::PDLACommands - implement perldl aliases/escapes
+PDLA::Perldl2::Plugin::PDLACommands - implement perldla aliases/escapes
 
 =head1 DESCRIPTION
 
 
 This plugin implements the various convenience features of the
-perldl shell which correspond, roughly, to aliases and some
+perldla shell which correspond, roughly, to aliases and some
 structured pre-processing of the command line entered:
 
 =over 4

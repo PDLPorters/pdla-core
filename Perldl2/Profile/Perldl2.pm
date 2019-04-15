@@ -39,9 +39,9 @@ sub apply_profile {
    if ($repl->term->ReadLine =~ /Stub/) {
       $repl->print("WARNING:\n Term::ReadLine::Stub does not support pdl2 features.\n");
       $repl->print(" Please install either Term::ReadLine::Perl or Term::ReadLine::Gnu.\n");
-      $repl->print(" Falling back to perldl in the meantime...\n");
+      $repl->print(" Falling back to perldla in the meantime...\n");
       $repl->print("------------------------------------------\n\n");
-      exec 'perldl';
+      exec 'perldla';
    }
 
    # add PDLA::Perldl2 for plugin search
@@ -67,7 +67,7 @@ sub apply_profile {
    # enable Term::ReadLine file expansion by default
    $repl->do_readline_filename_completion(1) if $repl->can('do_readline_filename_completion');
 
-   # do perldl stuff here
+   # do perldla stuff here
    $repl->eval('package main');
 
    $repl->eval('use PDLA');
@@ -93,7 +93,7 @@ sub apply_profile {
       $PERLDL::PAGER  = ((exists $ENV{PAGER}) ? $ENV{PAGER} : 'more');
       $PERLDL::PAGING = 0;
       $PERLDL::PROMPT = "pdla> ";                          # string or code reference
-      $PERLDL::PREFIX_RE = qr(^\s*(?:pdla|perldl)>\s*);    # RE for shell prompts
+      $PERLDL::PREFIX_RE = qr(^\s*(?:pdla|perldla)>\s*);    # RE for shell prompts
       $PERLDL::TERM = $_REPL->term;
       ] );
 

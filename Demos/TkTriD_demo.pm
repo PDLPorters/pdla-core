@@ -15,7 +15,7 @@ sub comment($);
 #  if(defined $PDLA::Graphics::TriD::cur){
 #	 print "Configuration error in TkTriD demo\n";
 #	 print "This demo cannot be run after you have loaded TriD\n";
-#	 print "Please restart perldl then try again.\n";
+#	 print "Please restart perldla then try again.\n";
 #	 exit;
 #  }
 #}

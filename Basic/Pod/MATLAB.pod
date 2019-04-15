@@ -52,7 +52,7 @@ PDLA programs.
 
 =head2 PDLA interactive shell
 
-To start the interactive shell, open a terminal and run C<perldl> or C<pdl2>.
+To start the interactive shell, open a terminal and run C<perldla> or C<pdl2>.
 As in MATLAB, the interactive shell is the best way to learn the
 language. To exit the shell, type C<exit>, just like MATLAB.
 
@@ -62,7 +62,7 @@ One popular IDE for Perl is called Padre (L<http://padre.perlide.org>).
 It is cross platform and easy to use.
 
 Whenever you write a stand-alone PDLA program (i.e. outside the
-C<perldl> or C<pdl2> shell) you must start the program with C<use PDLA;>.
+C<perldla> or C<pdl2> shell) you must start the program with C<use PDLA;>.
 This command imports the PDLA module into Perl. Here is a sample
 PDLA program:
 
@@ -158,7 +158,7 @@ MATLAB:
  >> b = 23;       % Suppress output.
  >> 
 
-PDLA Shell (perldl or pdl2):
+PDLA Shell (perldla or pdl2):
 
  pdla> $a = 12    # No output.
  pdla> print $a   # Print object.

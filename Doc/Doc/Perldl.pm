@@ -1,12 +1,12 @@
 =head1 NAME
 
-PDLA::Doc::Perldl - commands for accessing PDLA doc database from 'perldl' shell
+PDLA::Doc::Perldl - commands for accessing PDLA doc database from 'perldla' shell
 
 =head1 DESCRIPTION
 
 This module provides a simple set of functions to
 access the PDLA documentation of database, for use
-from the I<perldl> or I<pdl2> shells as well as the
+from the I<perldla> or I<pdl2> shells as well as the
 I<pdldoc> command-line program.
 
 Autoload files are also matched, via a search of the PDLALIB autoloader
@@ -634,7 +634,7 @@ sub help {
   } else {
 	print <<'EOH';
 
-The following commands support online help in the perldl shell:
+The following commands support online help in the perldla shell:
 
  help 'thing'   -- print docs on 'thing' (func, module, manual, autoload-file)
  help vars      -- print information about all current piddles
@@ -658,7 +658,7 @@ Quick start:
   apropos 'manual:' -- Find all the manual documents
   apropos 'module:' -- Quick summary of all PDLA modules
   help 'help'       -- details about PDLA help system
-  help 'perldl'     -- help about this shell
+  help 'perldla'     -- help about this shell
 
 EOH
   }
