@@ -421,7 +421,6 @@ my @exe_files = qw(perldla pdladoc);
 push @exe_files, "pdla$Config{exe_ext}" if $^O !~ /MSWin/;
 my @cleanup = ("pdla$Config{exe_ext}", qw(
     pdladoc.db pdladoc.pod perldla.pod Changes.new
-    t/callext$(OBJ_EXT) t/callext.$(DLEXT)
 ));
 
 ##############################
