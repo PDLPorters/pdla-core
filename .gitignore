@@ -121,6 +121,7 @@ Demos/BAD2_demo.pm
 Demos/BAD_demo.pm
 Doc/Doc/Config.pm
 MANIFEST.bak
+Perldl2/pdla2.pod
 _Inline/
 gsl.pl
 pdla

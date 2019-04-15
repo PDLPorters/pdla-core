@@ -154,7 +154,7 @@ comment q|
 	of the basic capabilities of PDLA.
 
 	We encourage you to play with these commands in
-        the perldla or pdl2 shell and use its online help support
+        the perldla or pdla2 shell and use its online help support
 	to find out more about these and other commands and
 	features of PDLA.
 

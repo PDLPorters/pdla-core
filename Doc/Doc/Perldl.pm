@@ -6,7 +6,7 @@ PDLA::Doc::Perldl - commands for accessing PDLA doc database from 'perldla' shel
 
 This module provides a simple set of functions to
 access the PDLA documentation of database, for use
-from the I<perldla> or I<pdl2> shells as well as the
+from the I<perldla> or I<pdla2> shells as well as the
 I<pdladoc> command-line program.
 
 Autoload files are also matched, via a search of the PDLALIB autoloader

@@ -11,7 +11,7 @@ around 'error_return' => sub {
    return $orig->($self, $type, clean_error_string($error));
 };
 
-# filter out the Devel::REPL, Class::MOP, ... from pdl2 errors
+# filter out the Devel::REPL, Class::MOP, ... from pdla2 errors
 sub clean_error_string {
    my $bigerr = $_[0];
    $bigerr =~ s/^\s+Devel::REPL.*$//ms;
@@ -33,7 +33,7 @@ PDLA::Perldl2::Plugin::CleanErrors - filter out Moose cruft
 
 =head1 DESCRIPTION
 
-Runtime errors in pdl2 are extremely verbose since they
+Runtime errors in pdla2 are extremely verbose since they
 include the entire call chain from the start of the interactive
 Devel::REPL shell, through the Moose and Class::MOP stuff and
 including Lexical::Persistence as well.  This plugin, which

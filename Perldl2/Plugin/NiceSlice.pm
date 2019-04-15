@@ -35,7 +35,7 @@ PDLA::Perldl2::Plugin::NiceSlice - enable PDLA NiceSlice syntax
 =head1 DESCRIPTION
 
 This plugin enables one to use the PDLA::NiceSlice syntax in an
-instance of C<Devel::REPL> such as the new Perldl2 shell, C<pdl2>.
+instance of C<Devel::REPL> such as the new Perldl2 shell, C<pdla2>.
 Without the plugin, array slicing looks like this:
     
   pdla> use PDLA;

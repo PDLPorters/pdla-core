@@ -613,7 +613,7 @@ Recording is off by default. To turn it on when you create a new
 device you can set the C<Recording> option to true, or you can set
 the C<$PDLA::Graphics::PGPLOT::RECORDING> variable to 1. I recommend doing the
 latter in your C<.perldlrc> file at least since you will often have use
-for recording in the perldl or pdl2 script.
+for recording in the perldl or pdla2 script.
 
 =head2 Use of recording
 
@@ -706,7 +706,7 @@ The solution is to call C<clear> on the state variable:
   $s->clear()
 
 (This is done automatically if the variable goes out of scope). I forsee
-this problem to most acute when working on the C<perldl> or C<pdl2>
+this problem to most acute when working on the C<perldl> or C<pdla2>
 command line, but since this is exactly where the recording is most useful
 the best advice is just to be careful and call clear on state variables.
 

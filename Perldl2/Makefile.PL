@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-my @podpms = map { $_.".pod", '$(INST_LIBDIR)/' . $_ .".pod"} qw/pdl2/;
+my @podpms = map { $_.".pod", '$(INST_LIBDIR)/' . $_ .".pod"} qw/pdla2/;
 
 # Make sure we have the PDLA CONFIG hash loaded, and try to load it
 # from perldl.conf if not.
@@ -20,8 +20,8 @@ undef &MY::postamble; # suppress warning
 
    $text .= << "EOPS" ;
 
-pdl2.pod : pdl2
-\t\$(PERLRUN) -MPod::Select -e "podselect('pdl2');" > pdl2.pod
+pdla2.pod : pdla2
+\t\$(PERLRUN) -MPod::Select -e "podselect('pdla2');" > pdla2.pod
 
 EOPS
 
@@ -35,7 +35,7 @@ if (!defined $PDLA::Config{WITH_DEVEL_REPL}) {
       WriteMakefile(
          'NAME' => 'PDLA::Perldl2',
          'VERSION' => '2.000',
-         'EXE_FILES' => [ 'pdl2' ],
+         'EXE_FILES' => [ 'pdla2' ],
          'DIR' => [ qw(Profile Plugin) ],
          'PM' => { 'Script.pm' => '$(INST_LIBDIR)/Perldl2/Script.pm', @podpms },
 	  (eval ($ExtUtils::MakeMaker::VERSION) >= 6.57_02 ? ('NO_MYMETA' => 1) : ()),
@@ -52,10 +52,10 @@ elsif ($PDLA::Config{WITH_DEVEL_REPL}) {
   WriteMakefile(
 	 'NAME' => 'PDLA::Perldl2',
 	 'VERSION' => '2.000',
-	 'EXE_FILES' => [ 'pdl2' ],
+	 'EXE_FILES' => [ 'pdla2' ],
 	 'DIR' => [ qw(Profile Plugin) ],
          'PM' => { 'Script.pm' => '$(INST_LIBDIR)/Perldl2/Script.pm', @podpms },
-         clean => { FILES => 'pdl2.pod' },
+         clean => { FILES => 'pdla2.pod' },
          (eval ($ExtUtils::MakeMaker::VERSION) >= 6.57_02 ? ('NO_MYMETA' => 1) : ()),
   );
 }

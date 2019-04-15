@@ -739,7 +739,7 @@ __END__
 
 =head1 NAME
 
-perldla - Simple shell for PDLA (see also L<pdl2>)
+perldla - Simple shell for PDLA (see also L<pdla2>)
 
 =head1 SYNOPSIS
 
@@ -848,7 +848,7 @@ command, which means that it will evaporate before the next prompt is printed.
 (You can use C<my> variables in a multi-line block or to isolate values within 
 a single command line, of course).
 
-  NOTE: pdl2 preserves lexical scope between lines.
+  NOTE: pdla2 preserves lexical scope between lines.
 
 =item * Execution is immediate
 
@@ -947,7 +947,7 @@ C<l> lists the history buffer
 
 C<?> is an alias for L<help|PDLA::Doc::Perldl/help>
 
-  pdla> ? pdl2    # get help for new pdl2 shell
+  pdla> ? pdla2    # get help for new pdla2 shell
 
 =item *
 
@@ -1132,7 +1132,7 @@ command is interactive.
 $PDLA::toolongtoprint
 
 The maximal size pdls to print (defaults to 10,000 elements).
-This is not just a C<perldla> or C<pdl2> variable but it is
+This is not just a C<perldla> or C<pdla2> variable but it is
 something that is usually needed in an interactive debugging
 session.
 
@@ -1242,7 +1242,7 @@ enabled/disabled.
 
 L<PDLA::NiceSlice|PDLA::NiceSlice> introduces a more convenient
 slicing syntax for piddles. In current versions of C<perldla> and
-C<pdl2> niceslicing is enabled by default (if the required CPAN
+C<pdla2> niceslicing is enabled by default (if the required CPAN
 modules are installed on your machine).
 
 At startup C<perldla> will let you

@@ -89,7 +89,7 @@ C<approx>.
 
 =over
 
-=item * The L<perldla|perldla> or L<pdl2|PDLA::Perldl2> Shell
+=item * The L<perldla|perldla> or L<pdla2|PDLA::Perldl2> Shell
 
 The Perldl Shell is a REPL (Read-Evaluate-Print-Loop, in other words,
 a prompt or shell) that allows you to work with PDLA (or any Perl, for

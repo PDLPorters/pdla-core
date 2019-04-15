@@ -27,7 +27,7 @@ L<PDLA::Core|PDLA::Core>.
 =head1 INTERACTIVE SHELL
 
 The PDLA package includes an interactive shell. You can learn about it,
-run C<perldoc perldla>, or run the shell C<perldla> or C<pdl2> and type
+run C<perldoc perldla>, or run the shell C<perldla> or C<pdla2> and type
 C<help>.
 
 =head1 LOOKING FOR A FUNCTION?
@@ -43,7 +43,7 @@ For example:
  yvals           Fills a piddle with Y index values. See the CAVEAT for xvals.
  zvals           Fills a piddle with Z index values. See the CAVEAT for xvals.
 
-To learn more about the PDLA shell, see L<perldla|perldla> or L<pdl2|pdl2>.
+To learn more about the PDLA shell, see L<perldla|perldla> or L<pdla2|pdla2>.
 
 =head1 LANGUAGE DOCUMENTATION
 

@@ -37,7 +37,7 @@ sub apply_profile {
 
    # check for Term::ReadLine::Stub
    if ($repl->term->ReadLine =~ /Stub/) {
-      $repl->print("WARNING:\n Term::ReadLine::Stub does not support pdl2 features.\n");
+      $repl->print("WARNING:\n Term::ReadLine::Stub does not support pdla2 features.\n");
       $repl->print(" Please install either Term::ReadLine::Perl or Term::ReadLine::Gnu.\n");
       $repl->print(" Falling back to perldla in the meantime...\n");
       $repl->print("------------------------------------------\n\n");
@@ -268,7 +268,7 @@ PDLA::Perldl2::Profile::Perldl2 - profile for Perldl2 shell
 =head1 DESCRIPTION
 
 This profile is for development of the new PDLA shell (version 2).
-The preferred method to start the new shell is via the C<pdl2>
+The preferred method to start the new shell is via the C<pdla2>
 command.  This documentation is provided for C<Devel::REPL> coders
 that may wish to use this profile directly for their development.
 

@@ -42,7 +42,7 @@ data to be easily played with and visualised.
 =head2 Help
 
 PDLA contains extensive documentation, available both within the
-I<perldla> or I<pdl2> shells and from the command line, using the C<pdladoc> program.
+I<perldla> or I<pdla2> shells and from the command line, using the C<pdladoc> program.
 For further information try either of:
 
  pdla> help help
@@ -117,8 +117,8 @@ And the empty C<qw()>  quotes are recognised as meaning 'nothing'.
 You can also specify a list of functions to import in the normal
 Perl way.
 
-There is also an interactive shell, C<perldla> or C<pdl2>, see I<perldla>
-or L<pdl2|PDLA::Perldl2> for details.
+There is also an interactive shell, C<perldla> or C<pdla2>, see I<perldla>
+or L<pdla2|PDLA::Perldl2> for details.
 
 =head2 To create a new PDLA variable
 
@@ -411,8 +411,8 @@ One can also write PDLA extensions as normal Perl modules.
 
 =head2 PDLA shells
 
-The Perl script C<pdl2> (or C<perldla>) provides a simple command line interface
-to PDLA.  If the latest Readlines/ReadKey modules have been installed C<pdl2>
+The Perl script C<pdla2> (or C<perldla>) provides a simple command line interface
+to PDLA.  If the latest Readlines/ReadKey modules have been installed C<pdla2>
 detects this and enables command line recall and editing.
 See the man page for details.
 

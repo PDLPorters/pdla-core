@@ -21,7 +21,7 @@ The values of a piddle are stored compactly as typed values in a single block of
 not (as in a normal Perl list-of-lists) as individual Perl scalars.
 
 In the sections that follow many "methods" are called out -- these are Perl operators
-that apply to PDLAs.  From the L<perldla|perldla> (or L<pdl2|PDLA::Perldl2>) shell, you
+that apply to PDLAs.  From the L<perldla|perldla> (or L<pdla2|PDLA::Perldl2>) shell, you
 can find out more about each method by typing "?" followed by the method name.
 
 =head2 Dimension lists 
@@ -227,7 +227,7 @@ several screens full of digits ;).
 [ here it might be appropriate to quickly talk about the 
 C<help vars> command
 that provides information about pdls in the interactive
-C<perldla> or C<pdl2> shell that comes with PDLA.
+C<perldla> or C<pdla2> shell that comes with PDLA.
 ]
 
 Now suppose we want to create a 1-D pdl that just references

@@ -102,7 +102,7 @@ routines (i.e. everything else in the PDLA distribution) had been changed.
  120
 
 C<demo bad> and C<demo bad2>
-within L<perldla|PDLA::perldla> or L<pdl2|PDLA::Perldl2> gives a demonstration of some of the things
+within L<perldla|PDLA::perldla> or L<pdla2|PDLA::Perldl2> gives a demonstration of some of the things
 possible with bad values.  These are also available on PDLA's web-site,
 at F<http://pdl.perl.org/demos/>.  See L<PDLA::Bad> for useful routines for working 
 with bad values and F<t/bad.t> to see them in action.
@@ -135,7 +135,7 @@ of either C<$PDLA::Config{WITH_BADVAL}> or C<$PDLA::Bad::Status> - if true then
 it has been.
 
 To find out if a routine supports bad values, use the C<badinfo> command in
-L<perldla|PDLA::perldla> or L<pdl2|PDLA::Perldl2> or the C<-b> option to
+L<perldla|PDLA::perldla> or L<pdla2|PDLA::Perldl2> or the C<-b> option to
 L<pdladoc|PDLA::pdladoc>.  This facility is currently a 'proof of concept'
 (or, more realistically, a quick hack) so expect it to be rough around the edges.
 
@@ -591,7 +591,7 @@ not sufficient, there's the C<BadDoc> option. For code written at
 the Perl level - i.e. in a .pm file - use the C<=for bad> pod directive.
 
 This information will be available via man/pod2man/html documentation. It's also
-accessible from the C<perldla> or C<pdl2> shells - using the C<badinfo> command - and the C<pdladoc>
+accessible from the C<perldla> or C<pdla2> shells - using the C<badinfo> command - and the C<pdladoc>
 shell command - using the C<-b> option.
 
 This support is at a very early stage - i.e. not much thought has gone into it:

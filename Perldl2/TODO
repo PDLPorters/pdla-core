@@ -19,7 +19,7 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
   Add "blink to matching delimiter" for input or even
   color highlight matching delimiters
 
-  Add Colors plugin support to the pdl2 p command.
+  Add Colors plugin support to the pdla2 p command.
 
   Add enhanced filter support to remove leading prompt
   strings (or other text) from input lines.  Need to be
@@ -59,9 +59,9 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
   Fix Term::ReadLine::Perl TAB expansion for paths to work
   with win32 paths (i.e. backslashes).
 
-  Add <TAB> expansion to the pdl2 help/? command.
+  Add <TAB> expansion to the pdla2 help/? command.
 
-  Track pdl2 session variables for PDLA, including: vars
+  Track pdla2 session variables for PDLA, including: vars
   (global and lexical), subs that were defined, modules
   loaded, and plugins for the REPL.  It should be possible
   to <TAB> complete for these.
@@ -74,7 +74,7 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
   IDEA: Associate metadata with image or figure windows
   (e.g., the commands that generated the figure).
 
-  Add SIGINT handler for pdl2 for win32.  Also need to add
+  Add SIGINT handler for pdla2 for win32.  Also need to add
   feature to ignore EOF to the read routine (around read
   modifier should work here---need to decide where to put it)
 
@@ -174,12 +174,12 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
   PDLA::NiceSlice if the implementation were migrated to
   Filter::Simple?
 
-  Make pdl2 fall back cleanly to a basic Devel::REPL or
+  Make pdla2 fall back cleanly to a basic Devel::REPL or
   even perldl if requirements to run are not installed.
   (falls back to perldl right now)
 
   Fix glob pattern completion display for shell escapes in
-  pdl2 (e.g., file*<TAB><TAB> will list out tab.a tab.b and
+  pdla2 (e.g., file*<TAB><TAB> will list out tab.a tab.b and
   tab.c if those are the valid expansions.  It should act
   just like bash directly from the command line---ideally).
 
@@ -239,33 +239,33 @@ Last saved: Tue 09 Jul 2013 09:05:18 AM
   configuration stuff is not available.  Lines and lines of
   backtrace isn't a help to anyone!
  
-  Improve the error returns from evaluations in pdl2 as they
+  Improve the error returns from evaluations in pdla2 as they
   seem to cut off the root error line for failures which makes
   it very difficult to debug things, e.g. I was getting errors
   from Core.pm instead of in my routine that had the failure.
   When I looked at the entire call stack in the debugger, I
   got the actual line with the bad code---of course I had to
-  give up the nice pdl2 environment.
+  give up the nice pdla2 environment.
 
-  Filter out error tracebacks from pdl2/perldl.  It looks like
+  Filter out error tracebacks from pdla2/perldl.  It looks like
   these are internal to Devel::REPL and not the code being
   executed and could be filtered out:
 
-   + eval {...}                # both pdl2 and perldl
-   + main::__ANON__            # both pdl2 and perldl
+   + eval {...}                # both pdla2 and perldl
+   + main::__ANON__            # both pdla2 and perldl
 
    | main::process_input       # perldl
    | main::eval_and_report     # perldl
 
-   - main::BEGIN               # pdl2
-   - Lexical::Persistence::    # pdl2
-   - Devel::REPL::             # pdl2
-   - Class::MOP::              # pdl2
+   - main::BEGIN               # pdla2
+   - Lexical::Persistence::    # pdla2
+   - Devel::REPL::             # pdla2
+   - Class::MOP::              # pdla2
 
   
 
 +-------------------------------------------------------------------+
-| Features                       perldl                 pdl2        |
+| Features                       perldl                 pdla2        |
 +-------------------------------------------------------------------+
   
   preproc_add/del                yes                    TBD
