@@ -45,9 +45,9 @@ Use PDLA interactively:
 
   %> pdl2
 
-  pdl> $a = sequence(10)  # or any other perl or PDLA command
+  pdla> $a = sequence(10)  # or any other perl or PDLA command
   
-  pdl> print "\$a = $a\n"; 
+  pdla> print "\$a = $a\n"; 
   $a = [0 1 2 3 4 5 6 7 8 9]
 
 =head1 DESCRIPTION
@@ -64,7 +64,7 @@ installed or found then C<pdl2> will print a warning and run
 the legacy C<perldl> shell command instead.
 
 By default, command lines beginning with the default prompt
-of either C<pdl2> or C<perldl> (one of 'pdl> ', 'PDLA> ', or
+of either C<pdl2> or C<perldl> (one of 'pdla> ', 'PDLA> ', or
 'perldl> ') will have the prefix string and surrounding
 whitespace stripped.  This allows for easy cut-and-paste
 from sample PDLA shell sessions or other examples into another
@@ -88,15 +88,15 @@ C<do_print> routine allows you to toggle between the default
 
 =for example
 
-  pdl> $a = pdl(3,2)
+  pdla> $a = pdl(3,2)
 
-  pdl> do_print
+  pdla> do_print
   1
-  pdl> $a = pdl(3,2)
+  pdla> $a = pdl(3,2)
   $PDLA1 = [3 2];
-  pdl> do_print
+  pdla> do_print
 
-  pdl> $a = pdl(3,2)
+  pdla> $a = pdl(3,2)
 
 =head1 VARIABLES
 

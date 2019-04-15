@@ -67,7 +67,7 @@ capabilities.
 
     pdl2
 
-  To exit the Perldl2 shell from the 'pdl> ' prompt, type
+  To exit the Perldl2 shell from the 'pdla> ' prompt, type
   Ctrl-D or quit, (q, x, and exit shortcuts are also
   available).  If Devel::REPL is not installed (or you
   don't have either TR::Gnu or TR::Perl), pdl2 will use
@@ -126,7 +126,7 @@ capabilities.
  Otherwise it runs the specified demo.
 
  By default, leading patterns matching the pdl2 shell
- prompt ('pdl> ' with possible surrounding white space)
+ prompt ('pdla> ' with possible surrounding white space)
  are stripped from the input.  That allows for easy
  cut-and-paste of pdl2 sessions from examples, demos,
  or docs.

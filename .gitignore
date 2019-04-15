@@ -123,7 +123,7 @@ Doc/Doc/Config.pm
 MANIFEST.bak
 _Inline/
 gsl.pl
-pdl
+pdla
 pdldoc.pod
 perldl.conf-fast
 perldl.conf-orig

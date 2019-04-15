@@ -21,7 +21,7 @@ HTML versions of the pages should also be present, in the
 F<HtmlDocs/PDLA> directory of the PDLA distribution. To find this 
 directory, try the following
 
- pdl> foreach ( map{"$_/PDLA/HtmlDocs"}@INC ) { p "$_\n" if -d $_ }  
+ pdla> foreach ( map{"$_/PDLA/HtmlDocs"}@INC ) { p "$_\n" if -d $_ }  
 
 =head2 Indexing idioms
 

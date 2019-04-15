@@ -33,8 +33,8 @@ comment q|
                 perl script.pl
 
         or you can just try some of the commands illustrated
-        in the demos by just retyping them at the perldl or pdl
-        'pdl>' command prompt.
+        in the demos by just retyping them at the perldl or pdla
+        'pdla>' command prompt.
 |;
 
 act q|

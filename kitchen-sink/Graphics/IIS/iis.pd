@@ -211,7 +211,7 @@ L<PDLA::PP|PDLA::PP> threading you can supply lists of points via
 
 An amusing PDLA idiom is:
 
- pdl> iiscirc iiscur
+ pdla> iiscirc iiscur
 
 Note the colours are the same as IRAF, viz:
 
@@ -263,8 +263,8 @@ e.g.:
 
 =for example
 
- pdl> saoimage
- pdl> saoimage( -geometry => '800x800' )
+ pdla> saoimage
+ pdla> saoimage( -geometry => '800x800' )
 
 =cut
 
@@ -295,8 +295,8 @@ e.g.
 
 =for example
 
- pdl> ximtool
- pdl> ximtool (-maxColors => 64)
+ pdla> ximtool
+ pdla> ximtool (-maxColors => 64)
 
 =cut
 

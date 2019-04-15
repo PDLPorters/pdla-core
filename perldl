@@ -22,8 +22,8 @@ $PERLDL::HISTFILESIZE = 500;    # Number of lines to keep in history
 $PERLDL::MULTI = 1;             # Enable multi-lines by default
 $PERLDL::NO_EOF = 0;            # Disable EOF protection by default
 $PERLDL::NO_EOF = 1 if $^O =~ 'MSWin';  # ...but enable for windows 
-$PERLDL::PROMPT = "pdl> ";
-$PERLDL::PREFIX_RE = qr(^\s*(?:pdl|perldl)>\s*); # RE for shell prompts
+$PERLDL::PROMPT = "pdla> ";
+$PERLDL::PREFIX_RE = qr(^\s*(?:pdla|perldl)>\s*); # RE for shell prompts
 $PERLDL::PAGER  = (exists $ENV{PAGER} ? $ENV{PAGER} : 'more');
 				# Default output paging program
 $PERLDL::PAGE   = 0;
@@ -404,7 +404,7 @@ sub p { local $^W=0; print(@_); }  # suppress possible undefined var message
 
 my %demos =
     (
-     'pdl' => 'PDLA::Demos::General', # have to protect pdl as it means something
+     'pdla' => 'PDLA::Demos::General', # have to protect pdla as it means something
      '3d' => 'PDLA::Demos::TriD1',
      '3d2' => 'PDLA::Demos::TriD2',
      '3dgal' => 'PDLA::Demos::TriDGallery',
@@ -423,7 +423,7 @@ sub demo {
     if(/^$/) {
 	print <<EOD;
 Use:
-   demo pdl         # general demo
+   demo pdla         # general demo
 
    demo 3d          # 3d demo (requires TriD with OpenGL or Mesa)
    demo 3d2         # 3d demo, part 2. (Somewhat memory-intensive)
@@ -746,15 +746,15 @@ perldl - Simple shell for PDLA (see also L<pdl2>)
 Use PDLA interactively:
 
   bash$ perldl
-  pdl> $a = sequence(10) # or any other perl or PDLA command
+  pdla> $a = sequence(10) # or any other perl or PDLA command
   
-  bash$ pdl
-  pdl> print "Hello, world!\n"; 
+  bash$ pdla
+  pdla> print "Hello, world!\n"; 
 
 Run a script:
 
   bash$ cat > pdlscript
-  #!/usr/bin/pdl
+  #!/usr/bin/pdla
   print "Hello, world!\n";
   ...
 
@@ -770,7 +770,7 @@ not exactly identical to Perl, in that under most circumstances ending
 a line causes immediate execution of the command entered so far (no
 trailing ';' is required).
 
-The synonym B<pdl> is a compiled executable that is useful as a script
+The synonym B<pdla> is a compiled executable that is useful as a script
 interpreter using UNIX shebang (C<#!>) syntax.  This is useful for generating
 and re-executing command-journal files from B<perldl>.
 
@@ -786,7 +786,7 @@ honor or ignore the ^D (end-of-file) character when sent from a
 terminal, or to attempt to do the Right Thing when a block construct
 spanning multiple lines is encountered.
 
-B<perldl> and B<pdl> support several command-line options, which are
+B<perldl> and B<pdla> support several command-line options, which are
 discussed near the end of this document.
 
 =head2 Reference manual & online help
@@ -816,12 +816,12 @@ e.g.:
 
    bash$ perldl
    ReadLines enabled
-   pdl> $a = rfits "foo.fits"
+   pdla> $a = rfits "foo.fits"
    BITPIX =  -32  size = 88504 pixels
    Reading  354016 bytes
    BSCALE =  &&  BZERO =
 
-   pdl> imag log($a+400)
+   pdla> imag log($a+400)
    Displaying 299 x 296 image from 4.6939525604248 to 9.67116928100586 ...
 
 =head2 Command execution
@@ -888,7 +888,7 @@ force compilation-and-execution.
 =back
 
 If you want to preserve this behavior in a script (for example to replay a command
-journal file; see below on how to create one), you can use B<pdl> instead of B<perl>
+journal file; see below on how to create one), you can use B<pdla> instead of B<perl>
 as the interpreter in the script's initial shebang line.
 
 
@@ -909,11 +909,11 @@ to the process on your terminal). Provided your PDLA code does not
 ignore C<sigint>s this should throw you back at the C<perldl>
 command prompt:
 
-  pdl> $result = start_lengthy_computation()
+  pdla> $result = start_lengthy_computation()
    <Ctrl-C>
  Ctrl-C detected
 
-  pdl>
+  pdla>
 
 =head2 Shortcuts and aliases
 
@@ -923,7 +923,7 @@ command prompt:
 
 The shell aliases C<p> to be a convenient short form of C<print>, e.g.
 
-   pdl> p ones 5,3
+   pdla> p ones 5,3
 
    [
     [1 1 1 1 1]
@@ -939,21 +939,21 @@ C<q> and C<x> are short-hand for C<quit>.
 
 C<l> lists the history buffer
 
-  pdl> l # list last 20 commands
+  pdla> l # list last 20 commands
 
-  pdl> l 40 # list last 40 commands
+  pdla> l 40 # list last 40 commands
 
 =item *
 
 C<?> is an alias for L<help|PDLA::Doc::Perldl/help>
 
-  pdl> ? pdl2    # get help for new pdl2 shell
+  pdla> ? pdl2    # get help for new pdl2 shell
 
 =item *
 
 C<??> is an alias for L<apropos|PDLA::Doc::Perldl/apropos>
 
-  pdl> ?? PDLA::Doc
+  pdla> ?? PDLA::Doc
 
 =item *
 
@@ -962,18 +962,18 @@ L<usage|PDLA::Doc::Perldl/usage> and L<sig|PDLA::Doc::Perldl/sig>:
 all words after these commands are used verbatim and not evaluated
 by perl. So you can write, e.g.,
 
-  pdl> help help
+  pdla> help help
 
 instead of
 
-  pdl> help 'help'
+  pdla> help 'help'
 
 =back
 
 
 =head2 Command-line options
 
-B<perldl> and B<pdl> support several command-line options to adjust the behavior of the
+B<perldl> and B<pdla> support several command-line options to adjust the behavior of the
 session.  Most of them are equivalent to commands that can be entered at the B<pdlE<gt>>
 prompt.  They are:
 
@@ -1077,7 +1077,7 @@ output generated by subsequent perldl commands (without paging).
 
 =item *
 
-$PERLDL::PROMPT - default value 'pdl> '
+$PERLDL::PROMPT - default value 'pdla> '
 
 Enough said  But can also be set to a subroutine reference, e.g.
 $PERLDL::PROMPT = sub {join(':',(gmtime)[2,1,0]).'> '} puts the
@@ -1143,10 +1143,10 @@ session.
 A useful idiom for developing perldl scripts or editing functions
 on-line is
 
-  pdl> # emacs script &
+  pdla> # emacs script &
     -- add perldl code to script and save the file
   
-  pdl> do 'script'
+  pdla> do 'script'
 
 -- substitute your favourite window-based editor for 'emacs' (you may
 also need to change the '&' on non-Unix systems).
@@ -1162,7 +1162,7 @@ invokes as a script interpreter.  Because perldl is itself an interpreted
 perl script, most unices won't allow you to say "#!/usr/bin/perldl" 
 at the top of your script.
 
-Instead, say "#!/usr/bin/pdl" and your script will be executed exactly
+Instead, say "#!/usr/bin/pdla" and your script will be executed exactly
 as if you typed it, line-by-line, into the perldl shell.
 
 =head2 Command preprocessing
@@ -1194,7 +1194,7 @@ C<preproc_del> with the filter to be removed as argument.  To find out
 if a filter is currently installed in the preprocessing pipeline use
 C<preproc_registered>:
 
-  pdl> preproc_add $myfilter unless preproc_registered $myfilter;
+  pdla> preproc_add $myfilter unless preproc_registered $myfilter;
 
 Previous versions of C<perldl> used the variable C<$PERLDL::PREPROCESS>.
 This will still work but should be avoided. Please change your scripts
@@ -1217,11 +1217,11 @@ and bracket arguments with qw.
 
 This would convert:
 
-  pdl> mysub arg1 arg2
+  pdla> mysub arg1 arg2
 
 to
 
-  pdl> mysub qw( arg1 arg2 )
+  pdla> mysub qw( arg1 arg2 )
 
 which Perl will understand as a list.  Obviously, a little more effort
 is required to check for cases where the caller has supplied a normal
@@ -1232,7 +1232,7 @@ You can remove this preprocessor using the C<preproc_del> function
 which takes one argument (the filter to be removed, it must be the
 same coderef that was returned from a previous C<preproc_add> call):
 
-  pdl> preproc_del $filter;
+  pdla> preproc_del $filter;
 
 An example of actual usage can be found in the C<perldl> script. Look
 at the function C<trans> to see how the niceslicing preprocessor is
@@ -1262,8 +1262,8 @@ info to this end, something like this:
 When you get such a message that indicates C<NiceSlice> is enabled
 you can use the enhanced slicing syntax:
 
-  pdl> $a = sequence 10;
-  pdl> p $a(3:8:2)
+  pdla> $a = sequence 10;
+  pdla> p $a(3:8:2)
 
 For details consult L<PDLA::NiceSlice>.
 
@@ -1276,26 +1276,26 @@ the substitutions that the NiceSlice filter makes.
 You can switch the L<PDLA::NiceSlice|PDLA::NiceSlice> filter on and off
 by typing
 
-  pdl> trans # switch niceslicing on
+  pdla> trans # switch niceslicing on
 
 and
 
-  pdl> notrans # switch niceslicing off
+  pdla> notrans # switch niceslicing off
 
 respectively. The filter is on by default.
 
 To see how your commands are translated
 switch reporting on:
 
-  pdl> report 1;
-  pdl> p $a(3:8:2)
+  pdla> report 1;
+  pdla> p $a(3:8:2)
   processed p $a->nslice([3,8,2])
   [3 5 7]
 
 Similarly, switch reporting off as needed
 
-  pdl> report 0;
-  pdl>  p $a(3:8:2)
+  pdla> report 0;
+  pdla>  p $a(3:8:2)
   [3 5 7]
 
 Reporting is off by default.
@@ -1308,9 +1308,9 @@ executed automatically every time the user enters a new line.
 
 A simple example would be to print the time of each command:
 
-  pdl> push @PERLDL::AUTO,'print scalar(gmtime),"\n"'
+  pdla> push @PERLDL::AUTO,'print scalar(gmtime),"\n"'
   
-  pdl> print zeroes(3,3)
+  pdla> print zeroes(3,3)
   Sun May  3 04:49:05 1998
   
   [
@@ -1319,15 +1319,15 @@ A simple example would be to print the time of each command:
    [0 0 0]
   ]
   
-  pdl> print "Boo"
+  pdla> print "Boo"
   Sun May  3 04:49:18 1998
   Boo
-  pdl>
+  pdla>
 
 Or to make sure any changes in the file 'local.perldlrc' are
 always picked up :-
 
-  pdl> push @PERLDL::AUTO,"do 'local.perldlrc'"
+  pdla> push @PERLDL::AUTO,"do 'local.perldlrc'"
 
 This code can of course be put *in* 'local.perldlrc', but
 be careful :-) [Hint: add C<unless ($started++)> to above

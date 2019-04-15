@@ -137,7 +137,7 @@ Regex search PDLA documentation database
 
 =for example
 
- pdl> apropos 'pic'
+ pdla> apropos 'pic'
  rpic            Read images in many formats with automatic format detection.
  rpiccan         Test which image formats can be read/written
  wmpeg           Write an image sequence ((x,y,n) piddle) as an MPEG animation.
@@ -369,7 +369,7 @@ Prints usage information for a PDLA function
 
 =for example
 
-   pdl> usage 'inner'
+   pdla> usage 'inner'
 
    inner           inner prodcuct over one dimension
                    (Module PDLA::Primitive)
@@ -422,7 +422,7 @@ doesn't break -- it causes threading.  See L<PDLA::PP|PDLA::PP> for details.
 
 =for example
 
-  pdl> sig 'outer'
+  pdla> sig 'outer'
     Signature: outer(a(n); b(m); [o]c(n,m); )
 
 
@@ -578,9 +578,9 @@ and the remaining commands listed, along with the names of their modules.
 
 =for example
 
- pdl> help 'PDLA::Tutorials' # show the guide to PDLA tutorials
- pdl> help 'PDLA::Slices'    # show the docs in the PDLA::Slices module
- pdl> help 'slice'          # show docs on the 'slice' function
+ pdla> help 'PDLA::Tutorials' # show the guide to PDLA tutorials
+ pdla> help 'PDLA::Slices'    # show the docs in the PDLA::Slices module
+ pdla> help 'slice'          # show docs on the 'slice' function
 
 =cut
 

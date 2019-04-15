@@ -92,8 +92,8 @@ sub apply_profile {
       $PERLDL::PAGE   = 0;
       $PERLDL::PAGER  = ((exists $ENV{PAGER}) ? $ENV{PAGER} : 'more');
       $PERLDL::PAGING = 0;
-      $PERLDL::PROMPT = "pdl> ";                          # string or code reference
-      $PERLDL::PREFIX_RE = qr(^\s*(?:pdl|perldl)>\s*);    # RE for shell prompts
+      $PERLDL::PROMPT = "pdla> ";                          # string or code reference
+      $PERLDL::PREFIX_RE = qr(^\s*(?:pdla|perldl)>\s*);    # RE for shell prompts
       $PERLDL::TERM = $_REPL->term;
       ] );
 
@@ -118,7 +118,7 @@ sub apply_profile {
       if(/^$/) {
       print <<EOD;
       Use:
-      demo pdl         # general demo
+      demo pdla         # general demo
 
       demo 3d          # 3d demo (requires TriD with OpenGL or Mesa)
       demo 3d2         # 3d demo, part 2. (Somewhat memory-intensive)
@@ -140,7 +140,7 @@ EOD
       } # if: /^$/
 
       my %demos = (
-         'pdl' => 'PDLA::Demos::General', # have to protect pdl as it means something
+         'pdla' => 'PDLA::Demos::General', # have to protect pdla as it means something
          '3d' => 'PDLA::Demos::TriD1',
          '3d2' => 'PDLA::Demos::TriD2',
          '3dgal' => 'PDLA::Demos::TriDGallery',
@@ -262,7 +262,7 @@ PDLA::Perldl2::Profile::Perldl2 - profile for Perldl2 shell
     
     Loaded PDLA v2.006
     
-    pdl> 
+    pdla> 
 
 
 =head1 DESCRIPTION

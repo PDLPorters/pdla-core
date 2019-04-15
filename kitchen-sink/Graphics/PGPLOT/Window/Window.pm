@@ -4,14 +4,14 @@ PDLA::Graphics::PGPLOT::Window - A OO interface to PGPLOT windows
 
 =head1 SYNOPSIS
 
- pdl> use PDLA::Graphics::PGPLOT::Window
- pdl> $win = pgwin(Device => '/xs');
- pdl> $a = pdl [1..100]
- pdl> $b = sqrt($a)
- pdl> $win->line($b)
- pdl> $win->hold()
- pdl> $c = sin($a/10)*2 + 4
- pdl> $win->line($c)
+ pdla> use PDLA::Graphics::PGPLOT::Window
+ pdla> $win = pgwin(Device => '/xs');
+ pdla> $a = pdl [1..100]
+ pdla> $b = sqrt($a)
+ pdla> $win->line($b)
+ pdla> $win->hold()
+ pdla> $c = sin($a/10)*2 + 4
+ pdla> $win->line($c)
 
 In the following documentation the commands are not shown in their OO
 versions. This is for historical reasons and should not cause too much

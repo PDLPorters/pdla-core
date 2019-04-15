@@ -289,11 +289,11 @@ routines are supported:
 
 Example:
 
- pdl> line3d [sqrt(rvals(zeroes(50,50))/2)]
+ pdla> line3d [sqrt(rvals(zeroes(50,50))/2)]
  - Lines on surface
- pdl> line3d [$x,$y,$z]
+ pdla> line3d [$x,$y,$z]
  - Lines over X, Y, Z
- pdl> line3d $coords
+ pdla> line3d $coords
  - Lines over the 3D coordinates in $coords.
 
 Note: line plots differ from mesh plots in that lines
@@ -317,7 +317,7 @@ contexts and options
 
 Example:
 
- pdl> imag3d [sqrt(rvals(zeroes(50,50))/2)], {Lines=>0};
+ pdla> imag3d [sqrt(rvals(zeroes(50,50))/2)], {Lines=>0};
 
  - Rendered image of surface
 
@@ -339,7 +339,7 @@ contexts and options
 
 Example:
 
- pdl> mesh3d [sqrt(rvals(zeroes(50,50))/2)]
+ pdla> mesh3d [sqrt(rvals(zeroes(50,50))/2)]
 
  - mesh of surface
 
@@ -371,7 +371,7 @@ alias for mesh3d
 
 Example:
 
- pdl> points3d [sqrt(rvals(zeroes(50,50))/2)];
+ pdla> points3d [sqrt(rvals(zeroes(50,50))/2)];
  - points on surface
 
 See module documentation for more information on
@@ -392,7 +392,7 @@ contexts and options
 
 Example:
 
- pdl> spheres3d ndcoords(10,10,10)->clump(1,2,3)  
+ pdla> spheres3d ndcoords(10,10,10)->clump(1,2,3)  
  
  - lattice of spheres at coordinates on 10x10x10 grid
 
@@ -420,8 +420,8 @@ ways one might want to do this.
 
 e.g.
 
- pdl> $a=sqrt(rvals(zeroes(50,50))/2)
- pdl> imagrgb [0.5*sin(8*$a)+0.5,0.5*cos(8*$a)+0.5,0.5*cos(4*$a)+0.5]
+ pdla> $a=sqrt(rvals(zeroes(50,50))/2)
+ pdla> imagrgb [0.5*sin(8*$a)+0.5,0.5*cos(8*$a)+0.5,0.5*cos(4*$a)+0.5]
 
 =head2 imagrgb3d
 
@@ -443,7 +443,7 @@ The default is [[0,0,0],[1,0,0],[1,1,0],[0,1,0]].
 
 e.g.
 
- pdl> imagrgb3d $colors, {Points => [[0,0,0],[1,0,0],[1,0,1],[0,0,1]]};
+ pdla> imagrgb3d $colors, {Points => [[0,0,0],[1,0,0],[1,0,1],[0,0,1]]};
  - plot on XZ plane instead of XY.
 
 =head2 grabpic3d

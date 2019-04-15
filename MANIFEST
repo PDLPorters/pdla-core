@@ -241,7 +241,7 @@ inc/Carp.pm
 inc/Carp/Heavy.pm
 m51.fits
 macosx/README
-pdl.c
+pdla.c
 pdldoc
 perldl
 perldl.conf

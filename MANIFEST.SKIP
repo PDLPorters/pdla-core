@@ -113,7 +113,7 @@ RCS
 ^inv-data.pl
 ^kitchen-sink
 ^patch
-^pdl$
+^pdla$
 ^pdl.*-log.txt$
 ^pdldoc.db$
 ^pdldoc.pod

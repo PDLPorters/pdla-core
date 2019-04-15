@@ -8,13 +8,13 @@ PDLA::Graphics::PGPLOT - PGPLOT enhanced interface for PDLA
 
 =head1 SYNOPSIS
 
- pdl> $a = pdl [1..100]
- pdl> $b = sqrt($a)
- pdl> line $b
- pdl> hold
+ pdla> $a = pdl [1..100]
+ pdla> $b = sqrt($a)
+ pdla> line $b
+ pdla> hold
  Graphics on HOLD
- pdl> $c = sin($a/10)*2 + 4
- pdl> line $c
+ pdla> $c = sin($a/10)*2 + 4
+ pdla> line $c
 
 =head1 DESCRIPTION
 

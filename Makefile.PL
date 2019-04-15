@@ -420,8 +420,8 @@ push @prereq, ('OpenGL' => $PDLA::Config{POGL_VERSION}) if $PDLA::Config{USE_POG
 # push @prereq, ('ExtUtils::F77' => 1.10) unless $seen_f77conf;
 
 my @exe_files = qw(perldl pdldoc);
-push @exe_files, "pdl$Config{exe_ext}" if $^O !~ /MSWin/;
-my @cleanup = ("pdl$Config{exe_ext}", qw(
+push @exe_files, "pdla$Config{exe_ext}" if $^O !~ /MSWin/;
+my @cleanup = ("pdla$Config{exe_ext}", qw(
     pdldoc.db pdldoc.pod perldl.pod Changes.new
     t/callext$(OBJ_EXT) t/callext.$(DLEXT)
 ));
@@ -562,11 +562,11 @@ doc_perl_install ::
     $text=~ s/\%HTML\%//og; # Remove just %HTML% markers
   }
 
-# Here, `pdl.c` is used directly because some makes (e.g., on Solaris) do not
+# Here, `pdla.c` is used directly because some makes (e.g., on Solaris) do not
 # support the `$<` variable in explicit rules
 $text .= <<EOT if $^O !~ /MSWin/;
-pdl$Config::Config{exe_ext} : pdl.c
-	\$(CC) pdl.c -o \$\@
+pdla$Config::Config{exe_ext} : pdla.c
+	\$(CC) pdla.c -o \$\@
 EOT
 
 $text .= << 'EOT' if $^O =~ /MSWin/;
@@ -680,7 +680,7 @@ sub parallel_target_mangle {
     $target;
 }
 
-# remove pdl.c from making EUMM think this dir has XS in it
+# remove pdla.c from making EUMM think this dir has XS in it
 sub MY::init_dirscan {
     package MY;
     my ($self) = @_;

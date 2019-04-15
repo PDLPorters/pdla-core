@@ -17,7 +17,7 @@ If you want to search for a function name, you should use the PDLA
 shell along with the "help" or "apropos" command (to do a fuzzy search).
 For example:
 
- pdl> apropos xval
+ pdla> apropos xval
  xlinvals        X axis values between endpoints (see xvals).
  xlogvals        X axis values logarithmicly spaced...
  xvals           Fills a piddle with X index values...

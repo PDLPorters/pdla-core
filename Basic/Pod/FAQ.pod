@@ -312,16 +312,16 @@ C<pdl2> session of a PDLA beginner (lengthy output is only symbolically
 reproduced in braces ( <... ...> ) ):
 
     unix> pdl2
-    pdl> help
+    pdla> help
     < ... help output ... >
-    pdl> help PDLA::QuickStart
+    pdla> help PDLA::QuickStart
     < ... perldoc page ... >
-    pdl> $a = pdl (1,5,7.3,1.0)
-    pdl> $b = sequence float, 4, 4
-    pdl> help inner
+    pdla> $a = pdl (1,5,7.3,1.0)
+    pdla> $b = sequence float, 4, 4
+    pdla> help inner
     < ... help on the 'inner' function ... >
-    pdl> $c = inner $a, $b
-    pdl> p $c
+    pdla> $c = inner $a, $b
+    pdla> p $c
     [22.6 79.8 137 194.2]
 
 For further sources of information that are accessible through the
@@ -835,35 +835,35 @@ C<.=> for certain types of assignments.
 In Perl 5.6.7 and higher this assignment can be made
 using lvalue subroutines:
 
-    pdl> $a = sequence(5); p $a
+    pdla> $a = sequence(5); p $a
     [0 1 2 3 4]
-    pdl> $a->slice('1:2') .= pdl([5,6])
-    pdl> p $a
+    pdla> $a->slice('1:2') .= pdl([5,6])
+    pdla> p $a
     [0 5 6 3 4]
 
 see L<PDLA::Lvalue> for more info.  PDLA also supports a more
 matrix-like slice syntax via the L<PDLA::NiceSlice|PDLA::NiceSlice> module:
 
-    pdl> $a(1:2) .= pdl([5,6])
-    pdl> p $a
+    pdla> $a(1:2) .= pdl([5,6])
+    pdla> p $a
     [0 5 6 3 4]
 
 With versions of Perl prior to 5.6.7 B<or when running under
 the perl debugger> this has to be done using a temporary variable: 
 
-    pdl> $a = sequence(5); p $a
+    pdla> $a = sequence(5); p $a
     [0 1 2 3 4]
-    pdl> $tmp = $a->slice('1:2'); p $tmp;
+    pdla> $tmp = $a->slice('1:2'); p $tmp;
     [1 2]
-    pdl> $tmp .= pdl([5, 6]);    # Note .= !!
-    pdl> p $a
+    pdla> $tmp .= pdl([5, 6]);    # Note .= !!
+    pdla> p $a
     [0 5 6 3 4]
 
 This can also be made into one expression, which is often
 seen in PDLA code:
 
-    pdl> ($tmp = $a->slice('1:2')) .= pdl([5,6])
-    pdl> p $a
+    pdla> ($tmp = $a->slice('1:2')) .= pdl([5,6])
+    pdla> p $a
     [0 5 6 3 4]
 
 
@@ -877,11 +877,11 @@ has two very useful functions:
 C<any> and C<all> . Use these to test if any or
 all elements in a piddle fulfills some criterion:
 
-    pdl> $a=pdl ( 1, -2, 3);
-    pdl> print '$a has at least one element < 0' if (any $a < 0);
+    pdla> $a=pdl ( 1, -2, 3);
+    pdla> print '$a has at least one element < 0' if (any $a < 0);
     $a has at least one element < 0
     
-    pdl> print '$a is not positive definite' unless (all $a > 0);
+    pdla> print '$a is not positive definite' unless (all $a > 0);
     $a is not positive definite
 
 
@@ -1195,12 +1195,12 @@ Questions like this should be a thing of the past with the PDLA
 on-line help system in place. Just try (after installation):
 
     un*x> pdl2
-    pdl> apropos trid
+    pdla> apropos trid
 
 Check the output for promising hits and then try to look up
 some of them, e.g.
 
-    pdl> help PDLA::Graphics::TriD
+    pdla> help PDLA::Graphics::TriD
 
 Note that case matters with C<help> but not with C<apropos> .
 
@@ -1253,7 +1253,7 @@ or the PDLA documentation. There is already a lot of functionality in
 PDLA which you might not be aware of.  The easiest way to look for
 functionality is to use the C<apropos> command:
 
-    pdl> apropos 'integral'
+    pdla> apropos 'integral'
     ceil            Round to integral values in floating-point format
     floor           Round to integral values in floating-point format
     intover         Project via integral to N-1 dimensions
