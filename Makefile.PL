@@ -14,8 +14,8 @@ use File::Spec;
 $::PP_VERBOSE = $::PP_VERBOSE = 0; # =1 makes PP waffle a lot
 
 # file globals(!)
-my ($pdl_f77conf, $forcebuild);
-my ($seen_pdlconf, $seen_f77conf);
+my ($forcebuild);
+my ($seen_pdlconf);
 my $pdl_conf_file = ''; # apparently for users to change
 
 # build-system globals
@@ -214,16 +214,6 @@ EOD
   %PDLA_CONFIG = ();
 }
 
-sub check_f77conf {
-  my ($seenyet) = @_;
-  return 0 unless $seenyet;
-
-  my $pdl_f77conf = File::Spec->rel2abs($pdl_f77conf)
-    unless File::Spec->file_name_is_absolute($pdl_f77conf);
-  $PDLA::Config{F77CONF} = $pdl_f77conf;
-  return 1;
-}
-
 sub make_Version_pm {
   # Get Version from Basic/PDLA.pm and generated Basic/Core/Version.pm from it
   require './Basic/PDLA.pm';
@@ -320,9 +310,6 @@ for my $mod (@test) {
 	if(/^PDLACONF=(.*)$/) {
 		$seen_pdlconf=1;
 		$pdl_conf_file = $1; ();
-	} elsif (/^F77CONF=(.*)$/) {
-		$seen_f77conf=1;
-		$pdl_f77conf=$1; ();
 	} elsif (/^FORCE$/i) {
 		$forcebuild=1;
 		();
@@ -342,7 +329,6 @@ unless ( $seen_pdlconf ) {
 
 # needs to be called before any of the make_XX routines
 getpdl_config($pdl_conf_file);
-$seen_f77conf = check_f77conf($seen_f77conf);
 
 # Check environment for SKIP_KNOWN_PROBLEMS
 if (!defined($PDLA::Config{SKIP_KNOWN_PROBLEMS}) and defined($ENV{SKIP_KNOWN_PROBLEMS})) {
@@ -391,8 +377,6 @@ my @prereq = (
            'Storable'            => 1.03,      # for PDLA::IO::Storable
 	   'Text::Balanced'      => 1.89,      # for PDLA::NiceSlice
 	  );
-
-# push @prereq, ('ExtUtils::F77' => 1.10) unless $seen_f77conf;
 
 my @exe_files = qw(perldla pdladoc);
 push @exe_files, "pdla$Config{exe_ext}" if $^O !~ /MSWin/;
