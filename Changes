@@ -1,4 +1,4 @@
-2.014000 
+2.014000 2019-04-19
  - PDLA can now create and use piddles having more
    than 2**32 elements.  Of particular use is that
    you can now use PDLA::IO::FlexRaw to memory map
