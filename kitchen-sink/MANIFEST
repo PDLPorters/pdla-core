@@ -129,10 +129,6 @@ IO/Dicom/Dicom.pm
 IO/Dicom/Makefile.PL
 IO/Dumper.pm
 IO/ENVI/readenvi.pdl
-IO/FITS/FITS.pm
-IO/FITS/Makefile.PL
-IO/FITS/t/bad.t
-IO/FITS/t/fits.t
 IO/FastRaw/FastRaw.pm
 IO/FastRaw/Makefile.PL
 IO/FastRaw/t/fastraw.t

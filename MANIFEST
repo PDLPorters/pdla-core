@@ -186,6 +186,8 @@ Example/InlinePdlapp/inlpp_link.pl
 Example/InlinePdlapp/inlppminimal.pl
 INSTALL
 INTERNATIONALIZATION
+IO/FITS/FITS.pm
+IO/FITS/Makefile.PL
 IO/Makefile.PL
 IO/Misc/Makefile.PL
 IO/Misc/misc.pd
@@ -268,6 +270,8 @@ t/croak.t
 t/erf.t
 t/erfi.t
 t/familyfree.t
+t/fits-bad.t
+t/fits.t
 t/flow.t
 t/func.pdl
 t/hdrs.t

@@ -140,6 +140,7 @@ start-up modules.
    use PDLA::Math;
    use PDLA::Version;
    use PDLA::IO::Misc;
+   use PDLA::IO::FITS;
    use PDLA::Lvalue;
 
 =cut
@@ -171,6 +172,7 @@ use PDLA::Lvalue;
 # Load these for TPJ compatibility
 
 use PDLA::IO::Misc;          # Misc IO (Ascii)
+use PDLA::IO::FITS;          # FITS IO (rfits/wfits; used by rpic/wpic too)
 
 # Load this so config/install info is available
 

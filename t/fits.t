@@ -262,11 +262,11 @@ unless($PDLA::Astro_FITS_Header) {
 #### Check that discontinuous data (e.g. from fftnd) get written correctly.
 #### (Sourceforge bug 3299611) it is possible to store data in a PDLA non-contiguously
 #### through the C API, by manipulating dimincs; fft uses this technique, which
-#### used to hose up fits output.  
+#### used to hose up fits output.
 
 SKIP:{
     eval "use PDLA::FFT";
-    skip "PDLA::FFT not installed", 79 if $@;
+    skip "PDLA::FFT not installed", 1 if $@;
 
     my $a = sequence(10,10,10);
     my $ai = zeroes($a);
