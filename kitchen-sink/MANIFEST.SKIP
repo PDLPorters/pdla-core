@@ -35,13 +35,6 @@
 ^IO/HDF/VS/VS\.pm
 ^IO/HDF/VS/VS\.xs
 ^IO/NDF/NDF.pm$
-^IO/Pnm/Pnm\..*
-^IO/Pnm/converters$
-^IO/Pnm/converters/README
-^IO/Pnm/converters/pnmtotiff$
-^IO/Pnm/converters/pnmtotiff.c
-^IO/Pnm/converters/tifftopnm$
-^IO/Pnm/converters/tifftopnm.c
 ^IO/Storable/Storable\.c
 ^IO/Storable/Storable\.pm
 ^IO/Storable/Storable\.xs
@@ -76,7 +69,6 @@ Libtmp/PCA/PCA*
 ^Libtmp/Genetic
 ^Libtmp/Image2D/Image2D\..*
 ^Libtmp/ImageND/ImageND\..*
-^Libtmp/ImageRGB/ImageRGB\..*
 ^Libtmp/Minuit/.*\.a$
 ^Libtmp/Minuit/.*\.pm$
 ^Libtmp/Minuit/.*\.xs$

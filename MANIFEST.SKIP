@@ -86,7 +86,15 @@ RCS
 ^Demos/BAD_demo.pm$
 ^Demos/TkTriD_demo.pm$
 ^Demos/TriD/test6.p$
+^IO/ImageRGB/ImageRGB\..*
 ^IO/Misc/Misc.*
+^IO/Pnm/Pnm\..*
+^IO/Pnm/converters$
+^IO/Pnm/converters/README
+^IO/Pnm/converters/pnmtotiff$
+^IO/Pnm/converters/pnmtotiff.c
+^IO/Pnm/converters/tifftopnm$
+^IO/Pnm/converters/tifftopnm.c
 ^LOG$
 ^[.]Inline
 ^Perldl2/logo3d.pdl

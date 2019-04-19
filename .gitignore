@@ -120,9 +120,15 @@ Basic/Ufunc/Ufunc.xs
 Demos/BAD2_demo.pm
 Demos/BAD_demo.pm
 Doc/Doc/Config.pm
+IO/ImageRGB/ImageRGB.c
+IO/ImageRGB/ImageRGB.pm
+IO/ImageRGB/ImageRGB.xs
 IO/Misc/Misc.c
 IO/Misc/Misc.pm
 IO/Misc/Misc.xs
+IO/Pnm/Pnm.c
+IO/Pnm/Pnm.pm
+IO/Pnm/Pnm.xs
 MANIFEST.bak
 Perldl2/pdla2.pod
 _Inline/

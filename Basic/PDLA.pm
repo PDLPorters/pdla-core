@@ -141,6 +141,7 @@ start-up modules.
    use PDLA::Version;
    use PDLA::IO::Misc;
    use PDLA::IO::FITS;
+   use PDLA::IO::Pic;
    use PDLA::Lvalue;
 
 =cut
@@ -173,6 +174,7 @@ use PDLA::Lvalue;
 
 use PDLA::IO::Misc;          # Misc IO (Ascii)
 use PDLA::IO::FITS;          # FITS IO (rfits/wfits; used by rpic/wpic too)
+use PDLA::IO::Pic;           # rpic/wpic
 
 # Load this so config/install info is available
 

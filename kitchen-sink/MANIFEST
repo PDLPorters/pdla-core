@@ -161,14 +161,6 @@ IO/IDL/Makefile.PL
 IO/IDL/README
 IO/IO.pod
 IO/Makefile.PL
-IO/Pnm/Makefile.PL
-IO/Pnm/Pic.pm
-IO/Pnm/pnm.pd
-IO/Pnm/t/pic_16bit.t
-IO/Pnm/t/picnorgb.t
-IO/Pnm/t/picrgb.t
-IO/Pnm/t/pnm.t
-IO/Pnm/t/rim.t
 IO/Storable/Makefile.PL
 IO/Storable/storable.pd
 IO/Storable/t/storable.t
@@ -294,11 +286,6 @@ Libtmp/Image2D/t/pthreadBarf.t
 Libtmp/ImageND/Makefile.PL
 Libtmp/ImageND/imagend.pd
 Libtmp/ImageND/t/imagend.t
-Libtmp/ImageRGB/Makefile.PL
-Libtmp/ImageRGB/imagergb.pd
-Libtmp/ImageRGB/pdlppm.h
-Libtmp/ImageRGB/ppm_quant.c
-Libtmp/ImageRGB/t/imagergb.t
 Libtmp/Interpolate/Interpolate.pm
 Libtmp/Interpolate/Makefile.PL
 Libtmp/Interpolate/Slatec/Makefile.PL

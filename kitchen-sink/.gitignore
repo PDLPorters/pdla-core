@@ -34,9 +34,6 @@ IO/HDF/VS/VS.c
 IO/HDF/VS/VS.pm
 IO/HDF/VS/VS.xs
 IO/NDF/NDF.pm
-IO/Pnm/Pnm.c
-IO/Pnm/Pnm.pm
-IO/Pnm/Pnm.xs
 IO/Storable/Storable.c
 IO/Storable/Storable.pm
 IO/Storable/Storable.xs
@@ -162,9 +159,6 @@ Libtmp/Image2D/Image2D.xs
 Libtmp/ImageND/ImageND.c
 Libtmp/ImageND/ImageND.pm
 Libtmp/ImageND/ImageND.xs
-Libtmp/ImageRGB/ImageRGB.c
-Libtmp/ImageRGB/ImageRGB.pm
-Libtmp/ImageRGB/ImageRGB.xs
 Libtmp/Minuit/Minuit.c
 Libtmp/Minuit/Minuit.pm
 Libtmp/Minuit/Minuit.xs

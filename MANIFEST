@@ -188,9 +188,16 @@ INSTALL
 INTERNATIONALIZATION
 IO/FITS/FITS.pm
 IO/FITS/Makefile.PL
+IO/ImageRGB/Makefile.PL
+IO/ImageRGB/imagergb.pd
+IO/ImageRGB/pdlppm.h
+IO/ImageRGB/ppm_quant.c
 IO/Makefile.PL
 IO/Misc/Makefile.PL
 IO/Misc/misc.pd
+IO/Pnm/Makefile.PL
+IO/Pnm/Pic.pm
+IO/Pnm/pnm.pd
 Known_problems
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -278,6 +285,7 @@ t/hdrs.t
 t/hist.t
 t/howbig.t
 t/ica.t
+t/imagergb.t
 t/inline-comment-test.t
 t/inline-with.t
 t/inlinepdlpp.t
@@ -299,7 +307,11 @@ t/pdl-from-string-bad-values.t
 t/pdl_from_string.t
 t/pdlchar.t
 t/physical.t
+t/pic_16bit.t
+t/picnorgb.t
+t/picrgb.t
 t/polyroots.t
+t/pnm.t
 t/pp_croaking.t
 t/pp_line_numbers.t
 t/pptest.t
@@ -311,6 +323,7 @@ t/pthread_auto.t
 t/reduce.t
 t/refs.t
 t/requiredmods.t
+t/rim.t
 t/round.t
 t/scope.t
 t/segfault.t
