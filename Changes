@@ -1,4 +1,4 @@
-2.016000 
+2.016000 2019-04-19
  - Bugs fixed:
    - 416   PDLA::PP creates .pm & .xs files before pp_done is called
    - 414   ccNcompt (i.e. cc4compt and cc8compt) breaks with byte data type
