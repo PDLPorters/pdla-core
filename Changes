@@ -1,4 +1,4 @@
-2.015000 
+2.015000 2019-04-19
  - Fixes to improve compile and test of F77 modules
    on OS X (i.e. don't build i386 versions)
  - Basic/Ops/ops.pd - make compatible with MSVC++ 6.0

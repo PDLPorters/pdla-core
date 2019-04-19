@@ -147,7 +147,7 @@ start-up modules.
 
 =cut
 
-our $VERSION = "2.014000";
+our $VERSION = "2.015000";
 
 # Main loader of standard PDLA package
 
