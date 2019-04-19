@@ -349,25 +349,6 @@ if (!defined($PDLA::Config{SKIP_KNOWN_PROBLEMS}) and defined($ENV{SKIP_KNOWN_PRO
    $PDLA::Config{SKIP_KNOWN_PROBLEMS} = $ENV{SKIP_KNOWN_PROBLEMS};
    warn "Makefile.PL: setting SKIP_KNOWN_PROBLEMS Config from environment value: $ENV{SKIP_KNOWN_PROBLEMS}";
 }
-# Add check for POGL if USE_POGL is enabled
-if (!defined($PDLA::Config{USE_POGL}) or +$PDLA::Config{USE_POGL}) {
-   eval "use OpenGL $PDLA::Config{POGL_VERSION} qw();";
-   if ($@) {
-      if (defined($PDLA::Config{USE_POGL})) {
-         warn "Makefile.PL: DEPENDENCY ERROR: USE_POGL requires at least OpenGL version $PDLA::Config{POGL_VERSION}!\n";
-         exit 0;
-      } else {
-         warn "Makefile.PL: OpenGL-$PDLA::Config{POGL_VERSION} not found, setting \$PDLA::Config{USE_POGL} => 0\n";
-         $PDLA::Config{USE_POGL} = 0;
-      }
-   } else {
-      # Have OpenGL so set USE_POGL option if needed
-      warn "Makefile.PL: Found required OpenGL version, setting USE_POGL => 1\n" unless defined($PDLA::Config{USE_POGL});
-      $PDLA::Config{USE_POGL} ||= 1;
-   }
-} else {
-   warn "Makefile.PL: Have \$PDLA::Config{USE_POGL} => 0 so skipping TriD build with POGL\n";
-}
 
 make_Version_pm();
 
@@ -411,9 +392,6 @@ my @prereq = (
            'Storable'            => 1.03,      # for PDLA::IO::Storable
 	   'Text::Balanced'      => 1.89,      # for PDLA::NiceSlice
 	  );
-
-# add OpenGL version dependency for CPAN to follow
-push @prereq, ('OpenGL' => $PDLA::Config{POGL_VERSION}) if $PDLA::Config{USE_POGL};
 
 # push @prereq, ('ExtUtils::F77' => 1.10) unless $seen_f77conf;
 
