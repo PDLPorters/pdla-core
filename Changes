@@ -1,3 +1,50 @@
+2.016000 
+ - Bugs fixed:
+   - 416   PDLA::PP creates .pm & .xs files before pp_done is called
+   - 414   ccNcompt (i.e. cc4compt and cc8compt) breaks with byte data type
+ - All collapse operators now have "<name>over" equivalent names.
+   This ends an API wart in which most, but not all, of the collapse
+   operators had a short form that did full collapse and a long form
+   that did 1-D collapse only (e.g. "and" collapses to a point,
+   while "andover" collapses by one dimension).  The exceptions are
+   left in for legacy code, but now have regularized "-over" forms
+   as well:
+      average       -> avgover
+      daverage      -> davgover
+      maximum       -> maxover
+      maximum_ind   -> maxover_ind
+      maximum_n_ind -> maxover_n_ind
+      minmaximum    -> minmaxover
+      minimum       -> minover
+      minimum_ind   -> minover_ind
+      minimum_n_ind -> minover_n_ind
+ - PDLAs with dataflow can now be reshaped.  The dataflow
+   connection gets severed by the reshape operation.
+ - PDLA::IO::FITS now works better with RICE-compressed FITS
+   images, such as are produced by NASA's SDO project.
+       - The NAXIS- header keywords are now replaced by their
+         ZNAXIS- equivalents, so the NAXIS fields in the header
+         are correct after the image is read in.
+       - The Z-, TFIELDS, TTYPE*, and TFORM* keywords are now
+         deleted from the header object, so that the uncompressed,
+         loaded image does not have leftover compression headers.
+ - The language preprocessor PDLA::PP now does not automatically
+   call pp_done for modules that do not call pp_done themselves.
+   This new, stricter behavior requires module authors to call
+   pp_done at the end of their PDLA::PP file.  This prevents
+   partially-complete .xs and .pm files from being written if
+   there is a module build error.
+ - PDLA::whichND returns PDLAs of Indx type, to avoid overflows.
+ - Empty piddles are handled slightly differently now by
+   PDLA::info and `help vars'.  Empty piddles are different
+   from null piddles, and now generate different info strings.
+   (null piddles lack data or dimensions; empty piddles have
+   at least one dimension of size 0).
+ - There is now a .gitattributes file so GitHub repo language
+   stats are more accurate.
+ - The PDLA SF/GitHub deveolpment workflow is integrated into
+   the DEVELOPMENT docs.
+
 2.015000 2019-04-19
  - Fixes to improve compile and test of F77 modules
    on OS X (i.e. don't build i386 versions)
