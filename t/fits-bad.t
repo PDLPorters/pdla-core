@@ -2,7 +2,7 @@
 #
 # test bad value handling in PDL
 # - as it's a compile-time option we
-#   skip unless $PDL::Config{WITH_BADVAL}
+#   skip unless $PDLA::Config{WITH_BADVAL}
 #
 
 use strict;
@@ -24,11 +24,11 @@ END {
     unlink $fname if -e $fname;
 }
 
-use PDL::LiteF;
+use PDLA::LiteF;
 $| = 1;
 
-use PDL::Config;
-if ( $PDL::Config{WITH_BADVAL} ) {
+use PDLA::Config;
+if ( $PDLA::Config{WITH_BADVAL} ) {
     plan tests => 4;
 } else {
     # reduced testing
@@ -64,7 +64,7 @@ if ( $PDL::Config{WITH_BADVAL} ) {
 }
 
 # test r/wfits
-use PDL::IO::FITS;
+use PDLA::IO::FITS;
 
 $a = sequence(10)->setbadat(0);
 print "Writing to fits: $a  type = (", $a->get_datatype, ")\n";
