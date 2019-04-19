@@ -1,4 +1,4 @@
-$VERSION = "2.013008";
+$VERSION = "2.013009";
 
 # pp_setversion $VERSION;  # haven't worked out why it breaks my system (CS)
 pp_beginwrap; # required for overload to work
@@ -11,7 +11,7 @@ pp_beginwrap; # required for overload to work
 pp_bless('PDLA::Complex');
 
 pp_addpm {At => Top}, <<'EOD';
-our $VERSION = "2.013008";
+our $VERSION = "2.013009";
    use PDLA::Slices;
    use PDLA::Types;
    use PDLA::Bad;

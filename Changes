@@ -1,3 +1,6 @@
+2.013009 2019-04-19
+ - fix non-PDLA-ed test
+
 2.013008 2019-04-19
  - restore PDLA::IO::Misc, ::FITS, ::Pic
 
