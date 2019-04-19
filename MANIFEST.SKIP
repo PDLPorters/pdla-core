@@ -95,6 +95,9 @@ RCS
 ^IO/Pnm/converters/pnmtotiff.c
 ^IO/Pnm/converters/tifftopnm$
 ^IO/Pnm/converters/tifftopnm.c
+^IO/Storable/Storable\.c
+^IO/Storable/Storable\.pm
+^IO/Storable/Storable\.xs
 ^LOG$
 ^[.]Inline
 ^Perldl2/logo3d.pdl

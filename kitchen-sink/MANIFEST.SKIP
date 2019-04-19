@@ -35,9 +35,6 @@
 ^IO/HDF/VS/VS\.pm
 ^IO/HDF/VS/VS\.xs
 ^IO/NDF/NDF.pm$
-^IO/Storable/Storable\.c
-^IO/Storable/Storable\.pm
-^IO/Storable/Storable\.xs
 ^IO/tmp0
 ^IO/tmp0.hdr
 Libtmp/PCA/PCA*

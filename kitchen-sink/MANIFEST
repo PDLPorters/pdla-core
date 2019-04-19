@@ -161,11 +161,6 @@ IO/IDL/Makefile.PL
 IO/IDL/README
 IO/IO.pod
 IO/Makefile.PL
-IO/Storable/Makefile.PL
-IO/Storable/storable.pd
-IO/Storable/t/storable.t
-IO/Storable/t/storable_new_amd64.dat
-IO/Storable/t/storable_old_amd64.dat
 Libtmp/CallExt/CallExt.pm
 Libtmp/CallExt/CallExt.xs
 Libtmp/CallExt/Makefile.PL

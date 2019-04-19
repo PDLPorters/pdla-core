@@ -34,9 +34,6 @@ IO/HDF/VS/VS.c
 IO/HDF/VS/VS.pm
 IO/HDF/VS/VS.xs
 IO/NDF/NDF.pm
-IO/Storable/Storable.c
-IO/Storable/Storable.pm
-IO/Storable/Storable.xs
 Libtmp/CallExt/CallExt.c
 Libtmp/Compression/Compression.c
 Libtmp/Compression/Compression.pm

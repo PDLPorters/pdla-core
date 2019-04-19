@@ -198,6 +198,8 @@ IO/Misc/misc.pd
 IO/Pnm/Makefile.PL
 IO/Pnm/Pic.pm
 IO/Pnm/pnm.pd
+IO/Storable/Makefile.PL
+IO/Storable/storable.pd
 Known_problems
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -330,6 +332,9 @@ t/scope.t
 t/segfault.t
 t/slice-exceptions.t
 t/slice.t
+t/storable.t
+t/storable_new_amd64.dat
+t/storable_old_amd64.dat
 t/stringify.t
 t/subclass.t
 t/subclass2.t

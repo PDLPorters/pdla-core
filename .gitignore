@@ -129,6 +129,9 @@ IO/Misc/Misc.xs
 IO/Pnm/Pnm.c
 IO/Pnm/Pnm.pm
 IO/Pnm/Pnm.xs
+IO/Storable/Storable.c
+IO/Storable/Storable.pm
+IO/Storable/Storable.xs
 MANIFEST.bak
 Perldl2/pdla2.pod
 _Inline/
