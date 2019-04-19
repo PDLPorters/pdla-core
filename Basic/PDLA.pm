@@ -139,6 +139,7 @@ start-up modules.
    use PDLA::MatrixOps;
    use PDLA::Math;
    use PDLA::Version;
+   use PDLA::IO::Misc;
    use PDLA::Lvalue;
 
 =cut
@@ -166,6 +167,10 @@ use PDLA::Bad;
 use PDLA::Math;
 use PDLA::MatrixOps;
 use PDLA::Lvalue;
+
+# Load these for TPJ compatibility
+
+use PDLA::IO::Misc;          # Misc IO (Ascii)
 
 # Load this so config/install info is available
 

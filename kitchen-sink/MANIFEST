@@ -165,9 +165,6 @@ IO/IDL/Makefile.PL
 IO/IDL/README
 IO/IO.pod
 IO/Makefile.PL
-IO/Misc/Makefile.PL
-IO/Misc/misc.pd
-IO/Misc/t/misc.t
 IO/Pnm/Makefile.PL
 IO/Pnm/Pic.pm
 IO/Pnm/pnm.pd

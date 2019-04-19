@@ -86,6 +86,7 @@ RCS
 ^Demos/BAD_demo.pm$
 ^Demos/TkTriD_demo.pm$
 ^Demos/TriD/test6.p$
+^IO/Misc/Misc.*
 ^LOG$
 ^[.]Inline
 ^Perldl2/logo3d.pdl

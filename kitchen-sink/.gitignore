@@ -33,9 +33,6 @@ IO/HDF/SD/SD.xs
 IO/HDF/VS/VS.c
 IO/HDF/VS/VS.pm
 IO/HDF/VS/VS.xs
-IO/Misc/Misc.c
-IO/Misc/Misc.pm
-IO/Misc/Misc.xs
 IO/NDF/NDF.pm
 IO/Pnm/Pnm.c
 IO/Pnm/Pnm.pm

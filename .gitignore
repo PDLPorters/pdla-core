@@ -120,6 +120,9 @@ Basic/Ufunc/Ufunc.xs
 Demos/BAD2_demo.pm
 Demos/BAD_demo.pm
 Doc/Doc/Config.pm
+IO/Misc/Misc.c
+IO/Misc/Misc.pm
+IO/Misc/Misc.xs
 MANIFEST.bak
 Perldl2/pdla2.pod
 _Inline/

@@ -186,6 +186,9 @@ Example/InlinePdlapp/inlpp_link.pl
 Example/InlinePdlapp/inlppminimal.pl
 INSTALL
 INTERNATIONALIZATION
+IO/Makefile.PL
+IO/Misc/Makefile.PL
+IO/Misc/misc.pd
 Known_problems
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -283,6 +286,7 @@ t/matmult.t
 t/matrix.t
 t/matrixops.t
 t/minmax-behavior.t
+t/misc.t
 t/niceslice.t
 t/nsdatahandle.t
 t/ones.t
