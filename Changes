@@ -1,3 +1,25 @@
+2.015000 
+ - Fixes to improve compile and test of F77 modules
+   on OS X (i.e. don't build i386 versions)
+ - Basic/Ops/ops.pd - make compatible with MSVC++ 6.0
+ - Fix missing PDLA license information
+ - Fix sf.net bug #403: reshape() failed when applied to a
+   piddle with dataflow.  Now, changing the shape of a PDLA
+   that already has dataflow is prevented and an error message
+   given.
+ - Fix sf.net bug 406 Added missing logic for clump(-N) and minor
+   cleanup of perl wrapper.
+ - force new_pdl_from_string to return a piddle with P=physical flag
+ - Add $PDLA::indxformat for PDLA_Indx This avoids loss of
+   significance when 64bit PDLA_Indx values are printed.
+   Make new_pdl_from_string() avoid converting IV values
+   to NVs This allows pdl(indx, '[ 9007199254740992 ]')
+   to work without rounding due to the 52bit double
+   precision mantissa versus the 63bits + sign for PDLA_Indx.
+ - Add type support info to pdl() constructor documentation.
+   pdl() has always supported this usage but examples were
+   missing in the documentation.
+
 2.014000 2019-04-19
  - PDLA can now create and use piddles having more
    than 2**32 elements.  Of particular use is that
