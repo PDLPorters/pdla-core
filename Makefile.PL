@@ -368,7 +368,6 @@ my @podpms = map { $_.".pod", '$(INST_LIBDIR)/PDLA/' . $_ .".pod"}
   qw/Bugs/;
 
 my @prereq = (
-	   'Astro::FITS::Header' => 0,
            'Carp'                => 0,         # Need to run
            'Config'              => 0,         # 
            'Convert::UU'         => 0,         # for PDLA::IO::Dumper
@@ -451,6 +450,13 @@ my %makefile_hash = (
                   x_IRC => 'irc://irc.perl.org/#pdl',
                 },
                 no_index => { file => ['Doc/scantree.pl'] },
+                prereqs => {
+                  runtime => {
+                    suggests => {
+                      'Astro::FITS::Header' => 0,
+                    },
+                  },
+                },
               },
 	      'OPTIMIZE'  => $PDLA::Config{OPTIMIZE} || $Config{optimize},
 	      'CCFLAGS' => $ccflags,
