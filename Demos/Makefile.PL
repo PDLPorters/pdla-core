@@ -25,8 +25,6 @@ WriteMakefile(
                     'TriD1.pm'    => '$(INST_LIBDIR)/Demos/TriD1.pm',
                     'TriD2.pm'    => '$(INST_LIBDIR)/Demos/TriD2.pm',
                     'TriDGallery.pm'    => '$(INST_LIBDIR)/Demos/TriDGallery.pm',
-		    'PGPLOT_demo.pm'	=> '$(INST_LIBDIR)/Demos/PGPLOT_demo.pm',
-		    'PGPLOT_OO_demo.pm'	=> '$(INST_LIBDIR)/Demos/PGPLOT_OO_demo.pm',
                     'BAD_demo.pm'       => '$(INST_LIBDIR)/Demos/BAD_demo.pm',
                     'BAD2_demo.pm'      => '$(INST_LIBDIR)/Demos/BAD2_demo.pm',
                     'Transform_demo.pm' => '$(INST_LIBDIR)/Demos/Transform_demo.pm',
