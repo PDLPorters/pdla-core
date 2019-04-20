@@ -1,7 +1,7 @@
-2.019100 
+2.019100 2019-04-21
+ - full transition to PDLA, up to date with legacy PDL master
  - change docs to remove $a and $b since that clashes with Perl sort vars
  - CI now measures test coverage for XS and C code
- - full transition to PDLA, up to date with legacy PDL master
  - fix PDL::Lite so it successfully exports working functions
  - range speedups by @d-lamb
  - compatibility with Perl's experimental bitwise feature
