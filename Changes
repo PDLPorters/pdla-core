@@ -1,3 +1,6 @@
+2.018001 2019-04-20
+ - missed PDLA_INVALID as Type
+
 2.018000 2019-04-20
  - SF.net Bugs fixed:
    - 429 Alien::Proj4->load_projection_information parses PJ_sch parameters incorrectly
