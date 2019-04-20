@@ -6,10 +6,6 @@ The following issues have been reported with this version of PDLA:
   calculations.  A warning is output every "use PDLA;"
 
 
-- A bug in the perl Nepbm interface code prevents reading or writing
-  image files with whitespace in the filename.
-
-
 - GLUT readline support in perldla with the -glut option not
   yet implemented for win32.  Work in progress.
 
