@@ -1,3 +1,12 @@
+2.019000 
+ - cat returns a piddle of the highest input type, not
+   the first.
+ - rfits/wfits now do tilde filename expansion.
+ - det in MatrixOps now uses the cached lu_decomp
+   value correctly.
+ - Multiple minor fixes, docs, cleanup, and changing
+   things to point to github away from sf.net.
+
 2.018001 2019-04-20
  - missed PDLA_INVALID as Type
 
