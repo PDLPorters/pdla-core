@@ -19,7 +19,7 @@ unless (defined $dirarg) {
 }
 my @dirs = split /,/,$dirarg;
 unless (defined $outdb) {
-	$outdb = "$dirs[0]/PDLA/pdldoc.db";
+	$outdb = "$dirs[0]/PDLA/pdladoc.db";
 	print "DB  = $outdb\n";
 }
 
