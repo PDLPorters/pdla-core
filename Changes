@@ -1,4 +1,4 @@
-2.019000 
+2.019000 2019-04-20
  - cat returns a piddle of the highest input type, not
    the first.
  - rfits/wfits now do tilde filename expansion.
