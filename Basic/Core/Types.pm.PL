@@ -219,6 +219,7 @@ sub gentypehashcode {
   use Data::Dumper;
   local $Data::Dumper::Terse = 1;
   local $Data::Dumper::Indent = 1;
+  local $Data::Dumper::Sortkeys = 1;
   local $Data::Dumper::Pad = "\t\t";
   my $i = 0;
   my $perlcode = '';
@@ -450,7 +451,7 @@ sub datatypes_header {
     warn "Using new 64bit index support\n" if $Config::Config{'ivsize'}==8;
 
     my $anyval_union = '';
-    my $enum = '';
+    my $enum = 'PDLA_INVALID=-1, ';
     my $typedefs = '';
     for (sort { $typehash{$a}{'numval'}<=>$typehash{$b}{'numval'} }  keys %typehash) {
      $enum .= $typehash{$_}{'sym'}.", ";
