@@ -1,4 +1,4 @@
-2.018000 
+2.018000 2019-04-20
  - SF.net Bugs fixed:
    - 429 Alien::Proj4->load_projection_information parses PJ_sch parameters incorrectly
    - 432 Work around List::MoreUtils bug t/gd_oo_test.t started failing in testers.
