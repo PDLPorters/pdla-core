@@ -19,7 +19,7 @@ The following issues have been reported with this version of PDLA:
   This can affect code using parentheses to group.  An example
   that shows the problem is code like:
 
-     f( ($pdl0 * $pdl1) x $pdl2 )
+     f( ($pdl_0 * $pdl_1) x $pdl_2 )
 
   which now gives an error.  The fix is to force the element-wise
   operation in parentheses to be treated in scalar context rather

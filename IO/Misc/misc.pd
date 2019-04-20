@@ -978,8 +978,8 @@ default print format.
 
 =for usage
 
- Usage: @str = swcols format, pdl1,pdl2,pdl3,...;
-    or  $str = swcols format, pdl1,pdl2,pdl3,...;
+ Usage: @str = swcols format, pdl_1,pdl_2,pdl_3,...;
+    or  $str = swcols format, pdl_1,pdl_2,pdl_3,...;
 
 =cut
 
