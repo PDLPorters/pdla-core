@@ -1,3 +1,15 @@
+2.019100 
+ - change docs to remove $a and $b since that clashes with Perl sort vars
+ - CI now measures test coverage for XS and C code
+ - full transition to PDLA, up to date with legacy PDL master
+ - fix PDL::Lite so it successfully exports working functions
+ - range speedups by @d-lamb
+ - compatibility with Perl's experimental bitwise feature
+ - pdladoc improvements
+ - fix borover and bandover with badvalues
+ - fix XS stack-handling bug revealed by Perl 5.28 compiled with debugging
+ - more portable tilde expansion
+
 2.019000 2019-04-20
  - cat returns a piddle of the highest input type, not
    the first.
