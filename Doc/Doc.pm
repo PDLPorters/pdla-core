@@ -165,7 +165,7 @@ An implementation of online docs for PDLA.
 =head1 Using PDLA documentation
 
 PDLA::Doc's main use is in the "help" (synonym "?") and "apropos"
-(synonym "??") commands in the perldl shell.  PDLA:Doc provides the
+(synonym "??") commands in the perldla shell.  PDLA:Doc provides the
 infrastrucure to index and access PDLA's documentation through these
 commands.  There is also an API for direct access to the documentation 
 database (see below).

@@ -10,7 +10,7 @@ The following issues have been reported with this version of PDLA:
   image files with whitespace in the filename.
 
 
-- GLUT readline support in perldl with the -glut option not
+- GLUT readline support in perldla with the -glut option not
   yet implemented for win32.  Work in progress.
 
 
@@ -28,7 +28,7 @@ The following issues have been reported with this version of PDLA:
     f( scalar($p0 * $p1) x $p2 );
 
 
-- The current Ctrl-C logic in the PDLA shells (pdl2 and perldl)
+- The current Ctrl-C logic in the PDLA shells (pdl2 and perldla)
   doesn't work the same with the perl's new "safe signals".  A
   workaround to the problem is to set the PERL_SIGNALS environment
   variable to "unsafe".  See sf.net feature request #3308168
@@ -46,24 +46,24 @@ The following issues have been reported with this version of PDLA:
 
 
 - Multiline q'' constructs are broken in the Devel::REPL versions
-  1.003012 and 1.003013 so you'll need to use perldl or avoid
+  1.003012 and 1.003013 so you'll need to use perldla or avoid
   splitting quoted strings across lines.  A fix is being investigated.
 
 
 - The demo 3d and 3d2 windows do not close (can not be closed)
-  after the demo finishes.  You need to exit the perldl shell
+  after the demo finishes.  You need to exit the perldla shell
   to have the window close.
 
 
 - When you close a TriD graphics window with the frame widget
-  the whole process exits including the perldl shell.
+  the whole process exits including the perldla shell.
 
 
 - Extremely verbose but not particularly helpful text output from
   the configure-build-test process.
 
 
-- Directory completion in the interactive PDLA shells (perldl and pdl2)
+- Directory completion in the interactive PDLA shells (perldla and pdl2)
   using Term::ReadLine::Perl adds a space after each directory expansion.
   To continue to complete, one must delete the space before typing <TAB>
   again.  The problem has been reported as a Term::ReadLine::Perl bug.
@@ -115,7 +115,7 @@ The following issues have been reported with this version of PDLA:
          SF#254 online docs don't link to functions in other PDLA modules
          SF#238 NiceSlice affects code where it should not
          SF#210 default PDLA build output too long
-         SF#147 closing TriD window kills perldl shell
+         SF#147 closing TriD window kills perldla shell
 
 
 

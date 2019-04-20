@@ -13,5 +13,5 @@
 
 PDLA ("Perl Data Language") gives standard Perl the ability to *compactly* store and *speedily* manipulate the large N-dimensional data arrays which are the bread and butter of scientific computing.
 
-PDLA turns Perl into a free, array-oriented, numerical language similar to (but, we believe, better than) such commercial packages as IDL and MatLab. One can write simple perl expressions to manipulate entire numerical arrays all at once. Simple interactive shells, `pdla2` and `perldl`, are provided for use from the command line along with the `PDLA` module for use in Perl scripts.
+PDLA turns Perl into a free, array-oriented, numerical language similar to (but, we believe, better than) such commercial packages as IDL and MatLab. One can write simple perl expressions to manipulate entire numerical arrays all at once. Simple interactive shells, `pdla2` and `perldla`, are provided for use from the command line along with the `PDLA` module for use in Perl scripts.
 
