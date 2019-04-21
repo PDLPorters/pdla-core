@@ -1,3 +1,8 @@
+2.019101 2019-04-21
+ - make t/badvalue_scalar_cmp.t, t/pdl_from_string.t less fragile
+ - de-corrupt FITS file production
+ - make not blow up on ActivePerl (zap Cwd::abs_path on non-existent dir)
+
 2.019100 2019-04-21
  - full transition to PDLA, up to date with legacy PDL master
  - change docs to remove $a and $b since that clashes with Perl sort vars
