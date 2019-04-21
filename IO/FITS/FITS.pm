@@ -48,6 +48,7 @@ PDLA distribution, the copyright notice should be pasted into in this file.
 =cut
 
 use strict;
+use warnings;
 
 BEGIN {
 
@@ -2864,7 +2865,7 @@ sub _wfits_nullhdu ($) {
     _print_to_fits( $fh, $hdr, " " );
   } else {
     _print_to_fits( $fh, 
-		    q+SIMPLE  =                    T / Null HDU (no data, only extensions)            BITPIX  =                  -32 / Needed to make fverify happy                   NAXIS   =                    0                                                  EXTEND  =                    T / File contains extensions                       COMMENT   Written by perl (PDLA::IO::FITS::wfits) legacy code.                   COMMENT   For best results, install Astro::FITS::Header.                        HDUNAME = 'PRIMARY '                                                            END                                                                             +,
+		    q+SIMPLE  =                    T / Null HDU (no data, only extensions)            BITPIX  =                  -32 / Needed to make fverify happy                   NAXIS   =                    0                                                  EXTEND  =                    T / File contains extensions                       COMMENT  Written by perl (PDLA::IO::FITS::wfits) legacy code.                   COMMENT   For best results, install Astro::FITS::Header.                        HDUNAME = 'PRIMARY '                                                            END                                                                             +,
 		    " ");
   }
 }
