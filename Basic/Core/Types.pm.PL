@@ -358,8 +358,8 @@ Returns an array of keys of typehash sorted in order of type complexity
 
 =for example
 
- pdl> @typelist = PDLA::Types::typesrtkeys;
- pdl> print @typelist;
+ pdla> @typelist = PDLA::Types::typesrtkeys;
+ pdla> print @typelist;
  PDLA_B PDLA_S PDLA_US PDLA_L PDLA_IND PDLA_LL PDLA_F PDLA_D
 
 =cut
@@ -377,8 +377,8 @@ Returns an array of pp symbols for all known types
 
 =for example
 
- pdl> @ppdefs = PDLA::Types::ppdefs
- pdl> print @ppdefs;
+ pdla> @ppdefs = PDLA::Types::ppdefs
+ pdla> print @ppdefs;
  B S U L N Q F D
 
 =cut
@@ -400,7 +400,7 @@ PDLA::Types::typefld($type,$fld);
 
 =for example
 
- pdl> print PDLA::Types::typefld('PDLA_IND',realctype)
+ pdla> print PDLA::Types::typefld('PDLA_IND',realctype)
  long
 
 =cut
