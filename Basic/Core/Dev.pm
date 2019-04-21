@@ -451,6 +451,7 @@ sub pdlpp_stdargs_int {
  my $mallocinc = exists $PDLA::Config{MALLOCDBG}->{include} ?
    $PDLA::Config{MALLOCDBG}->{include} : '';
 my $libsarg = $libs || $malloclib ? "$libs $malloclib " : ''; # for Win32
+ require ExtUtils::MakeMaker;
  return (
  	%::PDLA_OPTIONS,
 	 'NAME'  	=> $mod,
@@ -469,6 +470,7 @@ my $libsarg = $libs || $malloclib ? "$libs $malloclib " : ''; # for Win32
 sub pdlpp_stdargs {
  my($rec) = @_;
  my($src,$pref,$mod) = @$rec;
+ require ExtUtils::MakeMaker;
  return (
  	%::PDLA_OPTIONS,
 	 'NAME'  	=> $mod,
