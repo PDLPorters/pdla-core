@@ -370,26 +370,26 @@ EOF
 }
 
 # Expects list in format:
-# [gtest.pd, GTest, PDLA::GTest    ], [...]
-# source,    prefix,module/package
+# [gtest.pd, GTest, PDLA::GTest,    PDLA::XSPkg], [...]
+# source,    prefix,module/package, optional pp_addxs destination
 # The idea is to support in future several packages in same dir - EUMM
 #   7.06 supports
 
 # This is the function internal for PDLA.
 #
 sub pdlpp_postamble_int {
-	join '',map { my($src,$pref,$mod) = @$_;
+	join '',map { my($src,$pref,$mod,$callpack) = @$_;
 	my $w = whereami_any();
 	$w =~ s%/((PDLA)|(Basic))$%%;  # remove the trailing subdir
 	my $top = File::Spec->abs2rel($w);
 	my $basic = File::Spec->catdir($top, 'Basic');
 	my $core = File::Spec->catdir($basic, 'Core');
 	my $gen = File::Spec->catdir($basic, 'Gen');
-
+	$callpack //= '';
 qq|
 
 $pref.pm: $src $core/Types.pm
-	\$(PERLRUNINST) \"-MPDLA::PP qw[$mod $mod $pref]\" $src
+	\$(PERLRUNINST) \"-MPDLA::PP qw[$mod $mod $pref $callpack]\" $src
 
 $pref.xs: $pref.pm
 	\$(TOUCH) \$@
@@ -403,16 +403,18 @@ $pref\$(OBJ_EXT): $pref.c
 
 
 # This is the function to be used outside the PDLA tree.
+# same format as pdlpp_postamble_int
 sub pdlpp_postamble {
-	join '',map { my($src,$pref,$mod) = @$_;
+	join '',map { my($src,$pref,$mod,$callpack) = @$_;
 	my $w = whereami_any();
 	$w =~ s%/((PDLA)|(Basic))$%%;  # remove the trailing subdir
 	require ExtUtils::MM;
 	my $oneliner = MM->oneliner(q{exit if \$\$ENV{DESTDIR}; use PDLA::Doc; eval { PDLA::Doc::add_module(q{$mod}); }});
+	$callpack //= '';
 qq|
 
 $pref.pm: $src
-	\$(PERL) "-I$w" \"-MPDLA::PP qw[$mod $mod $pref]\" $src
+	\$(PERL) "-I$w" \"-MPDLA::PP qw[$mod $mod $pref $callpack]\" $src
 
 $pref.xs: $pref.pm
 	\$(TOUCH) \$@
