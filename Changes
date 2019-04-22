@@ -1,3 +1,6 @@
+2.019102 
+ - Inline::Pdlapp can take package param to put XS subs into
+
 2.019101 2019-04-21
  - make t/badvalue_scalar_cmp.t, t/pdl_from_string.t less fragile
  - de-corrupt FITS file production
