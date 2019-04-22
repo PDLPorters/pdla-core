@@ -1,3 +1,6 @@
+2.019103 2019-04-22
+ - got the version number wrong in previous release
+
 2.019102 2019-04-22
  - Inline::Pdlapp can take package param to put XS subs into
 
