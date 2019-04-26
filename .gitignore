@@ -82,7 +82,6 @@ cover_db/
 # These can either be in the specific directories or specified
 # with full patch in the top level directory (as here).
 
-.inlinepdlpp
 .inlinewith
 Basic/Bad/Bad.c
 Basic/Bad/Bad.pm
