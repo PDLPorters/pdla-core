@@ -1,3 +1,6 @@
+2.019105 2019-04-26
+ - Inline::Pdlapp removed, in its own distro/repo now
+
 2.019104 2019-04-26
  - include @d-lamb complex_atan2 improvements
 
