@@ -87,8 +87,6 @@ branches:
   except:
     - /^wip\//
     - /^blocked/
-  only:
-    - master
 notifications:
   irc:
     channels:
