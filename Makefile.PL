@@ -699,22 +699,9 @@ sub parallel_target_mangle {
     $target;
 }
 
-# remove pdla.c from making EUMM think this dir has XS in it
-sub MY::init_dirscan {
-    package MY;
-    my ($self) = @_;
-    $self->SUPER::init_dirscan;
-    $self->{C} = [];
-    $self->{O_FILES} = [];
-}
-
 sub MY::init_PM {
   package MY;
   my ($self) = @_;
-  my $core = 'lib/PDLA/Core';
-  $self->{XS}{"$core.xs"} = "$core.c";
-  push @{$self->{C}}, "$core.c";
-  push @{$self->{O_FILES}}, "$core$self->{OBJ_EXT}";
   $self->SUPER::init_PM;
   for my $pm (keys %{ $self->{PM} }) {
     next unless (my $nonPL = $pm) =~ s/\.PL$//;
