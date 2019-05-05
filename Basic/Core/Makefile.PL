@@ -6,98 +6,12 @@ use ExtUtils::MakeMaker;
 
 ## $DB::single = 1;  # uncomment to have debugger stop here
 
-my $pthread_include = $Config::Config{usrinc};  # not good for win32
-my $pthread_library = '-lpthread';                                  # not good for MSVC
-my $pthread_define  = ' -DPDLA_PTHREAD ';
-
 my $badval_define = " -DBADVAL=$PDLA::Config{WITH_BADVAL} -DBADVAL_USENAN=$PDLA::Config{BADVAL_USENAN} -DBADVAL_PER_PDLA=$PDLA::Config{BADVAL_PER_PDLA}";
 
 my $malloclib = $PDLA::Config{MALLOCDBG}->{libs};
 my $mallocinc = $PDLA::Config{MALLOCDBG}->{include};
 
-print "Trying to figure out POSIX threads support ...\n";
-
-# TODO: replace directory and file checks for pthread.h by Devel::CheckLib test
-if ( exists $PDLA::Config{POSIX_THREADS_INC} and  defined $PDLA::Config{POSIX_THREADS_INC} ) {
-    $pthread_include = $PDLA::Config{POSIX_THREADS_INC};
-    print "\t..setting \$pthread_include to $pthread_include\n";
-} elsif (-d $pthread_include) {
-    print "\tSaw pthread.h. Fine.\n";
-    $pthread_include = "-I$pthread_include"
-} else {
-    print "\tEhh. Didn't see include file 'pthread.h'.\n";
-    $pthread_include = '';
-}
-
-# TODO: need to clean up per-platform logic herer
-if ( exists $PDLA::Config{POSIX_THREADS_LIBS} and defined $PDLA::Config{POSIX_THREADS_LIBS} ) {
-    $pthread_library = $PDLA::Config{POSIX_THREADS_LIBS};
-    print "\tUsing POSIX_THREADS_LIBS from perldl.conf\n";
-} elsif ($Config::Config{libs} =~ /-lpthread/) {   # wrong
-    print "\tFine, your perl was linked against pthread library.\n";
-} elsif ($^O eq 'dec_osf') {
-    if ($Config::Config{usemymalloc} eq 'n') {
-        print "\tFine pthread, works with Digital Unixs malloc\n";
-    } else {
-        #
-        print "\tPerls malloc has problems when perl is not linked with -lpthread\n";
-        $pthread_library = '';
-    }
-} elsif ($^O eq 'freebsd'){
-    if ($Config::Config{libs} =~ /-lc_r/) {
-        print "\tGood, found -lc_r on a freebsd system.\n";
-    } else {
-        print "On FreeBSD try building perl with libc_r instead of libc\n";
-        $pthread_library = '';
-    }
- } elsif ($^O =~ /bsd$/i){
-    if ($Config::Config{ldflags} =~ /-pthread/) {
-       if ($Config::Config{usemymalloc} eq 'y') {
-          print "\tGood, usemymalloc=y, will build with pthread support\n";
-       } else {
-          print "\tGot usemymalloc=$Config::Config{usemymalloc} so not building with pthreads\n";
-          $pthread_library = '';
-       }
-    } else {
-          print "\tMissing '-pthread' from ldflags=$Config::Config{lddlflags} so not building with pthreads\n";
-          $pthread_library = '';
-    }
- } else {
-    print "\tNope, your perl was not linked against pthread library\n";
-    if ($^O =~ /mswin/i or $^O =~ /cygwin/i) {
-       if (eval { check_lib(LIB=>'-lpthread',header=>'pthread.h') }) {
-          print "\tWe found -lpthread and pthread.h so will build anyway\n";
-          $pthread_library = '-lpthread';
-       } else {
-          $pthread_library = '';
-       }
-    } else {
-       print "\tWe'll try the default -lpthread anyway\n";
-       # $pthread_library = '';
-    }
- }
-
-$pthread_include = $pthread_library = '' unless $pthread_include and $pthread_library;
-
-{
-    # TODO: use a Devel::CheckLib build/run test to verify working build params
-    my $conf = $PDLA::Config{WITH_POSIX_THREADS};
-
-    if ((!defined($conf) or $conf)
-	and $pthread_include and $pthread_library) {
-	print "\t==> Will build PDLA with POSIX thread support. Gifts to TJL :-)\n";
-	$PDLA::Config{WITH_POSIX_THREADS} = 1;
-    } elsif($conf) {
-	print "\t==> I couldn't find pthread support. However, you have\n";
-	print "\t    turned on the forcing option in PDLA_CONFIG so I guess I gotta do it\n";
-    } else {
-	print "\t==> PDLA will be built without POSIX thread support.\n";
-	print "\t==> *NOTE*: PDLA threads are unrelated to perl threads (usethreads=y)!\n";
-	print "\t==> Enabling perl threads will not help!\n";
-	$pthread_define = '';
-	$PDLA::Config{WITH_POSIX_THREADS} = 0;
-    }
-}
+my (undef, $pthread_include, $pthread_library, $pthread_define) = figure_pthreads();
 
 # isbigendian() is in PDLA::Dev
 print "Trying to figure out endian-ness of machine...";
