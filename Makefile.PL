@@ -464,8 +464,7 @@ my %makefile_hash = (
     }
   },
   depend => {
-     'lib/PDLA/Core$(OBJ_EXT)' => 'config pm_to_blib lib/PDLA/pdldataswitch.c lib/PDLA/pdlbadvalinit.c lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h',
-         # Core.xs needs blib/arch for -Mblib to work, as well as pm_to_blib
+     'lib/PDLA/Core$(OBJ_EXT)' => 'pm_to_blib lib/PDLA/pdldataswitch.c lib/PDLA/pdlbadvalinit.c lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h',
   },
   'dist'     => {
     COMPRESS => 'gzip',
@@ -525,33 +524,22 @@ make_PDLA_Config_pm(); # write out config to PDLA::Config
 
 WriteMakefile(%makefile_hash);
 
-sub make_from_PL {
-    my ($head, $extradeps) = @_;
-    return unless defined $extradeps;
-    sprintf <<'EOF', $head, $extradeps;
-%s :: %s
-EOF
-}
-
 sub MY::postamble {
   my ($self) = @_;
   package MY;
   my @m = PDLA::Core::Dev::postamble() . "\n\n";
-  push @m, map ::make_from_PL("lib/PDLA/Core/$_", 'lib/PDLA/Types.pm'),
-    qw( pdl.h pdlsimple.h pdlcore.h pdlconv.c pdlcore.c );
+  push @m, map "lib/PDLA/$_ :: lib/PDLA/Types.pm\n",
+    qw( Core/pdl.h Core/pdlsimple.h Core/pdlcore.h pdlconv.c pdlcore.c );
   if (!$self->is_make_type('dmake')) {
     push @m, <<'EOF';
 # Bits of C code we generate from special perl scripts
 # there must be a more elegant way of saying that
 # certain files have additional dependencies!
-lib/PDLA/pdlthread.c :: lib/PDLA/Core/pdlcore.h
-lib/PDLA/pdlhash.c :: lib/PDLA/Core/pdlcore.h
-lib/PDLA/pdlapi.c :: lib/PDLA/Core/pdlcore.h
-lib/PDLA/pdlmagic.c :: lib/PDLA/Core/pdlcore.h
-lib/PDLA/Core$(OBJ_EXT) : lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
-
-# this ensures Types.pm is in blib, where the .pd files below can find
-subdirs :: pm_to_blib
+lib/PDLA/pdlthread$(OBJ_EXT) :: lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
+lib/PDLA/pdlhash$(OBJ_EXT) :: lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
+lib/PDLA/pdlapi$(OBJ_EXT) :: lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
+lib/PDLA/pdlsections$(OBJ_EXT) :: lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
+lib/PDLA/pdlmagic$(OBJ_EXT) :: lib/PDLA/Core/pdlcore.h
 
 EOF
   }
@@ -646,7 +634,7 @@ sub coretarget {
                 map { [
                     [ 'Basic', $_ ],
                     [ qw(pm_to_blib dynamic) ],
-                    [ qw(pm_to_blib $(INST_DYNAMIC) lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h) ],
+                    [ qw(pm_to_blib $(INST_DYNAMIC)) ],
                 # the modules in PDLA::LiteF, used in t/core.t
                 ] } qw(Ops Primitive Ufunc Slices Bad Math MatrixOps),
             ]
