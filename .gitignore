@@ -83,6 +83,7 @@ cover_db/
 # with full patch in the top level directory (as here).
 
 .inlinewith
+.inlinepdlpp
 Basic/Bad/Bad.c
 Basic/Bad/Bad.pm
 Basic/Bad/Bad.xs

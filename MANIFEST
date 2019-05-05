@@ -75,6 +75,12 @@ Example/Benchmark/Bench.xs
 Example/Benchmark/Makefile.PL
 Example/Benchmark/README
 Example/Benchmark/time.pl
+Example/Inlinepdlapp/inlpp.pl
+Example/Inlinepdlapp/inlpp_link.pl
+Example/Inlinepdlapp/inlppminimal.pl
+Example/Inlinepdlapp/Module/Makefile.PL
+Example/Inlinepdlapp/Module/MyInlineMod.pm
+Example/Inlinepdlapp/Module/t/myinlinemod.t
 INSTALL
 INTERNATIONALIZATION
 IO/ImageRGB/Makefile.PL
@@ -143,6 +149,7 @@ debian/perldl.conf
 debian/rules
 debian/source/format
 debian/write_config_debian.pl
+lib/Inline/Pdlapp.pm
 lib/PDLA.pm
 lib/PDLA/API.pod
 lib/PDLA/AutoLoader.pm
@@ -254,6 +261,7 @@ t/howbig.t
 t/ica.t
 t/imagergb.t
 t/inline-with.t
+t/inlinepdlpp.t
 t/interpol.t
 t/lgamma.t
 t/lite_loads_twice.t

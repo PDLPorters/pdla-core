@@ -363,6 +363,8 @@ my @prereq = (
            'File::Path'          => 0,
 	   'Filter::Util::Call'  => 0,         # for PDLA::NiceSlice
 	   'Filter::Simple'      => 0.88,      # for new PDLA::NiceSlice
+	   'Inline' => 0.83, # fixed ILSM-finding
+	   'Inline::C' => 0.62,
 	   'Module::Compile'     => 0.23,      # for new PDLA::NiceSlice
 	   'Pod::Parser'         => 0,         # version TBD for PDLA::Doc
 	   'Pod::Select'         => 0,         # version TBD for PDLA::Doc
@@ -443,12 +445,6 @@ my %makefile_hash = (
           'Astro::FITS::Header' => 0,
         },
       },
-      test => {
-        suggests => {
-          'Inline' => 0.83, # fixed ILSM-finding
-          'Inline::C' => 0.62,
-        },
-      },
     },
   },
   @optimize,
@@ -480,7 +476,7 @@ my %makefile_hash = (
     'FILES' => join ' ', @cleanup, qw(
       tbyte.tif tmp0 tmp0.hdr tushort.tif
       MANIFEST.bak tmp1* tmpraw* t/tmpraw* t/tmp1*
-      _Inline/ .inlinepdlpp/ .inline-ct/ .inlinewith/ *.xfig
+      _Inline/ .inlinepdlpp/ .inlinewith/ *.xfig
     ),
   },
   'realclean' => {
