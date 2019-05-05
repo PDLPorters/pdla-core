@@ -259,6 +259,7 @@ sub isbigendian {
 #
 
 
+# return exit code, so 0 = OK
 sub genpp {
 
    $gotstart = 0; @gencode = ();
@@ -304,6 +305,7 @@ sub genpp {
       }
 
    } # End while
+   0;
 }
 
 sub flushgeneric {  # Construct the generic code switch
@@ -344,7 +346,7 @@ sub genpp_cmdline {
   my $MM = bless { NAME => 'Fake' }, 'MM';
   my $devpm = whereami_any()."/Core/Dev.pm";
   sprintf($MM->oneliner(<<'EOF'), $devpm) . qq{ "$in" > "$out"};
-require "%s"; PDLA::Core::Dev->import(); genpp();
+require "%s"; PDLA::Core::Dev->import(); exit genpp();
 EOF
 }
 
