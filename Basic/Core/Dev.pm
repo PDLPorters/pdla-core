@@ -20,14 +20,18 @@ PDLA development and is often used from within Makefile.PL's.
 
 package PDLA::Core::Dev;
 
+use strict;
+use warnings;
 use File::Path;
 use File::Basename;
 use ExtUtils::Manifest;
-use English; require Exporter;
+use English;
+require Exporter;
+use Config;
 
-@ISA    = qw( Exporter );
+our @ISA    = qw( Exporter );
 
-@EXPORT = qw( isbigendian genpp %PDLA_DATATYPES
+our @EXPORT = qw( isbigendian genpp %PDLA_DATATYPES
 	     PDLA_INCLUDE PDLA_TYPEMAP
 	     PDLA_AUTO_INCLUDE PDLA_BOOT
 		 PDLA_INST_INCLUDE PDLA_INST_TYPEMAP
@@ -36,6 +40,10 @@ use English; require Exporter;
                 unsupported getcyglib trylink
                 pdlpp_mkgen
 		 );
+
+our %PDLA_DATATYPES;
+my $O_NONBLOCK = defined $Config{'o_nonblock'} ? $Config{'o_nonblock'}
+                : 'O_NONBLOCK';
 
 # Installation locations
 # beware: whereami_any now appends the /Basic or /PDLA directory as appropriate
@@ -94,7 +102,7 @@ sub whereami_any {
 }
 
 sub whereami {
-   for $dir (@INC,qw|. .. ../.. ../../.. ../../../..|) {
+   for my $dir (qw|. .. ../.. ../../.. ../../../..|,@INC) {
       return ($_[0] ? $dir . '/Basic' : $dir)
 	if -e "$dir/Basic/Core/Dev.pm";
    }
@@ -104,7 +112,7 @@ sub whereami {
 }
 
 sub whereami_inst {
-   for $dir (@INC,map {$_."/blib"} qw|. .. ../.. ../../.. ../../../..|) {
+   for my $dir (@INC,map {$_."/blib"} qw|. .. ../.. ../../.. ../../../..|) {
       return ($_[0] ? $dir . '/PDLA' : $dir)
 	if -e "$dir/PDLA/Core/Dev.pm";
    }
@@ -169,15 +177,12 @@ my $libs = defined $PDLA::Config{MALLOCDBG}->{libs} ?
   "$PDLA::Config{MALLOCDBG}->{libs}" : '';
 
 %PDLA_DATATYPES = ();
-foreach $key (keys %PDLA::Types::typehash) {
+foreach my $key (keys %PDLA::Types::typehash) {
     $PDLA_DATATYPES{$PDLA::Types::typehash{$key}->{'sym'}} =
 	$PDLA::Types::typehash{$key}->{'ctype'};
 }
 
 # non-blocking IO configuration
-
-$O_NONBLOCK = defined $Config{'o_nonblock'} ? $Config{'o_nonblock'}
-                : 'O_NONBLOCK';
 
 =head2 isbigendian
 
@@ -259,10 +264,11 @@ sub isbigendian {
 #
 
 
+my ($loopvar, $indent, @gencode); # guuhhhhhh
 # return exit code, so 0 = OK
 sub genpp {
 
-   $gotstart = 0; @gencode = ();
+   my $gotstart = 0; @gencode = ();
 
    while (<>) { # Process files in @ARGV list - result to STDOUT
 
@@ -312,9 +318,9 @@ sub flushgeneric {  # Construct the generic code switch
 
    print $indent,"switch ($loopvar) {\n\n";
 
-   for $case (PDLA::Types::typesrtkeys()){
+   for my $case (PDLA::Types::typesrtkeys()){
 
-     $type = $PDLA_DATATYPES{$case};
+     my $type = $PDLA_DATATYPES{$case};
 
      my $ppsym = $PDLA::Types::typehash{$case}->{ppsym};
      print $indent,"case $case:\n"; # Start of this case
@@ -323,7 +329,7 @@ sub flushgeneric {  # Construct the generic code switch
      # Now output actual code with substutions
 
      for  (@gencode) {
-        $line = $_;
+        my $line = $_;
 
         $line =~ s/\bgeneric\b/$type/g;
         $line =~ s/\bgeneric_ppsym\b/$ppsym/g;
