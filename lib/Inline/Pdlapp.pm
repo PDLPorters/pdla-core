@@ -185,6 +185,7 @@ sub write_Makefile_PL {
     );
     my @postamblepack = ("$modfname.pd", $modfname, $module);
     push @postamblepack, $o->{ILSM}{PACKAGE} if $o->{ILSM}{PACKAGE};
+    local $Data::Dumper::Sortkeys = 1;
     local $Data::Dumper::Terse = 1;
     local $Data::Dumper::Indent = 1;
     open my $fh, ">", "$o->{API}{build_dir}/Makefile.PL" or croak;
