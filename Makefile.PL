@@ -237,9 +237,9 @@ sub make_Types_pm {
   # make sure we have Types.pm ready for prime time
   die "Types.pm.PL not found in Basic/Core"
     unless -f 'Basic/Core/Types.pm.PL';
-  system( $Config{perlpath}, 'Basic/Core/Types.pm.PL');
+  system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', 'Basic/Core/Types.pm');
   unless ( -f 'Basic/Core/Types.pm' ) {
-     warn "system( $Config{perlpath}, 'Basic/Core/Types.pm.PL') was run...\n";
+     warn "system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', 'Basic/Core/Types.pm') was run...\n";
      die "error creating Basic/Core/Types.pm";
   }
 }
