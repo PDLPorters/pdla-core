@@ -201,14 +201,33 @@ END
     close $fh;
 }
 
+sub _derive_PERL5LIB {
+  require Cwd;
+  my %libexclude = map { $_=>1 }
+    # perl has these already
+    (grep length, map $Config{$_},
+      qw(archlibexp privlibexp sitearchexp sitelibexp vendorarchexp vendorlibexp)),
+    (defined $ENV{PERL5LIB} ? (
+      map { my $l = $_; ($l, map "$l/$Config{$_}", qw(version archname)) }
+      split $Config{path_sep}, $ENV{PERL5LIB}
+    ) : ()),
+    ;
+  my @libinclude = grep !$libexclude{$_}, @INC;
+  push @libinclude, split $Config{path_sep}, $ENV{PERL5LIB}
+    if defined $ENV{PERL5LIB};
+  # grep is because on Windows, Cwd::abs_path blows up on non-exist dir
+  @libinclude = map Cwd::abs_path($_), grep -e, @libinclude;
+  my %seen; @libinclude = grep !$seen{$_}++, @libinclude; # de-dup
+  return if !@libinclude;
+  join $Config{path_sep}, @libinclude;
+}
+
 #==============================================================================
 # Run the build process.
 #==============================================================================
 sub compile {
     my $o = shift;
-    # grep is because on Windows, Cwd::abs_path blows up on non-exist dir
-    local $ENV{PERL5LIB} = join $Config{path_sep}, map abs_path($_), grep -e, @INC
-        unless defined $ENV{PERL5LIB};
+    local $ENV{PERL5LIB} = _derive_PERL5LIB();
     $o->SUPER::compile;
 }
 sub fix_make { } # our Makefile.PL doesn't need this
