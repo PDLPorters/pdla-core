@@ -12,7 +12,7 @@ use Config;
 use File::Basename qw(&basename &dirname);
 
 require './Dev.pm'; PDLA::Core::Dev->import;
-use vars qw( %PDLA_DATATYPES );
+my $sym2type = PDLA::Core::Dev::load_Types();
 
 # version 2 is for versions after PDLA 2.1.1
 # version 4 has pdl_hard_copy included in the Core structure.
@@ -150,7 +150,7 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p);
 
 for my $in ( PDLA::Types::typesrtkeys() ) {
 
-  (my $type = $PDLA_DATATYPES{$in}) =~ s/^PDLA_//;
+  (my $type = $sym2type->{$in}) =~ s/^PDLA_//;
   print OUT <<"!WITH!SUBS!";
 PDLA_Indx pdl_setav_$type(PDLA_$type* pdata, AV* av,
 	PDLA_Indx* pdims, PDLA_Long ndims, int level, PDLA_$type undefval, pdl *p);

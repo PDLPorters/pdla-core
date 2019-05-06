@@ -7,17 +7,14 @@ use Config;
 use File::Basename qw(&basename &dirname);
 
 require './Dev.pm'; PDLA::Core::Dev->import;
-use vars qw( %PDLA_DATATYPES );
+my $sym2type = PDLA::Core::Dev::load_Types();
+PDLA::Types->import(':All');
 
 # check for bad value support
 require './Config.pm'; # to load the PDLA not the Perl one
 die "No PDLA::Config found" unless %PDLA::Config;
 my $bvalflag = $PDLA::Config{WITH_BADVAL};
 my $usenan = $PDLA::Config{BADVAL_USENAN};
-require './Types.pm';
-PDLA::Types->import(':All');
-
-
 
 # This forces PL files to create target in same directory as PL file.
 # This is so that make depend always knows where to find PL derivatives.
@@ -972,7 +969,7 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
 # pdl_setav calls...
 #
   for my $type(typesrtkeys()){
-    my $t2 = $PDLA_DATATYPES{$type};
+    my $t2 = $sym2type->{$type};
     $t2 =~ s/PDLA_//;
     print OUT <<"!WITH!SUBS!";
   case $type:
@@ -1034,7 +1031,7 @@ pdl* pdl_from_array(AV* av, AV* dims, int type, pdl* p)
 
 for my $in ( typesrtkeys() ) {
 
-  (my $type = $PDLA_DATATYPES{$in}) =~ s/^PDLA_//;
+  (my $type = $sym2type->{$in}) =~ s/^PDLA_//;
 
 print OUT <<"!WITH!SUBS!";
 
