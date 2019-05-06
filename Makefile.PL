@@ -527,23 +527,20 @@ WriteMakefile(%makefile_hash);
 sub MY::postamble {
   my ($self) = @_;
   package MY;
-  my @m = PDLA::Core::Dev::postamble() . "\n\n";
-  push @m, map "lib/PDLA/$_ :: lib/PDLA/Types.pm\n",
-    qw( Core/pdl.h Core/pdlsimple.h Core/pdlcore.h pdlconv.c pdlcore.c );
-  if (!$self->is_make_type('dmake')) {
-    push @m, <<'EOF';
-# Bits of C code we generate from special perl scripts
-# there must be a more elegant way of saying that
-# certain files have additional dependencies!
-lib/PDLA/pdlthread$(OBJ_EXT) :: lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
-lib/PDLA/pdlhash$(OBJ_EXT) :: lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
-lib/PDLA/pdlapi$(OBJ_EXT) :: lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
-lib/PDLA/pdlsections$(OBJ_EXT) :: lib/PDLA/Core/pdl.h lib/PDLA/Core/pdlcore.h
-lib/PDLA/pdlmagic$(OBJ_EXT) :: lib/PDLA/Core/pdlcore.h
-
-EOF
-  }
-
+  my @m = PDLA::Core::Dev::postamble() . "\n";
+  my @doublecolontuples = map [ map "lib/PDLA/$_", @$_ ],
+    [ qw(pdlthread$(OBJ_EXT) Core/pdl.h Core/pdlcore.h) ],
+    [ qw(pdlhash$(OBJ_EXT) Core/pdl.h Core/pdlcore.h) ],
+    [ qw(pdlapi$(OBJ_EXT) Core/pdl.h Core/pdlcore.h) ],
+    [ qw(pdlsections$(OBJ_EXT) Core/pdl.h Core/pdlcore.h) ],
+    [ qw(pdlmagic$(OBJ_EXT) Core/pdlcore.h) ],
+    map [ $_, "Types.pm" ],
+      qw( Core/pdl.h Core/pdlsimple.h Core/pdlcore.h pdlconv.c pdlcore.c );
+    ;
+  push @m, map {
+    my ($left, @rights) = @$_;
+    "$left :: @rights\n"
+  } @doublecolontuples;
   # Extra build target to build the doc database
   my $text = '
 doctest ::
