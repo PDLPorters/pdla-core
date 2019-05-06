@@ -237,10 +237,9 @@ sub make_Types_pm {
   # make sure we have Types.pm ready for prime time
   die "Types.pm.PL not found in Basic/Core"
     unless -f 'Basic/Core/Types.pm.PL';
-  my $usebvals = $PDLA::Config{WITH_BADVAL} ? "BADVALS=1" : "";
-  system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', $usebvals);
+  system( $Config{perlpath}, 'Basic/Core/Types.pm.PL');
   unless ( -f 'Basic/Core/Types.pm' ) {
-     warn "system( $Config{perlpath}, 'Basic/Core/Types.pm.PL', $usebvals) was run...\n";
+     warn "system( $Config{perlpath}, 'Basic/Core/Types.pm.PL') was run...\n";
      die "error creating Basic/Core/Types.pm";
   }
 }
@@ -264,7 +263,6 @@ sub myformat {
 
 sub make_PDLA_Config_pm {
   print "Writing Basic/Core/Config.pm\n";
-
   my $versionFile = "Basic/Core/Config.pm";
   require IO::Handle; # enable method calls on FHs
   open my $fh, ">", $versionFile
@@ -334,6 +332,11 @@ if (!defined($PDLA::Config{SKIP_KNOWN_PROBLEMS}) and defined($ENV{SKIP_KNOWN_PRO
    $PDLA::Config{SKIP_KNOWN_PROBLEMS} = $ENV{SKIP_KNOWN_PROBLEMS};
    warn "Makefile.PL: setting SKIP_KNOWN_PROBLEMS Config from environment value: $ENV{SKIP_KNOWN_PROBLEMS}";
 }
+
+# do *before* WriteMakefile - no options
+# are set by the recursively called Makefile.PLs
+# and avoids having to bodge in the Config to get copied into blib
+make_PDLA_Config_pm(); # write out config to PDLA::Config
 
 make_Version_pm();
 
@@ -488,11 +491,6 @@ for $k(sort keys %makefile_hash) {
 
 WriteMakefile(%makefile_hash);
 
-# do *after* WriteMakefile since some options
-# are set by the recursively called Makefile.PLs
-make_PDLA_Config_pm(); # write out config to PDLA::Config
-
-# Extra build target to build the doc database
 sub MY::postamble {
   my ($self) = @_;
   package MY;

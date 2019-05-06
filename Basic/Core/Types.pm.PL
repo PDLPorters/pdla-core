@@ -6,6 +6,7 @@
 
 use strict;
 
+require './Basic/Core/Config.pm';
 use Config;
 use File::Basename qw(&basename &dirname);
 
@@ -39,13 +40,7 @@ sub typeof_PDLA_i64 {
     die "Can not find an integer 64 bit type";
 }
 
-my $bvalflag = 0;
-for (@ARGV) {
-  if(/^BADVALS=(.*)$/)
-    {
-      $bvalflag = $1;
-    }
-}
+my $bvalflag = $PDLA::Config{WITH_BADVAL};
 
 # Data types *must* be listed in order of complexity!!
 # this is critical for type conversions!!!
