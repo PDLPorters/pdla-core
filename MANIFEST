@@ -147,6 +147,7 @@ debian/perldl.conf
 debian/rules
 debian/source/format
 debian/write_config_debian.pl
+inc/Inline/Module.pm
 lib/Inline/Pdlapp.pm
 lib/PDLA.pm
 lib/PDLA/API.pod
