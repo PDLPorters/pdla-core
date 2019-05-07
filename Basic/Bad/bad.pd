@@ -140,6 +140,79 @@ sub PDLA::copybad { return $_[0]->copy; } # ignore the mask
 
 } # unless: $bvalflag
 
+pp_addpm({At=>'Top'},<<'!NO!SUBS!');
+
+=head1 NAME
+
+PDLA::Bad - PDLA does process bad values
+
+=head1 DESCRIPTION
+
+PDLA has been compiled with WITH_BADVAL set to 1. Therefore,
+you can enter the wonderful world of bad value support in
+PDLA.
+
+This module is loaded when you do C<use PDLA>,
+C<Use PDLA::Lite> or C<PDLA::LiteF>.
+
+Implementation details are given in
+L<PDLA::BadValues>.
+
+=head1 SYNOPSIS
+
+ use PDLA::Bad;
+ print "\nBad value support in PDLA is turned " .
+     $PDLA::Bad::Status ? "on" : "off" . ".\n";
+
+ Bad value support in PDLA is turned on.
+
+ and some other things
+
+=head1 VARIABLES
+
+There are currently three variables that this module defines
+which may be of use.
+
+=over 4
+
+=item $PDLA::Bad::Status
+
+Set to 1
+
+=item $PDLA::Bad::UseNaN
+
+Set to 1 if PDLA was compiled with C<BADVAL_USENAN> set,
+0 otherwise.
+
+=item $PDLA::Bad::PerPdl
+
+Set to 1 if PDLA was compiled with the I<experimental>
+C<BADVAL_PER_PDLA> option set, 0 otherwise.
+
+=back
+
+=cut
+
+!NO!SUBS!
+
+## Header
+pp_addpm(<<"!WITH!SUBS!");
+
+# really should be constants
+\$PDLA::Bad::Status = 1;
+\$PDLA::Bad::UseNaN = $usenan;
+\$PDLA::Bad::PerPdl = $bvalPerPdl;
+
+use strict;
+
+use PDLA::Types;
+use PDLA::Primitive;
+
+############################################################
+############################################################
+
+!WITH!SUBS!
+
 #########################################################
 
 # _finite in VC++
@@ -202,79 +275,6 @@ if ( $usenan == 0 ) {
     pp_add_boot( " _nan_float = __pdl_nan.__d;\n  _nan_double = (double) __pdl_nan.__d;\n" );
 
 } # if: $usenan
-
-## Header
-pp_addpm({At=>'Top'},<<'!NO!SUBS!');
-
-=head1 NAME
-
-PDLA::Bad - PDLA does process bad values
-
-=head1 DESCRIPTION
-
-PDLA has been compiled with WITH_BADVAL set to 1. Therefore,
-you can enter the wonderful world of bad value support in
-PDLA.
-
-This module is loaded when you do C<use PDLA>,
-C<Use PDLA::Lite> or C<PDLA::LiteF>.
-
-Implementation details are given in
-L<PDLA::BadValues>.
-
-=head1 SYNOPSIS
-
- use PDLA::Bad;
- print "\nBad value support in PDLA is turned " .
-     $PDLA::Bad::Status ? "on" : "off" . ".\n";
-
- Bad value support in PDLA is turned on.
-
- and some other things
-
-=head1 VARIABLES
-
-There are currently three variables that this module defines
-which may be of use.
-
-=over 4
-
-=item $PDLA::Bad::Status
-
-Set to 1
-
-=item $PDLA::Bad::UseNaN
-
-Set to 1 if PDLA was compiled with C<BADVAL_USENAN> set,
-0 otherwise.
-
-=item $PDLA::Bad::PerPdl
-
-Set to 1 if PDLA was compiled with the I<experimental>
-C<BADVAL_PER_PDLA> option set, 0 otherwise.
-
-=back
-
-=cut
-
-!NO!SUBS!
-
-pp_addpm(<<"!WITH!SUBS!");
-
-# really should be constants
-\$PDLA::Bad::Status = 1;
-\$PDLA::Bad::UseNaN = $usenan;
-\$PDLA::Bad::PerPdl = $bvalPerPdl;
-
-use strict;
-
-use PDLA::Types;
-use PDLA::Primitive;
-
-############################################################
-############################################################
-
-!WITH!SUBS!
 
 # we want the following to be in PDLA, not PDLA::Bad, hence
 my $xshdr = "MODULE = PDLA::Bad PACKAGE = PDLA";
@@ -451,7 +451,425 @@ sub PDLA::check_badflag {
     return $pdl->badflag;
 } # sub: check_badflag()
 
+# note:
+#  if sent a piddle, we have to change it's bad values
+#  (but only if it contains bad values)
+#  - there's a slight overhead in that the badflag is
+#    cleared and then set (hence propagating to all
+#    children) but we'll ignore that)
+#  - we can ignore this for float/double types
+#    since we can't change the bad value
+#
+sub PDLA::badvalue {
+    no strict 'refs';
+
+    my ( $self, $val ) = @_;
+    my $num;
+    if ( UNIVERSAL::isa($self,"PDLA") ) {
+	$num = $self->get_datatype;
+	if ( $num < $PDLA_F && defined($val) && $self->badflag ) {
+	    $self->inplace->setbadtoval( $val );
+	    $self->badflag(1);
+	}
+
+	if ($PDLA::Config{BADVAL_PER_PDLA}) {
+	    my $name = "PDLA::_badvalue_per_pdl_int$num";
+	    if ( defined $val ) {
+		return &{$name}($self, $val )->sclr;
+	    } else {
+		return &{$name}($self, undef)->sclr;
+	    }
+	}
+
+    } elsif ( UNIVERSAL::isa($self,"PDLA::Type") ) {
+	$num = $self->enum;
+    } else {
+        # assume it's a number
+        $num = $self;
+    }
+
+    my $name = "PDLA::_badvalue_int$num";
+    if ( defined $val ) {
+	return &{$name}( $val )->sclr;
+    } else {
+	return &{$name}( undef )->sclr;
+    }
+
+} # sub: badvalue()
+
+sub PDLA::orig_badvalue {
+    no strict 'refs';
+
+    my $self = shift;
+    my $num;
+    if ( UNIVERSAL::isa($self,"PDLA") ) {
+	$num = $self->get_datatype;
+    } elsif ( UNIVERSAL::isa($self,"PDLA::Type") ) {
+	$num = $self->enum;
+    } else {
+        # assume it's a number
+        $num = $self;
+    }
+
+    my $name = "PDLA::_default_badvalue_int$num";
+    return &${name}();
+
+} # sub: orig_badvalue()
+
+############################################################
+############################################################
+
 !NO!SUBS!
+
+# Generate small ops functions to do entire array
+foreach my $op ( 
+	  ['nbad','nbadover'],
+	  ['ngood','ngoodover'],
+	  ) {
+    pp_addpm(<<"EOD");
+
+*$op->[0] = \\&PDLA::$op->[0];
+sub PDLA::$op->[0] {
+	my(\$x) = \@_; my \$tmp;
+	\$x->clump(-1)->$op->[1](\$tmp=PDLA->nullcreate(\$x) );
+	return \$tmp->at();
+}
+EOD
+
+} # for $op
+
+pp_addpm(<<'!NO!SUBS!');
+
+=head2 nbad
+
+=for ref
+
+Returns the number of bad values in a piddle
+
+=for usage
+
+ $x = nbad($data);
+
+=for bad
+
+Accepts good and bad input piddles; output is a Perl scalar
+and therefore is always good.
+
+=head2 ngood
+
+=for ref
+
+Returns the number of good values in a piddle
+
+=for usage
+
+ $x = ngood($data);
+
+=for bad
+
+Accepts good and bad input piddles; output is a Perl scalar
+and therefore is always good.
+
+=head2 setbadat
+
+=for ref
+
+Set the value to bad at a given position.
+
+=for usage
+
+ setbadat $piddle, @position
+
+C<@position> is a coordinate list, of size equal to the
+number of dimensions in the piddle.
+This is a wrapper around L<set|PDLA::Core/set> and is
+probably mainly useful in test scripts!
+
+=for example
+
+ pdla> $x = sequence 3,4
+ pdla> $x->setbadat 2,1
+ pdla> p $x
+ [
+  [  0   1   2]
+  [  3   4 BAD]
+  [  6   7   8]
+  [  9  10  11]
+ ]
+
+=for bad
+
+This method can be called on piddles that have bad values.
+The remainder of the arguments should be Perl scalars indicating
+the position to set as bad. The output piddle will have bad values
+and will have its badflag turned on.
+
+=cut
+
+*setbadat = \&PDLA::setbadat;
+sub PDLA::setbadat {
+    barf 'Usage: setbadat($pdl, $x, $y, ...)' if $#_<1;
+    my $self  = shift; 
+    PDLA::Core::set_c ($self, [@_], $self->badvalue);
+    $self->badflag(1);
+    return $self;
+}
+
+!NO!SUBS!
+
+# setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
+# setbadtonan /
+#
+if ( $usenan ) {
+    pp_add_exported( '', 'setnantobad setbadtonan' );
+	pp_addpm(<<'!NO!SUBS!');
+
+=head2 setnantobad
+
+=for ref
+
+Sets NaN/Inf values in the input piddle bad
+(only relevant for floating-point piddles).
+Can be done inplace.
+
+As C<$PDLA::Bad::UseNan == 1>, this is just a copy
+with a call to L<check_badflag()|/check_badflag> thrown in.
+
+=for usage
+
+ $y = $x->setnantobad;
+ $x->inplace->setnantobad;
+
+=for bad
+
+Supports bad values.
+
+=cut
+
+*setnantobad = \&PDLA::setnantobad;
+sub PDLA::setnantobad{
+    my $x = shift;
+    my $y;
+    if ( $x->is_inplace ) {
+	$x->set_inplace(0);
+	$y = $x;
+    } elsif ( $#_ > -1 ) {
+	$y = $_[0] = $x->copy; # is this correct?
+    } else {
+	$y = $x->copy;
+    }
+    # make sure bad flag is set, otherwise check_badflag() is a nop
+    $y->badflag(1); $y->check_badflag();
+    return $y;
+}
+
+=head2 setbadtonan
+
+=for ref
+
+Sets Bad values to NaN
+(only relevant for floating-point piddles).
+Can be done inplace.
+
+As C<$PDLA::Bad::UseNan == 1>, this is just a copy,
+with the bad flag being cleared.
+
+=for usage
+
+ $y = $x->setbadtonan;
+ $x->inplace->setbadtonan;
+
+=for bad
+
+Supports bad values.
+
+=cut
+
+*setbadtonan = \&PDLA::setbadtonan;
+sub PDLA::setbadtonan{
+    my $x = shift;
+    my $y;
+    if ( $x->is_inplace ) {
+	$x->set_inplace(0);
+	$y = $x;
+    } elsif ( $#_ > -1 ) {
+	$y = $_[0] = $x->copy; # is this correct?
+    } else {
+	$y = $x->copy;
+    }
+    $y->badflag(0);
+    return $y;
+}
+
+!NO!SUBS!
+
+} else {
+
+    # usenan is not true, so we need to do something
+pp_def('setnantobad' . <<'=cut',
+
+=head2 setnantobad
+
+=for sig
+
+  Signature: (a(); [o]b())
+
+=for ref
+
+Sets NaN/Inf values in the input piddle bad
+(only relevant for floating-point piddles).
+Can be done inplace.
+
+=for usage
+
+ $y = $x->setnantobad;
+ $x->inplace->setnantobad;
+
+=for bad
+
+This method can process piddles with bad values: those bad values
+are propagated into the output piddle. Any value that is not finite
+is also set to bad in the output piddle. If all values from the input
+piddle are good and finite, the output piddle will B<not> have its
+bad flag set. One more caveat: if done inplace, and if the input piddle's
+bad flag is set, it will no
+
+=cut
+
+    HandleBad => 1,
+    GenericTypes => [ 'F', 'D' ],
+    Inplace => 1,
+    CopyBadStatusCode => q{
+        /* note: not quite the normal check since set b bad within Code */
+        /* we propagate the bad flag even if a was originally bad since */
+        /* there is no easy way to pass this information around */
+        if ( a == b && $ISPDLASTATEBAD(b) )
+            PDLA->propagate_badflag( b, 1 ); /* propagate badflag if inplace */
+    },
+    Code => q{
+        int flag = 0;
+        threadloop %{
+            if ( ! finite($a()) ) {
+                $SETBAD(b());
+                flag = 1;
+            }
+            else {
+                $b() = $a();
+            }
+        %}
+        if ( flag ) $PDLASTATESETBAD(b);
+    },
+); # pp_def: setnantobad
+
+
+pp_def('setbadtonan' . <<'=cut',
+
+=head2 setbadtonan
+
+=for sig
+
+  Signature: (a(); [o] b();)
+
+=for ref
+
+Sets Bad values to NaN
+
+This is only relevant for floating-point piddles. The input piddle can be
+of any type, but if done inplace, the input must be floating point.
+
+=for usage
+
+ $y = $x->setbadtonan;
+ $x->inplace->setbadtonan;
+
+=for bad
+
+This method processes input piddles with bad values. The output piddles will
+not contain bad values (insofar as NaN is not Bad as far as PDLA is concerned)
+and the output piddle does not have its bad flag set. As an inplace
+operation, it clears the bad flag.
+
+=cut
+
+    HandleBad => 1,
+    GenericTypes => [ 'F', 'D' ],
+    Inplace => 1,
+    CopyBadStatusCode => q{
+        /* propagate cleared badflag if inplace */
+        if ( a == b ) PDLA->propagate_badflag( b, 0 );
+        /* always make sure the output is "good" */
+        $SETPDLASTATEGOOD(b);
+    },
+    Code => q{
+        if ( $ISBAD(a()) ) {
+		/* _nan_xxx set up at top of file */
+            $b() = $TFD(_nan_float,_nan_double);
+        }
+        else {
+            $b() = $a();
+        }
+    },
+); # pp_def: setbadtonan
+
+} # if: $usenan
+
+pp_addpm({At=>'Bot'},<<'!WITHOUT!SUBS!');
+
+=head1 CHANGES
+
+The I<experimental> C<BADVAL_PER_PDLA> configuration option,
+which - when set - allows per-piddle bad values, was added
+after the 2.4.2 release of PDLA.
+The C<$PDLA::Bad::PerPdl> variable can be
+inspected to see if this feature is available.
+
+
+=head1 CONFIGURATION
+
+The way the PDLA handles the various bad value settings depends on your
+compile-time configuration settings, as held in C<perldl.conf>.
+
+=over
+
+=item C<$PDLA::Config{WITH_BADVAL}>
+
+Set this configuration option to a true value if you want bad value
+support. The default setting is for this to be true.
+
+=item C<$PDLA::Config{BADVAL_USENAN}>
+
+Set this configuration option to a true value if you want floating-pont
+numbers to use NaN to represent the bad value. If set to false, you can
+use any number to represent a bad value, which is generally more
+flexible. In the default configuration, this is set to a false value.
+
+=item C<$PDLA::Config{BADVAL_PER_PDLA}>
+
+Set this configuration option to a true value if you want each of your
+piddles to keep track of their own bad values. This means that for one
+piddle you can set the bad value to zero, while in another piddle you
+can set the bad value to NaN (or any other useful number). This is
+usually set to false.
+
+=back
+
+=head1 AUTHOR
+
+Doug Burke (djburke@cpan.org), 2000, 2001, 2003, 2006.
+
+The per-piddle bad value support is by Heiko Klein (2006).
+
+CPAN documentation fixes by David Mertens (2010, 2013).
+
+All rights reserved. There is no warranty. You are allowed to
+redistribute this software / documentation under certain conditions. For
+details, see the file COPYING in the PDLA distribution. If this file is
+separated from the PDLA distribution, the copyright notice should be
+included in the file.
+
+=cut
+
+!WITHOUT!SUBS!
 
 pp_addhdr <<'EOHDR';
 static pdl* new_pdlscalar(int datatype)
@@ -548,83 +966,9 @@ _default_badvalue_int${i}()
 
 ";
 
-
-
 } # foreach: $i = 0 .. $ntypes
 
 pp_addxs( "\n$xshdr\n\n$str\n" );
-
-pp_addpm(<<'!NO!SUBS!');
-
-# note:
-#  if sent a piddle, we have to change it's bad values
-#  (but only if it contains bad values)
-#  - there's a slight overhead in that the badflag is
-#    cleared and then set (hence propagating to all
-#    children) but we'll ignore that)
-#  - we can ignore this for float/double types
-#    since we can't change the bad value
-#
-sub PDLA::badvalue {
-    no strict 'refs';
-
-    my ( $self, $val ) = @_;
-    my $num;
-    if ( UNIVERSAL::isa($self,"PDLA") ) {
-	$num = $self->get_datatype;
-	if ( $num < $PDLA_F && defined($val) && $self->badflag ) {
-	    $self->inplace->setbadtoval( $val );
-	    $self->badflag(1);
-	}
-
-	if ($PDLA::Config{BADVAL_PER_PDLA}) {
-	    my $name = "PDLA::_badvalue_per_pdl_int$num";
-	    if ( defined $val ) {
-		return &{$name}($self, $val )->sclr;
-	    } else {
-		return &{$name}($self, undef)->sclr;
-	    }
-	}
-
-    } elsif ( UNIVERSAL::isa($self,"PDLA::Type") ) {
-	$num = $self->enum;
-    } else {
-        # assume it's a number
-        $num = $self;
-    }
-
-    my $name = "PDLA::_badvalue_int$num";
-    if ( defined $val ) {
-	return &{$name}( $val )->sclr;
-    } else {
-	return &{$name}( undef )->sclr;
-    }
-
-} # sub: badvalue()
-
-sub PDLA::orig_badvalue {
-    no strict 'refs';
-
-    my $self = shift;
-    my $num;
-    if ( UNIVERSAL::isa($self,"PDLA") ) {
-	$num = $self->get_datatype;
-    } elsif ( UNIVERSAL::isa($self,"PDLA::Type") ) {
-	$num = $self->enum;
-    } else {
-        # assume it's a number
-        $num = $self;
-    }
-
-    my $name = "PDLA::_default_badvalue_int$num";
-    return &${name}();
-
-} # sub: orig_badvalue()
-
-############################################################
-############################################################
-
-!NO!SUBS!
 
 pp_def('isbad' . <<'=cut',
 
@@ -802,102 +1146,6 @@ flag set.
         $b() = cnt;',
        );
 
-# Generate small ops functions to do entire array
-foreach my $op ( 
-	  ['nbad','nbadover'],
-	  ['ngood','ngoodover'],
-	  ) {
-    pp_addpm(<<"EOD");
-
-*$op->[0] = \\&PDLA::$op->[0];
-sub PDLA::$op->[0] {
-	my(\$x) = \@_; my \$tmp;
-	\$x->clump(-1)->$op->[1](\$tmp=PDLA->nullcreate(\$x) );
-	return \$tmp->at();
-}
-EOD
-
-} # for $op
-
-pp_addpm(<<'!NO!SUBS!');
-
-=head2 nbad
-
-=for ref
-
-Returns the number of bad values in a piddle
-
-=for usage
-
- $x = nbad($data);
-
-=for bad
-
-Accepts good and bad input piddles; output is a Perl scalar
-and therefore is always good.
-
-=head2 ngood
-
-=for ref
-
-Returns the number of good values in a piddle
-
-=for usage
-
- $x = ngood($data);
-
-=for bad
-
-Accepts good and bad input piddles; output is a Perl scalar
-and therefore is always good.
-
-=head2 setbadat
-
-=for ref
-
-Set the value to bad at a given position.
-
-=for usage
-
- setbadat $piddle, @position
-
-C<@position> is a coordinate list, of size equal to the
-number of dimensions in the piddle.
-This is a wrapper around L<set|PDLA::Core/set> and is
-probably mainly useful in test scripts!
-
-=for example
-
- pdla> $x = sequence 3,4
- pdla> $x->setbadat 2,1
- pdla> p $x
- [
-  [  0   1   2]
-  [  3   4 BAD]
-  [  6   7   8]
-  [  9  10  11]
- ]
-
-=for bad
-
-This method can be called on piddles that have bad values.
-The remainder of the arguments should be Perl scalars indicating
-the position to set as bad. The output piddle will have bad values
-and will have its badflag turned on.
-
-=cut
-
-*setbadat = \&PDLA::setbadat;
-sub PDLA::setbadat {
-    barf 'Usage: setbadat($pdl, $x, $y, ...)' if $#_<1;
-    my $self  = shift; 
-    PDLA::Core::set_c ($self, [@_], $self->badvalue);
-    $self->badflag(1);
-    return $self;
-}
-
-!NO!SUBS!
-
 # NOTE: the Code section uses SETBAD
 #
 # have removed inplace stuff because:
@@ -1064,202 +1312,6 @@ pp_addhdr('
 ');
 }
 
-# setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
-# setbadtonan /
-#
-if ( $usenan ) {
-    pp_add_exported( '', 'setnantobad setbadtonan' );
-	pp_addpm(<<'!NO!SUBS!');
-
-=head2 setnantobad
-
-=for ref
-
-Sets NaN/Inf values in the input piddle bad
-(only relevant for floating-point piddles).
-Can be done inplace.
-
-As C<$PDLA::Bad::UseNan == 1>, this is just a copy
-with a call to L<check_badflag()|/check_badflag> thrown in.
-
-=for usage
-
- $y = $x->setnantobad;
- $x->inplace->setnantobad;
-
-=for bad
-
-Supports bad values.
-
-=cut
-
-*setnantobad = \&PDLA::setnantobad;
-sub PDLA::setnantobad{
-    my $x = shift;
-    my $y;
-    if ( $x->is_inplace ) {
-	$x->set_inplace(0);
-	$y = $x;
-    } elsif ( $#_ > -1 ) {
-	$y = $_[0] = $x->copy; # is this correct?
-    } else {
-	$y = $x->copy;
-    }
-    # make sure bad flag is set, otherwise check_badflag() is a nop
-    $y->badflag(1); $y->check_badflag();
-    return $y; 
-}
-
-=head2 setbadtonan
-
-=for ref
-
-Sets Bad values to NaN
-(only relevant for floating-point piddles).
-Can be done inplace.
-
-As C<$PDLA::Bad::UseNan == 1>, this is just a copy,
-with the bad flag being cleared.
-
-=for usage
-
- $y = $x->setbadtonan;
- $x->inplace->setbadtonan;
-
-=for bad
-
-Supports bad values.
-
-=cut
-
-*setbadtonan = \&PDLA::setbadtonan;
-sub PDLA::setbadtonan{
-    my $x = shift;
-    my $y;
-    if ( $x->is_inplace ) {
-	$x->set_inplace(0);
-	$y = $x;
-    } elsif ( $#_ > -1 ) {
-	$y = $_[0] = $x->copy; # is this correct?
-    } else {
-	$y = $x->copy;
-    }
-    $y->badflag(0);
-    return $y; 
-}
-
-!NO!SUBS!
-
-} else {
-
-    # usenan is not true, so we need to do something
-pp_def('setnantobad' . <<'=cut',
-
-=head2 setnantobad
-
-=for sig
-
-  Signature: (a(); [o]b())
-
-=for ref
-
-Sets NaN/Inf values in the input piddle bad
-(only relevant for floating-point piddles).
-Can be done inplace.
-
-=for usage
-
- $y = $x->setnantobad;
- $x->inplace->setnantobad;
-
-=for bad
-
-This method can process piddles with bad values: those bad values
-are propagated into the output piddle. Any value that is not finite
-is also set to bad in the output piddle. If all values from the input
-piddle are good and finite, the output piddle will B<not> have its
-bad flag set. One more caveat: if done inplace, and if the input piddle's
-bad flag is set, it will no
-
-=cut
-
-    HandleBad => 1,
-    GenericTypes => [ 'F', 'D' ],
-    Inplace => 1,
-    CopyBadStatusCode => q{
-        /* note: not quite the normal check since set b bad within Code */
-        /* we propagate the bad flag even if a was originally bad since */
-        /* there is no easy way to pass this information around */
-        if ( a == b && $ISPDLASTATEBAD(b) )
-            PDLA->propagate_badflag( b, 1 ); /* propagate badflag if inplace */
-    },
-    Code => q{
-        int flag = 0;
-        threadloop %{
-            if ( ! finite($a()) ) {
-                $SETBAD(b());
-                flag = 1;
-            }
-            else {
-                $b() = $a();
-            }
-        %}
-        if ( flag ) $PDLASTATESETBAD(b);
-    },
-); # pp_def: setnantobad
-
-
-pp_def('setbadtonan' . <<'=cut',
-
-=head2 setbadtonan
-
-=for sig
-
-  Signature: (a(); [o] b();)
-
-=for ref
-
-Sets Bad values to NaN
-
-This is only relevant for floating-point piddles. The input piddle can be
-of any type, but if done inplace, the input must be floating point.
-
-=for usage
-
- $y = $x->setbadtonan;
- $x->inplace->setbadtonan;
-
-=for bad
-
-This method processes input piddles with bad values. The output piddles will
-not contain bad values (insofar as NaN is not Bad as far as PDLA is concerned)
-and the output piddle does not have its bad flag set. As an inplace
-operation, it clears the bad flag.
-
-=cut
-    
-    HandleBad => 1,
-    GenericTypes => [ 'F', 'D' ],
-    Inplace => 1,
-    CopyBadStatusCode => q{
-        /* propagate cleared badflag if inplace */
-        if ( a == b ) PDLA->propagate_badflag( b, 0 );
-        /* always make sure the output is "good" */
-        $SETPDLASTATEGOOD(b);
-    },
-    Code => q{
-        if ( $ISBAD(a()) ) {
-        	/* _nan_xxx set up at top of file */
-            $b() = $TFD(_nan_float,_nan_double);
-        }
-        else {
-            $b() = $a();
-        }
-    },
-); # pp_def: setbadtonan
-
-} # if: $usenan
-
 # renamed replacebad by setbadtoval
 pp_def('setbadtoval' . <<'=cut',
 
@@ -1372,65 +1424,4 @@ its bad value flag set to true.
     },
 ); # pp_def: copybad
 
-#########################################################
-
-pp_addpm({At=>'Bot'},<<'!WITHOUT!SUBS!');
-
-=head1 CHANGES
-
-The I<experimental> C<BADVAL_PER_PDLA> configuration option,
-which - when set - allows per-piddle bad values, was added
-after the 2.4.2 release of PDLA.
-The C<$PDLA::Bad::PerPdl> variable can be
-inspected to see if this feature is available.
-
-
-=head1 CONFIGURATION
-
-The way the PDLA handles the various bad value settings depends on your
-compile-time configuration settings, as held in C<perldl.conf>.
-
-=over
-
-=item C<$PDLA::Config{WITH_BADVAL}>
-
-Set this configuration option to a true value if you want bad value
-support. The default setting is for this to be true.
-
-=item C<$PDLA::Config{BADVAL_USENAN}>
-
-Set this configuration option to a true value if you want floating-pont
-numbers to use NaN to represent the bad value. If set to false, you can
-use any number to represent a bad value, which is generally more
-flexible. In the default configuration, this is set to a false value.
-
-=item C<$PDLA::Config{BADVAL_PER_PDLA}>
-
-Set this configuration option to a true value if you want each of your
-piddles to keep track of their own bad values. This means that for one
-piddle you can set the bad value to zero, while in another piddle you
-can set the bad value to NaN (or any other useful number). This is
-usually set to false.
-
-=back
-
-=head1 AUTHOR
-
-Doug Burke (djburke@cpan.org), 2000, 2001, 2003, 2006.
-
-The per-piddle bad value support is by Heiko Klein (2006).
-
-CPAN documentation fixes by David Mertens (2010, 2013).
-
-All rights reserved. There is no warranty. You are allowed to
-redistribute this software / documentation under certain conditions. For
-details, see the file COPYING in the PDLA distribution. If this file is
-separated from the PDLA distribution, the copyright notice should be
-included in the file.
-
-=cut
-
-!WITHOUT!SUBS!
-
-## End
 pp_done();
