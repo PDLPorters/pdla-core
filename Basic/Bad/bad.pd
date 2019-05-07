@@ -706,7 +706,7 @@ sub PDLA::setbadtonan{
 } else {
 
     # usenan is not true, so we need to do something
-pp_def('setnantobad' . <<'=cut',
+pp_def('setnantobad' . "\n=for sig\n\n  Signature: (a(); [o]b())\n" . <<'=cut',
 
 =head2 setnantobad
 
@@ -762,7 +762,7 @@ bad flag is set, it will no
 ); # pp_def: setnantobad
 
 
-pp_def('setbadtonan' . <<'=cut',
+pp_def('setbadtonan' . "\n=for sig\n\n  Signature: (a(); [o] b();)\n" . <<'=cut',
 
 =head2 setbadtonan
 
@@ -970,7 +970,7 @@ _default_badvalue_int${i}()
 
 pp_addxs( "\n$xshdr\n\n$str\n" );
 
-pp_def('isbad' . <<'=cut',
+pp_def('isbad' . "\n=for sig\n\n  Signature: (a(); int [o]b())\n" . <<'=cut',
 
 =head2 isbad
 
@@ -1012,7 +1012,7 @@ same as the input piddle's flag.
 
        );
 
-pp_def('isgood' . <<'=cut',
+pp_def('isgood' . "\n=for sig\n\n  Signature: (a(); int [o]b())\n" . <<'=cut',
 
 =head2 isgood
 
@@ -1055,7 +1055,7 @@ same as the input piddle's flag.
 
 # perhaps these should have pm code which returns the
 # answer if the bad flag is not set
-pp_def('nbadover' . <<'=cut',
+pp_def('nbadover' . "\n=for sig\n\n  Signature: (a(n); indx [o] b())\n" . <<'=cut',
 
 =head2 nbadover
 
@@ -1100,7 +1100,7 @@ flag set.
     },
 );
 
-pp_def('ngoodover' . <<'=cut',
+pp_def('ngoodover' . "\n=for sig\n\n  Signature: (a(n); indx [o] b())\n" . <<'=cut',
 
 =head2 ngoodover
 
@@ -1173,7 +1173,7 @@ if ( 0 ) {
 }
 
 # note: have made the mask be an integer
-pp_def('setbadif' . <<'=cut',
+pp_def('setbadif' . "\n=for sig\n\n  Signature: (a(); int mask(); [o]b())\n" . <<'=cut',
 
 =head2 setbadif
 
@@ -1249,7 +1249,7 @@ pp_addhdr('
 ');
 }
 
-pp_def('setvaltobad' . <<'=cut',
+pp_def('setvaltobad' . "\n=for sig\n\n  Signature: (a(); [o]b(); double value)\n" . <<'=cut',
 
 =head2 setvaltobad
 
@@ -1313,7 +1313,7 @@ pp_addhdr('
 }
 
 # renamed replacebad by setbadtoval
-pp_def('setbadtoval' . <<'=cut',
+pp_def('setbadtoval' . "\n=for sig\n\n  Signature: (a(); [o]b(); double newval)\n" . <<'=cut',
 
 =head2 setbadtoval
 
@@ -1365,7 +1365,7 @@ values are copied with no replacement.
     },
 ); # pp_def: setbadtoval
 
-pp_def('copybad'.<<'=cut',
+pp_def('copybad' . "\n=for sig\n\n  Signature: (a(); mask(); [o]b())\n" .<<'=cut',
 
 =head2 copybad
 
