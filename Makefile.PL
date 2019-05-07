@@ -649,10 +649,11 @@ sub coretarget {
         [ build_inline_PDLA_Ops => '$(INST_DYNAMIC)' ],
         [
             core => [
+                'build_inline',
                 map { [
                     [ 'Basic', $_ ],
                     [ qw(pm_to_blib dynamic) ],
-                    [ qw(pm_to_blib $(INST_DYNAMIC) build_inline) ],
+                    [ qw(pm_to_blib $(INST_DYNAMIC)) ],
                 # the modules in PDLA::LiteF, used in t/core.t
                 ] } qw(Primitive Ufunc Slices Bad Math MatrixOps),
             ]
