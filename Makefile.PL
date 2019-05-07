@@ -196,6 +196,16 @@ EOD
       print "WARNING: Setting BADVAL_USENAN=0 as BADVAL_PER_PDLA option is set!\n\n";
       $PDLA_CONFIG{BADVAL_USENAN} = 0;
   }
+  if ( $flag_bad ) {
+    print "Congratulations - building PDLA with bad value support (WITH_BADVAL=1)\n\t";
+    print "+ using ", ($flag_use_nan ? "NaN" : "-FLT_MAX/-DBL_MAX");
+    print " for floating-point bad values";
+    print "+ with per-piddle bad values (EXPERIMENTAL FEATURE)"
+      if $flag_per_pdl;
+  } else {
+    print "building PDLA without bad value support (WITH_BADVAL!=1)";
+  }
+  print "\n";
 
   (
     $PDLA_CONFIG{WITH_POSIX_THREADS},
