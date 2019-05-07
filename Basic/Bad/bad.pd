@@ -914,6 +914,63 @@ its bad value flag set to true.
 
 !NO!SUBS!
 
+pp_addpm({At=>'Bot'},<<'!WITHOUT!SUBS!');
+
+=head1 CHANGES
+
+The I<experimental> C<BADVAL_PER_PDLA> configuration option,
+which - when set - allows per-piddle bad values, was added
+after the 2.4.2 release of PDLA.
+The C<$PDLA::Bad::PerPdl> variable can be
+inspected to see if this feature is available.
+
+=head1 CONFIGURATION
+
+The way the PDLA handles the various bad value settings depends on your
+compile-time configuration settings, as held in C<perldl.conf>.
+
+=over
+
+=item C<$PDLA::Config{WITH_BADVAL}>
+
+Set this configuration option to a true value if you want bad value
+support. The default setting is for this to be true.
+
+=item C<$PDLA::Config{BADVAL_USENAN}>
+
+Set this configuration option to a true value if you want floating-pont
+numbers to use NaN to represent the bad value. If set to false, you can
+use any number to represent a bad value, which is generally more
+flexible. In the default configuration, this is set to a false value.
+
+=item C<$PDLA::Config{BADVAL_PER_PDLA}>
+
+Set this configuration option to a true value if you want each of your
+piddles to keep track of their own bad values. This means that for one
+piddle you can set the bad value to zero, while in another piddle you
+can set the bad value to NaN (or any other useful number). This is
+usually set to false.
+
+=back
+
+=head1 AUTHOR
+
+Doug Burke (djburke@cpan.org), 2000, 2001, 2003, 2006.
+
+The per-piddle bad value support is by Heiko Klein (2006).
+
+CPAN documentation fixes by David Mertens (2010, 2013).
+
+All rights reserved. There is no warranty. You are allowed to
+redistribute this software / documentation under certain conditions. For
+details, see the file COPYING in the PDLA distribution. If this file is
+separated from the PDLA distribution, the copyright notice should be
+included in the file.
+
+=cut
+
+!WITHOUT!SUBS!
+
 # setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
 # setbadtonan /
 #
@@ -1052,64 +1109,6 @@ pp_def('setbadtonan' . "\n=for sig\n\n  Signature: (a(); [o] b();)\n",
 ); # pp_def: setbadtonan
 
 } # if: $usenan
-
-pp_addpm({At=>'Bot'},<<'!WITHOUT!SUBS!');
-
-=head1 CHANGES
-
-The I<experimental> C<BADVAL_PER_PDLA> configuration option,
-which - when set - allows per-piddle bad values, was added
-after the 2.4.2 release of PDLA.
-The C<$PDLA::Bad::PerPdl> variable can be
-inspected to see if this feature is available.
-
-
-=head1 CONFIGURATION
-
-The way the PDLA handles the various bad value settings depends on your
-compile-time configuration settings, as held in C<perldl.conf>.
-
-=over
-
-=item C<$PDLA::Config{WITH_BADVAL}>
-
-Set this configuration option to a true value if you want bad value
-support. The default setting is for this to be true.
-
-=item C<$PDLA::Config{BADVAL_USENAN}>
-
-Set this configuration option to a true value if you want floating-pont
-numbers to use NaN to represent the bad value. If set to false, you can
-use any number to represent a bad value, which is generally more
-flexible. In the default configuration, this is set to a false value.
-
-=item C<$PDLA::Config{BADVAL_PER_PDLA}>
-
-Set this configuration option to a true value if you want each of your
-piddles to keep track of their own bad values. This means that for one
-piddle you can set the bad value to zero, while in another piddle you
-can set the bad value to NaN (or any other useful number). This is
-usually set to false.
-
-=back
-
-=head1 AUTHOR
-
-Doug Burke (djburke@cpan.org), 2000, 2001, 2003, 2006.
-
-The per-piddle bad value support is by Heiko Klein (2006).
-
-CPAN documentation fixes by David Mertens (2010, 2013).
-
-All rights reserved. There is no warranty. You are allowed to
-redistribute this software / documentation under certain conditions. For
-details, see the file COPYING in the PDLA distribution. If this file is
-separated from the PDLA distribution, the copyright notice should be
-included in the file.
-
-=cut
-
-!WITHOUT!SUBS!
 
 pp_addhdr <<'EOHDR';
 static pdl* new_pdlscalar(int datatype)
