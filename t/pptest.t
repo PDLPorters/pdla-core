@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Config;
 use Test::More $Config{usedl}
-    ? (tests => 5)
+    ? ()
     : (skip_all => 'No dynaload; double-blib static build too difficult');
 use File::Spec;
 use IPC::Cmd qw(run);
@@ -449,3 +449,5 @@ sub in_dir {
     die $err unless $ok;
     return $return;
 }
+
+done_testing;
