@@ -912,10 +912,6 @@ or C<$mask> have bad values, those values will be marked
 as bad in the output piddle and the output piddle will have
 its bad value flag set to true.
 
-!NO!SUBS!
-
-pp_addpm({At=>'Bot'},<<'!WITHOUT!SUBS!');
-
 =head1 CHANGES
 
 The I<experimental> C<BADVAL_PER_PDLA> configuration option,
@@ -969,7 +965,7 @@ included in the file.
 
 =cut
 
-!WITHOUT!SUBS!
+!NO!SUBS!
 
 # setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
 # setbadtonan /
