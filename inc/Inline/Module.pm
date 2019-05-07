@@ -155,18 +155,13 @@ distdir_inline : create_distdir
 # Inline currently only supports dynamic
 dynamic :: build_inline
 
-$inline_build_path\$(DFSEP).exists :
-\t\$(NOECHO) \$(MKPATH) $inline_build_path
-\t\$(NOECHO) \$(CHMOD) \$(PERM_DIR) $inline_build_path
-\t\$(NOECHO) \$(TOUCH) $inline_build_path\$(DFSEP).exists
-
 build_inline : @mangled
 ...
     for my $module (@$code_modules) {
         my ($this_mangled) = _mangle_name($module);
         $section .= <<"...";
 
-$this_mangled : $inline_build_path\$(DFSEP).exists
+$this_mangled :
 \t\$(ABSPERLRUN) -Iinc -MInline::Module=makeblibproxy -e 1 -- $module
 \t\$(ABSPERLRUN) -Iinc -Ilib -Iblib/lib -MInline=Config,directory,$inline_build_path,build_noisy,1 -M$module -e 1 --
 \t\$(ABSPERLRUN) -Iinc -MInline::Module=makeblibdyna -e 1 -- $module
