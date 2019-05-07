@@ -310,6 +310,8 @@ EOF
     'threadtest.pd' => <<'EOF',
 # previously in t/inline-comment-test.t
 
+pp_addpm('');
+
 pp_def('testinc',
         Pars => 'a(); [o] b()',
         Code => q{
@@ -348,6 +350,8 @@ pp_def('testinc2',
 
         },
 );
+
+pp_done();
 EOF
 
     't/all.t' => <<'EOF',
@@ -373,13 +377,13 @@ TODO: {
         ok(not (all $y == $x + 1), 'WART: commenting out a threadloop does not work')
                 or diag("\$x is $x and \$y is $y");
 }
-}
 
 done_testing;
 EOF
 
 );
 
+do_tests(\%THREADTESTFILES);
 do_tests(\%PPTESTFILES);
 in_dir(
     sub {
