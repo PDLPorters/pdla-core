@@ -627,6 +627,9 @@ Sets NaN/Inf values in the input piddle bad
 (only relevant for floating-point piddles).
 Can be done inplace.
 
+If C<$PDLA::Bad::UseNan == 1>, this is just a copy
+with a call to L<check_badflag()|/check_badflag> thrown in.
+
 =for usage
 
  $y = $x->setnantobad;
@@ -653,6 +656,9 @@ Sets Bad values to NaN
 
 This is only relevant for floating-point piddles. The input piddle can be
 of any type, but if done inplace, the input must be floating point.
+
+If C<$PDLA::Bad::UseNan == 1>, this is just a copy,
+with the bad flag being cleared.
 
 =for usage
 
@@ -974,28 +980,6 @@ if ( $usenan ) {
     pp_add_exported( '', 'setnantobad setbadtonan' );
 	pp_addpm(<<'!NO!SUBS!');
 
-=head2 setnantobad
-
-=for ref
-
-Sets NaN/Inf values in the input piddle bad
-(only relevant for floating-point piddles).
-Can be done inplace.
-
-As C<$PDLA::Bad::UseNan == 1>, this is just a copy
-with a call to L<check_badflag()|/check_badflag> thrown in.
-
-=for usage
-
- $y = $x->setnantobad;
- $x->inplace->setnantobad;
-
-=for bad
-
-Supports bad values.
-
-=cut
-
 *setnantobad = \&PDLA::setnantobad;
 sub PDLA::setnantobad{
     my $x = shift;
@@ -1012,28 +996,6 @@ sub PDLA::setnantobad{
     $y->badflag(1); $y->check_badflag();
     return $y;
 }
-
-=head2 setbadtonan
-
-=for ref
-
-Sets Bad values to NaN
-(only relevant for floating-point piddles).
-Can be done inplace.
-
-As C<$PDLA::Bad::UseNan == 1>, this is just a copy,
-with the bad flag being cleared.
-
-=for usage
-
- $y = $x->setbadtonan;
- $x->inplace->setbadtonan;
-
-=for bad
-
-Supports bad values.
-
-=cut
 
 *setbadtonan = \&PDLA::setbadtonan;
 sub PDLA::setbadtonan{
