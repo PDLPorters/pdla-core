@@ -615,6 +615,303 @@ sub PDLA::setbadat {
     return $self;
 }
 
+=head2 setnantobad
+
+=for sig
+
+  Signature: (a(); [o]b())
+
+=for ref
+
+Sets NaN/Inf values in the input piddle bad
+(only relevant for floating-point piddles).
+Can be done inplace.
+
+=for usage
+
+ $y = $x->setnantobad;
+ $x->inplace->setnantobad;
+
+=for bad
+
+This method can process piddles with bad values: those bad values
+are propagated into the output piddle. Any value that is not finite
+is also set to bad in the output piddle. If all values from the input
+piddle are good and finite, the output piddle will B<not> have its
+bad flag set. One more caveat: if done inplace, and if the input piddle's
+bad flag is set, it will no
+
+=head2 setbadtonan
+
+=for sig
+
+  Signature: (a(); [o] b();)
+
+=for ref
+
+Sets Bad values to NaN
+
+This is only relevant for floating-point piddles. The input piddle can be
+of any type, but if done inplace, the input must be floating point.
+
+=for usage
+
+ $y = $x->setbadtonan;
+ $x->inplace->setbadtonan;
+
+=for bad
+
+This method processes input piddles with bad values. The output piddles will
+not contain bad values (insofar as NaN is not Bad as far as PDLA is concerned)
+and the output piddle does not have its bad flag set. As an inplace
+operation, it clears the bad flag.
+
+=head2 isbad
+
+=for sig
+
+  Signature: (a(); int [o]b())
+
+=for ref
+
+Returns a binary mask indicating which values of
+the input are bad values
+
+Returns a 1 if the value is bad, 0 otherwise.
+Similar to L<isfinite|PDLA::Math/isfinite>.
+
+=for example
+
+ $x = pdl(1,2,3);
+ $x->badflag(1);
+ set($x,1,$x->badvalue);
+ $y = isbad($x);
+ print $y, "\n";
+ [0 1 0]
+
+=for bad
+
+This method works with input piddles that are bad. The output piddle
+will never contain bad values, but its bad value flag will be the
+same as the input piddle's flag.
+
+=head2 isgood
+
+=for sig
+
+  Signature: (a(); int [o]b())
+
+=for ref
+
+Is a value good?
+
+Returns a 1 if the value is good, 0 otherwise.
+Also see L<isfinite|PDLA::Math/isfinite>.
+
+=for example
+
+ $x = pdl(1,2,3);
+ $x->badflag(1);
+ set($x,1,$x->badvalue);
+ $y = isgood($x);
+ print $y, "\n";
+ [1 0 1]
+
+=for bad
+
+This method works with input piddles that are bad. The output piddle
+will never contain bad values, but its bad value flag will be the
+same as the input piddle's flag.
+
+=head2 nbadover
+
+=for sig
+
+  Signature: (a(n); indx [o] b())
+
+=for ref
+
+Find the number of bad elements along the 1st dimension.
+
+This function reduces the dimensionality of a piddle by one by finding the
+number of bad elements along the 1st dimension. In this sense it shares
+much in common with the functions defined in L<PDLA::Ufunc>. In particular,
+by using L<xchg|PDLA::Slices/xchg> and similar dimension rearranging methods,
+it is possible to perform this calculation over I<any> dimension.
+
+=for usage
+
+ $x = nbadover($y);
+
+=for example
+
+ $spectrum = nbadover $image->xchg(0,1)
+
+=for bad
+
+nbadover processes input values that are bad. The output piddle will not have
+any bad values, but the bad flag will be set if the input piddle had its bad
+flag set.
+
+=head2 ngoodover
+
+=for sig
+
+  Signature: (a(n); indx [o] b())
+
+=for ref
+
+Find the number of good elements along the 1st dimension.
+
+This function reduces the dimensionality of a piddle
+by one by finding the number of good elements
+along the 1st dimension.
+
+By using L<xchg|PDLA::Slices/xchg> etc. it is possible to use
+I<any> dimension.
+
+=for usage
+
+ $x = ngoodover($y);
+
+=for example
+
+ $spectrum = ngoodover $image->xchg(0,1)
+
+=for bad
+
+ngoodover processes input values that are bad. The output piddle will not have
+any bad values, but the bad flag will be set if the input piddle had its bad
+flag set.
+
+=head2 setbadif
+
+=for sig
+
+  Signature: (a(); int mask(); [o]b())
+
+=for ref
+
+Set elements bad based on the supplied mask, otherwise
+copy across the data.
+
+=for example
+
+ pdla> $x = sequence(5,5)
+ pdla> $x = $x->setbadif( $x % 2 )
+ pdla> p "a badflag: ", $x->badflag, "\n"
+ a badflag: 1
+ pdla> p "a is\n$x"
+ [
+  [  0 BAD   2 BAD   4]
+  [BAD   6 BAD   8 BAD]
+  [ 10 BAD  12 BAD  14]
+  [BAD  16 BAD  18 BAD]
+  [ 20 BAD  22 BAD  24]
+ ]
+
+Unfortunately, this routine can I<not> be run inplace, since the
+current implementation can not handle the same piddle used as
+C<a> and C<mask> (eg C<< $x->inplace->setbadif($x%2) >> fails).
+Even more unfortunate: we can't catch this error and tell you.
+
+=for bad
+
+The output always has its bad flag set, even if it does not contain
+any bad values (use L<check_badflag|/check_badflag> to check
+whether there are any bad values in the output).
+The input piddle can have bad values: any bad values in the input piddles
+are copied across to the output piddle.
+
+Also see L<setvaltobad|/setvaltobad> and L<setnantobad|/setnantobad>.
+
+=head2 setvaltobad
+
+=for sig
+
+  Signature: (a(); [o]b(); double value)
+
+=for ref
+
+Set bad all those elements which equal the supplied value.
+
+=for example
+
+ $x = sequence(10) % 3;
+ $x->inplace->setvaltobad( 0 );
+ print "$x\n";
+ [BAD 1 2 BAD 1 2 BAD 1 2 BAD]
+
+This is a simpler version of L<setbadif|/setbadif>, but this
+function can be done inplace.  See L<setnantobad|/setnantobad>
+if you want to convert NaN/Inf to the bad value.
+
+=for bad
+
+The output always has its bad flag set, even if it does not contain
+any bad values (use L<check_badflag|/check_badflag> to check
+whether there are any bad values in the output).
+Any bad values in the input piddles are copied across to the output piddle.
+
+=head2 setbadtoval
+
+=for sig
+
+  Signature: (a(); [o]b(); double newval)
+
+=for ref
+
+Replace any bad values by a (non-bad) value.
+
+Can be done inplace. Also see
+L<badmask|PDLA::Math/badmask>.
+
+=for example
+
+ $x->inplace->setbadtoval(23);
+ print "a badflag: ", $x->badflag, "\n";
+ a badflag: 0
+
+=for bad
+
+The output always has its bad flag cleared.
+If the input piddle does not have its bad flag set, then
+values are copied with no replacement.
+
+=head2 copybad
+
+=for sig
+
+  Signature: (a(); mask(); [o]b())
+
+=for ref
+
+Copies values from one piddle to another, setting them
+bad if they are bad in the supplied mask.
+
+Can be done inplace.
+
+=for example
+
+ $x = byte( [0,1,3] );
+ $mask = byte( [0,0,0] );
+ $mask->badflag(1);
+ set($mask,1,$mask->badvalue);
+ $x->inplace->copybad( $mask );
+ p $x;
+ [0 BAD 3]
+
+It is equivalent to:
+
+ $c = $x + $mask * 0
+
+=for bad
+
+This handles input piddles that are bad. If either C<$x>
+or C<$mask> have bad values, those values will be marked
+as bad in the output piddle and the output piddle will have
+its bad value flag set to true.
+
 !NO!SUBS!
 
 # setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
@@ -706,36 +1003,7 @@ sub PDLA::setbadtonan{
 } else {
 
     # usenan is not true, so we need to do something
-pp_def('setnantobad' . "\n=for sig\n\n  Signature: (a(); [o]b())\n" . <<'=cut',
-
-=head2 setnantobad
-
-=for sig
-
-  Signature: (a(); [o]b())
-
-=for ref
-
-Sets NaN/Inf values in the input piddle bad
-(only relevant for floating-point piddles).
-Can be done inplace.
-
-=for usage
-
- $y = $x->setnantobad;
- $x->inplace->setnantobad;
-
-=for bad
-
-This method can process piddles with bad values: those bad values
-are propagated into the output piddle. Any value that is not finite
-is also set to bad in the output piddle. If all values from the input
-piddle are good and finite, the output piddle will B<not> have its
-bad flag set. One more caveat: if done inplace, and if the input piddle's
-bad flag is set, it will no
-
-=cut
-
+pp_def('setnantobad' . "\n=for sig\n\n  Signature: (a(); [o]b())\n",
     HandleBad => 1,
     GenericTypes => [ 'F', 'D' ],
     Inplace => 1,
@@ -762,35 +1030,7 @@ bad flag is set, it will no
 ); # pp_def: setnantobad
 
 
-pp_def('setbadtonan' . "\n=for sig\n\n  Signature: (a(); [o] b();)\n" . <<'=cut',
-
-=head2 setbadtonan
-
-=for sig
-
-  Signature: (a(); [o] b();)
-
-=for ref
-
-Sets Bad values to NaN
-
-This is only relevant for floating-point piddles. The input piddle can be
-of any type, but if done inplace, the input must be floating point.
-
-=for usage
-
- $y = $x->setbadtonan;
- $x->inplace->setbadtonan;
-
-=for bad
-
-This method processes input piddles with bad values. The output piddles will
-not contain bad values (insofar as NaN is not Bad as far as PDLA is concerned)
-and the output piddle does not have its bad flag set. As an inplace
-operation, it clears the bad flag.
-
-=cut
-
+pp_def('setbadtonan' . "\n=for sig\n\n  Signature: (a(); [o] b();)\n",
     HandleBad => 1,
     GenericTypes => [ 'F', 'D' ],
     Inplace => 1,
@@ -970,125 +1210,27 @@ _default_badvalue_int${i}()
 
 pp_addxs( "\n$xshdr\n\n$str\n" );
 
-pp_def('isbad' . "\n=for sig\n\n  Signature: (a(); int [o]b())\n" . <<'=cut',
-
-=head2 isbad
-
-=for sig
-
-  Signature: (a(); int [o]b())
-
-=for ref
-
-Returns a binary mask indicating which values of
-the input are bad values
-
-Returns a 1 if the value is bad, 0 otherwise.
-Similar to L<isfinite|PDLA::Math/isfinite>.
-
-=for example
-
- $x = pdl(1,2,3);
- $x->badflag(1);
- set($x,1,$x->badvalue);
- $y = isbad($x);
- print $y, "\n";
- [0 1 0]
-
-=for bad
-
-This method works with input piddles that are bad. The output piddle
-will never contain bad values, but its bad value flag will be the
-same as the input piddle's flag.
-
-=cut
-
+pp_def('isbad' . "\n=for sig\n\n  Signature: (a(); int [o]b())\n",
        HandleBad => 1,
-       Code => 
+       Code =>
        '$b() = 0;',
-       BadCode => 
+       BadCode =>
        '$b() = $ISBAD(a());',
        CopyBadStatusCode => '',
-
        );
 
-pp_def('isgood' . "\n=for sig\n\n  Signature: (a(); int [o]b())\n" . <<'=cut',
-
-=head2 isgood
-
-=for sig
-
-  Signature: (a(); int [o]b())
-
-=for ref
-
-Is a value good?
-
-Returns a 1 if the value is good, 0 otherwise.
-Also see L<isfinite|PDLA::Math/isfinite>.
-
-=for example
-
- $x = pdl(1,2,3);
- $x->badflag(1);
- set($x,1,$x->badvalue);
- $y = isgood($x);
- print $y, "\n";
- [1 0 1]
-
-=for bad
-
-This method works with input piddles that are bad. The output piddle
-will never contain bad values, but its bad value flag will be the
-same as the input piddle's flag.
-
-=cut
-
+pp_def('isgood' . "\n=for sig\n\n  Signature: (a(); int [o]b())\n",
        HandleBad => 1,
-       Code => 
+       Code =>
        '$b() = 1;',
-       BadCode => 
+       BadCode =>
        '$b() = $ISGOOD(a());',
        CopyBadStatusCode => '',
        );
 
-
 # perhaps these should have pm code which returns the
 # answer if the bad flag is not set
-pp_def('nbadover' . "\n=for sig\n\n  Signature: (a(n); indx [o] b())\n" . <<'=cut',
-
-=head2 nbadover
-
-=for sig
-
-  Signature: (a(n); indx [o] b())
-
-=for ref
-
-Find the number of bad elements along the 1st dimension.
-
-This function reduces the dimensionality of a piddle by one by finding the
-number of bad elements along the 1st dimension. In this sense it shares
-much in common with the functions defined in L<PDLA::Ufunc>. In particular,
-by using L<xchg|PDLA::Slices/xchg> and similar dimension rearranging methods,
-it is possible to perform this calculation over I<any> dimension.
-
-=for usage
-
- $x = nbadover($y);
-
-=for example
-
- $spectrum = nbadover $image->xchg(0,1)
-
-=for bad
-
-nbadover processes input values that are bad. The output piddle will not have
-any bad values, but the bad flag will be set if the input piddle had its bad
-flag set.
-
-=cut
-
+pp_def('nbadover' . "\n=for sig\n\n  Signature: (a(n); indx [o] b())\n",
     HandleBad => 1,
     Code => '$b() = 0;',
     BadCode => q{
@@ -1100,41 +1242,7 @@ flag set.
     },
 );
 
-pp_def('ngoodover' . "\n=for sig\n\n  Signature: (a(n); indx [o] b())\n" . <<'=cut',
-
-=head2 ngoodover
-
-=for sig
-
-  Signature: (a(n); indx [o] b())
-
-=for ref
-
-Find the number of good elements along the 1st dimension.
-
-This function reduces the dimensionality of a piddle
-by one by finding the number of good elements
-along the 1st dimension.
-
-By using L<xchg|PDLA::Slices/xchg> etc. it is possible to use
-I<any> dimension.
-
-=for usage
-
- $x = ngoodover($y);
-
-=for example
-
- $spectrum = ngoodover $image->xchg(0,1)
-
-=for bad
-
-ngoodover processes input values that are bad. The output piddle will not have
-any bad values, but the bad flag will be set if the input piddle had its bad
-flag set.
-
-=cut
-
+pp_def('ngoodover' . "\n=for sig\n\n  Signature: (a(n); indx [o] b())\n",
        HandleBad => 1,
        Code => 
        '$b() = (PDLA_Indx) $SIZE(n);',
@@ -1173,51 +1281,7 @@ if ( 0 ) {
 }
 
 # note: have made the mask be an integer
-pp_def('setbadif' . "\n=for sig\n\n  Signature: (a(); int mask(); [o]b())\n" . <<'=cut',
-
-=head2 setbadif
-
-=for sig
-
-  Signature: (a(); int mask(); [o]b())
-
-=for ref
-
-Set elements bad based on the supplied mask, otherwise
-copy across the data.
-
-=for example
-
- pdla> $x = sequence(5,5)
- pdla> $x = $x->setbadif( $x % 2 )
- pdla> p "a badflag: ", $x->badflag, "\n"
- a badflag: 1
- pdla> p "a is\n$x"
- [
-  [  0 BAD   2 BAD   4]
-  [BAD   6 BAD   8 BAD]
-  [ 10 BAD  12 BAD  14]
-  [BAD  16 BAD  18 BAD]
-  [ 20 BAD  22 BAD  24]
- ]
-
-Unfortunately, this routine can I<not> be run inplace, since the
-current implementation can not handle the same piddle used as
-C<a> and C<mask> (eg C<< $x->inplace->setbadif($x%2) >> fails).
-Even more unfortunate: we can't catch this error and tell you.
-
-=for bad
-
-The output always has its bad flag set, even if it does not contain
-any bad values (use L<check_badflag|/check_badflag> to check
-whether there are any bad values in the output). 
-The input piddle can have bad values: any bad values in the input piddles
-are copied across to the output piddle.
-
-Also see L<setvaltobad|/setvaltobad> and L<setnantobad|/setnantobad>.
-
-=cut
-
+pp_def('setbadif' . "\n=for sig\n\n  Signature: (a(); int mask(); [o]b())\n",
     HandleBad => 1,
     %setbadif_extra,
     Code =>
@@ -1249,38 +1313,7 @@ pp_addhdr('
 ');
 }
 
-pp_def('setvaltobad' . "\n=for sig\n\n  Signature: (a(); [o]b(); double value)\n" . <<'=cut',
-
-=head2 setvaltobad
-
-=for sig
-
-  Signature: (a(); [o]b(); double value)
-
-=for ref
-
-Set bad all those elements which equal the supplied value.
-
-=for example
-
- $x = sequence(10) % 3;
- $x->inplace->setvaltobad( 0 );
- print "$x\n";
- [BAD 1 2 BAD 1 2 BAD 1 2 BAD]
-
-This is a simpler version of L<setbadif|/setbadif>, but this
-function can be done inplace.  See L<setnantobad|/setnantobad>
-if you want to convert NaN/Inf to the bad value.
-
-=for bad
-
-The output always has its bad flag set, even if it does not contain
-any bad values (use L<check_badflag|/check_badflag> to check
-whether there are any bad values in the output). 
-Any bad values in the input piddles are copied across to the output piddle.
-
-=cut
-
+pp_def('setvaltobad' . "\n=for sig\n\n  Signature: (a(); [o]b(); double value)\n",
     HandleBad => 1,
     Inplace => 1,
     CopyBadStatusCode => q{
@@ -1313,35 +1346,7 @@ pp_addhdr('
 }
 
 # renamed replacebad by setbadtoval
-pp_def('setbadtoval' . "\n=for sig\n\n  Signature: (a(); [o]b(); double newval)\n" . <<'=cut',
-
-=head2 setbadtoval
-
-=for sig
-
-  Signature: (a(); [o]b(); double newval)
-
-=for ref
-
-Replace any bad values by a (non-bad) value. 
-
-Can be done inplace. Also see
-L<badmask|PDLA::Math/badmask>.
-
-=for example
-
- $x->inplace->setbadtoval(23);
- print "a badflag: ", $x->badflag, "\n";
- a badflag: 0
-
-=for bad
-
-The output always has its bad flag cleared.
-If the input piddle does not have its bad flag set, then
-values are copied with no replacement.
-
-=cut
-
+pp_def('setbadtoval' . "\n=for sig\n\n  Signature: (a(); [o]b(); double newval)\n",
     HandleBad => 1,
     Inplace => 1,
     Code => '$b() = $a();',
@@ -1365,44 +1370,7 @@ values are copied with no replacement.
     },
 ); # pp_def: setbadtoval
 
-pp_def('copybad' . "\n=for sig\n\n  Signature: (a(); mask(); [o]b())\n" .<<'=cut',
-
-=head2 copybad
-
-=for sig
-
-  Signature: (a(); mask(); [o]b())
-
-=for ref
-
-Copies values from one piddle to another, setting them
-bad if they are bad in the supplied mask.
-
-Can be done inplace.
-
-=for example
-
- $x = byte( [0,1,3] );
- $mask = byte( [0,0,0] );
- $mask->badflag(1);
- set($mask,1,$mask->badvalue);
- $x->inplace->copybad( $mask );
- p $x;
- [0 BAD 3]
-
-It is equivalent to:
-
- $c = $x + $mask * 0
-
-=for bad
-
-This handles input piddles that are bad. If either C<$x>
-or C<$mask> have bad values, those values will be marked
-as bad in the output piddle and the output piddle will have
-its bad value flag set to true.
-
-=cut
-
+pp_def('copybad' . "\n=for sig\n\n  Signature: (a(); mask(); [o]b())\n",
     HandleBad => 1,
     Inplace => [ 'a' ],
     Code => '$b() = $a();',
