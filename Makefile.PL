@@ -353,17 +353,10 @@ my @podpms = map { $_.".pod", '$(INST_LIBDIR)/PDLA/' . $_ .".pod"}
   qw/Bugs/;
 
 my @prereq = (
-           'Carp'                => 0,         # Need to run
-           'Config'              => 0,         # 
            'Convert::UU'         => 0,         # for PDLA::IO::Dumper
            'Data::Dumper'        => 2.121,     # for PDLA::IO::Dumper
-           'Fcntl'               => 0,
-           'File::Basename'      => 0,
-           'File::Find'          => 0,
 	   'File::Map'           => 0.57,      # test new mmap implementation
            'File::Path'          => 0,
-	   'File::Spec'          => 0.6,
-	   'File::Temp'          => 0,
 	   'Filter::Util::Call'  => 0,         # for PDLA::NiceSlice
 	   'Filter::Simple'      => 0.88,      # for new PDLA::NiceSlice
 	   'Module::Compile'     => 0.23,      # for new PDLA::NiceSlice
