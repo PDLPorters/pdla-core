@@ -1,5 +1,22 @@
 use strict;
 
+pp_add_exported ('', 'uniq');
+pp_add_exported ('', 'uniqind');
+pp_add_exported ('', 'uniqvec');
+pp_add_exported('', 'clip');
+pp_add_exported('','stats');
+pp_add_exported('','grandom');
+pp_add_exported('','vsearch');
+pp_add_exported('', 'interpol');
+pp_add_exported('','interpND');
+pp_add_exported("", 'one2nd');
+pp_add_exported("", 'where');
+pp_add_exported("", 'whereND');
+pp_add_exported("", 'whichND');
+pp_add_exported("", 'setops');
+pp_add_exported("", 'intersect');
+pp_add_exported('', 'matmult');
+
 pp_addpm({At=>'Top'},<<'EOD');
 
 use PDLA::Slices;
@@ -220,8 +237,6 @@ footprint within cache as long as possible on most modern CPUs.
 For usage, see L<x|/x>, a description of the overloaded 'x' operator
 
 EOD
-
-pp_add_exported('', 'matmult');
 
 pp_def('matmult',
 	HandleBad=>0,
@@ -798,7 +813,6 @@ pp_def('in',
 		 loop(n) %{ if ($a() == $b()) {$c() = 1; break;} %}',
 );
 
-pp_add_exported ('', 'uniq');
 pp_addpm (<< 'EOPM');
 
 =head2 uniq
@@ -860,7 +874,6 @@ sub PDLA::uniq {
 
 EOPM
 
-pp_add_exported ('', 'uniqind');
 pp_addpm (<< 'EOPM');
 
 =head2 uniqind
@@ -927,7 +940,6 @@ sub PDLA::uniqind {
 
 EOPM
 
-pp_add_exported ('', 'uniqvec');
 pp_addpm (<< 'EOPM');
 
 =head2 uniqvec
@@ -1083,7 +1095,6 @@ EOD
 
 } # for: my $opt
 
-pp_add_exported('', 'clip');
 
 pp_addpm(<<'EOD');
 
@@ -1390,7 +1401,6 @@ sub PDLA::statsover {
 ',
 );
 
-pp_add_exported('','stats');
 pp_addpm(<<'EOD');
 
 =head2 stats
@@ -2036,13 +2046,11 @@ sub PDLA::grandom {
 }
 EOD
 
-pp_add_exported('','grandom');
 
 ###############################################################
 # binary searches in a piddle; various forms
 ###############################################################
 
-pp_add_exported('','vsearch');
 
 # generic front end; defaults to vsearch_sample for backwards compatibility
 
@@ -2693,7 +2701,6 @@ pp_def('interpolate',
 ',
 );
 
-pp_add_exported('', 'interpol');
 pp_addpm(<<'EOD');
 =head2 interpol
 
@@ -2737,7 +2744,6 @@ sub interpol ($$$;$) {
 
 EOD
 
-pp_add_exported('','interpND');
 pp_addpm(<<'EOD');
 =head2 interpND
 
@@ -2989,7 +2995,6 @@ EOD
 # things related to indexing: one2nd, which, where
 ##############################################################
 
-pp_add_exported("", 'one2nd');
 pp_addpm(<<'EOD');
 =head2 one2nd
 
@@ -3270,8 +3275,6 @@ sub PDLA::where {
 EOD
 );
 
-pp_add_exported("", 'where');
-
 pp_addpm(<<'EOD'
 =head2 whereND
 
@@ -3357,8 +3360,6 @@ sub PDLA::whereND :lvalue {
 
 EOD
 );
-
-pp_add_exported("", 'whereND');
 
 pp_addpm(<<'EOD'
 =head2 whichND
@@ -3473,8 +3474,6 @@ sub PDLA::whichND {
 
 EOD
 );
-
-pp_add_exported("", 'whichND');
 
 #
 # Set operations suited for manipulation of the operations above.
@@ -3664,11 +3663,6 @@ sub PDLA::setops {
 EOD
 );
 
-
-pp_add_exported("", 'setops');
-
-
-
 pp_addpm(<<'EOD'
 =head2 intersect
 
@@ -3706,9 +3700,6 @@ sub PDLA::intersect {
 
 EOD
 );
-
-pp_add_exported("", 'intersect');
-
 
 pp_addpm({At=>'Bot'},<<'EOD');
 
