@@ -11,6 +11,11 @@ my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
 my $usenan   = $PDLA::Config{BADVAL_USENAN} || 0;
 my $bvalPerPdl = $PDLA::Config{BADVAL_PER_PDLA} || 0;
 
+pp_add_exported( '',
+ 'badflag check_badflag badvalue orig_badvalue nbad nbadover ngood ngoodover ' .
+ 'setbadat setbadif setvaltobad setbadtoval setnantobad setbadtonan copybad '.
+ 'isbad isgood ' );
+
 pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
 
 use strict;
@@ -140,11 +145,6 @@ sub PDLA::copybad { return $_[0]->copy; } # ignore the mask
 
 !NO!SUBS!
 
-    pp_add_exported( '',
-		     'badflag check_badflag badvalue orig_badvalue nbad nbadover ngood ngoodover ' .
-		     'setbadat setbadif setvaltobad setbadtoval setnantobad setbadtonan copybad '.
-		     'isbad isgood ' );
-
     pp_done();
     exit;
 
@@ -192,10 +192,6 @@ if ($^O =~ /MSWin/) {
 ');
     }
 }
-
-pp_add_exported( '',
-		 'badflag check_badflag badvalue orig_badvalue nbad nbadover ngood ngoodover ' .
-		 'setbadat ' );
 
 # If UseNaN == 0, we need to have a variable containing the
 # value for NaN. This is taken from Basic/Core/Core.xs.PL
@@ -904,7 +900,6 @@ included in the file.
 # setbadtonan /
 #
 if ( $usenan ) {
-    pp_add_exported( '', 'setnantobad setbadtonan' );
 	pp_addpm(<<'!NO!SUBS!');
 
 sub PDLA::setnantobad{
