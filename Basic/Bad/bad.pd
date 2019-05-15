@@ -13,6 +13,9 @@ my $bvalPerPdl = $PDLA::Config{BADVAL_PER_PDLA} || 0;
 
 pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
 
+use strict;
+use PDLA::Types;
+
 =head1 NAME
 
 PDLA::Bad - PDLA can process bad values if configured at compile-time
@@ -66,18 +69,21 @@ C<BADVAL_PER_PDLA> option set, 0 otherwise.
 
 !NO!SUBS!
 
+pp_addpm(<<"!WITH!SUBS!");
+
+# really should be constants
+\$PDLA::Bad::Status = $bvalflag;
+\$PDLA::Bad::UseNaN = $usenan;
+\$PDLA::Bad::PerPdl = $bvalPerPdl;
+
+!WITH!SUBS!
+
 # if no bad-value support, this is easy
 
 unless ( $bvalflag ) {
 
     pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
-# really should be a constant
-$PDLA::Bad::Status = 0;
-$PDLA::Bad::UseNaN = 0;
-$PDLA::Bad::PerPdl = 0;
-
 # dummy routines
-#
 *badflag         = \&PDLA::badflag;
 *badvalue        = \&PDLA::badvalue;
 *orig_badvalue   = \&PDLA::orig_badvalue;
@@ -147,23 +153,6 @@ sub PDLA::copybad { return $_[0]->copy; } # ignore the mask
     exit;
 
 } # unless: $bvalflag
-
-## Header
-pp_addpm(<<"!WITH!SUBS!");
-
-# really should be constants
-\$PDLA::Bad::Status = 1;
-\$PDLA::Bad::UseNaN = $usenan;
-\$PDLA::Bad::PerPdl = $bvalPerPdl;
-
-use strict;
-
-use PDLA::Types;
-
-############################################################
-############################################################
-
-!WITH!SUBS!
 
 #########################################################
 
