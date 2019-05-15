@@ -579,7 +579,7 @@ Sets NaN/Inf values in the input piddle bad
 (only relevant for floating-point piddles).
 Can be done inplace.
 
-If C<$PDLA::Bad::UseNan == 1>, this is just a copy
+If C<$PDLA::Bad::UseNaN == 1>, this is just a copy
 with a call to L<check_badflag()|/check_badflag> thrown in.
 
 =for usage
@@ -609,7 +609,7 @@ Sets Bad values to NaN
 This is only relevant for floating-point piddles. The input piddle can be
 of any type, but if done inplace, the input must be floating point.
 
-If C<$PDLA::Bad::UseNan == 1>, this is just a copy,
+If C<$PDLA::Bad::UseNaN == 1>, this is just a copy,
 with the bad flag being cleared.
 
 =for usage
