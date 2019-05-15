@@ -229,13 +229,10 @@ pp_def('matmult',
 	PMCode => <<'EOPM',
 sub PDLA::matmult {
     my ($x,$y,$c) = @_;
-
     $y = pdl($y) unless eval { $y->isa('PDLA') };
     $c = PDLA->null unless eval { $c->isa('PDLA') };
-
     while($x->getndims < 2) {$x = $x->dummy(-1)}
     while($y->getndims < 2) {$y = $y->dummy(-1)}
-
     return ($c .= $x * $y) if( ($x->dim(0)==1 && $x->dim(1)==1) ||
                                ($y->dim(0)==1 && $y->dim(1)==1) );
     if($y->dim(1) != $x->dim(0)) {
@@ -251,19 +248,16 @@ EOPM
         PDLA_Indx atdi, btdi;
 	PDLA_Indx resh, resw, rest;
 	PDLA_Indx tsiz = 64;
-
 	// Zero the output
 	loop(w) %{
 		loop(h) %{
 			$c() = 0;
 		%}
 	%}
-
 	// Make sure we're physical
 	// (Not needed if we don't need dimincs, see below)
 	// PDLA->make_physdims($PDLA(a));
 	// PDLA->make_physdims($PDLA(b));
-
         // Cache the dimincs to avoid constant lookups
 	// These two lines are what I wanted, but they break sometimes (dimincs not set right despite calling physdims?)
 	// I deleted them in favor of explicit offset calculation, which appears more robust.
@@ -271,37 +265,27 @@ EOPM
 	//	btdi = $PDLA(b)->dimincs[1];
 	atdi = &($a(t=>1, h=>0)) - &($a(t=>0,h=>0));
 	btdi = &($b(t=>1, w=>0)) - &($b(t=>0,w=>0));
-
-
 	// Loop over tiles
 	for(   oh=0;   oh < $SIZE(h);   oh += tsiz   ) {
 	   hlim = ( oh + tsiz > $SIZE(h) )  ?  $SIZE(h)  :  oh + tsiz;
-
 	   for(   ow=0;   ow < $SIZE(w);   ow += tsiz   ) {
 	      wlim = ( ow + tsiz > $SIZE(w) )  ?  $SIZE(w)  :  ow + tsiz;
-
 	      for(   ot=0;   ot < $SIZE(t);  ot += tsiz   ) {
 	         tlim = (ot + tsiz > $SIZE(t) )  ?  $SIZE(t)  :  ot + tsiz;
-
-
 	         for(  ih=oh; ih<hlim; ih++  ) {
 		    for(  iw=ow; iw<wlim; iw++  ) {
 		       $GENERIC() cc;
-
 		       // Cache data pointers before 't' run through tile
 		       ad = &($a(t=>ot, h=>ih));
 		       bd = &($b(w=>iw, t=>ot));
-
 		       // Cache the accumulated value for the output
 		       cc = $c(w=>iw, h=>ih);
-
 		       // Hotspot - run the 't' summation
 		       for( it=ot; it<tlim; it++  ) {
 		       	    cc += *ad * *bd;
 			    ad += atdi;
 			    bd += btdi;
 		       }
-
 		       // put the output back to be further accumulated later
 		       $c(w=>iw, h=>ih) = cc;
 		    }
@@ -341,7 +325,6 @@ pp_def(
        BadCode =>
        'double tmp = 0;
         int flag = 0;
-
 	loop(n) %{
            if ( $ISGOOD(a()) && $ISGOOD(b()) && $ISGOOD(c()) ) {
               tmp += $a() * $b() * $c();
@@ -1152,7 +1135,6 @@ sub PDLA::clip {
 	  return $x->copy;
       }
   }
-
   if($x->is_inplace) {
       $x->set_inplace(0); $d = $x
   } elsif ($#_ > 2) {
@@ -1169,7 +1151,6 @@ sub PDLA::clip {
   } else {
       die "This can't happen (clip contingency) - file a bug";
   }
-
   return $d;
 }
 EOPM
@@ -1330,7 +1311,6 @@ pp_def('statsover',
 	 $avg() = tmp / norm;  /* Find mean */
          $min() = curmin;
          $max() = curmax;
-
          /* Calculate the RMS and standard deviation. */
          tmp = 0;
 	 loop(n) %{
@@ -1367,7 +1347,6 @@ pp_def('statsover',
            $avg() = tmp / norm; /* Find mean */
            $min() = curmin;
            $max() = curmax;
-
 	   /* Calculate the RMS and standard deviation. */
            tmp = 0;
            loop(n) %{
@@ -1393,12 +1372,10 @@ pp_def('statsover',
          }',
       CopyBadStatusCode => '',
       PMCode => '
-
 sub PDLA::statsover {
    barf(\'Usage: ($mean,[$prms, $median, $min, $max, $adev, $rms]) = statsover($data,[$weights])\') if $#_>1;
    my ($data, $weights) = @_;
    $weights = $data->ones() if !defined($weights);
-
    my $median = $data->medover();
    my $mean = PDLA->nullcreate($data);
    my $rms = PDLA->nullcreate($data);
@@ -1407,11 +1384,9 @@ sub PDLA::statsover {
    my $adev = PDLA->nullcreate($data);
    my $prms = PDLA->nullcreate($data);
    &PDLA::_statsover_int($data, $weights, $mean, $prms, $median, $min, $max, $adev, $rms);
-
    return $mean unless wantarray;
    return ($mean, $prms, $median, $min, $max, $adev, $rms);
 }
-
 ',
 );
 
@@ -1772,9 +1747,7 @@ EOD
      Code => '
         PDLA_Indx i=0;
         $GENERIC() x1, x2;
-
         x1 = 1; x2 = 0;
-
         loop(n) %{
            $x() = x1 + x2;
            if (i++>0) {
@@ -2691,7 +2664,6 @@ pp_def('interpolate',
 		 int up = ($x(n => n1) > $x(n => 0));
                  PDLA_Indx jl, jh, m;
                  int carp;
-
                  threadloop %{
                    jl = -1;
                    jh = n;
@@ -3198,7 +3170,6 @@ EOD
 				dm++;
 			}'.$_->{Elseclause} . "\n".
 		' %}',
-
 #		the next one is currently a dirty hack
 #               this will probably break once dataflow is enabled again
 #               *unless* we have made sure that mask is physical by now!!!
@@ -3210,10 +3181,8 @@ EOD
 		PDLA_Indx inc = PDLA_REPRINC(dpdl,0);
 		PDLA_Indx offs = PDLA_REPROFFS(dpdl);
 		PDLA_Indx i;
-
 		if (dpdl->ndims != 1)
 		  barf("dimflag currently works only with 1D pdls");
-
 '.
 ($PDLA::Config{WITH_BADVAL} ? '
 		if(dpdl->state & PDLA_BADVAL)
@@ -3227,7 +3196,6 @@ EOD
  	 		$GENERIC() foo = *(m_datap+inc*i+offs);
 	 	                if(foo) sum++;
 		}
-
                 '. $_->{Autosize} . '
 		/* printf("RedoDimsCode: setting dim m to %ld\n",sum); */'
 	   );
