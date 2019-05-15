@@ -1,13 +1,5 @@
 use strict;
 
-pp_addhdr(<<'EOD');
-
-#ifndef RAND_MAX
-#error "You must have a working RAND_MAX! Something's wrong with your include files"
-#endif
-
-EOD
-
 pp_addpm({At=>'Top'},<<'EOD');
 
 use PDLA::Slices;
@@ -65,6 +57,14 @@ C<c()> is set bad. Otherwise C<c()> will have its bad flag cleared,
 as it will not contain any bad values.
 
 =cut
+EOD
+
+pp_addhdr(<<'EOD');
+
+#ifndef RAND_MAX
+#error "You must have a working RAND_MAX! Something's wrong with your include files"
+#endif
+
 EOD
 
 pp_def(
