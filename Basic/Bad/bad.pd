@@ -67,6 +67,24 @@ C<BADVAL_PER_PDLA> option set, 0 otherwise.
 
 =cut
 
+*badflag         = \&PDLA::badflag;
+*badvalue        = \&PDLA::badvalue;
+*orig_badvalue   = \&PDLA::orig_badvalue;
+*check_badflag = \&PDLA::check_badflag;
+*isbad  = \&PDLA::isbad;
+*isgood = \&PDLA::isgood;
+*nbadover  = \&PDLA::nbadover;
+*ngoodover = \&PDLA::ngoodover;
+*nbad      = \&PDLA::nbad;
+*ngood     = \&PDLA::ngood;
+*setbadat = \&PDLA::setbadat;
+*setbadif = \&PDLA::setbadif;
+*setvaltobad = \&PDLA::setvaltobad;
+*setbadtoval = \&PDLA::setvaltobad;
+*setnantobad = \&PDLA::setnantobad;
+*setbadtonan = \&PDLA::setbadtonan;
+*copybad = \&PDLA::copybad;
+
 !NO!SUBS!
 
 pp_addpm(<<"!WITH!SUBS!");
@@ -83,28 +101,16 @@ pp_addpm(<<"!WITH!SUBS!");
 unless ( $bvalflag ) {
 
     pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
-# dummy routines
-*badflag         = \&PDLA::badflag;
-*badvalue        = \&PDLA::badvalue;
-*orig_badvalue   = \&PDLA::orig_badvalue;
 
+# dummy routines
 sub PDLA::badflag       { return 0; } # no piddles can contain bad values by design
 sub PDLA::badvalue      { return undef; }
 sub PDLA::orig_badvalue { return undef; }
 
-*check_badflag = \&PDLA::check_badflag;
 sub PDLA::check_badflag { return 0; } # no piddles can contain bad values by design
-
-*isbad  = \&PDLA::isbad;
-*isgood = \&PDLA::isgood;
 
 sub PDLA::isbad  { return 0; } # no piddles can contain bad values by design
 sub PDLA::isgood { return 1; } # no piddles can contain bad values by design
-
-*nbadover  = \&PDLA::nbadover;
-*ngoodover = \&PDLA::ngoodover;
-*nbad      = \&PDLA::nbad;
-*ngood     = \&PDLA::ngood;
 
 #        Pars => 'a(n); int+ [o]b();',
 # collapse the input piddle along it's first dimension and set to 0's
@@ -117,19 +123,11 @@ sub PDLA::ngoodover { return PDLA::sumover( $_[0] * 0 + 1 ); }
 sub PDLA::nbad  { return 0; }
 sub PDLA::ngood { return $_[0]->nelem; }
 
-*setbadat = \&PDLA::setbadat;
-*setbadif = \&PDLA::setbadif;
-
 # As these can't be done inplace we try to keep the
 # same behaviour here
 #
 sub PDLA::setbadat { $_[0]->set_inplace(0); return $_[0]->copy; }
 sub PDLA::setbadif { $_[0]->set_inplace(0); return $_[0]->copy; }
-
-*setvaltobad = \&PDLA::setvaltobad;
-*setbadtoval = \&PDLA::setvaltobad;
-*setnantobad = \&PDLA::setnantobad;
-*setbadtonan = \&PDLA::setbadtonan;
 
 # this can be done inplace
 # fortunately PDLA::copy handles inplace ops
@@ -137,8 +135,6 @@ sub PDLA::setvaltobad { return $_[0]->copy; }
 sub PDLA::setbadtoval { return $_[0]->copy; }
 sub PDLA::setnantobad { return $_[0]->copy; }
 sub PDLA::setbadtonan { return $_[0]->copy; }
-
-*copybad = \&PDLA::copybad;
 
 sub PDLA::copybad { return $_[0]->copy; } # ignore the mask
 
@@ -252,13 +248,6 @@ badflag(x,newval=0)
 !WITH!SUBS!
 
 pp_addpm(<<'!NO!SUBS!');
-############################################################
-############################################################
-
-*badflag         = \&PDLA::badflag;
-*badvalue        = \&PDLA::badvalue;
-*orig_badvalue   = \&PDLA::orig_badvalue;
-
 ############################################################
 ############################################################
 
@@ -383,8 +372,6 @@ returns a Perl scalar with the final bad-value flag, so it
 never returns bad values itself.
 
 =cut
-
-*check_badflag = \&PDLA::check_badflag;
 
 sub PDLA::check_badflag {
     my $pdl = shift;
@@ -547,7 +534,6 @@ and will have its badflag turned on.
 
 =cut
 
-*setbadat = \&PDLA::setbadat;
 sub PDLA::setbadat {
     barf 'Usage: setbadat($pdl, $x, $y, ...)' if $#_<1;
     my $self  = shift; 
@@ -921,7 +907,6 @@ if ( $usenan ) {
     pp_add_exported( '', 'setnantobad setbadtonan' );
 	pp_addpm(<<'!NO!SUBS!');
 
-*setnantobad = \&PDLA::setnantobad;
 sub PDLA::setnantobad{
     my $x = shift;
     my $y;
@@ -938,7 +923,6 @@ sub PDLA::setnantobad{
     return $y;
 }
 
-*setbadtonan = \&PDLA::setbadtonan;
 sub PDLA::setbadtonan{
     my $x = shift;
     my $y;
