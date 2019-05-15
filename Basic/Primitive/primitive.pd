@@ -17,14 +17,6 @@ use Carp;
 
 PDLA::Primitive - primitive operations for pdl
 
-=head1 DESCRIPTION
-
-This module provides some primitive and useful functions defined
-using PDLA::PP and able to use the new indexing tricks.
-
-See L<PDLA::Indexing|PDLA::Indexing> for how to use indices creatively.
-For explanation of the signature format, see L<PDLA::PP|PDLA::PP>.
-
 =head1 SYNOPSIS
 
  # Pulls in PDLA::Primitive, among other modules.
@@ -33,13 +25,19 @@ For explanation of the signature format, see L<PDLA::PP|PDLA::PP>.
  # Only pull in PDLA::Primitive:
  use PDLA::Primitive;
 
-=cut
+=head1 DESCRIPTION
 
-EOD
+This module provides some primitive and useful functions defined
+using PDLA::PP and able to use the new indexing tricks.
+
+See L<PDLA::Indexing|PDLA::Indexing> for how to use indices creatively.
+For explanation of the signature format, see L<PDLA::PP|PDLA::PP>.
 
 =head1 FUNCTIONS
 
 =cut
+
+EOD
 
 ################################################################
 #  a whole bunch of quite basic functions for inner, outer
@@ -47,13 +45,27 @@ EOD
 #  available via operator overloading)
 ################################################################
 
+pp_addpm(<<'EOD');
 =head2 inner
 
 =for sig
 
   Signature: (a(n); b(n); [o]c())
 
+=for ref
+
+Inner product over one dimension
+
+ c = sum_i a_i * b_i
+
+=for bad
+
+If C<a() * b()> contains only bad data,
+C<c()> is set bad. Otherwise C<c()> will have its bad flag cleared,
+as it will not contain any bad values.
+
 =cut
+EOD
 
 pp_def(
        'inner',
@@ -72,37 +84,25 @@ pp_def(
         if ( badflag ) { $SETBAD(c()); $PDLASTATESETBAD(c); }
         else        { $c() = tmp;  }',
        CopyBadStatusCode => '',
-       Doc => '
-
-=for ref
-
-Inner product over one dimension
-
- c = sum_i a_i * b_i
-
-=cut
-
-',
-       BadDoc => '
-
-=for bad
-
-If C<a() * b()> contains only bad data,
-C<c()> is set bad. Otherwise C<c()> will have its bad flag cleared,
-as it will not contain any bad values.
-
-=cut
-
-',
        ); # pp_def( inner )
 
+pp_addpm(<<'EOD');
 =head2 outer
 
 =for sig
 
   Signature: (a(n); b(m); [o]c(n,m))
 
+=for ref
+
+outer product over one dimension
+
+Naturally, it is possible to achieve the effects of outer
+product simply by threading over the "C<*>"
+operator but this function is provided for convenience.
+
 =cut
+EOD
 
 pp_def(
        'outer',
@@ -120,19 +120,7 @@ pp_def(
              $c() = $a() * $b();
           }
         %}',
-       Doc => '
-
-=for ref
-
-outer product over one dimension
-
-Naturally, it is possible to achieve the effects of outer
-product simply by threading over the "C<*>"
-operator but this function is provided for convenience.
-
-=cut
-
-'); # pp_def( outer )
+); # pp_def( outer )
 
 
 pp_addpm(<<'EOD');
@@ -210,6 +198,26 @@ The mechanics of the multiplication are carried out by the
 L<matmult|/matmult> method.
 
 =cut
+
+EOD
+
+pp_addpm(<<'EOD');
+=head2 matmult
+
+=for ref
+
+Matrix multiplication
+
+Notionally, matrix multiplication $x x $y is equivalent to the
+threading expression
+
+    $x->dummy(1)->inner($y->xchg(0,1)->dummy(2),$c);
+
+but for large matrices that breaks CPU cache and is slow.  Instead,
+matmult calculates its result in 32x32x32 tiles, to keep the memory
+footprint within cache as long as possible on most modern CPUs.
+
+For usage, see L<x|/x>, a description of the overloaded 'x' operator
 
 EOD
 
@@ -302,32 +310,23 @@ EOPM
 	   }
 	}
 EOC
-	Doc => <<'EOD'
-=for ref
-
-Matrix multiplication
-
-Notionally, matrix multiplication $x x $y is equivalent to the
-threading expression
-
-    $x->dummy(1)->inner($y->xchg(0,1)->dummy(2),$c);
-
-but for large matrices that breaks CPU cache and is slow.  Instead,
-matmult calculates its result in 32x32x32 tiles, to keep the memory
-footprint within cache as long as possible on most modern CPUs.
-
-For usage, see L<x|/x>, a description of the overloaded 'x' operator
-
-EOD
 	);
 
+pp_addpm(<<'EOD');
 =head2 innerwt
 
 =for sig
 
   Signature: (a(n); b(n); c(n); [o]d())
 
+=for ref
+
+Weighted (i.e. triple) inner product
+
+ d = sum_i a(i) b(i) c(i)
+
 =cut
+EOD
 
 pp_def(
        'innerwt',
@@ -351,26 +350,26 @@ pp_def(
         %}
         if ( flag ) { $d() = tmp; }
         else        { $SETBAD(d()); }',
-       Doc => '
-
-=for ref
-
-Weighted (i.e. triple) inner product
-
- d = sum_i a(i) b(i) c(i)
-
-=cut
-
-'
        );
 
+pp_addpm(<<'EOD');
 =head2 inner2
 
 =for sig
 
   Signature: (a(n); b(n,m); c(m); [o]d())
 
+=for ref
+
+Inner product of two vectors and a matrix
+
+ d = sum_ij a(i) b(i,j) c(j)
+
+Note that you should probably not thread over C<a> and C<c> since that would be
+very wasteful. Instead, you should use a temporary for C<b*c>.
+
 =cut
+EOD
 
 pp_def(
        'inner2',
@@ -393,29 +392,25 @@ pp_def(
         %}
         if ( flag ) { $d() = tmp; }
         else        { $SETBAD(d()); }',
-       Doc => '
-
-=for ref
-
-Inner product of two vectors and a matrix
-
- d = sum_ij a(i) b(i,j) c(j)
-
-Note that you should probably not thread over C<a> and C<c> since that would be
-very wasteful. Instead, you should use a temporary for C<b*c>.
-
-=cut
-
-'
        );
 
+pp_addpm(<<'EOD');
 =head2 inner2d
 
 =for sig
 
   Signature: (a(n,m); b(n,m); [o]c())
 
+=for ref
+
+Inner product over 2 dimensions.
+
+Equivalent to
+
+ $c = inner($x->clump(2), $y->clump(2))
+
 =cut
+EOD
 
 pp_def(
        'inner2d',
@@ -438,28 +433,33 @@ pp_def(
         %}
         if ( flag ) { $c() = tmp; }
         else        { $SETBAD(c()); }',
-       Doc => '
-
-=for ref
-
-Inner product over 2 dimensions.
-
-Equivalent to
-
- $c = inner($x->clump(2), $y->clump(2))
-
-=cut
-
-'
        );
 
+pp_addpm(<<'EOD');
 =head2 inner2t
 
 =for sig
 
   Signature: (a(j,n); b(n,m); c(m,k); [t]tmp(n,k); [o]d(j,k)))
 
+=for ref
+
+Efficient Triple matrix product C<a*b*c>
+
+Efficiency comes from by using the temporary C<tmp>. This operation only
+scales as C<N**3> whereas threading using L<inner2|/inner2> would scale
+as C<N**4>.
+
+The reason for having this routine is that you do not need to
+have the same thread-dimensions for C<tmp> as for the other arguments,
+which in case of large numbers of matrices makes this much more
+memory-efficient.
+
+It is hoped that things like this could be taken care of as a kind of
+closures at some point.
+
 =cut
+EOD
 
 pp_def(
        'inner2t',
@@ -505,27 +505,6 @@ pp_def(
            if ( flag ) { $d() = tmp1; }
            else        { $SETBAD(d()); }
 	%}',
-       Doc => '
-
-=for ref
-
-Efficient Triple matrix product C<a*b*c>
-
-Efficiency comes from by using the temporary C<tmp>. This operation only
-scales as C<N**3> whereas threading using L<inner2|/inner2> would scale
-as C<N**4>.
-
-The reason for having this routine is that you do not need to
-have the same thread-dimensions for C<tmp> as for the other arguments,
-which in case of large numbers of matrices makes this much more
-memory-efficient.
-
-It is hoped that things like this could be taken care of as a kind of
-closures at some point.
-
-=cut
-
-'
        ); # pp_def inner2t()
 
 
@@ -535,16 +514,12 @@ sub crassgn {
 	\$a(tri => $_[2])*\$b(tri => $_[1]);"
 }
 
+pp_addpm(<<'EOD');
 =head2 crossp
 
 =for sig
 
   Signature: (a(tri=3); b(tri); [o] c(tri))
-
-=cut
-
-pp_def('crossp',
-       Doc => <<'EOD',
 
 =for ref
 
@@ -560,8 +535,9 @@ the inner product C<$c*$x> and C<$c*$y> will be zero, i.e. C<$c> is
 orthogonal to C<$x> and C<$y>
 
 =cut
-
 EOD
+
+pp_def('crossp',
        Pars => 'a(tri=3); b(tri); [o] c(tri)',
        Code =>
        crassgn(0,1,2)."\n".
@@ -569,6 +545,7 @@ EOD
        crassgn(2,0,1),
        );
 
+pp_addpm(<<'EOD');
 =head2 norm
 
 =for sig
@@ -578,11 +555,11 @@ EOD
 Normalises a vector to unit Euclidean length
 
 =cut
+EOD
 
 pp_def('norm',
        HandleBad => 1,
        Pars => 'vec(n); [o] norm(n)',
-       Doc => 'Normalises a vector to unit Euclidean length',
        Code =>
        'double sum=0;
 	loop(n) %{ sum += $vec()*$vec(); %}
@@ -628,41 +605,16 @@ pp_def('norm',
 # discussion)
 # see PDLA::ImageND for info about the circ_mean function
 
+pp_addpm(<<'EOD');
 =head2 indadd
 
 =for sig
 
   Signature: (a(); indx ind(); [o] sum(m))
 
-=cut
-
-pp_def(
-    'indadd',
-    HandleBad => 1,
-    Pars => 'a(); indx ind(); [o] sum(m)',
-    Code =>
-    'register PDLA_Indx foo = $ind();
-     if( foo<0 || foo>=$SIZE(m) ) {
-       barf("PDLA::indadd: invalid index");
-     }
-     $sum(m => foo) += $a();',
-    BadCode =>
-    'register PDLA_Indx foo = $ind();
-     if( $ISBADVAR(foo,ind) || foo<0 || foo>=$SIZE(m) ) {
-       barf("PDLA::indadd: invalid index");
-     }
-     if ( $ISBAD(a()) ) { $SETBAD(sum(m => foo)); }
-     else               { $sum(m => foo) += $a(); }',
-    BadDoc => '
-
 =for bad
 
 The routine barfs if any of the indices are bad.
-
-=cut
-
-',
-    Doc=>'
 
 =for ref
 
@@ -693,25 +645,33 @@ Threaded Example:
   # [0 1 0 0 2 0 3 0 0 0]
 
 =cut
+EOD
 
-');
+pp_def(
+    'indadd',
+    HandleBad => 1,
+    Pars => 'a(); indx ind(); [o] sum(m)',
+    Code =>
+    'register PDLA_Indx foo = $ind();
+     if( foo<0 || foo>=$SIZE(m) ) {
+       barf("PDLA::indadd: invalid index");
+     }
+     $sum(m => foo) += $a();',
+    BadCode =>
+    'register PDLA_Indx foo = $ind();
+     if( $ISBADVAR(foo,ind) || foo<0 || foo>=$SIZE(m) ) {
+       barf("PDLA::indadd: invalid index");
+     }
+     if ( $ISBAD(a()) ) { $SETBAD(sum(m => foo)); }
+     else               { $sum(m => foo) += $a(); }',
+);
 
+pp_addpm(<<'EOD');
 =head2 conv1d
 
 =for sig
 
   Signature: (a(m); kern(p); [o]b(m); int reflect)
-
-=cut
-
-# 1D convolution
-# useful for threaded 1D filters
-pp_addhdr('
-/* Fast Modulus with proper negative behaviour */
-#define REALMOD(a,b) while ((a)>=(b)) (a) -= (b); while ((a)<0) (a) += (b);
-');
-pp_def('conv1d',
-       Doc => << 'EOD',
 
 =for ref
 
@@ -765,8 +725,15 @@ recommended for processing pdls with bad values in them
 unless special care is taken.
 
 =cut
-
 EOD
+
+# 1D convolution
+# useful for threaded 1D filters
+pp_addhdr('
+/* Fast Modulus with proper negative behaviour */
+#define REALMOD(a,b) while ((a)>=(b)) (a) -= (b); while ((a)<0) (a) += (b);
+');
+pp_def('conv1d',
         Pars => 'a(m); kern(p); [o]b(m);',
         OtherPars => 'int reflect;',
         HandleBad => 0,
@@ -810,23 +777,12 @@ sub PDLA::conv1d {
            }
 ');
 
-
+pp_addpm(<<'EOD');
 =head2 in
 
 =for sig
 
   Signature: (a(); b(n); [o] c())
-
-=cut
-
-# this can be achieved by
-#  ($x->dummy(0) == $y)->orover
-# but this one avoids a larger intermediate and potentially shortcuts
-pp_def('in',
-	Pars => 'a(); b(n); [o] c()',
-	Code => '$c() = 0;
-		 loop(n) %{ if ($a() == $b()) {$c() = 1; break;} %}',
-	Doc => <<'EOD',
 
 =for ref
 
@@ -848,10 +804,16 @@ However, C<in> doesn't create a (potentially large) intermediate
 and is generally faster.
 
 =cut
-
 EOD
-);
 
+# this can be achieved by
+#  ($x->dummy(0) == $y)->orover
+# but this one avoids a larger intermediate and potentially shortcuts
+pp_def('in',
+	Pars => 'a(); b(n); [o] c()',
+	Code => '$c() = 0;
+		 loop(n) %{ if ($a() == $b()) {$c() = 1; break;} %}',
+);
 
 pp_add_exported ('', 'uniq');
 pp_addpm (<< 'EOPM');
@@ -891,10 +853,6 @@ Bad values are not considered unique by uniq and are ignored.
  [0 3 6 9]
 
 =cut
-
-EOPM
-
-pp_addpm(<<'EOPM');
 
 *uniq = \&PDLA::uniq;
 # return unique elements of array
@@ -952,10 +910,6 @@ indices.
 Bad values are not considered unique by uniqind and are ignored.
 
 =cut
-
-EOPM
-
-pp_addpm(<<'EOPM');
 
 *uniqind = \&PDLA::uniqind;
 # return unique elements of array
@@ -1028,10 +982,6 @@ non-NaN and non-BAD containing vectors, followed by the NaN vectors.
 
 =cut
 
-EOPM
-
-pp_addpm(<<'EOPM');
-
 sub PDLA::uniqvec {
 
    my($pdl) = shift;
@@ -1097,6 +1047,7 @@ EOPM
 
 # clipping
 
+pp_addpm(<<'EOD');
 =head2 hclip
 
 =for sig
@@ -1114,6 +1065,7 @@ clip (threshold) C<$a> by C<$b> (C<$b> is upper bound)
 clip (threshold) C<$a> by C<$b> (C<$b> is lower bound)
 
 =cut
+EOD
 
 for my $opt (
 	     ['hclip','>'],
@@ -1133,8 +1085,6 @@ for my $opt (
             } else {
 	       $c() = ($a() '.$op.' $b()) ? $b() : $a();
             }',
-	   Doc =>  'clip (threshold) C<$a> by C<$b> (C<$b> is '.
-	   ($name eq 'hclip' ? 'upper' : 'lower').' bound)',
           PMCode=><<"EOD",
 sub PDLA::$name {
    my (\$x,\$y) = \@_;
@@ -1229,13 +1179,29 @@ EOPM
 # elementary statistics and histograms
 ############################################################
 
+pp_addpm(<<'EOD');
 =head2 wtstat
 
 =for sig
 
   Signature: (a(n); wt(n); avg(); [o]b(); int deg)
 
+=for ref
+
+Weighted statistical moment of given degree
+
+This calculates a weighted statistic over the vector C<a>.
+The formula is
+
+ b() = (sum_i wt_i * (a_i ** degree - avg)) / (sum_i wt_i)
+
+=for bad
+
+Bad values are ignored in any calculation; C<$b> will only
+have its bad flag set if the output contains any bad data.
+
 =cut
+EOD
 
 pp_def(
        'wtstat',
@@ -1274,33 +1240,73 @@ pp_def(
         if ( flag ) { $b() = statsum / wtsum; }
         else        { $SETBAD(b()); $PDLASTATESETBAD(b); }',
        CopyBadStatusCode => '',
-       Doc => '
-
-=for ref
-
-Weighted statistical moment of given degree
-
-This calculates a weighted statistic over the vector C<a>.
-The formula is
-
- b() = (sum_i wt_i * (a_i ** degree - avg)) / (sum_i wt_i)
-
-=cut
-
-',
-       BadDoc => '
-
-=for bad
-
-Bad values are ignored in any calculation; C<$b> will only
-have its bad flag set if the output contains any bad data.
-
-=cut
-
-',
        );
 
 
+pp_addpm(<<'EOD');
+=head2 statsover
+
+=for ref
+
+Calculate useful statistics over a dimension of a piddle
+
+=for usage
+
+  ($mean,$prms,$median,$min,$max,$adev,$rms) = statsover($piddle, $weights);
+
+This utility function calculates various useful
+quantities of a piddle. These are:
+
+=over 3
+
+=item * the mean:
+
+  MEAN = sum (x)/ N
+
+with C<N> being the number of elements in x
+
+=item * the population RMS deviation from the mean:
+
+  PRMS = sqrt( sum( (x-mean(x))^2 )/(N-1) )
+
+The population deviation is the best-estimate of the deviation
+of the population from which a sample is drawn.
+
+=item * the median
+
+The median is the 50th percentile data value.  Median is found by
+L<medover|PDLA::Ufunc/medover>, so WEIGHTING IS IGNORED FOR THE MEDIAN CALCULATION.
+
+=item * the minimum
+
+=item * the maximum
+
+=item * the average absolute deviation:
+
+  AADEV = sum( abs(x-mean(x)) )/N
+
+=item * RMS deviation from the mean:
+
+  RMS = sqrt(sum( (x-mean(x))^2 )/N)
+
+(also known as the root-mean-square deviation, or the square root of the
+variance)
+
+=back
+
+This operator is a projection operator so the calculation
+will take place over the final dimension. Thus if the input
+is N-dimensional each returned value will be N-1 dimensional,
+to calculate the statistics for the entire piddle either
+use C<clump(-1)> directly on the piddle or call C<stats>.
+
+=for bad
+
+Bad values are simply ignored in the calculation, effectively reducing
+the sample size.  If all data are bad then the output data are marked bad.
+
+=cut
+EOD
 
 pp_def('statsover',
 	HandleBad => 1,
@@ -1407,75 +1413,6 @@ sub PDLA::statsover {
 }
 
 ',
-      Doc => '
-
-=for ref
-
-Calculate useful statistics over a dimension of a piddle
-
-=for usage
-
-  ($mean,$prms,$median,$min,$max,$adev,$rms) = statsover($piddle, $weights);
-
-This utility function calculates various useful
-quantities of a piddle. These are:
-
-=over 3
-
-=item * the mean:
-
-  MEAN = sum (x)/ N
-
-with C<N> being the number of elements in x
-
-=item * the population RMS deviation from the mean:
-
-  PRMS = sqrt( sum( (x-mean(x))^2 )/(N-1)
-
-The population deviation is the best-estimate of the deviation
-of the population from which a sample is drawn.
-
-=item * the median
-
-The median is the 50th percentile data value.  Median is found by
-L<medover|PDLA::Ufunc/medover>, so WEIGHTING IS IGNORED FOR THE MEDIAN CALCULATION.
-
-=item * the minimum
-
-=item * the maximum
-
-=item * the average absolute deviation:
-
-  AADEV = sum( abs(x-mean(x)) )/N
-
-=item * RMS deviation from the mean:
-
-  RMS = sqrt(sum( (x-mean(x))^2 )/N)
-
-(also known as the root-mean-square deviation, or the square root of the
-variance)
-
-=back
-
-This operator is a projection operator so the calculation
-will take place over the final dimension. Thus if the input
-is N-dimensional each returned value will be N-1 dimensional,
-to calculate the statistics for the entire piddle either
-use C<clump(-1)> directly on the piddle or call C<stats>.
-
-=cut
-
-',
-     BadDoc =>'
-
-=for bad
-
-Bad values are simply ignored in the calculation, effectively reducing
-the sample size.  If all data are bad then the output data are marked bad.
-
-=cut
-
-',
 );
 
 pp_add_exported('','stats');
@@ -1504,9 +1441,6 @@ values are flagged bad.
 
 =cut
 
-EOD
-
-pp_addpm(<<'EOD');
 *stats	  = \&PDLA::stats;
 sub PDLA::stats {
     barf('Usage: ($mean,[$rms]) = stats($data,[$weights])') if $#_>1;
@@ -1528,15 +1462,12 @@ sub PDLA::stats {
 }
 EOD
 
+pp_addpm(<<'EOD');
 =head2 histogram
 
 =for sig
 
   Signature: (in(n); int+[o] hist(m); double step; double min; int msize => m)
-
-=cut
-
-my $histogram_doc = <<'EOD';
 
 =for ref
 
@@ -1567,19 +1498,11 @@ For a higher-level interface, see L<hist|PDLA::Basic/hist>.
  pdla> p histogram(pdl(1,1,2),1,0,3)
  [0 2 1]
 
-=cut
-
-EOD
-
 =head2 whistogram
 
 =for sig
 
   Signature: (in(n); float+ wt(n);float+[o] hist(m); double step; double min; int msize => m)
-
-=cut
-
-my $whistogram_doc = <<'EOD';
 
 =for ref
 
@@ -1611,19 +1534,16 @@ you want.
 
 EOD
 
-
 for(
     {Name => 'histogram',
      WeightPar => '',
      HistType => 'int+',
      HistOp => '++',
-     Doc => $histogram_doc,
      },
     {Name => 'whistogram',
      WeightPar => 'float+ wt(n);',
      HistType => 'float+',
      HistOp => '+= $wt()',
-     Doc => $whistogram_doc,
      }
     )
 {
@@ -1666,19 +1586,16 @@ pp_def($_->{Name},
               }
 	   %}
 	%}',
-	Doc=>$_->{Doc});
+	);
 }
 
+pp_addpm(<<'EOD');
 =head2 histogram2d
 
 =for sig
 
   Signature: (ina(n); inb(n); int+[o] hist(ma,mb); double stepa; double mina; int masize => ma;
 	             double stepb; double minb; int mbsize => mb;)
-
-=cut
-
-my $histogram2d_doc = <<'EOD';
 
 =for ref
 
@@ -1712,18 +1629,12 @@ upper limit is put in the last bin.
 
 =cut
 
-EOD
-
 =head2 whistogram2d
 
 =for sig
 
   Signature: (ina(n); inb(n); float+ wt(n);float+[o] hist(ma,mb); double stepa; double mina; int masize => ma;
 	             double stepb; double minb; int mbsize => mb;)
-
-=cut
-
-my $whistogram2d_doc = <<'EOD';
 
 =for ref
 
@@ -1755,24 +1666,19 @@ upper limit is put in the last bin.
   [  0 0.1   0]
  ]
 
-
 =cut
-
 EOD
-
 
 for(
     {Name => 'histogram2d',
      WeightPar => '',
      HistType => 'int+',
      HistOp => '++',
-     Doc => $histogram2d_doc,
 	},
     {Name => 'whistogram2d',
      WeightPar => 'float+ wt(n);',
      HistType => 'float+',
      HistOp => '+= $wt()',
-     Doc => $whistogram2d_doc,
 	}
     )
 {
@@ -1830,7 +1736,7 @@ pp_def($_->{Name},
 	   %}
 	%}
 	',
-	Doc=> $_->{Doc});
+	);
 }
 
 
@@ -1839,6 +1745,7 @@ pp_def($_->{Name},
 # random numbers
 ###########################################################
 
+pp_addpm(<<'EOD');
 =head2 fibonacci
 
 =for sig
@@ -1848,10 +1755,10 @@ pp_def($_->{Name},
 Constructor - a vector with Fibonacci's sequence
 
 =cut
+EOD
 
 pp_def('fibonacci',
         Pars => '[o]x(n);',
-	Doc=>'Constructor - a vector with Fibonacci\'s sequence',
 	PMFunc=>'',
 	PMCode=><<'EOD',
 sub fibonacci { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->fibonacci : PDLA->fibonacci(@_) }
@@ -1877,32 +1784,12 @@ EOD
         %}
 ');
 
+pp_addpm(<<'EOD');
 =head2 append
 
 =for sig
 
   Signature: (a(n); b(m); [o] c(mn))
-
-=cut
-
-pp_def('append',
-	Pars => 'a(n); b(m); [o] c(mn)',
-# note that ideally we want to say '$SIZE(mn) = $SIZE(m)+$SIZE(n);'
-# but that requires placing RedoDimsParsedCode *after* assignment of
-# childdims to $SIZE(XXX)!!!  XXXXXmake that workXXXXX
-	RedoDimsCode => '
-		pdl * dpdla = $PDLA(a);
-		pdl * dpdlb = $PDLA(b);
-                $SIZE(mn) = (dpdla->ndims > 0 ? dpdla->dims[0] : 1) +
-                        (dpdlb->ndims > 0 ? dpdlb->dims[0] : 1);
-		',
-	Code => 'register PDLA_Indx mnp;
-		 PDLA_Indx ns = $SIZE(n);
-                 threadloop %{
-                       loop(n) %{ $c(mn => n) = $a(); %}
-		       loop(m) %{ mnp = m+ns; $c(mn => mnp) = $b(); %}
-		 %}',
-	Doc => '
 
 =for ref
 
@@ -1925,12 +1812,28 @@ L<cat|PDLA::Core/cat>, which can append more than two piddles that all
 have the same sized dimensions.
 
 =cut
+EOD
 
-'
+pp_def('append',
+	Pars => 'a(n); b(m); [o] c(mn)',
+# note that ideally we want to say '$SIZE(mn) = $SIZE(m)+$SIZE(n);'
+# but that requires placing RedoDimsParsedCode *after* assignment of
+# childdims to $SIZE(XXX)!!!  XXXXXmake that workXXXXX
+	RedoDimsCode => '
+		pdl * dpdla = $PDLA(a);
+		pdl * dpdlb = $PDLA(b);
+                $SIZE(mn) = (dpdla->ndims > 0 ? dpdla->dims[0] : 1) +
+                        (dpdlb->ndims > 0 ? dpdlb->dims[0] : 1);
+		',
+	Code => 'register PDLA_Indx mnp;
+		 PDLA_Indx ns = $SIZE(n);
+                 threadloop %{
+                       loop(n) %{ $c(mn => n) = $a(); %}
+		       loop(m) %{ mnp = m+ns; $c(mn => mnp) = $b(); %}
+		 %}',
    );
 
-pp_addpm(<<'EOD')
-
+pp_addpm(<<'EOD');
 =head2 glue
 
 =for usage
@@ -2006,25 +1909,14 @@ sub PDLA::glue{
     }
     $x->xchg(0,$dim);
 }
-
-
-
-
 EOD
-;
 
+pp_addpm(<<'EOD');
 =head2 axisvalues
 
 =for sig
 
   Signature: ([o,nc]a(n))
-
-=cut
-
-pp_def( 'axisvalues',
-	Pars => '[o,nc]a(n)',
-	Code => 'loop(n) %{ $a() = n; %}',
-	Doc => '
 
 =for ref
 
@@ -2035,13 +1927,15 @@ L<axisvals|PDLA::Basic/axisvals>
 and alters its argument.
 
 =cut
+EOD
 
-'
+pp_def( 'axisvalues',
+	Pars => '[o,nc]a(n)',
+	Code => 'loop(n) %{ $a() = n; %}',
        ); # pp_def: axisvalues
 
 
 pp_addpm(<<'EOD');
-
 =head2 random
 
 =for ref
@@ -2086,7 +1980,6 @@ generator. For further details consult Perl's  L<srand|perlfunc/srand>
 documentation.
 
 =cut
-
 EOD
 
 pp_addhdr(<<'EOH');
@@ -2104,7 +1997,6 @@ pp_def(
 	Code =>
 	'$a() = Drand01();',
 	'NoPthread' => 1, # random isn't threadsafe
-	Doc=>undef,
 	PMCode=><<'EOD',
 sub random { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->random : PDLA->random(@_) }
 sub PDLA::random {
@@ -2125,7 +2017,6 @@ pp_def(
 	'double tmp;
 	 do tmp = Drand01(); while (tmp == 0.0); /* 0 < tmp < 1 */
          $a() = tmp;',
-	Doc=>undef,
 	PMCode=><<'EOD',
 sub randsym { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->randsym : PDLA->randsym(@_) }
 sub PDLA::randsym {
@@ -2138,7 +2029,6 @@ EOD
 );
 
 pp_addpm(<<'EOD');
-
 =head2 grandom
 
 =for ref
@@ -2171,7 +2061,6 @@ sub PDLA::grandom {
    $x .= ndtri(randsym($x));
    return $x;
 }
-
 EOD
 
 pp_add_exported('','grandom');
@@ -2185,7 +2074,6 @@ pp_add_exported('','vsearch');
 # generic front end; defaults to vsearch_sample for backwards compatibility
 
 pp_addpm(<<'EOD');
-
 =head2 vsearch
 
 =for sig
@@ -2729,17 +2617,48 @@ for my $func ( [
 # routines somehow related to interpolation
 ###############################################################
 
+pp_addpm(<<'EOD');
 =head2 interpolate
 
 =for sig
 
   Signature: (xi(); x(n); y(n); [o] yi(); int [o] err())
 
+=for ref
+
+routine for 1D linear interpolation
+
+=for usage
+
+ ( $yi, $err ) = interpolate($xi, $x, $y)
+
+Given a set of points C<($x,$y)>, use linear interpolation
+to find the values C<$yi> at a set of points C<$xi>.
+
+C<interpolate> uses a binary search to find the suspects, er...,
+interpolation indices and therefore abscissas (ie C<$x>)
+have to be I<strictly> ordered (increasing or decreasing).
+For interpolation at lots of
+closely spaced abscissas an approach that uses the last index found as
+a start for the next search can be faster (compare Numerical Recipes
+C<hunt> routine). Feel free to implement that on top of the binary
+search if you like. For out of bounds values it just does a linear
+extrapolation and sets the corresponding element of C<$err> to 1,
+which is otherwise 0.
+
+See also L<interpol|/interpol>, which uses the same routine,
+differing only in the handling of extrapolation - an error message
+is printed rather than returning an error piddle.
+
+=for bad
+
+needs major (?) work to handles bad values
+
 =cut
+EOD
 
 pp_def('interpolate',
        HandleBad => 0,
-       BadDoc => 'needs major (?) work to handles bad values',
 	Pars => 'xi(); x(n); y(n); [o] yi(); int [o] err()',
 	GenericTypes => ['F','D'], # too restrictive ?
 	Code => '
@@ -2776,41 +2695,11 @@ pp_def('interpolate',
 		   $yi() = d*$y(n => jl) + (1-d)*$y(n => jh);
                    $err() = carp;
 		%}
-', Doc=><<'EOD');
-
-=for ref
-
-routine for 1D linear interpolation
-
-=for usage
-
- ( $yi, $err ) = interpolate($xi, $x, $y)
-
-Given a set of points C<($x,$y)>, use linear interpolation
-to find the values C<$yi> at a set of points C<$xi>.
-
-C<interpolate> uses a binary search to find the suspects, er...,
-interpolation indices and therefore abscissas (ie C<$x>)
-have to be I<strictly> ordered (increasing or decreasing).
-For interpolation at lots of
-closely spaced abscissas an approach that uses the last index found as
-a start for the next search can be faster (compare Numerical Recipes
-C<hunt> routine). Feel free to implement that on top of the binary
-search if you like. For out of bounds values it just does a linear
-extrapolation and sets the corresponding element of C<$err> to 1,
-which is otherwise 0.
-
-See also L<interpol|/interpol>, which uses the same routine,
-differing only in the handling of extrapolation - an error message
-is printed rather than returning an error piddle.
-
-=cut
-
-EOD
+',
+);
 
 pp_add_exported('', 'interpol');
 pp_addpm(<<'EOD');
-
 =head2 interpol
 
 =for sig
@@ -2855,7 +2744,6 @@ EOD
 
 pp_add_exported('','interpND');
 pp_addpm(<<'EOD');
-
 =head2 interpND
 
 =for ref
@@ -2882,7 +2770,6 @@ All the interpolation methods treat the pixels as value-centered, so
 the C<sample> method will return C<< $a->(0) >> for coordinate values on
 the set [-0.5,0.5), and all methods will return C<< $a->(1) >> for
 a coordinate value of exactly 1.
-
 
 Recognized options:
 
@@ -3109,7 +2996,6 @@ EOD
 
 pp_add_exported("", 'one2nd');
 pp_addpm(<<'EOD');
-
 =head2 one2nd
 
 =for ref
@@ -3159,6 +3045,7 @@ sub PDLA::one2nd {
 
 EOD
 
+pp_addpm(<<'EOD');
 =head2 which
 
 =for sig
@@ -3166,8 +3053,6 @@ EOD
   Signature: (mask(n); indx [o] inds(m))
 
 =cut
-
-my $doc_which = <<'EOD';
 
 =for ref
 
@@ -3208,19 +3093,11 @@ L<whichND|/whichND> returns N-D indices into a multidimensional PDLA.
  pdla> $indx = which($x>6); p $indx
  [7 8 9]
 
-=cut
-
-EOD
-
 =head2 which_both
 
 =for sig
 
   Signature: (mask(n); indx [o] inds(m); indx [o]notinds(q))
-
-=cut
-
-my $doc_which_both = <<'EOD';
 
 =for ref
 
@@ -3242,7 +3119,6 @@ C<$c_i>.
  [0 1 2 3 4]
 
 =cut
-
 EOD
 
 use PDLA::Config;
@@ -3253,7 +3129,6 @@ use PDLA::Config;
 	  Variables => 'int dm=0;',
 	  Elseclause => "",
 	  Autosize => '$SIZE(m) = sum;',
-	  Doc => $doc_which,
 	  PMCode=><<'EOD',
    sub which { my ($this,$out) = @_;
 		$this = $this->flat;
@@ -3269,7 +3144,6 @@ EOD
 	  Variables => 'int dm=0; int dm2=0;',
 	  Elseclause => "else { \n          \$notinds(q => dm2)=n; \n           dm2++;\n     }",
 	  Autosize => '$SIZE(m) = sum;'."\n".'  	  $SIZE(q) = dpdl->dims[0]-sum;',
-	  Doc => $doc_which_both,
 	  PMCode=><<'EOD',
    sub which_both { my ($this,$outi,$outni) = @_;
 		$this = $this->flat;
@@ -3285,7 +3159,6 @@ EOD
 {
     pp_def($_->{Name},
 	   HandleBad => 1,
-	   Doc => $_->{Doc},
 	   Pars => $_->{Pars},
 	   PMCode => $_->{PMCode},
 	   Code => $_->{Variables} .
@@ -3338,7 +3211,6 @@ EOD
 }
 
 pp_addpm(<<'EOD'
-
 =head2 where
 
 =for ref
@@ -3382,7 +3254,6 @@ WARNING: The first argument
 the exact same dimensions (or horrible things happen). You *cannot*
 thread over a smaller mask, for example.
 
-
 =cut
 
 sub PDLA::where {
@@ -3411,7 +3282,6 @@ EOD
 pp_add_exported("", 'where');
 
 pp_addpm(<<'EOD'
-
 =head2 whereND
 
 =for ref
@@ -3500,7 +3370,6 @@ EOD
 pp_add_exported("", 'whereND');
 
 pp_addpm(<<'EOD'
-
 =head2 whichND
 
 =for ref
@@ -3622,7 +3491,6 @@ pp_add_exported("", 'whichND');
 
 
 pp_addpm(<<'EOD'
-
 =head2 setops
 
 =for ref
@@ -3811,7 +3679,6 @@ pp_add_exported("", 'setops');
 
 
 pp_addpm(<<'EOD'
-
 =head2 intersect
 
 =for ref
@@ -3850,7 +3717,6 @@ EOD
 );
 
 pp_add_exported("", 'intersect');
-
 
 
 pp_addpm({At=>'Bot'},<<'EOD');
