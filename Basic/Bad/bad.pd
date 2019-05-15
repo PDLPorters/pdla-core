@@ -651,12 +651,156 @@ included in the file.
 
 !NO!SUBS!
 
+if ( $bvalflag ) {
+  pp_addpm(<<'!NO!SUBS!');
 
-# if no bad-value support, this is easy
+  *PDLA::check_badflag = sub {
+      my $pdl = shift;
+      $pdl->badflag(0) if $pdl->badflag and $pdl->nbad == 0;
+      return $pdl->badflag;
+  }; # sub: check_badflag()
 
-unless ( $bvalflag ) {
+  # note:
+  #  if sent a piddle, we have to change it's bad values
+  #  (but only if it contains bad values)
+  #  - there's a slight overhead in that the badflag is
+  #    cleared and then set (hence propagating to all
+  #    children) but we'll ignore that)
+  #  - we can ignore this for float/double types
+  #    since we can't change the bad value
+  #
+  *PDLA::badvalue = sub {
+    no strict 'refs';
 
-    pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
+    my ( $self, $val ) = @_;
+    my $num;
+    if ( UNIVERSAL::isa($self,"PDLA") ) {
+        $num = $self->get_datatype;
+        if ( $num < $PDLA_F && defined($val) && $self->badflag ) {
+            $self->inplace->setbadtoval( $val );
+            $self->badflag(1);
+        }
+
+        if ($PDLA::Config{BADVAL_PER_PDLA}) {
+            my $name = "PDLA::_badvalue_per_pdl_int$num";
+            if ( defined $val ) {
+                return &{$name}($self, $val )->sclr;
+            } else {
+                return &{$name}($self, undef)->sclr;
+            }
+        }
+
+    } elsif ( UNIVERSAL::isa($self,"PDLA::Type") ) {
+        $num = $self->enum;
+    } else {
+        # assume it's a number
+        $num = $self;
+    }
+
+    my $name = "PDLA::_badvalue_int$num";
+    if ( defined $val ) {
+        return &{$name}( $val )->sclr;
+    } else {
+        return &{$name}( undef )->sclr;
+    }
+
+  }; # sub: badvalue()
+
+  *PDLA::orig_badvalue = sub {
+    no strict 'refs';
+
+    my $self = shift;
+    my $num;
+    if ( UNIVERSAL::isa($self,"PDLA") ) {
+        $num = $self->get_datatype;
+    } elsif ( UNIVERSAL::isa($self,"PDLA::Type") ) {
+        $num = $self->enum;
+    } else {
+        # assume it's a number
+        $num = $self;
+    }
+
+    my $name = "PDLA::_default_badvalue_int$num";
+    return &${name}();
+
+  }; # sub: orig_badvalue()
+
+############################################################
+############################################################
+
+!NO!SUBS!
+
+  # Generate small ops functions to do entire array
+  foreach my $op ( 
+            ['nbad','nbadover'],
+            ['ngood','ngoodover'],
+              ) {
+      pp_addpm(<<"EOD");
+
+  *$op->[0] = \\&PDLA::$op->[0];
+  *PDLA::$op->[0] = sub {
+          my(\$x) = \@_; my \$tmp;
+          \$x->clump(-1)->$op->[1](\$tmp=PDLA->nullcreate(\$x) );
+          return \$tmp->at();
+  };
+EOD
+
+  } # for $op
+
+pp_addpm(<<'!NO!SUBS!');
+
+  *PDLA::setbadat = sub {
+      barf 'Usage: setbadat($pdl, $x, $y, ...)' if $#_<1;
+      my $self  = shift; 
+      PDLA::Core::set_c ($self, [@_], $self->badvalue);
+      $self->badflag(1);
+      return $self;
+  };
+
+!NO!SUBS!
+# setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
+# setbadtonan /
+#
+  if ( $usenan ) {
+    pp_addpm(<<'!NO!SUBS!');
+
+    *PDLA::setnantobad = sub {
+        my $x = shift;
+        my $y;
+        if ( $x->is_inplace ) {
+            $x->set_inplace(0);
+            $y = $x;
+        } elsif ( $#_ > -1 ) {
+            $y = $_[0] = $x->copy; # is this correct?
+        } else {
+            $y = $x->copy;
+        }
+        # make sure bad flag is set, otherwise check_badflag() is a nop
+        $y->badflag(1); $y->check_badflag();
+        return $y;
+    };
+
+    *PDLA::setbadtonan = sub {
+        my $x = shift;
+        my $y;
+        if ( $x->is_inplace ) {
+            $x->set_inplace(0);
+            $y = $x;
+        } elsif ( $#_ > -1 ) {
+            $y = $_[0] = $x->copy; # is this correct?
+        } else {
+            $y = $x->copy;
+        }
+        $y->badflag(0);
+        return $y;
+    };
+
+!NO!SUBS!
+
+  }
+} else {
+  # if no bad-value support, this is easy
+  pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
 
 # dummy routines
 *PDLA::badflag = sub { return 0; }; # no piddles can contain bad values by design
@@ -699,7 +843,7 @@ unless ( $bvalflag ) {
     pp_done();
     exit;
 
-} # unless: $bvalflag
+} # if: $bvalflag
 
 #########################################################
 
@@ -794,152 +938,7 @@ badflag(x,newval=0)
 
 !WITH!SUBS!
 
-pp_addpm(<<'!NO!SUBS!');
-
-*PDLA::check_badflag = sub {
-    my $pdl = shift;
-    $pdl->badflag(0) if $pdl->badflag and $pdl->nbad == 0;
-    return $pdl->badflag;
-}; # sub: check_badflag()
-
-# note:
-#  if sent a piddle, we have to change it's bad values
-#  (but only if it contains bad values)
-#  - there's a slight overhead in that the badflag is
-#    cleared and then set (hence propagating to all
-#    children) but we'll ignore that)
-#  - we can ignore this for float/double types
-#    since we can't change the bad value
-#
-*PDLA::badvalue = sub {
-    no strict 'refs';
-
-    my ( $self, $val ) = @_;
-    my $num;
-    if ( UNIVERSAL::isa($self,"PDLA") ) {
-	$num = $self->get_datatype;
-	if ( $num < $PDLA_F && defined($val) && $self->badflag ) {
-	    $self->inplace->setbadtoval( $val );
-	    $self->badflag(1);
-	}
-
-	if ($PDLA::Config{BADVAL_PER_PDLA}) {
-	    my $name = "PDLA::_badvalue_per_pdl_int$num";
-	    if ( defined $val ) {
-		return &{$name}($self, $val )->sclr;
-	    } else {
-		return &{$name}($self, undef)->sclr;
-	    }
-	}
-
-    } elsif ( UNIVERSAL::isa($self,"PDLA::Type") ) {
-	$num = $self->enum;
-    } else {
-        # assume it's a number
-        $num = $self;
-    }
-
-    my $name = "PDLA::_badvalue_int$num";
-    if ( defined $val ) {
-	return &{$name}( $val )->sclr;
-    } else {
-	return &{$name}( undef )->sclr;
-    }
-
-}; # sub: badvalue()
-
-*PDLA::orig_badvalue = sub {
-    no strict 'refs';
-
-    my $self = shift;
-    my $num;
-    if ( UNIVERSAL::isa($self,"PDLA") ) {
-	$num = $self->get_datatype;
-    } elsif ( UNIVERSAL::isa($self,"PDLA::Type") ) {
-	$num = $self->enum;
-    } else {
-        # assume it's a number
-        $num = $self;
-    }
-
-    my $name = "PDLA::_default_badvalue_int$num";
-    return &${name}();
-
-}; # sub: orig_badvalue()
-
-############################################################
-############################################################
-
-!NO!SUBS!
-
-# Generate small ops functions to do entire array
-foreach my $op ( 
-	  ['nbad','nbadover'],
-	  ['ngood','ngoodover'],
-	  ) {
-    pp_addpm(<<"EOD");
-
-*$op->[0] = \\&PDLA::$op->[0];
-*PDLA::$op->[0] = sub {
-	my(\$x) = \@_; my \$tmp;
-	\$x->clump(-1)->$op->[1](\$tmp=PDLA->nullcreate(\$x) );
-	return \$tmp->at();
-};
-EOD
-
-} # for $op
-
-pp_addpm(<<'!NO!SUBS!');
-
-*PDLA::setbadat = sub {
-    barf 'Usage: setbadat($pdl, $x, $y, ...)' if $#_<1;
-    my $self  = shift; 
-    PDLA::Core::set_c ($self, [@_], $self->badvalue);
-    $self->badflag(1);
-    return $self;
-};
-
-!NO!SUBS!
-# setnantobad \ are straight copies if $PDLA::Bad::UseNaN == 1
-# setbadtonan /
-#
-if ( $usenan ) {
-	pp_addpm(<<'!NO!SUBS!');
-
-*PDLA::setnantobad = sub {
-    my $x = shift;
-    my $y;
-    if ( $x->is_inplace ) {
-	$x->set_inplace(0);
-	$y = $x;
-    } elsif ( $#_ > -1 ) {
-	$y = $_[0] = $x->copy; # is this correct?
-    } else {
-	$y = $x->copy;
-    }
-    # make sure bad flag is set, otherwise check_badflag() is a nop
-    $y->badflag(1); $y->check_badflag();
-    return $y;
-};
-
-*PDLA::setbadtonan = sub {
-    my $x = shift;
-    my $y;
-    if ( $x->is_inplace ) {
-	$x->set_inplace(0);
-	$y = $x;
-    } elsif ( $#_ > -1 ) {
-	$y = $_[0] = $x->copy; # is this correct?
-    } else {
-	$y = $x->copy;
-    }
-    $y->badflag(0);
-    return $y;
-};
-
-!NO!SUBS!
-
-} else {
+if ( !$usenan ) {
 
     # usenan is not true, so we need to do something
 pp_def('setnantobad' . "\n=for sig\n\n  Signature: (a(); [o]b())\n",
