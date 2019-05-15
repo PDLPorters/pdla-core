@@ -64,9 +64,6 @@ C<-E<gt>copy> they would not.
 use PDLA::Core ':Internal';
 use Scalar::Util 'blessed';
 
-EOD
-
-pp_addpm(<<'EOD');
 =head2 index, index1d, index2d
 
 =for ref
@@ -141,10 +138,6 @@ index2d barfs if either of the index values are bad.
 
 =cut
 
-EOD
-
-pp_addpm(<<'EOD-indexND');
-
 =head2 indexNDb
 
 =for ref
@@ -189,10 +182,6 @@ sub PDLA::indexND {
 
 *PDLA::indexNDb = \&PDLA::indexND;
 
-EOD-indexND
-
-pp_addpm(<<'EOD-range');
-
 sub PDLA::range {
   my($source,$ind,$sz,$bound) = @_;
 
@@ -232,9 +221,7 @@ sub PDLA::range {
   no warnings; # shut up about passing undef into rangeb
   $source->rangeb($index,$size,$bound);
 }
-EOD-range
 
-pp_addpm(<<'EOD');
 =head2 range
 
 =for ref
@@ -499,9 +486,6 @@ to tease out the algorithm.
 
 =cut
 
-EOD
-
-pp_addpm(<<'EOD');
 =head2 rld
 
 =for ref
@@ -533,9 +517,6 @@ sub PDLA::rld {
   $c;
 }
 
-EOD
-
-pp_addpm(<<'EOD');
 =head2 rle
 
 =for ref
@@ -578,10 +559,7 @@ sub PDLA::rle {
                                 ($x!=0)->clump(1..$x->ndims-1)->sumover->max-1;
   return ($x->slice("0:$max_ind"),$y->slice("0:$max_ind"));
 }
-EOD
 
-
-pp_addpm(<<'EOD');
 =head2 xchg
 
 =for ref
@@ -602,10 +580,6 @@ are exchanged with each other i.e.
  $y->at(5,3,2,8) == $x->at(5,3,8,2)
 
 =cut
-
-EOD
-
-pp_addpm(<< 'EOD');
 
 =head2 reorder
 
@@ -726,9 +700,6 @@ sub PDLA::reorder {
         return $pdl->thread(@newDimOrder)->unthread(0);
 }
 
-EOD
-
-pp_addpm(<<'EOD');
 =head2 mv
 
 =for ref
@@ -749,9 +720,7 @@ place 1, so:
 The other dimensions are moved accordingly.
 Negative dimension indices count from the end.
 =cut
-EOD
 
-pp_addpm(<<'EOD');
 =head2 oslice
 
 =for ref
@@ -847,9 +816,6 @@ depending on whether you prefer error-reporting clarity or speed of execution.
 
 =cut
 
-EOD
-pp_addpm(<<'EOD');
-
 =head2 using
 
 =for ref
@@ -879,8 +845,6 @@ sub PDLA::using {
   @ind;
 }
 
-EOD
-pp_addpm(<<'EOD');
 =head2 diagonalI
 
 =for ref
@@ -902,8 +866,6 @@ to C<$x-E<gt>at(2,1,2,0,1,2)>.
 
 NOTE: diagonal doesn't handle threadids correctly. XXX FIX
 =cut
-EOD
-pp_addpm(<<'EOD');
 =head2 lags
 
 =for ref
@@ -938,8 +900,6 @@ C<$step> and C<$nlags> must be positive. C<$nthdim> can be
 negative and will then be counted from the last dim backwards
 in the usual way (-1 = last dim).
 =cut
-EOD
-pp_addpm(<<'EOD');
 =head2 splitdim
 
 =for ref
@@ -958,16 +918,12 @@ the expression
 
 is always true (C<m> has to be less than 3).
 =cut
-EOD
-pp_addpm(<<'EOD');
 =head2 rotate
 
 =for ref
 
 Shift vector elements along with wrap. Flows data back&forth.
 =cut
-EOD
-pp_addpm(<<'EOD');
 =head2 threadI
 
 =for ref
@@ -982,8 +938,6 @@ Put some dimensions to a threadid.
 
 =cut
 
-EOD
-pp_addpm(<<'EOD');
 =head2 identvaff
 
 =for ref
@@ -992,8 +946,6 @@ A vaffine identity transformation (includes thread_id copying).
 
 Mainly for internal use.
 =cut
-EOD
-pp_addpm(<<'EOD');
 =head2 unthread
 
 =for ref
@@ -1002,8 +954,6 @@ All threaded dimensions are made real again.
 
 See [TBD Doc] for details and examples.
 =cut
-EOD
-pp_addpm(<<'EOD');
 
 =head2 dice
 
@@ -1158,11 +1108,6 @@ sub PDLA::dice_axis {
   return $self->mv($axis,0)->index1d($ix)->mv(0,$axis);
 }
 *dice_axis = \&PDLA::dice_axis;
-
-
-EOD
-
-pp_addpm(<<'EOD-slice');
 
 =head2 slice
 
@@ -1376,9 +1321,6 @@ sub PDLA::slice (;@) {
 
     PDLA::sliceb($source,\@others);
 }
-
-EOD-slice
-pp_addpm({At => 'Bot'},<< 'EOD');
 
 =head1 BUGS
 
