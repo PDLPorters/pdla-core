@@ -1,9 +1,5 @@
 use strict;
 
-# check for bad value support
-use PDLA::Config;
-my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
-
 pp_addhdr(<<'EOD');
 
 #ifndef RAND_MAX
@@ -885,13 +881,6 @@ of the result piddle.  This follows the Matlab usage.
 See L<uniqind|uniqind> if you need the indices of the unique
 elements rather than the values.
 
-=cut
-
-EOPM
-
-if ( $bvalflag ) {
-	pp_addpm(<<'EOPM');
-
 =for bad
 
 Bad values are not considered unique by uniq and are ignored.
@@ -904,7 +893,6 @@ Bad values are not considered unique by uniq and are ignored.
 =cut
 
 EOPM
-} # if: $bvalflag
 
 pp_addpm(<<'EOPM');
 
@@ -959,13 +947,6 @@ piddle is lost.
 See L<uniq|uniq> if you want the unique values instead of the
 indices.
 
-=cut
-
-EOPM
-
-if ($bvalflag ) {
-	pp_addpm(<<'EOPM');
-
 =for bad
 
 Bad values are not considered unique by uniqind and are ignored.
@@ -973,7 +954,6 @@ Bad values are not considered unique by uniqind and are ignored.
 =cut
 
 EOPM
-} # if: $bvalflag
 
 pp_addpm(<<'EOPM');
 
@@ -1038,13 +1018,6 @@ See also L<uniq|uniq> for a unique list of scalars; and
 L<qsortvec|PDLA::Ufunc/qsortvec> for sorting a list of vectors
 lexicographcally.
 
-=cut
-
-EOPM
-
-if ( $bvalflag ) {
-pp_addpm(<<'EOPM');
-
 =for bad
 
 If a vector contains all bad values, it is ignored as in L<uniq|uniq>.
@@ -1053,11 +1026,9 @@ example, [1 2 BAD] and [BAD 2 3] could be returned, but [BAD BAD BAD]
 could not.  Vectors containing BAD values will be returned after any
 non-NaN and non-BAD containing vectors, followed by the NaN vectors.
 
-
 =cut
 
 EOPM
-} # if: $bvalflag
 
 pp_addpm(<<'EOPM');
 
@@ -1194,13 +1165,6 @@ Clip (threshold) a piddle by (optional) upper or lower bounds.
  $y = $x->clip(0,3);
  $c = $x->clip(undef, $x);
 
-=cut
-
-EOD
-
-    if ( $bvalflag ) {
-	pp_addpm(<<'EOD');
-
 =for bad
 
 clip handles bad values since it is just a
@@ -1210,7 +1174,6 @@ L<lclip|/lclip>.
 =cut
 
 EOD
-} # if: $bvalflag
 
 pp_def(
 	'clip',
@@ -1534,13 +1497,6 @@ calculated considering the entire input PDLA as a single sample, rather
 than as a collection of rows. See L</statsover> for definitions of the
 returned quantities.
 
-=cut
-
-EOD
-
-    if ( $bvalflag ) {
-	pp_addpm(<<'EOD');
-
 =for bad
 
 Bad values are handled; if all input values are bad, then all of the output
@@ -1549,7 +1505,7 @@ values are flagged bad.
 =cut
 
 EOD
-} # if: bvalflag
+
 pp_addpm(<<'EOD');
 *stats	  = \&PDLA::stats;
 sub PDLA::stats {
@@ -3289,6 +3245,8 @@ C<$c_i>.
 
 EOD
 
+use PDLA::Config;
+
     for (
 	 {Name=>'which',
 	  Pars => 'mask(n); indx [o] inds(m);',
@@ -3361,7 +3319,7 @@ EOD
 		  barf("dimflag currently works only with 1D pdls");
 
 '.
-($bvalflag ? '
+($PDLA::Config{WITH_BADVAL} ? '
 		if(dpdl->state & PDLA_BADVAL)
 		  for (i=0; i<dpdl->dims[0]; i++) {
 	 	 	$GENERIC() foo = *(m_datap+inc*i+offs);
