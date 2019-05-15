@@ -57,83 +57,14 @@ say
 then the variables C<$y> and C<$c> point to the same object but with
 C<-E<gt>copy> they would not.
 
+=head1 FUNCTIONS
+
 =cut
 
 use PDLA::Core ':Internal';
 use Scalar::Util 'blessed';
 
 EOD
-
-=head1
-FUNCTIONS
-=cut
-
-# $::PP_VERBOSE=1;
-
-pp_addhdr(<<'EOH');
-
-#ifdef _MSC_VER
-#if _MSC_VER < 1300
-#define strtoll strtol
-#else
-#define strtoll _strtoi64
-#endif
-#endif
-
-EOH
-
-pp_add_boot(
-"  PDLA->readdata_affine = pdl_readdata_affineinternal;\n" .
-"     PDLA->writebackdata_affine = pdl_writebackdata_affineinternal;\n"
-);
-
-## Several routines use the 'Dims' and 'ParentInds'
-## rules - these currently do nothing
-
-pp_def(
-       'affineinternal',
-       HandleBad => 1,
-       AffinePriv => 1,
-       DefaultFlow => 1,
-       P2Child => 1,
-       NoPdlThread => 1,
-       ReadDataFuncName => "pdl_readdata_affineinternal",
-       WriteBackDataFuncName => "pdl_writebackdata_affineinternal",
-       MakeComp => '$CROAK("AFMC MUSTNT BE CALLED");',
-       RedoDims => '$CROAK("AFRD MUSTNT BE CALLED");',
-       EquivCPOffsCode => '
-                PDLA_Indx i; PDLA_Indx poffs=$PRIV(offs); int nd;
-                for(i=0; i<$CHILD_P(nvals); i++) {
-                        $EQUIVCPOFFS(i,poffs);
-                        for(nd=0; nd<$CHILD_P(ndims); nd++) {
-                                poffs += $PRIV(incs[nd]);
-                                if( (nd<$CHILD_P(ndims)-1 &&
-                                     (i+1)%$CHILD_P(dimincs[nd+1])) ||
-                                   nd == $CHILD_P(ndims)-1)
-                                        break;
-                                poffs -= $PRIV(incs[nd]) *
-                                        $CHILD_P(dims[nd]);
-                        }
-                }',
-       Doc => undef,    # 'internal',
-);
-
-=head2 s_identity
-=cut
-
-pp_def(
-        's_identity',
-        HandleBad => 1,
-        P2Child => 1,
-        NoPdlThread => 1,
-        DefaultFlow => 1,
-        OtherPars => '',
-        Reversible => 1,
-        Dims => '$COPYDIMS();',
-        ParentInds => '$COPYINDS();',
-        Identity => 1,
-        Doc => undef, # Internal vaffine identity function.
-);
 
 pp_addpm(<<'EOD');
 =head2 index, index1d, index2d
@@ -212,139 +143,6 @@ index2d barfs if either of the index values are bad.
 
 EOD
 
-my $index_init_good =
-       'register PDLA_Indx foo = $ind();
-        if( foo<0 || foo>=$SIZE(n) ) {
-           barf("PDLA::index: invalid index %d (valid range 0..%d)",
-                foo,$SIZE(n)-1);
-        }';
-my $index_init_bad =
-       'register PDLA_Indx foo = $ind();
-        if( $ISBADVAR(foo,ind) || foo<0 || foo>=$SIZE(n) ) {
-           barf("PDLA::index: invalid index %d (valid range 0..%d)",
-                foo,$SIZE(n)-1);
-        }';
-
-pp_def(
-       'index',
-       HandleBad => 1,
-       DefaultFlow => 1,
-       Reversible => 1,
-       Pars => 'a(n); indx ind(); [oca] c();',
-       Code =>
-       $index_init_good . ' $c() = $a(n => foo);',
-       BadCode =>
-       $index_init_bad . ' $c() = $a(n => foo);',
-       BackCode =>
-       $index_init_good . ' $a(n => foo) = $c();',
-       BadBackCode =>
-       $index_init_bad . ' $a(n => foo) = $c();',
-       );
-
-pp_def(
-       'index1d',
-       HandleBad => 1,
-       DefaultFlow => 1,
-       Reversible => 1,
-       Pars => 'a(n); indx ind(m); [oca] c(m);',
-       Code =>
-       q{
-         PDLA_Indx i;
-         for(i=0;i<$SIZE(m);i++) {
-                  PDLA_Indx foo = $ind(m=>i);
-                  if( foo<0 || foo >= $SIZE(n) ) {
-                   barf("PDLA::index1d: invalid index %d at pos %d (valid range 0..%d)",
-                     foo, i, $SIZE(n)-1);
-                  }
-                  $c(m=>i) = $a(n=>foo);
-         }
-        },
-        BadCode =>
-        q{
-         PDLA_Indx i;
-         for(i=0;i<$SIZE(m);i++) {
-                 PDLA_Indx foo = $ind(m=>i);
-                 if( $ISBADVAR(foo, ind) ) {
-                     $SETBAD(c(m=>i));
-                 } else {
-                   if( foo<0 || foo >= $SIZE(n) ) {
-                     barf("PDLA::index1d: invalid/bad index %d at pos %d (valid range 0..%d)",
-                      foo, i, $SIZE(n)-1);
-                   }
-                   $c(m=>i) = $a(n=>foo);
-                 }
-         }
-        },
-       BackCode => q{
-         PDLA_Indx i;
-         for(i=0;i<$SIZE(m);i++) {
-                PDLA_Indx foo = $ind(m=>i);
-                if( foo<0 || foo >= $SIZE(n) ) {
-                 barf("PDLA::index1d: invalid index %d at pos %d (valid range 0..%d)",
-                   foo, i, $SIZE(n)-1);
-                }
-                $a(n=>foo) = $c(m=>i);
-         }
-        },
-       BadBackCode => q{
-         PDLA_Indx i;
-         for(i=0;i<$SIZE(m);i++) {
-                 PDLA_Indx foo = $ind(m=>i);
-                 if( $ISBADVAR(foo, ind) ) {
-                   /* do nothing */
-                 } else {
-                   if( foo<0 || foo >= $SIZE(n) ) {
-                     barf("PDLA::index1d: invalid/bad index %d at pos %d (valid range 0..%d)",
-                      foo, i, $SIZE(n)-1);
-                   }
-                   $a(n=>foo) = $c(m=>i);
-                 }
-         }
-        },
-       );
-
-my $index2d_init_good =
-       'register PDLA_Indx fooa,foob;
-        fooa = $inda();
-        if( fooa<0 || fooa>=$SIZE(na) ) {
-           barf("PDLA::index: invalid x-index %d (valid range 0..%d)",
-                fooa,$SIZE(na)-1);
-        }
-        foob = $indb();
-        if( foob<0 || foob>=$SIZE(nb) ) {
-           barf("PDLA::index: invalid y-index %d (valid range 0..%d)",
-                foob,$SIZE(nb)-1);
-        }';
-my $index2d_init_bad =
-       'register PDLA_Indx fooa,foob;
-        fooa = $inda();
-        if( $ISBADVAR(fooa,inda) || fooa<0 || fooa>=$SIZE(na) ) {
-           barf("PDLA::index: invalid index 1");
-        }
-        foob = $indb();
-        if( $ISBADVAR(foob,indb) || foob<0 || foob>=$SIZE(nb) ) {
-           barf("PDLA::index: invalid index 2");
-        }';
-
-pp_def(
-       'index2d',
-       HandleBad => 1,
-       DefaultFlow => 1,
-       Reversible => 1,
-       Pars => 'a(na,nb); indx inda(); indx indb(); [oca] c();',
-       Code =>
-       $index2d_init_good . ' $c() = $a(na => fooa, nb => foob);',
-       BadCode =>
-       $index2d_init_bad . '$c() = $a(na => fooa, nb => foob);',
-       BackCode =>
-       $index2d_init_good . ' $a(na => fooa, nb => foob) = $c();',
-       BadBackCode =>
-       $index2d_init_bad . '$a(na => fooa, nb => foob) = $c();',
-);
-
-
-# indexND: CED 2-Aug-2002
-pp_add_exported('','indexND indexNDb');
 pp_addpm(<<'EOD-indexND');
 
 =head2 indexNDb
@@ -703,6 +501,1112 @@ to tease out the algorithm.
 
 EOD
 
+pp_addpm(<<'EOD');
+=head2 rld
+
+=for ref
+
+Run-length decode a vector
+
+Given a vector C<$x> of the numbers of instances of values C<$y>, run-length
+decode to C<$c>.
+
+=for example
+
+ rld($x,$y,$c=null);
+
+=cut
+
+sub PDLA::rld {
+  my ($x,$y) = @_;
+  my ($c);
+  if ($#_ == 2) {
+    $c = $_[2];
+  } else {
+# XXX Need to improve emulation of threading in auto-generating c
+    my ($size) = $x->sumover->max;
+    my (@dims) = $x->dims;
+    shift @dims;
+    $c = $y->zeroes($size,@dims);
+  }
+  &PDLA::_rld_int($x,$y,$c);
+  $c;
+}
+
+EOD
+
+pp_addpm(<<'EOD');
+=head2 rle
+
+=for ref
+
+Run-length encode a vector
+
+Given vector C<$c>, generate a vector C<$x> with the number of each
+element, and a vector C<$y> of the unique values.  New in PDLA 2.017,
+only the elements up to the first instance of C<0> in C<$x> are
+returned, which makes the common use case of a 1-dimensional C<$c> simpler.
+For threaded operation, C<$x> and C<$y> will be large enough
+to hold the largest row of C<$y>, and only the elements up to the
+first instance of C<0> in each row of C<$x> should be considered.
+
+=for example
+
+ $c = floor(4*random(10));
+ rle($c,$x=null,$y=null);
+ #or
+ ($x,$y) = rle($c);
+
+ #for $c of shape [10, 4]:
+ $c = floor(4*random(10,4));
+ ($x,$y) = rle($c);
+
+ #to see the results of each row one at a time:
+ foreach (0..$c->dim(1)-1){
+  my ($as,$bs) = ($x(:,($_)),$y(:,($_)));
+  my ($ta,$tb) = where($as,$bs,$as!=0); #only the non-zero elements of $x
+  print $c(:,($_)) . " rle==> " , ($ta,$tb) , "\trld==> " . rld($ta,$tb) . "\n";
+ }
+
+=cut
+
+sub PDLA::rle {
+  my $c = shift;
+  my ($x,$y) = @_==2 ? @_ : (null,null);
+  &PDLA::_rle_int($c,$x,$y);
+  my $max_ind = ($c->ndims<2) ? ($x!=0)->sumover-1 :
+                                ($x!=0)->clump(1..$x->ndims-1)->sumover->max-1;
+  return ($x->slice("0:$max_ind"),$y->slice("0:$max_ind"));
+}
+EOD
+
+
+pp_addpm(<<'EOD');
+=head2 xchg
+
+=for ref
+
+exchange two dimensions
+
+Negative dimension indices count from the end.
+
+The command
+
+=for example
+
+ $y = $x->xchg(2,3);
+
+creates C<$y> to be like C<$x> except that the dimensions 2 and 3
+are exchanged with each other i.e.
+
+ $y->at(5,3,2,8) == $x->at(5,3,8,2)
+
+=cut
+
+EOD
+
+pp_addpm(<< 'EOD');
+
+=head2 reorder
+
+=for ref
+
+Re-orders the dimensions of a PDLA based on the supplied list.
+
+Similar to the L<xchg|/xchg> method, this method re-orders the dimensions
+of a PDLA. While the L<xchg|/xchg> method swaps the position of two dimensions,
+the reorder method can change the positions of many dimensions at
+once.
+
+=for usage
+
+ # Completely reverse the dimension order of a 6-Dim array.
+ $reOrderedPDLA = $pdl->reorder(5,4,3,2,1,0);
+
+The argument to reorder is an array representing where the current dimensions
+should go in the new array. In the above usage, the argument to reorder
+C<(5,4,3,2,1,0)>
+indicates that the old dimensions (C<$pdl>'s dims) should be re-arranged to make the
+new pdl (C<$reOrderPDLA>) according to the following:
+
+   Old Position   New Position
+   ------------   ------------
+   5              0
+   4              1
+   3              2
+   2              3
+   1              4
+   0              5
+
+You do not need to specify all dimensions, only a complete set
+starting at position 0.  (Extra dimensions are left where they are).
+This means, for example, that you can reorder() the X and Y dimensions of
+an image, and not care whether it is an RGB image with a third dimension running
+across color plane.
+
+=for example
+
+Example:
+
+ pdla> $x = sequence(5,3,2);       # Create a 3-d Array
+ pdla> p $x
+ [
+  [
+   [ 0  1  2  3  4]
+   [ 5  6  7  8  9]
+   [10 11 12 13 14]
+  ]
+  [
+   [15 16 17 18 19]
+   [20 21 22 23 24]
+   [25 26 27 28 29]
+  ]
+ ]
+ pdla> p $x->reorder(2,1,0); # Reverse the order of the 3-D PDLA
+ [
+  [
+   [ 0 15]
+   [ 5 20]
+   [10 25]
+  ]
+  [
+   [ 1 16]
+   [ 6 21]
+   [11 26]
+  ]
+  [
+   [ 2 17]
+   [ 7 22]
+   [12 27]
+  ]
+  [
+   [ 3 18]
+   [ 8 23]
+   [13 28]
+  ]
+  [
+   [ 4 19]
+   [ 9 24]
+   [14 29]
+  ]
+ ]
+
+The above is a simple example that could be duplicated by calling
+C<$x-E<gt>xchg(0,2)>, but it demonstrates the basic functionality of reorder.
+
+As this is an index function, any modifications to the
+result PDLA will change the parent.
+
+=cut
+
+sub PDLA::reorder {
+        my ($pdl,@newDimOrder) = @_;
+
+        my $arrayMax = $#newDimOrder;
+
+        #Error Checking:
+        if( $pdl->getndims < scalar(@newDimOrder) ){
+                my $errString = "PDLA::reorder: Number of elements (".scalar(@newDimOrder).") in newDimOrder array exceeds\n";
+                $errString .= "the number of dims in the supplied PDLA (".$pdl->getndims.")";
+                barf($errString);
+        }
+
+        # Check to make sure all the dims are within bounds
+        for my $i(0..$#newDimOrder) {
+          my $dim = $newDimOrder[$i];
+          if($dim < 0 || $dim > $#newDimOrder) {
+              my $errString = "PDLA::reorder: Dim index $newDimOrder[$i] out of range in position $i\n(range is 0-$#newDimOrder)";
+              barf($errString);
+          }
+        }
+
+        # Checking that they are all present and also not duplicated is done by thread() [I think]
+
+        # a quicker way to do the reorder
+        return $pdl->thread(@newDimOrder)->unthread(0);
+}
+
+EOD
+
+pp_addpm(<<'EOD');
+=head2 mv
+
+=for ref
+
+move a dimension to another position
+
+The command
+
+=for example
+
+ $y = $x->mv(4,1);
+
+creates C<$y> to be like C<$x> except that the dimension 4 is moved to the
+place 1, so:
+
+ $y->at(1,2,3,4,5,6) == $x->at(1,5,2,3,4,6);
+
+The other dimensions are moved accordingly.
+Negative dimension indices count from the end.
+=cut
+EOD
+
+pp_addpm(<<'EOD');
+=head2 oslice
+
+=for ref
+
+DEPRECATED:  'oslice' is the original 'slice' routine in pre-2.006_006
+versions of PDLA.  It is left here for reference but will disappear in
+PDLA 3.000
+
+Extract a rectangular slice of a piddle, from a string specifier.
+
+C<slice> was the original Swiss-army-knife PDLA indexing routine, but is
+largely superseded by the L<NiceSlice|PDLA::NiceSlice> source prefilter
+and its associated L<nslice|PDLA::Core/nslice> method.  It is still used as the
+basic underlying slicing engine for L<nslice|PDLA::Core/nslice>,
+and is especially useful in particular niche applications.
+
+=for example
+
+ $x->slice('1:3');  #  return the second to fourth elements of $x
+ $x->slice('3:1');  #  reverse the above
+ $x->slice('-2:1'); #  return last-but-one to second elements of $x
+
+The argument string is a comma-separated list of what to do
+for each dimension. The current formats include
+the following, where I<a>, I<b> and I<c> are integers and can
+take legal array index values (including -1 etc):
+
+=over 8
+
+=item :
+
+takes the whole dimension intact.
+
+=item ''
+
+(nothing) is a synonym for ":"
+(This means that C<$x-E<gt>slice(':,3')> is equal to C<$x-E<gt>slice(',3')>).
+
+=item a
+
+slices only this value out of the corresponding dimension.
+
+=item (a)
+
+means the same as "a" by itself except that the resulting
+dimension of length one is deleted (so if C<$x> has dims C<(3,4,5)> then
+C<$x-E<gt>slice(':,(2),:')> has dimensions C<(3,5)> whereas
+C<$x-E<gt>slice(':,2,:')> has dimensions C<(3,1,5))>.
+
+=item a:b
+
+slices the range I<a> to I<b> inclusive out of the dimension.
+
+=item a:b:c
+
+slices the range I<a> to I<b>, with step I<c> (i.e. C<3:7:2> gives the indices
+C<(3,5,7)>). This may be confusing to Matlab users but several other
+packages already use this syntax.
+
+
+=item '*'
+
+inserts an extra dimension of width 1 and
+
+=item '*a'
+
+inserts an extra (dummy) dimension of width I<a>.
+
+=back
+
+An extension is planned for a later stage allowing
+C<$x-E<gt>slice('(=1),(=1|5:8),3:6(=1),4:6')>
+to express a multidimensional diagonal of C<$x>.
+
+Trivial out-of-bounds slicing is allowed: if you slice a source
+dimension that doesn't exist, but only index the 0th element, then
+C<slice> treats the source as if there were a dummy dimension there.
+The following are all equivalent:
+
+        xvals(5)->dummy(1,1)->slice('(2),0')  # Add dummy dim, then slice
+        xvals(5)->slice('(2),0')              # Out-of-bounds slice adds dim.
+        xvals(5)->slice((2),0)                # NiceSlice syntax
+        xvals(5)->((2))->dummy(0,1)           # NiceSlice syntax
+
+This is an error:
+
+        xvals(5)->slice('(2),1')        # nontrivial out-of-bounds slice dies
+
+Because slicing doesn't directly manipulate the source and destination
+pdl -- it just sets up a transformation between them -- indexing errors
+often aren't reported until later.  This is either a bug or a feature,
+depending on whether you prefer error-reporting clarity or speed of execution.
+
+=cut
+
+EOD
+pp_addpm(<<'EOD');
+
+=head2 using
+
+=for ref
+
+Returns array of column numbers requested
+
+=for usage
+
+ line $pdl->using(1,2);
+
+Plot, as a line, column 1 of C<$pdl> vs. column 2
+
+=for example
+
+ pdla> $pdl = rcols("file");
+ pdla> line $pdl->using(1,2);
+
+=cut
+
+*using = \&PDLA::using;
+sub PDLA::using {
+  my ($x,@ind)=@_;
+  @ind = list $ind[0] if (blessed($ind[0]) && $ind[0]->isa('PDLA'));
+  foreach (@ind) {
+    $_ = $x->slice("($_)");
+  }
+  @ind;
+}
+
+EOD
+pp_addpm(<<'EOD');
+=head2 diagonalI
+
+=for ref
+
+Returns the multidimensional diagonal over the specified dimensions.
+
+The diagonal is placed at the first (by number) dimension that is
+diagonalized.
+The other diagonalized dimensions are removed. So if C<$x> has dimensions
+C<(5,3,5,4,6,5)> then after
+
+=for example
+
+ $y = $x->diagonal(0,2,5);
+
+the piddle C<$y> has dimensions C<(5,3,4,6)> and
+C<$y-E<gt>at(2,1,0,1)> refers
+to C<$x-E<gt>at(2,1,2,0,1,2)>.
+
+NOTE: diagonal doesn't handle threadids correctly. XXX FIX
+=cut
+EOD
+pp_addpm(<<'EOD');
+=head2 lags
+
+=for ref
+
+Returns a piddle of lags to parent.
+
+Usage:
+
+=for usage
+
+  $lags = $x->lags($nthdim,$step,$nlags);
+
+I.e. if C<$x> contains
+
+ [0,1,2,3,4,5,6,7]
+
+then
+
+=for example
+
+ $y = $x->lags(0,2,2);
+
+is a (5,2) matrix
+
+ [2,3,4,5,6,7]
+ [0,1,2,3,4,5]
+
+This order of returned indices is kept because the function is
+called "lags" i.e. the nth lag is n steps behind the original.
+
+C<$step> and C<$nlags> must be positive. C<$nthdim> can be
+negative and will then be counted from the last dim backwards
+in the usual way (-1 = last dim).
+=cut
+EOD
+pp_addpm(<<'EOD');
+=head2 splitdim
+
+=for ref
+
+Splits a dimension in the parent piddle (opposite of L<clump|PDLA::Core/clump>)
+
+After
+
+=for example
+
+ $y = $x->splitdim(2,3);
+
+the expression
+
+ $y->at(6,4,m,n,3,6) == $x->at(6,4,m+3*n)
+
+is always true (C<m> has to be less than 3).
+=cut
+EOD
+pp_addpm(<<'EOD');
+=head2 rotate
+
+=for ref
+
+Shift vector elements along with wrap. Flows data back&forth.
+=cut
+EOD
+pp_addpm(<<'EOD');
+=head2 threadI
+
+=for ref
+
+internal
+
+Put some dimensions to a threadid.
+
+=for example
+
+ $y = $x->threadI(0,1,5); # thread over dims 1,5 in id 1
+
+=cut
+
+EOD
+pp_addpm(<<'EOD');
+=head2 identvaff
+
+=for ref
+
+A vaffine identity transformation (includes thread_id copying).
+
+Mainly for internal use.
+=cut
+EOD
+pp_addpm(<<'EOD');
+=head2 unthread
+
+=for ref
+
+All threaded dimensions are made real again.
+
+See [TBD Doc] for details and examples.
+=cut
+EOD
+pp_addpm(<<'EOD');
+
+=head2 dice
+
+=for ref
+
+Dice rows/columns/planes out of a PDLA using indexes for
+each dimension.
+
+This function can be used to extract irregular subsets
+along many dimension of a PDLA, e.g. only certain rows in an image,
+or planes in a cube. This can of course be done with
+the usual dimension tricks but this saves having to
+figure it out each time!
+
+This method is similar in functionality to the L<slice|/slice>
+method, but L<slice|/slice> requires that contiguous ranges or ranges
+with constant offset be extracted. ( i.e. L<slice|/slice> requires
+ranges of the form C<1,2,3,4,5> or C<2,4,6,8,10>). Because of this
+restriction, L<slice|/slice> is more memory efficient and slightly faster
+than dice
+
+=for usage
+
+ $slice = $data->dice([0,2,6],[2,1,6]); # Dicing a 2-D array
+
+The arguments to dice are arrays (or 1D PDLAs) for each dimension
+in the PDLA. These arrays are used as indexes to which rows/columns/cubes,etc
+to dice-out (or extract) from the C<$data> PDLA.
+
+Use C<X> to select all indices along a given dimension (compare also
+L<mslice|PDLA::Core/mslice>). As usual (in slicing methods) trailing
+dimensions can be omitted implying C<X>'es for those.
+
+=for example
+
+ pdla> $x = sequence(10,4)
+ pdla> p $x
+ [
+  [ 0  1  2  3  4  5  6  7  8  9]
+  [10 11 12 13 14 15 16 17 18 19]
+  [20 21 22 23 24 25 26 27 28 29]
+  [30 31 32 33 34 35 36 37 38 39]
+ ]
+ pdla> p $x->dice([1,2],[0,3]) # Select columns 1,2 and rows 0,3
+ [
+  [ 1  2]
+  [31 32]
+ ]
+ pdla> p $x->dice(X,[0,3])
+ [
+  [ 0  1  2  3  4  5  6  7  8  9]
+  [30 31 32 33 34 35 36 37 38 39]
+ ]
+ pdla> p $x->dice([0,2,5])
+ [
+  [ 0  2  5]
+  [10 12 15]
+  [20 22 25]
+  [30 32 35]
+ ]
+
+As this is an index function, any modifications to the
+slice change the parent (use the C<.=> operator).
+
+=cut
+
+sub PDLA::dice {
+
+        my $self = shift;
+        my @dim_indexes = @_;  # array of dimension indexes
+
+        # Check that the number of dim indexes <=
+        #    number of dimensions in the PDLA
+        my $no_indexes = scalar(@dim_indexes);
+        my $noDims = $self->getndims;
+        barf("PDLA::dice: Number of index arrays ($no_indexes) not equal to the dimensions of the PDLA ($noDims")
+                         if $no_indexes > $noDims;
+        my $index;
+        my $pdlIndex;
+        my $outputPDLA=$self;
+        my $indexNo = 0;
+
+        # Go thru each index array and dice the input PDLA:
+        foreach $index(@dim_indexes){
+                $outputPDLA = $outputPDLA->dice_axis($indexNo,$index)
+                        unless !ref $index && $index eq 'X';
+
+                $indexNo++;
+        }
+
+        return $outputPDLA;
+}
+*dice = \&PDLA::dice;
+
+
+=head2 dice_axis
+
+=for ref
+
+Dice rows/columns/planes from a single PDLA axis (dimension)
+using index along a specified axis
+
+This function can be used to extract irregular subsets
+along any dimension, e.g. only certain rows in an image,
+or planes in a cube. This can of course be done with
+the usual dimension tricks but this saves having to
+figure it out each time!
+
+=for usage
+
+ $slice = $data->dice_axis($axis,$index);
+
+=for example
+
+ pdla> $x = sequence(10,4)
+ pdla> $idx = pdl(1,2)
+ pdla> p $x->dice_axis(0,$idx) # Select columns
+ [
+  [ 1  2]
+  [11 12]
+  [21 22]
+  [31 32]
+ ]
+ pdla> $t = $x->dice_axis(1,$idx) # Select rows
+ pdla> $t.=0
+ pdla> p $x
+ [
+  [ 0  1  2  3  4  5  6  7  8  9]
+  [ 0  0  0  0  0  0  0  0  0  0]
+  [ 0  0  0  0  0  0  0  0  0  0]
+  [30 31 32 33 34 35 36 37 38 39]
+ ]
+
+The trick to using this is that the index selects
+elements along the dimensions specified, so if you
+have a 2D image C<axis=0> will select certain C<X> values
+- i.e. extract columns
+
+As this is an index function, any modifications to the
+slice change the parent.
+
+=cut
+
+sub PDLA::dice_axis {
+  my($self,$axis,$idx) = @_;
+
+  # Convert to PDLAs: array refs using new, otherwise use topdl:
+  my $ix = (ref($idx) eq 'ARRAY') ? ref($self)->new($idx) : ref($self)->topdl($idx);
+  my $n = $self->getndims;
+  my $x = $ix->getndims;
+  barf("index_axis: index must be <=1D") if $x>1;
+  return $self->mv($axis,0)->index1d($ix)->mv(0,$axis);
+}
+*dice_axis = \&PDLA::dice_axis;
+
+
+EOD
+
+pp_addpm(<<'EOD-slice');
+
+=head2 slice
+
+=for usage
+
+  $slice = $data->slice([2,3],'x',[2,2,0],"-1:1:-1", "*3");
+
+=for ref
+
+Extract rectangular slices of a piddle, from a string specifier,
+an array ref specifier, or a combination.
+
+C<slice> is the main method for extracting regions of PDLAs and
+manipulating their dimensionality.  You can call it directly or
+via he L<NiceSlice|PDLA::NiceSlice> source prefilter that extends
+Perl syntax o include array slicing.
+
+C<slice> can extract regions along each dimension of a source PDLA,
+subsample or reverse those regions, dice each dimension by selecting a
+list of locations along it, or basic PDLA indexing routine.  The
+selected subfield remains connected to the original PDLA via dataflow.
+In most cases this neither allocates more memory nor slows down
+subsequent operations on either of the two connected PDLAs.
+
+You pass in a list of arguments.  Each term in the list controls
+the disposition of one axis of the source PDLA and/or returned PDLA.
+Each term can be a string-format cut specifier, a list ref that
+gives the same information without recourse to string manipulation,
+or a PDLA with up to 1 dimension giving indices along that axis that
+should be selected.
+
+If you want to pass in a single string specifier for the entire
+operation, you can pass in a comma-delimited list as the first
+argument.  C<slice> detects this condition and splits the string
+into a regular argument list.  This calling style is fully
+backwards compatible with C<slice> calls from before PDLA 2.006.
+
+B<STRING SYNTAX>
+
+If a particular argument to C<slice> is a string, it is parsed as a
+selection, an affine slice, or a dummy dimension depending on the
+form.  Leading or trailing whitespace in any part of each specifier is
+ignored (though it is not ignored within numbers).
+
+=over 3
+
+=item C<< '' >>, C<< : >>, or C<< X >> -- keep
+
+The empty string, C<:>, or C<X> cause the entire corresponding
+dimension to be kept unchanged.
+
+
+=item C<< <n> >> -- selection
+
+A single number alone causes a single index to be selected from the
+corresponding dimension.  The dimension is kept (and reduced to size
+1) in the output.
+
+=item C<< (<n>) >> -- selection and collapse
+
+A single number in parenthesis causes a single index to be selected
+from the corresponding dimension.  The dimension is discarded
+(completely eliminated) in the output.
+
+=item C<< <n>:<m> >> -- select an inclusive range
+
+Two numbers separated by a colon selects a range of values from the
+corresponding axis, e.g. C<< 3:4 >> selects elements 3 and 4 along the
+corresponding axis, and reduces that axis to size 2 in the output.
+Both numbers are regularized so that you can address the last element
+of the axis with an index of C< -1 >.  If, after regularization, the
+two numbers are the same, then exactly one element gets selected (just
+like the C<< <n> >> case).  If, after regulariation, the second number
+is lower than the first, then the resulting slice counts down rather
+than up -- e.g. C<-1:0> will return the entire axis, in reversed
+order.
+
+=item C<< <n>:<m>:<s> >> -- select a range with explicit step
+
+If you include a third parameter, it is the stride of the extracted
+range.  For example, C<< 0:-1:2 >> will sample every other element
+across the complete dimension.  Specifying a stride of 1 prevents
+autoreversal -- so to ensure that your slice is *always* forward
+you can specify, e.g., C<< 2:$n:1 >>.  In that case, an "impossible"
+slice gets an Empty PDLA (with 0 elements along the corresponding
+dimension), so you can generate an Empty PDLA with a slice of the
+form C<< 2:1:1 >>.
+
+=item C<< *<n> >> -- insert a dummy dimension
+
+Dummy dimensions aren't present in the original source and are
+"mocked up" to match dimensional slots, by repeating the data
+in the original PDLA some number of times.  An asterisk followed
+by a number produces a dummy dimension in the output, for
+example C<< *2 >> will generate a dimension of size 2 at
+the corresponding location in the output dim list.  Omitting
+the numeber (and using just an asterisk) inserts a dummy dimension
+of size 1.
+
+=back
+
+B<ARRAY REF SYNTAX>
+
+If you feed in an ARRAY ref as a slice term, then it can have
+0-3 elements.  The first element is the start of the slice along
+the corresponding dim; the second is the end; and the third is
+the stepsize.  Different combinations of inputs give the same
+flexibility as the string syntax.
+
+=over 3
+
+=item C<< [] >> - keep dim intact
+
+An empty ARRAY ref keeps the entire corresponding dim
+
+=item C<< [ 'X' ] >> - keep dim intact
+
+=item C<< [ '*',$n ] >> - generate a dummy dim of size $n
+
+If $n is missing, you get a dummy dim of size 1.
+
+=item C<< [ $dex, , 0 ] >> - collapse and discard dim
+
+C<$dex> must be a single value.  It is used to index
+the source, and the corresponding dimension is discarded.
+
+=item C<< [ $start, $end ] >> - collect inclusive slice
+
+In the simple two-number case, you get a slice that runs
+up or down (as appropriate) to connect $start and $end.
+
+=item C<< [ $start, $end, $inc ] >> - collect inclusive slice
+
+The three-number case works exactly like the three-number
+string case above.
+
+=back
+
+B<PDLA args for dicing>
+
+If you pass in a 0- or 1-D PDLA as a slicing argument, the
+corresponding dimension is "diced" -- you get one position
+along the corresponding dim, per element of the indexing PDLA,
+e.g. C<< $x->slice( pdl(3,4,9)) >> gives you elements 3, 4, and
+9 along the 0 dim of C<< $x >>.
+
+Because dicing is not an affine transformation, it is slower than
+direct slicing even though the syntax is convenient.
+
+
+=for example
+
+ $x->slice('1:3');  #  return the second to fourth elements of $x
+ $x->slice('3:1');  #  reverse the above
+ $x->slice('-2:1'); #  return last-but-one to second elements of $x
+
+ $x->slice([1,3]);  # Same as above three calls, but using array ref syntax
+ $x->slice([3,1]);
+ $x->slice([-2,1]);
+
+=cut
+
+
+##############################
+# 'slice' is now implemented as a small Perl wrapper around
+# a PP call.  This permits unification of the former slice,
+# dice, and nslice into a single call.  At the moment, dicing
+# is implemented a bit kludgily (it is detected in the Perl
+# front-end), but it is serviceable.
+#  --CED 12-Sep-2013
+
+*slice = \&PDLA::slice;
+sub PDLA::slice (;@) {
+    my ($source, @others) = @_;
+
+    # Deal with dicing.  This is lame and slow compared to the
+    # faster slicing, but works okay.  We loop over each argument,
+    # and if it's a PDLA we dispatch it in the most straightforward
+    # way.  Single-element and zero-element PDLAs are trivial and get
+    # converted into slices for faster handling later.
+
+    for my $i(0..$#others) {
+      if( blessed($others[$i]) && $others[$i]->isa('PDLA') ) {
+        my $idx = $others[$i];
+        if($idx->ndims > 1) {
+          barf("slice: dicing parameters must be at most 1D (arg $i)\n");
+        }
+        my $nlm = $idx->nelem;
+
+        if($nlm > 1) {
+
+	   #### More than one element - we have to dice (darn it).
+           my $n = $source->getndims;
+           $source = $source->mv($i,0)->index1d($idx)->mv(0,$i);
+           $others[$i] = '';
+
+        } 
+	elsif($nlm) {
+
+           #### One element - convert to a regular slice.
+           $others[$i] = $idx->flat->at(0);
+
+        }
+	else {
+	
+           #### Zero elements -- force an extended empty.
+           $others[$i] = "1:0:1";
+        }
+      }
+    }
+
+    PDLA::sliceb($source,\@others);
+}
+
+EOD-slice
+pp_addpm({At => 'Bot'},<< 'EOD');
+
+=head1 BUGS
+
+For the moment, you can't slice one of the zero-length dims of an
+empty piddle.  It is not clear how to implement this in a way that makes
+sense.
+
+Many types of index errors are reported far from the indexing
+operation that caused them.  This is caused by the underlying architecture:
+slice() sets up a mapping between variables, but that mapping isn't
+tested for correctness until it is used (potentially much later).
+
+=head1 AUTHOR
+
+Copyright (C) 1997 Tuomas J. Lukka.  Contributions by
+Craig DeForest, deforest@boulder.swri.edu.
+Documentation contributions by David Mertens.
+All rights reserved. There is no warranty. You are allowed
+to redistribute this software / documentation under certain
+conditions. For details, see the file COPYING in the PDLA
+distribution. If this file is separated from the PDLA distribution,
+the copyright notice should be included in the file.
+
+=cut
+
+EOD
+
+
+# $::PP_VERBOSE=1;
+
+pp_addhdr(<<'EOH');
+
+#ifdef _MSC_VER
+#if _MSC_VER < 1300
+#define strtoll strtol
+#else
+#define strtoll _strtoi64
+#endif
+#endif
+
+EOH
+
+pp_add_boot(
+"  PDLA->readdata_affine = pdl_readdata_affineinternal;\n" .
+"     PDLA->writebackdata_affine = pdl_writebackdata_affineinternal;\n"
+);
+
+## Several routines use the 'Dims' and 'ParentInds'
+## rules - these currently do nothing
+
+pp_def(
+       'affineinternal',
+       HandleBad => 1,
+       AffinePriv => 1,
+       DefaultFlow => 1,
+       P2Child => 1,
+       NoPdlThread => 1,
+       ReadDataFuncName => "pdl_readdata_affineinternal",
+       WriteBackDataFuncName => "pdl_writebackdata_affineinternal",
+       MakeComp => '$CROAK("AFMC MUSTNT BE CALLED");',
+       RedoDims => '$CROAK("AFRD MUSTNT BE CALLED");',
+       EquivCPOffsCode => '
+                PDLA_Indx i; PDLA_Indx poffs=$PRIV(offs); int nd;
+                for(i=0; i<$CHILD_P(nvals); i++) {
+                        $EQUIVCPOFFS(i,poffs);
+                        for(nd=0; nd<$CHILD_P(ndims); nd++) {
+                                poffs += $PRIV(incs[nd]);
+                                if( (nd<$CHILD_P(ndims)-1 &&
+                                     (i+1)%$CHILD_P(dimincs[nd+1])) ||
+                                   nd == $CHILD_P(ndims)-1)
+                                        break;
+                                poffs -= $PRIV(incs[nd]) *
+                                        $CHILD_P(dims[nd]);
+                        }
+                }',
+       Doc => undef,    # 'internal',
+);
+
+=head2 s_identity
+=cut
+
+pp_def(
+        's_identity',
+        HandleBad => 1,
+        P2Child => 1,
+        NoPdlThread => 1,
+        DefaultFlow => 1,
+        OtherPars => '',
+        Reversible => 1,
+        Dims => '$COPYDIMS();',
+        ParentInds => '$COPYINDS();',
+        Identity => 1,
+        Doc => undef, # Internal vaffine identity function.
+);
+
+my $index_init_good =
+       'register PDLA_Indx foo = $ind();
+        if( foo<0 || foo>=$SIZE(n) ) {
+           barf("PDLA::index: invalid index %d (valid range 0..%d)",
+                foo,$SIZE(n)-1);
+        }';
+my $index_init_bad =
+       'register PDLA_Indx foo = $ind();
+        if( $ISBADVAR(foo,ind) || foo<0 || foo>=$SIZE(n) ) {
+           barf("PDLA::index: invalid index %d (valid range 0..%d)",
+                foo,$SIZE(n)-1);
+        }';
+
+pp_def(
+       'index',
+       HandleBad => 1,
+       DefaultFlow => 1,
+       Reversible => 1,
+       Pars => 'a(n); indx ind(); [oca] c();',
+       Code =>
+       $index_init_good . ' $c() = $a(n => foo);',
+       BadCode =>
+       $index_init_bad . ' $c() = $a(n => foo);',
+       BackCode =>
+       $index_init_good . ' $a(n => foo) = $c();',
+       BadBackCode =>
+       $index_init_bad . ' $a(n => foo) = $c();',
+       );
+
+pp_def(
+       'index1d',
+       HandleBad => 1,
+       DefaultFlow => 1,
+       Reversible => 1,
+       Pars => 'a(n); indx ind(m); [oca] c(m);',
+       Code =>
+       q{
+         PDLA_Indx i;
+         for(i=0;i<$SIZE(m);i++) {
+                  PDLA_Indx foo = $ind(m=>i);
+                  if( foo<0 || foo >= $SIZE(n) ) {
+                   barf("PDLA::index1d: invalid index %d at pos %d (valid range 0..%d)",
+                     foo, i, $SIZE(n)-1);
+                  }
+                  $c(m=>i) = $a(n=>foo);
+         }
+        },
+        BadCode =>
+        q{
+         PDLA_Indx i;
+         for(i=0;i<$SIZE(m);i++) {
+                 PDLA_Indx foo = $ind(m=>i);
+                 if( $ISBADVAR(foo, ind) ) {
+                     $SETBAD(c(m=>i));
+                 } else {
+                   if( foo<0 || foo >= $SIZE(n) ) {
+                     barf("PDLA::index1d: invalid/bad index %d at pos %d (valid range 0..%d)",
+                      foo, i, $SIZE(n)-1);
+                   }
+                   $c(m=>i) = $a(n=>foo);
+                 }
+         }
+        },
+       BackCode => q{
+         PDLA_Indx i;
+         for(i=0;i<$SIZE(m);i++) {
+                PDLA_Indx foo = $ind(m=>i);
+                if( foo<0 || foo >= $SIZE(n) ) {
+                 barf("PDLA::index1d: invalid index %d at pos %d (valid range 0..%d)",
+                   foo, i, $SIZE(n)-1);
+                }
+                $a(n=>foo) = $c(m=>i);
+         }
+        },
+       BadBackCode => q{
+         PDLA_Indx i;
+         for(i=0;i<$SIZE(m);i++) {
+                 PDLA_Indx foo = $ind(m=>i);
+                 if( $ISBADVAR(foo, ind) ) {
+                   /* do nothing */
+                 } else {
+                   if( foo<0 || foo >= $SIZE(n) ) {
+                     barf("PDLA::index1d: invalid/bad index %d at pos %d (valid range 0..%d)",
+                      foo, i, $SIZE(n)-1);
+                   }
+                   $a(n=>foo) = $c(m=>i);
+                 }
+         }
+        },
+       );
+
+my $index2d_init_good =
+       'register PDLA_Indx fooa,foob;
+        fooa = $inda();
+        if( fooa<0 || fooa>=$SIZE(na) ) {
+           barf("PDLA::index: invalid x-index %d (valid range 0..%d)",
+                fooa,$SIZE(na)-1);
+        }
+        foob = $indb();
+        if( foob<0 || foob>=$SIZE(nb) ) {
+           barf("PDLA::index: invalid y-index %d (valid range 0..%d)",
+                foob,$SIZE(nb)-1);
+        }';
+my $index2d_init_bad =
+       'register PDLA_Indx fooa,foob;
+        fooa = $inda();
+        if( $ISBADVAR(fooa,inda) || fooa<0 || fooa>=$SIZE(na) ) {
+           barf("PDLA::index: invalid index 1");
+        }
+        foob = $indb();
+        if( $ISBADVAR(foob,indb) || foob<0 || foob>=$SIZE(nb) ) {
+           barf("PDLA::index: invalid index 2");
+        }';
+
+pp_def(
+       'index2d',
+       HandleBad => 1,
+       DefaultFlow => 1,
+       Reversible => 1,
+       Pars => 'a(na,nb); indx inda(); indx indb(); [oca] c();',
+       Code =>
+       $index2d_init_good . ' $c() = $a(na => fooa, nb => foob);',
+       BadCode =>
+       $index2d_init_bad . '$c() = $a(na => fooa, nb => foob);',
+       BackCode =>
+       $index2d_init_good . ' $a(na => fooa, nb => foob) = $c();',
+       BadBackCode =>
+       $index2d_init_bad . '$a(na => fooa, nb => foob) = $c();',
+);
+
+
+# indexND: CED 2-Aug-2002
+pp_add_exported('','indexND indexNDb');
 pp_def(
         'rangeb',
         OtherPars => 'SV *index; SV *size; SV *boundary',
@@ -1206,40 +2110,6 @@ pp_def(
             }
           %}',
 );
-pp_addpm(<<'EOD');
-=head2 rld
-
-=for ref
-
-Run-length decode a vector
-
-Given a vector C<$x> of the numbers of instances of values C<$y>, run-length
-decode to C<$c>.
-
-=for example
-
- rld($x,$y,$c=null);
-
-=cut
-
-sub PDLA::rld {
-  my ($x,$y) = @_;
-  my ($c);
-  if ($#_ == 2) {
-    $c = $_[2];
-  } else {
-# XXX Need to improve emulation of threading in auto-generating c
-    my ($size) = $x->sumover->max;
-    my (@dims) = $x->dims;
-    shift @dims;
-    $c = $y->zeroes($size,@dims);
-  }
-  &PDLA::_rld_int($x,$y,$c);
-  $c;
-}
-
-EOD
-
 
 pp_def(
         'rle',
@@ -1269,50 +2139,6 @@ pp_def(
           }
         ',
 );
-pp_addpm(<<'EOD');
-=head2 rle
-
-=for ref
-
-Run-length encode a vector
-
-Given vector C<$c>, generate a vector C<$x> with the number of each
-element, and a vector C<$y> of the unique values.  New in PDLA 2.017,
-only the elements up to the first instance of C<0> in C<$x> are
-returned, which makes the common use case of a 1-dimensional C<$c> simpler.
-For threaded operation, C<$x> and C<$y> will be large enough
-to hold the largest row of C<$y>, and only the elements up to the
-first instance of C<0> in each row of C<$x> should be considered.
-
-=for example
-
- $c = floor(4*random(10));
- rle($c,$x=null,$y=null);
- #or
- ($x,$y) = rle($c);
-
- #for $c of shape [10, 4]:
- $c = floor(4*random(10,4));
- ($x,$y) = rle($c);
-
- #to see the results of each row one at a time:
- foreach (0..$c->dim(1)-1){
-  my ($as,$bs) = ($x(:,($_)),$y(:,($_)));
-  my ($ta,$tb) = where($as,$bs,$as!=0); #only the non-zero elements of $x
-  print $c(:,($_)) . " rle==> " , ($ta,$tb) , "\trld==> " . rld($ta,$tb) . "\n";
- }
-
-=cut
-
-sub PDLA::rle {
-  my $c = shift;
-  my ($x,$y) = @_==2 ? @_ : (null,null);
-  &PDLA::_rle_int($c,$x,$y);
-  my $max_ind = ($c->ndims<2) ? ($x!=0)->sumover-1 :
-                                ($x!=0)->clump(1..$x->ndims-1)->sumover->max-1;
-  return ($x->slice("0:$max_ind"),$y->slice("0:$max_ind"));
-}
-EOD
 
 # this one can convert vaffine piddles without(!) physicalising them
 # maybe it can replace 'converttypei' in the future?
@@ -1406,30 +2232,6 @@ pp_def(
         Doc => 'internal',
 );
 
-pp_addpm(<<'EOD');
-=head2 xchg
-
-=for ref
-
-exchange two dimensions
-
-Negative dimension indices count from the end.
-
-The command
-
-=for example
-
- $y = $x->xchg(2,3);
-
-creates C<$y> to be like C<$x> except that the dimensions 2 and 3
-are exchanged with each other i.e.
-
- $y->at(5,3,2,8) == $x->at(5,3,8,2)
-
-=cut
-
-EOD
-
 pp_def(
         'xchg',
         OtherPars => 'int n1; int n2;',
@@ -1450,152 +2252,6 @@ pp_def(
         EquivPDimExpr => '(($CDIM == $COMP(n1)) ? $COMP(n2) : ($CDIM == $COMP(n2)) ? $COMP(n1) : $CDIM)',
         EquivCDimExpr => '(($PDIM == $COMP(n1)) ? $COMP(n2) : ($PDIM == $COMP(n2)) ? $COMP(n1) : $PDIM)',
 );
-
-pp_addpm(<< 'EOD');
-
-=head2 reorder
-
-=for ref
-
-Re-orders the dimensions of a PDLA based on the supplied list.
-
-Similar to the L<xchg|/xchg> method, this method re-orders the dimensions
-of a PDLA. While the L<xchg|/xchg> method swaps the position of two dimensions,
-the reorder method can change the positions of many dimensions at
-once.
-
-=for usage
-
- # Completely reverse the dimension order of a 6-Dim array.
- $reOrderedPDLA = $pdl->reorder(5,4,3,2,1,0);
-
-The argument to reorder is an array representing where the current dimensions
-should go in the new array. In the above usage, the argument to reorder
-C<(5,4,3,2,1,0)>
-indicates that the old dimensions (C<$pdl>'s dims) should be re-arranged to make the
-new pdl (C<$reOrderPDLA>) according to the following:
-
-   Old Position   New Position
-   ------------   ------------
-   5              0
-   4              1
-   3              2
-   2              3
-   1              4
-   0              5
-
-You do not need to specify all dimensions, only a complete set
-starting at position 0.  (Extra dimensions are left where they are).
-This means, for example, that you can reorder() the X and Y dimensions of
-an image, and not care whether it is an RGB image with a third dimension running
-across color plane.
-
-=for example
-
-Example:
-
- pdla> $x = sequence(5,3,2);       # Create a 3-d Array
- pdla> p $x
- [
-  [
-   [ 0  1  2  3  4]
-   [ 5  6  7  8  9]
-   [10 11 12 13 14]
-  ]
-  [
-   [15 16 17 18 19]
-   [20 21 22 23 24]
-   [25 26 27 28 29]
-  ]
- ]
- pdla> p $x->reorder(2,1,0); # Reverse the order of the 3-D PDLA
- [
-  [
-   [ 0 15]
-   [ 5 20]
-   [10 25]
-  ]
-  [
-   [ 1 16]
-   [ 6 21]
-   [11 26]
-  ]
-  [
-   [ 2 17]
-   [ 7 22]
-   [12 27]
-  ]
-  [
-   [ 3 18]
-   [ 8 23]
-   [13 28]
-  ]
-  [
-   [ 4 19]
-   [ 9 24]
-   [14 29]
-  ]
- ]
-
-The above is a simple example that could be duplicated by calling
-C<$x-E<gt>xchg(0,2)>, but it demonstrates the basic functionality of reorder.
-
-As this is an index function, any modifications to the
-result PDLA will change the parent.
-
-=cut
-
-sub PDLA::reorder {
-        my ($pdl,@newDimOrder) = @_;
-
-        my $arrayMax = $#newDimOrder;
-
-        #Error Checking:
-        if( $pdl->getndims < scalar(@newDimOrder) ){
-                my $errString = "PDLA::reorder: Number of elements (".scalar(@newDimOrder).") in newDimOrder array exceeds\n";
-                $errString .= "the number of dims in the supplied PDLA (".$pdl->getndims.")";
-                barf($errString);
-        }
-
-        # Check to make sure all the dims are within bounds
-        for my $i(0..$#newDimOrder) {
-          my $dim = $newDimOrder[$i];
-          if($dim < 0 || $dim > $#newDimOrder) {
-              my $errString = "PDLA::reorder: Dim index $newDimOrder[$i] out of range in position $i\n(range is 0-$#newDimOrder)";
-              barf($errString);
-          }
-        }
-
-        # Checking that they are all present and also not duplicated is done by thread() [I think]
-
-        # a quicker way to do the reorder
-        return $pdl->thread(@newDimOrder)->unthread(0);
-}
-
-EOD
-
-pp_addpm(<<'EOD');
-=head2 mv
-
-=for ref
-
-move a dimension to another position
-
-The command
-
-=for example
-
- $y = $x->mv(4,1);
-
-creates C<$y> to be like C<$x> except that the dimension 4 is moved to the
-place 1, so:
-
- $y->at(1,2,3,4,5,6) == $x->at(1,5,2,3,4,6);
-
-The other dimensions are moved accordingly.
-Negative dimension indices count from the end.
-=cut
-EOD
 
 pp_def(
         'mv',
@@ -1633,104 +2289,6 @@ pp_def(
 pp_addhdr << 'EOH';
 #define sign(x) ( (x) < 0 ? -1 : 1)
 EOH
-
-pp_addpm(<<'EOD');
-=head2 oslice
-
-=for ref
-
-DEPRECATED:  'oslice' is the original 'slice' routine in pre-2.006_006
-versions of PDLA.  It is left here for reference but will disappear in
-PDLA 3.000
-
-Extract a rectangular slice of a piddle, from a string specifier.
-
-C<slice> was the original Swiss-army-knife PDLA indexing routine, but is
-largely superseded by the L<NiceSlice|PDLA::NiceSlice> source prefilter
-and its associated L<nslice|PDLA::Core/nslice> method.  It is still used as the
-basic underlying slicing engine for L<nslice|PDLA::Core/nslice>,
-and is especially useful in particular niche applications.
-
-=for example
-
- $x->slice('1:3');  #  return the second to fourth elements of $x
- $x->slice('3:1');  #  reverse the above
- $x->slice('-2:1'); #  return last-but-one to second elements of $x
-
-The argument string is a comma-separated list of what to do
-for each dimension. The current formats include
-the following, where I<a>, I<b> and I<c> are integers and can
-take legal array index values (including -1 etc):
-
-=over 8
-
-=item :
-
-takes the whole dimension intact.
-
-=item ''
-
-(nothing) is a synonym for ":"
-(This means that C<$x-E<gt>slice(':,3')> is equal to C<$x-E<gt>slice(',3')>).
-
-=item a
-
-slices only this value out of the corresponding dimension.
-
-=item (a)
-
-means the same as "a" by itself except that the resulting
-dimension of length one is deleted (so if C<$x> has dims C<(3,4,5)> then
-C<$x-E<gt>slice(':,(2),:')> has dimensions C<(3,5)> whereas
-C<$x-E<gt>slice(':,2,:')> has dimensions C<(3,1,5))>.
-
-=item a:b
-
-slices the range I<a> to I<b> inclusive out of the dimension.
-
-=item a:b:c
-
-slices the range I<a> to I<b>, with step I<c> (i.e. C<3:7:2> gives the indices
-C<(3,5,7)>). This may be confusing to Matlab users but several other
-packages already use this syntax.
-
-
-=item '*'
-
-inserts an extra dimension of width 1 and
-
-=item '*a'
-
-inserts an extra (dummy) dimension of width I<a>.
-
-=back
-
-An extension is planned for a later stage allowing
-C<$x-E<gt>slice('(=1),(=1|5:8),3:6(=1),4:6')>
-to express a multidimensional diagonal of C<$x>.
-
-Trivial out-of-bounds slicing is allowed: if you slice a source
-dimension that doesn't exist, but only index the 0th element, then
-C<slice> treats the source as if there were a dummy dimension there.
-The following are all equivalent:
-
-        xvals(5)->dummy(1,1)->slice('(2),0')  # Add dummy dim, then slice
-        xvals(5)->slice('(2),0')              # Out-of-bounds slice adds dim.
-        xvals(5)->slice((2),0)                # NiceSlice syntax
-        xvals(5)->((2))->dummy(0,1)           # NiceSlice syntax
-
-This is an error:
-
-        xvals(5)->slice('(2),1')        # nontrivial out-of-bounds slice dies
-
-Because slicing doesn't directly manipulate the source and destination
-pdl -- it just sets up a transformation between them -- indexing errors
-often aren't reported until later.  This is either a bug or a feature,
-depending on whether you prefer error-reporting clarity or speed of execution.
-
-=cut
-
-EOD
 
 pp_def(
         'oslice',
@@ -1983,40 +2541,6 @@ pp_def(
 );
 
 
-pp_addpm(<<'EOD'
-
-=head2 using
-
-=for ref
-
-Returns array of column numbers requested
-
-=for usage
-
- line $pdl->using(1,2);
-
-Plot, as a line, column 1 of C<$pdl> vs. column 2
-
-=for example
-
- pdla> $pdl = rcols("file");
- pdla> line $pdl->using(1,2);
-
-=cut
-
-*using = \&PDLA::using;
-sub PDLA::using {
-  my ($x,@ind)=@_;
-  @ind = list $ind[0] if (blessed($ind[0]) && $ind[0]->isa('PDLA'));
-  foreach (@ind) {
-    $_ = $x->slice("($_)");
-  }
-  @ind;
-}
-
-EOD
-);
-
 pp_add_exported('', 'using');
 
 pp_addhdr(<<END
@@ -2070,30 +2594,6 @@ pp_def( 'affine',
                 ',
         Doc => undef,
 );
-
-pp_addpm(<<'EOD');
-=head2 diagonalI
-
-=for ref
-
-Returns the multidimensional diagonal over the specified dimensions.
-
-The diagonal is placed at the first (by number) dimension that is
-diagonalized.
-The other diagonalized dimensions are removed. So if C<$x> has dimensions
-C<(5,3,5,4,6,5)> then after
-
-=for example
-
- $y = $x->diagonal(0,2,5);
-
-the piddle C<$y> has dimensions C<(5,3,4,6)> and
-C<$y-E<gt>at(2,1,0,1)> refers
-to C<$x-E<gt>at(2,1,2,0,1,2)>.
-
-NOTE: diagonal doesn't handle threadids correctly. XXX FIX
-=cut
-EOD
 
 pp_def(
         'diagonalI',
@@ -2153,43 +2653,6 @@ pp_def(
         ',
 );
 
-pp_addpm(<<'EOD');
-=head2 lags
-
-=for ref
-
-Returns a piddle of lags to parent.
-
-Usage:
-
-=for usage
-
-  $lags = $x->lags($nthdim,$step,$nlags);
-
-I.e. if C<$x> contains
-
- [0,1,2,3,4,5,6,7]
-
-then
-
-=for example
-
- $y = $x->lags(0,2,2);
-
-is a (5,2) matrix
-
- [2,3,4,5,6,7]
- [0,1,2,3,4,5]
-
-This order of returned indices is kept because the function is
-called "lags" i.e. the nth lag is n steps behind the original.
-
-C<$step> and C<$nlags> must be positive. C<$nthdim> can be
-negative and will then be counted from the last dim backwards
-in the usual way (-1 = last dim).
-=cut
-EOD
-
 pp_def(
         'lags',
         P2Child => 1,
@@ -2232,27 +2695,6 @@ pp_def(
         '
 );
 
-pp_addpm(<<'EOD');
-=head2 splitdim
-
-=for ref
-
-Splits a dimension in the parent piddle (opposite of L<clump|PDLA::Core/clump>)
-
-After
-
-=for example
-
- $y = $x->splitdim(2,3);
-
-the expression
-
- $y->at(6,4,m,n,3,6) == $x->at(6,4,m+3*n)
-
-is always true (C<m> has to be less than 3).
-=cut
-EOD
-
 pp_def(
         'splitdim',
         P2Child => 1,
@@ -2293,15 +2735,6 @@ pp_def(
         ',
 );
 
-pp_addpm(<<'EOD');
-=head2 rotate
-
-=for ref
-
-Shift vector elements along with wrap. Flows data back&forth.
-=cut
-EOD
-
 pp_def('rotate',
         Pars=>'x(n); indx shift(); [oca]y(n)',
         DefaultFlow => 1,
@@ -2334,23 +2767,6 @@ pp_def('rotate',
 );
 
 # This is a bit tricky. Hope I haven't missed any cases.
-
-pp_addpm(<<'EOD');
-=head2 threadI
-
-=for ref
-
-internal
-
-Put some dimensions to a threadid.
-
-=for example
-
- $y = $x->threadI(0,1,5); # thread over dims 1,5 in id 1
-
-=cut
-
-EOD
 
 pp_def(
         'threadI',
@@ -2437,17 +2853,6 @@ pp_def(
 );
 
 
-pp_addpm(<<'EOD');
-=head2 identvaff
-
-=for ref
-
-A vaffine identity transformation (includes thread_id copying).
-
-Mainly for internal use.
-=cut
-EOD
-
 # we don't really need this one since it can be achieved with
 # a ->threadI(-1,[])
 pp_def('identvaff',
@@ -2471,17 +2876,6 @@ pp_def('identvaff',
                 ',
 );
 
-
-pp_addpm(<<'EOD');
-=head2 unthread
-
-=for ref
-
-All threaded dimensions are made real again.
-
-See [TBD Doc] for details and examples.
-=cut
-EOD
 
 pp_def(
         'unthread',
@@ -2514,382 +2908,6 @@ pp_def(
 
 
 pp_add_exported('', 'dice dice_axis');
-pp_addpm(<<'EOD');
-
-=head2 dice
-
-=for ref
-
-Dice rows/columns/planes out of a PDLA using indexes for
-each dimension.
-
-This function can be used to extract irregular subsets
-along many dimension of a PDLA, e.g. only certain rows in an image,
-or planes in a cube. This can of course be done with
-the usual dimension tricks but this saves having to
-figure it out each time!
-
-This method is similar in functionality to the L<slice|/slice>
-method, but L<slice|/slice> requires that contiguous ranges or ranges
-with constant offset be extracted. ( i.e. L<slice|/slice> requires
-ranges of the form C<1,2,3,4,5> or C<2,4,6,8,10>). Because of this
-restriction, L<slice|/slice> is more memory efficient and slightly faster
-than dice
-
-=for usage
-
- $slice = $data->dice([0,2,6],[2,1,6]); # Dicing a 2-D array
-
-The arguments to dice are arrays (or 1D PDLAs) for each dimension
-in the PDLA. These arrays are used as indexes to which rows/columns/cubes,etc
-to dice-out (or extract) from the C<$data> PDLA.
-
-Use C<X> to select all indices along a given dimension (compare also
-L<mslice|PDLA::Core/mslice>). As usual (in slicing methods) trailing
-dimensions can be omitted implying C<X>'es for those.
-
-=for example
-
- pdla> $x = sequence(10,4)
- pdla> p $x
- [
-  [ 0  1  2  3  4  5  6  7  8  9]
-  [10 11 12 13 14 15 16 17 18 19]
-  [20 21 22 23 24 25 26 27 28 29]
-  [30 31 32 33 34 35 36 37 38 39]
- ]
- pdla> p $x->dice([1,2],[0,3]) # Select columns 1,2 and rows 0,3
- [
-  [ 1  2]
-  [31 32]
- ]
- pdla> p $x->dice(X,[0,3])
- [
-  [ 0  1  2  3  4  5  6  7  8  9]
-  [30 31 32 33 34 35 36 37 38 39]
- ]
- pdla> p $x->dice([0,2,5])
- [
-  [ 0  2  5]
-  [10 12 15]
-  [20 22 25]
-  [30 32 35]
- ]
-
-As this is an index function, any modifications to the
-slice change the parent (use the C<.=> operator).
-
-=cut
-
-sub PDLA::dice {
-
-        my $self = shift;
-        my @dim_indexes = @_;  # array of dimension indexes
-
-        # Check that the number of dim indexes <=
-        #    number of dimensions in the PDLA
-        my $no_indexes = scalar(@dim_indexes);
-        my $noDims = $self->getndims;
-        barf("PDLA::dice: Number of index arrays ($no_indexes) not equal to the dimensions of the PDLA ($noDims")
-                         if $no_indexes > $noDims;
-        my $index;
-        my $pdlIndex;
-        my $outputPDLA=$self;
-        my $indexNo = 0;
-
-        # Go thru each index array and dice the input PDLA:
-        foreach $index(@dim_indexes){
-                $outputPDLA = $outputPDLA->dice_axis($indexNo,$index)
-                        unless !ref $index && $index eq 'X';
-
-                $indexNo++;
-        }
-
-        return $outputPDLA;
-}
-*dice = \&PDLA::dice;
-
-
-=head2 dice_axis
-
-=for ref
-
-Dice rows/columns/planes from a single PDLA axis (dimension)
-using index along a specified axis
-
-This function can be used to extract irregular subsets
-along any dimension, e.g. only certain rows in an image,
-or planes in a cube. This can of course be done with
-the usual dimension tricks but this saves having to
-figure it out each time!
-
-=for usage
-
- $slice = $data->dice_axis($axis,$index);
-
-=for example
-
- pdla> $x = sequence(10,4)
- pdla> $idx = pdl(1,2)
- pdla> p $x->dice_axis(0,$idx) # Select columns
- [
-  [ 1  2]
-  [11 12]
-  [21 22]
-  [31 32]
- ]
- pdla> $t = $x->dice_axis(1,$idx) # Select rows
- pdla> $t.=0
- pdla> p $x
- [
-  [ 0  1  2  3  4  5  6  7  8  9]
-  [ 0  0  0  0  0  0  0  0  0  0]
-  [ 0  0  0  0  0  0  0  0  0  0]
-  [30 31 32 33 34 35 36 37 38 39]
- ]
-
-The trick to using this is that the index selects
-elements along the dimensions specified, so if you
-have a 2D image C<axis=0> will select certain C<X> values
-- i.e. extract columns
-
-As this is an index function, any modifications to the
-slice change the parent.
-
-=cut
-
-sub PDLA::dice_axis {
-  my($self,$axis,$idx) = @_;
-
-  # Convert to PDLAs: array refs using new, otherwise use topdl:
-  my $ix = (ref($idx) eq 'ARRAY') ? ref($self)->new($idx) : ref($self)->topdl($idx);
-  my $n = $self->getndims;
-  my $x = $ix->getndims;
-  barf("index_axis: index must be <=1D") if $x>1;
-  return $self->mv($axis,0)->index1d($ix)->mv(0,$axis);
-}
-*dice_axis = \&PDLA::dice_axis;
-
-
-EOD
-
-pp_addpm(<<'EOD-slice');
-
-=head2 slice
-
-=for usage
-
-  $slice = $data->slice([2,3],'x',[2,2,0],"-1:1:-1", "*3");
-
-=for ref
-
-Extract rectangular slices of a piddle, from a string specifier,
-an array ref specifier, or a combination.
-
-C<slice> is the main method for extracting regions of PDLAs and
-manipulating their dimensionality.  You can call it directly or
-via he L<NiceSlice|PDLA::NiceSlice> source prefilter that extends
-Perl syntax o include array slicing.
-
-C<slice> can extract regions along each dimension of a source PDLA,
-subsample or reverse those regions, dice each dimension by selecting a
-list of locations along it, or basic PDLA indexing routine.  The
-selected subfield remains connected to the original PDLA via dataflow.
-In most cases this neither allocates more memory nor slows down
-subsequent operations on either of the two connected PDLAs.
-
-You pass in a list of arguments.  Each term in the list controls
-the disposition of one axis of the source PDLA and/or returned PDLA.
-Each term can be a string-format cut specifier, a list ref that
-gives the same information without recourse to string manipulation,
-or a PDLA with up to 1 dimension giving indices along that axis that
-should be selected.
-
-If you want to pass in a single string specifier for the entire
-operation, you can pass in a comma-delimited list as the first
-argument.  C<slice> detects this condition and splits the string
-into a regular argument list.  This calling style is fully
-backwards compatible with C<slice> calls from before PDLA 2.006.
-
-B<STRING SYNTAX>
-
-If a particular argument to C<slice> is a string, it is parsed as a
-selection, an affine slice, or a dummy dimension depending on the
-form.  Leading or trailing whitespace in any part of each specifier is
-ignored (though it is not ignored within numbers).
-
-=over 3
-
-=item C<< '' >>, C<< : >>, or C<< X >> -- keep
-
-The empty string, C<:>, or C<X> cause the entire corresponding
-dimension to be kept unchanged.
-
-
-=item C<< <n> >> -- selection
-
-A single number alone causes a single index to be selected from the
-corresponding dimension.  The dimension is kept (and reduced to size
-1) in the output.
-
-=item C<< (<n>) >> -- selection and collapse
-
-A single number in parenthesis causes a single index to be selected
-from the corresponding dimension.  The dimension is discarded
-(completely eliminated) in the output.
-
-=item C<< <n>:<m> >> -- select an inclusive range
-
-Two numbers separated by a colon selects a range of values from the
-corresponding axis, e.g. C<< 3:4 >> selects elements 3 and 4 along the
-corresponding axis, and reduces that axis to size 2 in the output.
-Both numbers are regularized so that you can address the last element
-of the axis with an index of C< -1 >.  If, after regularization, the
-two numbers are the same, then exactly one element gets selected (just
-like the C<< <n> >> case).  If, after regulariation, the second number
-is lower than the first, then the resulting slice counts down rather
-than up -- e.g. C<-1:0> will return the entire axis, in reversed
-order.
-
-=item C<< <n>:<m>:<s> >> -- select a range with explicit step
-
-If you include a third parameter, it is the stride of the extracted
-range.  For example, C<< 0:-1:2 >> will sample every other element
-across the complete dimension.  Specifying a stride of 1 prevents
-autoreversal -- so to ensure that your slice is *always* forward
-you can specify, e.g., C<< 2:$n:1 >>.  In that case, an "impossible"
-slice gets an Empty PDLA (with 0 elements along the corresponding
-dimension), so you can generate an Empty PDLA with a slice of the
-form C<< 2:1:1 >>.
-
-=item C<< *<n> >> -- insert a dummy dimension
-
-Dummy dimensions aren't present in the original source and are
-"mocked up" to match dimensional slots, by repeating the data
-in the original PDLA some number of times.  An asterisk followed
-by a number produces a dummy dimension in the output, for
-example C<< *2 >> will generate a dimension of size 2 at
-the corresponding location in the output dim list.  Omitting
-the numeber (and using just an asterisk) inserts a dummy dimension
-of size 1.
-
-=back
-
-B<ARRAY REF SYNTAX>
-
-If you feed in an ARRAY ref as a slice term, then it can have
-0-3 elements.  The first element is the start of the slice along
-the corresponding dim; the second is the end; and the third is
-the stepsize.  Different combinations of inputs give the same
-flexibility as the string syntax.
-
-=over 3
-
-=item C<< [] >> - keep dim intact
-
-An empty ARRAY ref keeps the entire corresponding dim
-
-=item C<< [ 'X' ] >> - keep dim intact
-
-=item C<< [ '*',$n ] >> - generate a dummy dim of size $n
-
-If $n is missing, you get a dummy dim of size 1.
-
-=item C<< [ $dex, , 0 ] >> - collapse and discard dim
-
-C<$dex> must be a single value.  It is used to index
-the source, and the corresponding dimension is discarded.
-
-=item C<< [ $start, $end ] >> - collect inclusive slice
-
-In the simple two-number case, you get a slice that runs
-up or down (as appropriate) to connect $start and $end.
-
-=item C<< [ $start, $end, $inc ] >> - collect inclusive slice
-
-The three-number case works exactly like the three-number
-string case above.
-
-=back
-
-B<PDLA args for dicing>
-
-If you pass in a 0- or 1-D PDLA as a slicing argument, the
-corresponding dimension is "diced" -- you get one position
-along the corresponding dim, per element of the indexing PDLA,
-e.g. C<< $x->slice( pdl(3,4,9)) >> gives you elements 3, 4, and
-9 along the 0 dim of C<< $x >>.
-
-Because dicing is not an affine transformation, it is slower than
-direct slicing even though the syntax is convenient.
-
-
-=for example
-
- $x->slice('1:3');  #  return the second to fourth elements of $x
- $x->slice('3:1');  #  reverse the above
- $x->slice('-2:1'); #  return last-but-one to second elements of $x
-
- $x->slice([1,3]);  # Same as above three calls, but using array ref syntax
- $x->slice([3,1]);
- $x->slice([-2,1]);
-
-=cut
-
-
-##############################
-# 'slice' is now implemented as a small Perl wrapper around
-# a PP call.  This permits unification of the former slice,
-# dice, and nslice into a single call.  At the moment, dicing
-# is implemented a bit kludgily (it is detected in the Perl
-# front-end), but it is serviceable.
-#  --CED 12-Sep-2013
-
-*slice = \&PDLA::slice;
-sub PDLA::slice (;@) {
-    my ($source, @others) = @_;
-
-    # Deal with dicing.  This is lame and slow compared to the
-    # faster slicing, but works okay.  We loop over each argument,
-    # and if it's a PDLA we dispatch it in the most straightforward
-    # way.  Single-element and zero-element PDLAs are trivial and get
-    # converted into slices for faster handling later.
-
-    for my $i(0..$#others) {
-      if( blessed($others[$i]) && $others[$i]->isa('PDLA') ) {
-        my $idx = $others[$i];
-        if($idx->ndims > 1) {
-          barf("slice: dicing parameters must be at most 1D (arg $i)\n");
-        }
-        my $nlm = $idx->nelem;
-
-        if($nlm > 1) {
-
-	   #### More than one element - we have to dice (darn it).
-           my $n = $source->getndims;
-           $source = $source->mv($i,0)->index1d($idx)->mv(0,$i);
-           $others[$i] = '';
-
-        } 
-	elsif($nlm) {
-
-           #### One element - convert to a regular slice.
-           $others[$i] = $idx->flat->at(0);
-
-        }
-	else {
-	
-           #### Zero elements -- force an extended empty.
-           $others[$i] = "1:0:1";
-        }
-      }
-    }
-
-    PDLA::sliceb($source,\@others);
-}
-
-EOD-slice
-
 pp_add_exported('', 'slice');
 
 ##########
@@ -3462,35 +3480,6 @@ SLICE-MC
 
         } # end of RedoDims for slice
 );
-
-
-pp_addpm({At => 'Bot'},<< 'EOD');
-
-=head1 BUGS
-
-For the moment, you can't slice one of the zero-length dims of an
-empty piddle.  It is not clear how to implement this in a way that makes
-sense.
-
-Many types of index errors are reported far from the indexing
-operation that caused them.  This is caused by the underlying architecture:
-slice() sets up a mapping between variables, but that mapping isn't
-tested for correctness until it is used (potentially much later).
-
-=head1 AUTHOR
-
-Copyright (C) 1997 Tuomas J. Lukka.  Contributions by
-Craig DeForest, deforest@boulder.swri.edu.
-Documentation contributions by David Mertens.
-All rights reserved. There is no warranty. You are allowed
-to redistribute this software / documentation under certain
-conditions. For details, see the file COPYING in the PDLA
-distribution. If this file is separated from the PDLA distribution,
-the copyright notice should be included in the file.
-
-=cut
-
-EOD
 
 
 pp_done();
