@@ -2094,8 +2094,8 @@ for the values from C<$vals> piddle, returning indices into C<$x>.
 What is a "match", and the meaning of the returned indices, are determined
 by the options.
 
-The C<mode> option indicates which method of searching to use, and may
-be one of:
+The C<mode> option indicates which method of searching to use (default:
+C<sample>), and may be one of:
 
 =over
 
@@ -2133,8 +2133,6 @@ below for further explanation of the bin.
 
 =back
 
-The default value of C<mode> is C<sample>.
-
 =cut
 
 sub vsearch {
@@ -2158,6 +2156,299 @@ sub vsearch {
 }
 
 *PDLA::vsearch = \&vsearch;
+
+=head2 vsearch_sample
+
+=for ref
+
+Search for values in a sorted array, return index appropriate for sampling
+from a distribution
+
+=for usage
+
+  $idx = vsearch_sample($vals, $x);
+
+C<$x> must be sorted, but may be in decreasing or increasing
+order.
+
+B<vsearch_sample> returns an index I<I> for each value I<V> of C<$vals> appropriate
+for sampling C<$vals>
+
+I<I> has the following properties:
+
+=over
+
+=item *
+
+if C<$x> is sorted in increasing order
+
+           V <= x[0]  : I = 0
+   x[0]  < V <= x[-1] : I s.t. x[I-1] < V <= x[I]
+   x[-1] < V          : I = $x->nelem -1
+
+=item *
+
+if C<$x> is sorted in decreasing order
+
+            V > x[0]  : I = 0
+   x[0]  >= V > x[-1] : I s.t. x[I] >= V > x[I+1]
+   x[-1] >= V         : I = $x->nelem - 1
+
+If all elements of C<$x> are equal, I<< I = $x->nelem - 1 >>.
+
+If C<$x> contains duplicated elements, I<I> is the index of the
+leftmost (by position in array) duplicate if I<V> matches.
+
+=for example
+
+This function is useful e.g. when you have a list of probabilities
+for events and want to generate indices to events:
+
+ $x = pdl(.01,.86,.93,1); # Barnsley IFS probabilities cumulatively
+ $y = random 20;
+ $c = vsearch_sample($y, $x); # Now, $c will have the appropriate distr.
+
+It is possible to use the L<cumusumover|PDLA::Ufunc/cumusumover>
+function to obtain cumulative probabilities from absolute probabilities.
+
+=for bad
+
+needs major (?) work to handles bad values
+
+=head2 vsearch_insert_leftmost
+
+=for ref
+
+Determine the insertion point for values in a sorted array, inserting
+before duplicates.
+
+=for usage
+
+  $idx = vsearch_insert_leftmost($vals, $x);
+
+C<$x> must be sorted, but may be in decreasing or increasing
+order.
+
+B<vsearch_insert_leftmost> returns an index I<I> for each value I<V> of
+C<$vals> equal to the leftmost position (by index in array) within
+C<$x> that I<V> may be inserted and still maintain the order in
+C<$x>.
+
+Insertion at index I<I> involves shifting elements I<I> and higher of
+C<$x> to the right by one and setting the now empty element at index
+I<I> to I<V>.
+
+I<I> has the following properties:
+
+=over
+
+=item *
+
+if C<$x> is sorted in increasing order
+
+           V <= x[0]  : I = 0
+   x[0]  < V <= x[-1] : I s.t. x[I-1] < V <= x[I]
+   x[-1] < V          : I = $x->nelem
+
+=item *
+
+if C<$x> is sorted in decreasing order
+
+            V >  x[0]  : I = -1
+   x[0]  >= V >= x[-1] : I s.t. x[I] >= V > x[I+1]
+   x[-1] >= V          : I = $x->nelem -1
+
+If all elements of C<$x> are equal,
+
+  i = 0
+
+If C<$x> contains duplicated elements, I<I> is the index of the
+leftmost (by index in array) duplicate if I<V> matches.
+
+=for bad
+
+needs major (?) work to handles bad values
+
+=head2 vsearch_insert_rightmost
+
+=for ref
+
+Determine the insertion point for values in a sorted array, inserting
+after duplicates.
+
+=for usage
+
+  $idx = vsearch_insert_rightmost($vals, $x);
+
+C<$x> must be sorted, but may be in decreasing or increasing
+order.
+
+B<vsearch_insert_rightmost> returns an index I<I> for each value I<V> of
+C<$vals> equal to the rightmost position (by index in array) within
+C<$x> that I<V> may be inserted and still maintain the order in
+C<$x>.
+
+Insertion at index I<I> involves shifting elements I<I> and higher of
+C<$x> to the right by one and setting the now empty element at index
+I<I> to I<V>.
+
+I<I> has the following properties:
+
+=over
+
+=item *
+
+if C<$x> is sorted in increasing order
+
+            V < x[0]  : I = 0
+   x[0]  <= V < x[-1] : I s.t. x[I-1] <= V < x[I]
+   x[-1] <= V         : I = $x->nelem
+
+=item *
+
+if C<$x> is sorted in decreasing order
+
+           V >= x[0]  : I = -1
+   x[0]  > V >= x[-1] : I s.t. x[I] >= V > x[I+1]
+   x[-1] > V          : I = $x->nelem -1
+
+If all elements of C<$x> are equal,
+
+  i = $x->nelem - 1
+
+If C<$x> contains duplicated elements, I<I> is the index of the
+leftmost (by index in array) duplicate if I<V> matches.
+
+=for bad
+
+needs major (?) work to handles bad values
+
+=head2 vsearch_match
+
+=for ref
+
+Match values against a sorted array.
+
+=for usage
+
+  $idx = vsearch_match($vals, $x);
+
+C<$x> must be sorted, but may be in decreasing or increasing
+order.
+
+B<vsearch_match> returns an index I<I> for each value I<V> of
+C<$vals>.  If I<V> matches an element in C<$x>, I<I> is the
+index of that element, otherwise it is I<-( insertion_point + 1 )>,
+where I<insertion_point> is an index in C<$x> where I<V> may be
+inserted while maintaining the order in C<$x>.  If C<$x> has
+duplicated values, I<I> may refer to any of them.
+
+=for bad
+
+needs major (?) work to handles bad values
+
+=head2 vsearch_bin_inclusive
+
+=for ref
+
+Determine the index for values in a sorted array of bins, lower bound inclusive.
+
+=for usage
+
+  $idx = vsearch_bin_inclusive($vals, $x);
+
+C<$x> must be sorted, but may be in decreasing or increasing
+order.
+
+C<$x> represents the edges of contiguous bins, with the first and
+last elements representing the outer edges of the outer bins, and the
+inner elements the shared bin edges.
+
+The lower bound of a bin is inclusive to the bin, its outer bound is exclusive to it.
+B<vsearch_bin_inclusive> returns an index I<I> for each value I<V> of C<$vals>
+
+I<I> has the following properties:
+
+=over
+
+=item *
+
+if C<$x> is sorted in increasing order
+
+            V < x[0]  : I = -1
+   x[0]  <= V < x[-1] : I s.t. x[I] <= V < x[I+1]
+   x[-1] <= V         : I = $x->nelem - 1
+
+=item *
+
+if C<$x> is sorted in decreasing order
+
+            V >= x[0]  : I = 0
+   x[0]  >  V >= x[-1] : I s.t. x[I+1] > V >= x[I]
+   x[-1] >  V          : I = $x->nelem
+
+If all elements of C<$x> are equal,
+
+  i = $x->nelem - 1
+
+If C<$x> contains duplicated elements, I<I> is the index of the
+righmost (by index in array) duplicate if I<V> matches.
+
+=for bad
+
+needs major (?) work to handles bad values
+
+=head2 vsearch_bin_exclusive
+
+=for ref
+
+Determine the index for values in a sorted array of bins, lower bound exclusive.
+
+=for usage
+
+  $idx = vsearch_bin_exclusive($vals, $x);
+
+C<$x> must be sorted, but may be in decreasing or increasing
+order.
+
+C<$x> represents the edges of contiguous bins, with the first and
+last elements representing the outer edges of the outer bins, and the
+inner elements the shared bin edges.
+
+The lower bound of a bin is exclusive to the bin, its upper bound is
+inclusive to it.  B<vsearch_bin_exclusive> returns an index I<I> for
+each value I<V> of C<$vals>.
+
+I<I> has the following properties:
+
+=over
+
+=item *
+
+if C<$x> is sorted in increasing order
+
+            V <= x[0]  : I = -1
+   x[0]  <  V <= x[-1] : I s.t. x[I] < V <= x[I+1]
+   x[-1] <  V          : I = $x->nelem - 1
+
+=item *
+
+if C<$x> is sorted in decreasing order
+
+            V >  x[0]  : I = 0
+   x[0]  >= V >  x[-1] : I s.t. x[I-1] >= V > x[I]
+   x[-1] >= V          : I = $x->nelem
+
+If all elements of C<$x> are equal,
+
+  i = $x->nelem - 1
+
+If C<$x> contains duplicated elements, I<I> is the index of the
+righmost (by index in array) duplicate if I<V> matches.
+
+=for bad
+
+needs major (?) work to handles bad values
 
 EOD
 
@@ -2188,48 +2479,6 @@ for my $func ( [
                          :           low ;
                    ----
            ],
-            ref =>
-              'Search for values in a sorted array, return index appropriate for sampling from a distribution',
-
-            doc_pre => q[
-			 B<%FUNC%> returns an index I<I> for each value I<V> of C<$vals> appropriate
-                         for sampling C<$vals>
-			 ----
-			 ],
-            doc_incr => q[
-				   V <= x[0]  : I = 0
-			   x[0]  < V <= x[-1] : I s.t. x[I-1] < V <= x[I]
-			   x[-1] < V          : I = $x->nelem -1
-			 ----
-			 ],
-
-            doc_decr => q[
-				    V > x[0]  : I = 0
-			   x[0]  >= V > x[-1] : I s.t. x[I] >= V > x[I+1]
-			   x[-1] >= V         : I = $x->nelem - 1
-			 ----
-			 ],
-
-            doc_post => q[
-			  If all elements of C<$x> are equal, I<< I = $x->nelem - 1 >>.
-
-			  If C<$x> contains duplicated elements, I<I> is the index of the
-			  leftmost (by position in array) duplicate if I<V> matches.
-
-			  =for example
-
-			  This function is useful e.g. when you have a list of probabilities
-			  for events and want to generate indices to events:
-
-			   $x = pdl(.01,.86,.93,1); # Barnsley IFS probabilities cumulatively
-			   $y = random 20;
-			   $c = %FUNC%($y, $x); # Now, $c will have the appropriate distr.
-
-			  It is possible to use the L<cumusumover|PDLA::Ufunc/cumusumover>
-			  function to obtain cumulative probabilities from absolute probabilities.
-			  ----
-			  ],
-
         },
     ],
 
@@ -2247,44 +2496,6 @@ for my $func ( [
 		    }
 		    $idx() = up ? low : high;
 	    ],
-            ref =>
-              'Determine the insertion point for values in a sorted array, inserting before duplicates.',
-
-            doc_pre => q[
-			 B<%FUNC%> returns an index I<I> for each value I<V> of
-			 C<$vals> equal to the leftmost position (by index in array) within
-			 C<$x> that I<V> may be inserted and still maintain the order in
-			 C<$x>.
-
-			 Insertion at index I<I> involves shifting elements I<I> and higher of
-			 C<$x> to the right by one and setting the now empty element at index
-			 I<I> to I<V>.
-			 ----
-			 ],
-            doc_incr => q[
-				   V <= x[0]  : I = 0
-			   x[0]  < V <= x[-1] : I s.t. x[I-1] < V <= x[I]
-			   x[-1] < V          : I = $x->nelem
-			 ----
-			 ],
-
-            doc_decr => q[
-				    V >  x[0]  : I = -1
-			   x[0]  >= V >= x[-1] : I s.t. x[I] >= V > x[I+1]
-			   x[-1] >= V          : I = $x->nelem -1
-			 ----
-			 ],
-
-            doc_post => q[
-			  If all elements of C<$x> are equal,
-
-			      i = 0
-
-			  If C<$x> contains duplicated elements, I<I> is the index of the
-			  leftmost (by index in array) duplicate if I<V> matches.
-			  ----
-			  ],
-
         },
     ],
 
@@ -2302,44 +2513,6 @@ for my $func ( [
 		   }
 		   $idx() = up ? low : high;
             ],
-            ref =>
-              'Determine the insertion point for values in a sorted array, inserting after duplicates.',
-
-            doc_pre => q[
-			 B<%FUNC%> returns an index I<I> for each value I<V> of
-			 C<$vals> equal to the rightmost position (by index in array) within
-			 C<$x> that I<V> may be inserted and still maintain the order in
-			 C<$x>.
-
-			 Insertion at index I<I> involves shifting elements I<I> and higher of
-			 C<$x> to the right by one and setting the now empty element at index
-			 I<I> to I<V>.
-			 ----
-			 ],
-            doc_incr => q[
-				    V < x[0]  : I = 0
-			   x[0]  <= V < x[-1] : I s.t. x[I-1] <= V < x[I]
-			   x[-1] <= V         : I = $x->nelem
-			 ----
-			 ],
-
-            doc_decr => q[
-				   V >= x[0]  : I = -1
-			   x[0]  > V >= x[-1] : I s.t. x[I] >= V > x[I+1]
-			   x[-1] > V          : I = $x->nelem -1
-			 ----
-			 ],
-
-            doc_post => q[
-			  If all elements of C<$x> are equal,
-
-			      i = $x->nelem - 1
-
-			  If C<$x> contains duplicated elements, I<I> is the index of the
-			  leftmost (by index in array) duplicate if I<V> matches.
-			  ----
-			  ],
-
         },
 
     ],
@@ -2375,17 +2548,6 @@ for my $func ( [
                          :   up ? - ( low  + 1 )
                          :        - ( high + 1 );
 	       ],
-            ref => 'Match values against a sorted array.',
-
-            doc_pre => q[
-			 B<%FUNC%> returns an index I<I> for each value I<V> of
-			 C<$vals>.  If I<V> matches an element in C<$x>, I<I> is the
-			 index of that element, otherwise it is I<-( insertion_point + 1 )>,
-			 where I<insertion_point> is an index in C<$x> where I<V> may be
-			 inserted while maintaining the order in C<$x>.  If C<$x> has
-			 duplicated values, I<I> may refer to any of them.
-			 ----
-			 ],
 
         },
     ],
@@ -2405,42 +2567,6 @@ for my $func ( [
                    }
                    $idx() = up ? high: low;
             ],
-            ref =>
-              'Determine the index for values in a sorted array of bins, lower bound inclusive.',
-
-            doc_pre => q[
-			 C<$x> represents the edges of contiguous bins, with the first and
-			 last elements representing the outer edges of the outer bins, and the
-			 inner elements the shared bin edges.
-
-			 The lower bound of a bin is inclusive to the bin, its outer bound is exclusive to it.
-                         B<%FUNC%> returns an index I<I> for each value I<V> of C<$vals>
-			 ----
-			 ],
-            doc_incr => q[
-				    V < x[0]  : I = -1
-			   x[0]  <= V < x[-1] : I s.t. x[I] <= V < x[I+1]
-			   x[-1] <= V         : I = $x->nelem - 1
-			 ----
-			 ],
-
-            doc_decr => q[
-				    V >= x[0]  : I = 0
-			   x[0]  >  V >= x[-1] : I s.t. x[I+1] > V >= x[I]
-			   x[-1] >  V          : I = $x->nelem
-			 ----
-			 ],
-
-            doc_post => q[
-			  If all elements of C<$x> are equal,
-
-			      i = $x->nelem - 1
-
-			  If C<$x> contains duplicated elements, I<I> is the index of the
-			  righmost (by index in array) duplicate if I<V> matches.
-			  ----
-			  ],
-
         },
     ],
 
@@ -2460,42 +2586,6 @@ for my $func ( [
                    }
                    $idx() = up ? high: low;
             ],
-            ref =>
-              'Determine the index for values in a sorted array of bins, lower bound exclusive.',
-
-            doc_pre => q[
-			 C<$x> represents the edges of contiguous bins, with the first and
-			 last elements representing the outer edges of the outer bins, and the
-			 inner elements the shared bin edges.
-
-			 The lower bound of a bin is exclusive to the bin, its upper bound is inclusive to it.
-			 B<%FUNC%> returns an index I<I> for each value I<V> of C<$vals>.
-			 ----
-			 ],
-            doc_incr => q[
-				    V <= x[0]  : I = -1
-			   x[0]  <  V <= x[-1] : I s.t. x[I] < V <= x[I+1]
-			   x[-1] <  V          : I = $x->nelem - 1
-			 ----
-			 ],
-
-            doc_decr => q[
-				    V >  x[0]  : I = 0
-			   x[0]  >= V >  x[-1] : I s.t. x[I-1] >= V > x[I]
-			   x[-1] >= V          : I = $x->nelem
-			 ----
-			 ],
-
-            doc_post => q[
-			  If all elements of C<$x> are equal,
-
-			      i = $x->nelem - 1
-
-			  If C<$x> contains duplicated elements, I<I> is the index of the
-			  righmost (by index in array) duplicate if I<V> matches.
-			  ----
-			  ],
-
         }
     ],
 
@@ -2514,55 +2604,8 @@ for my $func ( [
 	# overrides this.
         '%UP%' => '$x(n => n1) >= $x(n => 0)',
 
-        '%FUNC%' => $func,
-
-        '%PRE%' => undent(
-            q[
-		    %DOC_PRE%
-                    ----
-		   ]
-        ),
-
-
-
-        '%BODY%' => undent(
-            q[
-		   I<I> has the following properties:
-
-		   =over
-
-		   =item *
-
-		   if C<$x> is sorted in increasing order
-
-		   %DOC_INCR%
-
-		   =item *
-
-		   if C<$x> is sorted in decreasing order
-
-		   %DOC_DECR%
-
-		   =back
-		   ----
-                   ]
-        ),
-
-        '%POST%' => undent(
-            q[
-                   %DOC_POST%
-		   ----
-                   ]
-        ),
-
         map { ( "%\U$_%" => undent( $algo->{$_} ) ) } keys %$algo,
     );
-
-    $replace{'%PRE%'} = '' unless defined $replace{'%DOC_PRE%'};
-    $replace{'%BODY%'} = ''
-      unless defined $replace{'%DOC_INCR%'} || defined $replace{'%DOC_DECR%'};
-    $replace{'%POST%'} = '' unless defined $replace{'%DOC_POST%'};
-
 
     my $code = undent q[
                    PDLA_Indx n1 = $SIZE(n)-1;
@@ -2578,38 +2621,18 @@ for my $func ( [
                    ----
                ];
 
-    my $doc = undent q[
-		   =for ref
-
-		   %REF%
-
-		   =for usage
-
-		     $idx = %FUNC%($vals, $x);
-
-		   C<$x> must be sorted, but may be in decreasing or increasing
-		   order.
-
-                   %PRE%
-		   %BODY%
-		   %POST%
-                   ----
-		   ];
-
 
     # redo until nothing changes
-    for my $tref ( \$code, \$doc ) {
+    for my $tref ( \$code ) {
         1 while $$tref =~ s/(%[\w_]+%)/$replace{$1}/ge;
     }
 
     pp_def(
         $func,
         HandleBad    => 0,
-        BadDoc       => 'needs major (?) work to handles bad values',
         Pars         => 'vals(); x(n); indx [o]idx()',
         GenericTypes => [ 'F', 'D' ],    # too restrictive ?
         Code         => $code,
-	Doc          => $doc,
     );
 }
 
