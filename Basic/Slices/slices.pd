@@ -865,7 +865,7 @@ switch(ind_pdl->datatype) {
   PDLA_Indx i,ntsize;
 
   if( (size == NULL) || (size == &PL_sv_undef) ) {
-    // NO size was passed in (not normally executed even if you passed in no size to range(),
+    // NO size was passed in - not normally executed even if you passed in no size to range(),
     // as range() generates a size array...
     for(i=0;i<$COMP(rdim);i++)
           $COMP(sizes[i]) = 0;
