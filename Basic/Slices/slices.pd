@@ -1190,6 +1190,22 @@ EOD-EquivCPOffsCode
 );
 
 
+pp_def(
+        'rld',
+        Pars=>'indx a(n); b(n); [o]c(m);',
+        PMCode=>'sub PDLA::rld{}', # to make the _rld_int
+        Code=>'
+          PDLA_Indx i,j=0,an;
+          $GENERIC(b) bv;
+          loop (n) %{
+            an = $a();
+            bv = $b();
+            for (i=0;i<an;i++) {
+              $c(m=>j) = bv;
+              j++;
+            }
+          %}',
+);
 pp_addpm(<<'EOD');
 =head2 rld
 
@@ -1206,12 +1222,6 @@ decode to C<$c>.
 
 =cut
 
-EOD
-
-pp_def(
-        'rld',
-        Pars=>'indx a(n); b(n); [o]c(m);',
-        PMCode =><<'EOD',
 sub PDLA::rld {
   my ($x,$y) = @_;
   my ($c);
@@ -1227,20 +1237,38 @@ sub PDLA::rld {
   &PDLA::_rld_int($x,$y,$c);
   $c;
 }
-EOD
-        Code=>'
-          PDLA_Indx i,j=0,an;
-          $GENERIC(b) bv;
-          loop (n) %{
-            an = $a();
-            bv = $b();
-            for (i=0;i<an;i++) {
-              $c(m=>j) = bv;
-              j++;
-            }
-          %}',
-);
 
+EOD
+
+
+pp_def(
+        'rle',
+        Pars=>'c(n); indx [o]a(m); [o]b(m);',
+#this RedoDimsCode sets $SIZE(m)==$SIZE(n), but the slice in the PMCode below makes m<=n.
+        RedoDimsCode=>'$SIZE(m)=$PDLA(c)->dims[0];',
+        PMCode=>'sub PDLA::rle{}', # to make the _rle_int
+        Code=>'
+          PDLA_Indx j=0,sn=$SIZE(n);
+          $GENERIC(c) cv, clv;
+          clv = $c(n=>0);
+          $b(m=>0) = clv;
+          $a(m=>0) = 0;
+          loop (n) %{
+            cv = $c();
+            if (cv == clv) {
+              $a(m=>j)++;
+            } else {
+              j++;
+              $b(m=>j) = clv = cv;
+              $a(m=>j) = 1;
+            }
+          %}
+          for (j++;j<$SIZE(m);j++) {
+            $a(m=>j) = 0;
+            $b(m=>j) = 0;
+          }
+        ',
+);
 pp_addpm(<<'EOD');
 =head2 rle
 
@@ -1276,14 +1304,6 @@ first instance of C<0> in each row of C<$x> should be considered.
 
 =cut
 
-EOD
-
-pp_def(
-        'rle',
-        Pars=>'c(n); indx [o]a(m); [o]b(m);',
-#this RedoDimsCode sets $SIZE(m)==$SIZE(n), but the slice in the PMCode below makes m<=n.
-        RedoDimsCode=>'$SIZE(m)=$PDLA(c)->dims[0];',
-        PMCode=><<'EOC',
 sub PDLA::rle {
   my $c = shift;
   my ($x,$y) = @_==2 ? @_ : (null,null);
@@ -1292,29 +1312,7 @@ sub PDLA::rle {
                                 ($x!=0)->clump(1..$x->ndims-1)->sumover->max-1;
   return ($x->slice("0:$max_ind"),$y->slice("0:$max_ind"));
 }
-EOC
-        Code=>'
-          PDLA_Indx j=0,sn=$SIZE(n);
-          $GENERIC(c) cv, clv;
-          clv = $c(n=>0);
-          $b(m=>0) = clv;
-          $a(m=>0) = 0;
-          loop (n) %{
-            cv = $c();
-            if (cv == clv) {
-              $a(m=>j)++;
-            } else {
-              j++;
-              $b(m=>j) = clv = cv;
-              $a(m=>j) = 1;
-            }
-          %}
-          for (j++;j<$SIZE(m);j++) {
-            $a(m=>j) = 0;
-            $b(m=>j) = 0;
-          }
-        ',
-);
+EOD
 
 # this one can convert vaffine piddles without(!) physicalising them
 # maybe it can replace 'converttypei' in the future?
