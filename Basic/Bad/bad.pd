@@ -11,26 +11,11 @@ my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
 my $usenan   = $PDLA::Config{BADVAL_USENAN} || 0;
 my $bvalPerPdl = $PDLA::Config{BADVAL_PER_PDLA} || 0;
 
-# if no bad-value support, this is easy
-
-unless ( $bvalflag ) {
-
-    pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
+pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
 
 =head1 NAME
 
-PDLA::Bad - PDLA does not process bad values
-
-=head1 DESCRIPTION
-
-PDLA has been compiled with WITH_BADVAL either 0 or undef,
-so it does not contain any bad-value support code.
-Actually, a number of methods are defined, but they are only
-placeholders to make writing other code, that has to handle
-WITH_BADVAL being true or false, easier.
-
-Implementation details are given in
-L<PDLA::BadValues>.
+PDLA::Bad - PDLA can process bad values if configured at compile-time
 
 =head1 SYNOPSIS
 
@@ -38,7 +23,21 @@ L<PDLA::BadValues>.
  print "\nBad value support in PDLA is turned " .
      $PDLA::Bad::Status ? "on" : "off" . ".\n";
 
- Bad value support in PDLA is turned off.
+=head1 DESCRIPTION
+
+If PDLA is compiled with C<WITH_BADVAL> set to 1,
+you can enter the wonderful world of bad value support in
+PDLA.
+
+If not, it will not contain any bad-value support code. Actually, a
+number of methods are defined, but they are only placeholders to make
+writing other code, that has to handle WITH_BADVAL being true or false,
+easier.
+
+This module is loaded when you do C<use PDLA>,
+C<use PDLA::Lite> or C<PDLA::LiteF>.
+
+Implementation details are given in L<PDLA::BadValues>.
 
 =head1 VARIABLES
 
@@ -49,20 +48,29 @@ which may be of use.
 
 =item $PDLA::Bad::Status
 
-Set to 0
+Set to C<$PDLA::Config{WITH_BADVAL}>.
 
 =item $PDLA::Bad::UseNaN
 
-Set to 0
+Set to 1 if PDLA was compiled with C<BADVAL_USENAN> set,
+0 otherwise.
 
 =item $PDLA::Bad::PerPdl
 
-Set to 0
+Set to 1 if PDLA was compiled with the I<experimental>
+C<BADVAL_PER_PDLA> option set, 0 otherwise.
 
 =back
 
 =cut
 
+!NO!SUBS!
+
+# if no bad-value support, this is easy
+
+unless ( $bvalflag ) {
+
+    pp_addpm({At=>'Top'}, <<'!NO!SUBS!');
 # really should be a constant
 $PDLA::Bad::Status = 0;
 $PDLA::Bad::UseNaN = 0;
@@ -139,61 +147,6 @@ sub PDLA::copybad { return $_[0]->copy; } # ignore the mask
     exit;
 
 } # unless: $bvalflag
-
-pp_addpm({At=>'Top'},<<'!NO!SUBS!');
-
-=head1 NAME
-
-PDLA::Bad - PDLA does process bad values
-
-=head1 DESCRIPTION
-
-PDLA has been compiled with WITH_BADVAL set to 1. Therefore,
-you can enter the wonderful world of bad value support in
-PDLA.
-
-This module is loaded when you do C<use PDLA>,
-C<Use PDLA::Lite> or C<PDLA::LiteF>.
-
-Implementation details are given in
-L<PDLA::BadValues>.
-
-=head1 SYNOPSIS
-
- use PDLA::Bad;
- print "\nBad value support in PDLA is turned " .
-     $PDLA::Bad::Status ? "on" : "off" . ".\n";
-
- Bad value support in PDLA is turned on.
-
- and some other things
-
-=head1 VARIABLES
-
-There are currently three variables that this module defines
-which may be of use.
-
-=over 4
-
-=item $PDLA::Bad::Status
-
-Set to 1
-
-=item $PDLA::Bad::UseNaN
-
-Set to 1 if PDLA was compiled with C<BADVAL_USENAN> set,
-0 otherwise.
-
-=item $PDLA::Bad::PerPdl
-
-Set to 1 if PDLA was compiled with the I<experimental>
-C<BADVAL_PER_PDLA> option set, 0 otherwise.
-
-=back
-
-=cut
-
-!NO!SUBS!
 
 ## Header
 pp_addpm(<<"!WITH!SUBS!");
