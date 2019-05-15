@@ -121,15 +121,6 @@ pp_def(
 =head2 s_identity
 =cut
 
-$doc = <<'DOC';
-=for ref
-
-Internal vaffine identity function.
-
-=cut
-
-DOC
-
 pp_def(
         's_identity',
         HandleBad => 1,
@@ -141,7 +132,7 @@ pp_def(
         Dims => '$COPYDIMS();',
         ParentInds => '$COPYINDS();',
         Identity => 1,
-        Doc => $doc,
+        Doc => undef, # Internal vaffine identity function.
 );
 
 =head2 index, index1d, index2d
@@ -211,6 +202,14 @@ from each column of C<$x> into C<$c>.  If you want to extract multiple
 columns from an array in one operation, see L<dice|/dice> or
 L<indexND|/indexND>.
 
+=for bad
+
+index barfs if any of the index values are bad.
+
+index1d propagates BAD index elements to the output variable.
+
+index2d barfs if either of the index values are bad.
+
 =cut
 
 EOD
@@ -243,8 +242,6 @@ pp_def(
        BadBackCode =>
        $index_init_bad . ' $a(n => foo) = $c();',
        Doc => $doc,
-       BadDoc =>
-       'index barfs if any of the index values are bad.',
        );
 
 pp_def(
@@ -308,8 +305,6 @@ pp_def(
          }
         },
        Doc => $doc,
-       BadDoc =>
-       'index1d propagates BAD index elements to the output variable.'
        );
 
 my $index2d_init_good =
@@ -350,8 +345,6 @@ pp_def(
        BadBackCode =>
        $index2d_init_bad . '$a(na => fooa, nb => foob) = $c();',
        Doc => $doc,
-       BadDoc =>
-       'index2d barfs if either of the index values are bad.',
 );
 
 
