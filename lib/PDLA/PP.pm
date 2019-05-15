@@ -2619,7 +2619,7 @@ sub make_incsizes {
 	my($parnames,$parobjs,$dimobjs,$havethreading) = @_;
 	my $str = ($havethreading?"pdl_thread __pdlthread; ":"").
 	  (join '',map {$parobjs->{$_}->get_incdecls} @$parnames).
-	    (join '',map {$_->get_decldim} sort values %$dimobjs);
+	    (join '', map $dimobjs->{$_}->get_decldim, sort keys %$dimobjs);
 	return ($str,undef);
 }
 
@@ -2630,8 +2630,8 @@ sub make_incsize_copy {
 	 : "").
 	 (join '',map {$parobjs->{$_}->get_incdecl_copy(sub{"\$PRIV($_[0])"},
 	 						sub{"$copyname->$_[0]"})} @$parnames).
-	 (join '',map {$_->get_copydim(sub{"\$PRIV($_[0])"},
-						sub{"$copyname->$_[0]"})} sort values %$dimobjs);
+	 (join '',map $dimobjs->{$_}->get_copydim(sub{"\$PRIV($_[0])"},
+						sub{"$copyname->$_[0]"}), sort keys %$dimobjs);
 
 }
 
@@ -2793,7 +2793,7 @@ sub make_redodims_thread {
     my $nn = $#$pnames;
     my @privname = map { "\$PRIV(pdls[$_])" } ( 0 .. $nn );
     $str .= $npdls ? "PDLA_Indx __creating[$npdls];\n" : "PDLA_Indx __creating[1];\n";
-    $str .= join '',map {$_->get_initdim."\n"} sort values %$dobjs;
+    $str .= join '',map $dobjs->{$_}->get_initdim."\n", sort keys %$dobjs;
 
     # if FlagCreat is NOT true, then we set __creating[] to 0
     # and we can use this knowledge below, and in hdrcheck()
