@@ -1021,7 +1021,6 @@ static pdl* new_pdlscalar(int datatype)
        }
 EOHDR
 
-use PDLA::Types;
 my $ntypes = $#PDLA::Types::names;
 
 my $str;
