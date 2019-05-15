@@ -135,11 +135,9 @@ pp_def(
         Doc => undef, # Internal vaffine identity function.
 );
 
+pp_addpm(<<'EOD');
 =head2 index, index1d, index2d
 
-=cut
-
-$doc = <<'EOD';
 =for ref
 
 C<index>, C<index1d>, and C<index2d> provide rudimentary index indirection.
@@ -241,7 +239,6 @@ pp_def(
        $index_init_good . ' $a(n => foo) = $c();',
        BadBackCode =>
        $index_init_bad . ' $a(n => foo) = $c();',
-       Doc => $doc,
        );
 
 pp_def(
@@ -304,7 +301,6 @@ pp_def(
                  }
          }
         },
-       Doc => $doc,
        );
 
 my $index2d_init_good =
@@ -344,7 +340,6 @@ pp_def(
        $index2d_init_good . ' $a(na => fooa, nb => foob) = $c();',
        BadBackCode =>
        $index2d_init_bad . '$a(na => fooa, nb => foob) = $c();',
-       Doc => $doc,
 );
 
 
@@ -441,14 +436,9 @@ sub PDLA::range {
 }
 EOD-range
 
+pp_addpm(<<'EOD');
 =head2 range
 
-=cut
-
-pp_def(
-        'rangeb',
-        OtherPars => 'SV *index; SV *size; SV *boundary',
-        Doc => <<'EOD',
 =for ref
 
 Engine for L<range|/range>
@@ -712,6 +702,10 @@ to tease out the algorithm.
 =cut
 
 EOD
+
+pp_def(
+        'rangeb',
+        OtherPars => 'SV *index; SV *size; SV *boundary',
         HandleBad => 1,
         DefaultFlow => 1,
         Reversible => 1,
@@ -1196,8 +1190,23 @@ EOD-EquivCPOffsCode
 );
 
 
+pp_addpm(<<'EOD');
 =head2 rld
+
+=for ref
+
+Run-length decode a vector
+
+Given a vector C<$x> of the numbers of instances of values C<$y>, run-length
+decode to C<$c>.
+
+=for example
+
+ rld($x,$y,$c=null);
+
 =cut
+
+EOD
 
 pp_def(
         'rld',
@@ -1230,25 +1239,44 @@ EOD
               j++;
             }
           %}',
-        Doc => <<'EOD'
+);
+
+pp_addpm(<<'EOD');
+=head2 rle
+
 =for ref
 
-Run-length decode a vector
+Run-length encode a vector
 
-Given a vector C<$x> of the numbers of instances of values C<$y>, run-length
-decode to C<$c>.
+Given vector C<$c>, generate a vector C<$x> with the number of each
+element, and a vector C<$y> of the unique values.  New in PDLA 2.017,
+only the elements up to the first instance of C<0> in C<$x> are
+returned, which makes the common use case of a 1-dimensional C<$c> simpler.
+For threaded operation, C<$x> and C<$y> will be large enough
+to hold the largest row of C<$y>, and only the elements up to the
+first instance of C<0> in each row of C<$x> should be considered.
 
 =for example
 
- rld($x,$y,$c=null);
+ $c = floor(4*random(10));
+ rle($c,$x=null,$y=null);
+ #or
+ ($x,$y) = rle($c);
+
+ #for $c of shape [10, 4]:
+ $c = floor(4*random(10,4));
+ ($x,$y) = rle($c);
+
+ #to see the results of each row one at a time:
+ foreach (0..$c->dim(1)-1){
+  my ($as,$bs) = ($x(:,($_)),$y(:,($_)));
+  my ($ta,$tb) = where($as,$bs,$as!=0); #only the non-zero elements of $x
+  print $c(:,($_)) . " rle==> " , ($ta,$tb) , "\trld==> " . rld($ta,$tb) . "\n";
+ }
 
 =cut
 
 EOD
-);
-
-=head2 rle
-=cut
 
 pp_def(
         'rle',
@@ -1286,40 +1314,6 @@ EOC
             $b(m=>j) = 0;
           }
         ',
-        Doc => <<'EOD'
-=for ref
-
-Run-length encode a vector
-
-Given vector C<$c>, generate a vector C<$x> with the number of each
-element, and a vector C<$y> of the unique values.  New in PDLA 2.017,
-only the elements up to the first instance of C<0> in C<$x> are
-returned, which makes the common use case of a 1-dimensional C<$c> simpler.
-For threaded operation, C<$x> and C<$y> will be large enough
-to hold the largest row of C<$y>, and only the elements up to the
-first instance of C<0> in each row of C<$x> should be considered.
-
-=for example
-
- $c = floor(4*random(10));
- rle($c,$x=null,$y=null);
- #or
- ($x,$y) = rle($c);
-
- #for $c of shape [10, 4]:
- $c = floor(4*random(10,4));
- ($x,$y) = rle($c);
-
- #to see the results of each row one at a time:
- foreach (0..$c->dim(1)-1){
-  my ($as,$bs) = ($x(:,($_)),$y(:,($_)));
-  my ($ta,$tb) = where($as,$bs,$as!=0); #only the non-zero elements of $x
-  print $c(:,($_)) . " rle==> " , ($ta,$tb) , "\trld==> " . rld($ta,$tb) . "\n";
- }
-
-=cut
-
-EOD
 );
 
 # this one can convert vaffine piddles without(!) physicalising them
@@ -1414,31 +1408,9 @@ pp_def(
         Doc => 'internal',
 );
 
-
-
+pp_addpm(<<'EOD');
 =head2 xchg
-=cut
 
-pp_def(
-        'xchg',
-        OtherPars => 'int n1; int n2;',
-        DefaultFlow => 1,
-        Reversible => 1,
-        P2Child => 1,
-        NoPdlThread => 1,
-        XCHGOnly => 1,
-        EquivDimCheck => 'if ($COMP(n1) <0)
-                                $COMP(n1) += $PARENT(threadids[0]);
-                          if ($COMP(n2) <0)
-                                $COMP(n2) += $PARENT(threadids[0]);
-                          if ($COMP(n1) <0 ||$COMP(n2) <0 ||
-                             $COMP(n1) >= $PARENT(threadids[0]) ||
-                             $COMP(n2) >= $PARENT(threadids[0]))
-                barf("One of dims %d, %d out of range: should be 0<=dim<%d",
-                        $COMP(n1),$COMP(n2),$PARENT(threadids[0]));',
-        EquivPDimExpr => '(($CDIM == $COMP(n1)) ? $COMP(n2) : ($CDIM == $COMP(n2)) ? $COMP(n1) : $CDIM)',
-        EquivCDimExpr => '(($PDIM == $COMP(n1)) ? $COMP(n2) : ($PDIM == $COMP(n2)) ? $COMP(n1) : $PDIM)',
-        Doc => <<'EOD',
 =for ref
 
 exchange two dimensions
@@ -1459,6 +1431,26 @@ are exchanged with each other i.e.
 =cut
 
 EOD
+
+pp_def(
+        'xchg',
+        OtherPars => 'int n1; int n2;',
+        DefaultFlow => 1,
+        Reversible => 1,
+        P2Child => 1,
+        NoPdlThread => 1,
+        XCHGOnly => 1,
+        EquivDimCheck => 'if ($COMP(n1) <0)
+                                $COMP(n1) += $PARENT(threadids[0]);
+                          if ($COMP(n2) <0)
+                                $COMP(n2) += $PARENT(threadids[0]);
+                          if ($COMP(n1) <0 ||$COMP(n2) <0 ||
+                             $COMP(n1) >= $PARENT(threadids[0]) ||
+                             $COMP(n2) >= $PARENT(threadids[0]))
+                barf("One of dims %d, %d out of range: should be 0<=dim<%d",
+                        $COMP(n1),$COMP(n2),$PARENT(threadids[0]));',
+        EquivPDimExpr => '(($CDIM == $COMP(n1)) ? $COMP(n2) : ($CDIM == $COMP(n2)) ? $COMP(n1) : $CDIM)',
+        EquivCDimExpr => '(($PDIM == $COMP(n1)) ? $COMP(n2) : ($PDIM == $COMP(n2)) ? $COMP(n1) : $PDIM)',
 );
 
 pp_addpm(<< 'EOD');
@@ -1584,8 +1576,28 @@ sub PDLA::reorder {
 
 EOD
 
+pp_addpm(<<'EOD');
 =head2 mv
+
+=for ref
+
+move a dimension to another position
+
+The command
+
+=for example
+
+ $y = $x->mv(4,1);
+
+creates C<$y> to be like C<$x> except that the dimension 4 is moved to the
+place 1, so:
+
+ $y->at(1,2,3,4,5,6) == $x->at(1,5,2,3,4,6);
+
+The other dimensions are moved accordingly.
+Negative dimension indices count from the end.
 =cut
+EOD
 
 pp_def(
         'mv',
@@ -1618,41 +1630,15 @@ pp_def(
                 (($PDIM > $COMP(n2) || $PDIM < $COMP(n1)) ?
                         $PDIM : (($PDIM == $COMP(n1)) ? $COMP(n2) : $PDIM-1))
                 : $PDIM))',
-        Doc => << 'EOD',
-=for ref
-
-move a dimension to another position
-
-The command
-
-=for example
-
- $y = $x->mv(4,1);
-
-creates C<$y> to be like C<$x> except that the dimension 4 is moved to the
-place 1, so:
-
- $y->at(1,2,3,4,5,6) == $x->at(1,5,2,3,4,6);
-
-The other dimensions are moved accordingly.
-Negative dimension indices count from the end.
-=cut
-EOD
 );
 
 pp_addhdr << 'EOH';
 #define sign(x) ( (x) < 0 ? -1 : 1)
 EOH
 
+pp_addpm(<<'EOD');
 =head2 oslice
-=cut
 
-# I think the quotes in the =item ":" lines
-# confuse the perldoc stuff
-#
-pp_def(
-        'oslice',
-        Doc => << 'EOD',
 =for ref
 
 DEPRECATED:  'oslice' is the original 'slice' routine in pre-2.006_006
@@ -1747,6 +1733,9 @@ depending on whether you prefer error-reporting clarity or speed of execution.
 =cut
 
 EOD
+
+pp_def(
+        'oslice',
         P2Child => 1,
         NoPdlThread => 1,
         DefaultFlow => 1,
@@ -2084,8 +2073,29 @@ pp_def( 'affine',
         Doc => undef,
 );
 
+pp_addpm(<<'EOD');
 =head2 diagonalI
+
+=for ref
+
+Returns the multidimensional diagonal over the specified dimensions.
+
+The diagonal is placed at the first (by number) dimension that is
+diagonalized.
+The other diagonalized dimensions are removed. So if C<$x> has dimensions
+C<(5,3,5,4,6,5)> then after
+
+=for example
+
+ $y = $x->diagonal(0,2,5);
+
+the piddle C<$y> has dimensions C<(5,3,4,6)> and
+C<$y-E<gt>at(2,1,0,1)> refers
+to C<$x-E<gt>at(2,1,2,0,1,2)>.
+
+NOTE: diagonal doesn't handle threadids correctly. XXX FIX
 =cut
+EOD
 
 pp_def(
         'diagonalI',
@@ -2143,35 +2153,11 @@ pp_def(
                         }
                 $SETDIMS();
         ',
-        Doc => << 'EOD',
-=for ref
-
-Returns the multidimensional diagonal over the specified dimensions.
-
-The diagonal is placed at the first (by number) dimension that is
-diagonalized.
-The other diagonalized dimensions are removed. So if C<$x> has dimensions
-C<(5,3,5,4,6,5)> then after
-
-=for example
-
- $y = $x->diagonal(0,2,5);
-
-the piddle C<$y> has dimensions C<(5,3,4,6)> and
-C<$y-E<gt>at(2,1,0,1)> refers
-to C<$x-E<gt>at(2,1,2,0,1,2)>.
-
-NOTE: diagonal doesn't handle threadids correctly. XXX FIX
-=cut
-EOD
 );
 
+pp_addpm(<<'EOD');
 =head2 lags
-=cut
 
-pp_def(
-        'lags',
-        Doc => <<'EOD',
 =for ref
 
 Returns a piddle of lags to parent.
@@ -2205,6 +2191,9 @@ negative and will then be counted from the last dim backwards
 in the usual way (-1 = last dim).
 =cut
 EOD
+
+pp_def(
+        'lags',
         P2Child => 1,
         NoPdlThread => 1,
         DefaultFlow => 1,
@@ -2245,12 +2234,9 @@ EOD
         '
 );
 
+pp_addpm(<<'EOD');
 =head2 splitdim
-=cut
 
-pp_def(
-        'splitdim',
-        Doc => <<'EOD',
 =for ref
 
 Splits a dimension in the parent piddle (opposite of L<clump|PDLA::Core/clump>)
@@ -2268,6 +2254,9 @@ the expression
 is always true (C<m> has to be less than 3).
 =cut
 EOD
+
+pp_def(
+        'splitdim',
         P2Child => 1,
         NoPdlThread => 1,
         DefaultFlow => 1,
@@ -2306,16 +2295,16 @@ EOD
         ',
 );
 
+pp_addpm(<<'EOD');
 =head2 rotate
-=cut
 
-pp_def('rotate',
-        Doc => <<'EOD',
 =for ref
 
 Shift vector elements along with wrap. Flows data back&forth.
 =cut
 EOD
+
+pp_def('rotate',
         Pars=>'x(n); indx shift(); [oca]y(n)',
         DefaultFlow => 1,
         Reversible => 1,
@@ -2348,12 +2337,9 @@ EOD
 
 # This is a bit tricky. Hope I haven't missed any cases.
 
+pp_addpm(<<'EOD');
 =head2 threadI
-=cut
 
-pp_def(
-        'threadI',
-        Doc => <<'EOD',
 =for ref
 
 internal
@@ -2367,6 +2353,9 @@ Put some dimensions to a threadid.
 =cut
 
 EOD
+
+pp_def(
+        'threadI',
         P2Child => 1,
         NoPdlThread => 1,
         DefaultFlow => 1,
@@ -2450,8 +2439,16 @@ EOD
 );
 
 
+pp_addpm(<<'EOD');
 =head2 identvaff
+
+=for ref
+
+A vaffine identity transformation (includes thread_id copying).
+
+Mainly for internal use.
 =cut
+EOD
 
 # we don't really need this one since it can be achieved with
 # a ->threadI(-1,[])
@@ -2474,23 +2471,12 @@ pp_def('identvaff',
                 $SETDELTATHREADIDS(0);
                 $CHILD(threadids[$CHILD(nthreadids)]) = $CHILD(ndims);
                 ',
-        Doc => <<'EOD',
-=for ref
-
-A vaffine identity transformation (includes thread_id copying).
-
-Mainly for internal use.
-=cut
-EOD
 );
 
 
+pp_addpm(<<'EOD');
 =head2 unthread
-=cut
 
-pp_def(
-        'unthread',
-        Doc => <<'EOD',
 =for ref
 
 All threaded dimensions are made real again.
@@ -2498,6 +2484,9 @@ All threaded dimensions are made real again.
 See [TBD Doc] for details and examples.
 =cut
 EOD
+
+pp_def(
+        'unthread',
         P2Child => 1,
         NoPdlThread => 1,
         DefaultFlow => 1,
