@@ -679,8 +679,8 @@ sub format_chunk {
     my @m = join ' ', $left, ':', @{$deps||[]};
     my $fsdir = File::Spec->catdir(@$dir);
     push @m, "\t" . $self->oneliner(
-        "die \$! unless chdir q($fsdir); exec q(\$(MAKE) @$targets)"
-    );
+        "die \$! unless chdir q($fsdir); exec \@ARGV"
+    ) . " \$(MAKE) @$targets";
     join '', map "$_\n", @m;
 }
 
