@@ -1,27 +1,37 @@
-use strict;
-
-pp_add_exported ('', 'uniq');
-pp_add_exported ('', 'uniqind');
-pp_add_exported ('', 'uniqvec');
-pp_add_exported('', 'clip');
-pp_add_exported('','stats');
-pp_add_exported('','grandom');
-pp_add_exported('','vsearch');
-pp_add_exported('', 'interpol');
-pp_add_exported('','interpND');
-pp_add_exported("", 'one2nd');
-pp_add_exported("", 'where');
-pp_add_exported("", 'whereND');
-pp_add_exported("", 'whichND');
-pp_add_exported("", 'setops');
-pp_add_exported("", 'intersect');
-pp_add_exported('', 'matmult');
-
-pp_addpm({At=>'Top'},<<'EOD');
+package PDLA::Primitive;
 
 use strict;
 use warnings;
+use PDLA::Primitive::Inline Pdlapp => Config => clean_after_build => 0;
+use PDLA::Primitive::Inline Pdlapp => 'DATA', internal => 1;
+use PDLA::Core;
 use Carp;
+use parent 'PDLA::Exporter';
+
+our @EXPORT_OK = qw(
+  vsearch interpol grandom random randsym which which_both fibonacci
+);
+our %EXPORT_TAGS = (Func=> \@EXPORT_OK);
+
+sub import_export {
+    my ($func) = @_;
+    push @EXPORT_OK, $func;
+    no strict 'refs';
+    *$func = \&{"PDLA::$func"};
+}
+
+import_export($_) for qw(
+  uniq uniqind uniqvec clip stats interpND one2nd
+  where whereND whichND setops intersect matmult
+  axisvalues append indadd
+  interpolate vsearch_sample vsearch_insert_leftmost
+  vsearch_insert_rightmost vsearch_match vsearch_bin_inclusive
+  vsearch_bin_exclusive histogram2d
+  whistogram2d histogram whistogram statsover
+  wtstat clip hclip lclip
+  in conv1d norm crossp inner2t
+  inner2d inner2 innerwt outer inner
+);
 
 =head1 NAME
 
@@ -2548,7 +2558,11 @@ Updated for CPAN viewing compatibility by David Mertens.
 
 =cut
 
-EOD
+1;
+
+__DATA__
+
+__Pdlapp__
 
 pp_addhdr(<<'EOD');
 

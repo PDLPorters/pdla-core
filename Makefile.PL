@@ -17,8 +17,8 @@ my ($seen_pdlconf);
 my $pdl_conf_file = ''; # apparently for users to change
 
 # the modules in PDLA::LiteF, used in t/core.t
-my @INLINEMODULES = qw(Ops Bad Slices);
-my @COREMODULES = qw(Primitive Ufunc Math MatrixOps);
+my @INLINEMODULES = qw(Ops Bad Slices Primitive);
+my @COREMODULES = qw(Ufunc Math MatrixOps);
 
 # build-system globals
 our ($usenan, $bvalflag, $bvalPerPdl);
