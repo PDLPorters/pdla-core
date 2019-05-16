@@ -448,6 +448,7 @@ Bad values are not considered unique by uniq and are ignored.
 # flattens in the process
 sub PDLA::uniq {
    use PDLA::Core 'barf';
+   require PDLA::Slices;
    my ($arr) = @_;
    return $arr if($arr->nelem == 0); # The null list is unique (CED)
    my $srt  = $arr->clump(-1)->where($arr==$arr)->qsort;  # no NaNs or BADs for qsort
@@ -500,6 +501,7 @@ Bad values are not considered unique by uniqind and are ignored.
 # flattens in the process
 sub PDLA::uniqind {
   use PDLA::Core 'barf';
+  require PDLA::Slices;
   my ($arr) = @_;
   return $arr if($arr->nelem == 0); # The null list is unique (CED)
   # Different from uniq we sort and store the result in an intermediary
@@ -561,8 +563,8 @@ non-NaN and non-BAD containing vectors, followed by the NaN vectors.
 =cut
 
 sub PDLA::uniqvec {
-
    my($pdl) = shift;
+   require PDLA::Slices;
 
    return $pdl if ( $pdl->nelem == 0 || $pdl->ndims < 2 );
    return $pdl if ( $pdl->slice("(0)")->nelem < 2 );                     # slice isn't cheap but uniqvec isn't either
@@ -2435,7 +2437,6 @@ and this does the final selection:
 *setops = \&PDLA::setops;
 
 sub PDLA::setops {
-
   my ($x, $op, $y)=@_;
 
   # Check that $x and $y are 1D.
@@ -2464,8 +2465,8 @@ sub PDLA::setops {
     # Find indices which are duplicated - these are to be excluded
     #
     # We do this by comparing x with x shifted each way.
-    my $i1 = which($union != rotate($union, 1));
-    my $i2 = which($union != rotate($union, -1));
+    my $i1 = which($union != PDLA::Slices::rotate($union, 1));
+    my $i2 = which($union != PDLA::Slices::rotate($union, -1));
     #
     # We then mark/mask these in the s1 and s2 arrays to indicate which ones
     # are not equal to their neighbours.
@@ -2488,7 +2489,7 @@ sub PDLA::setops {
     # Make ordered list of set union.
     my $union = append($x, $y)->qsort;
 
-    return $union->where($union == rotate($union, -1));
+    return $union->where($union == PDLA::Slices::rotate($union, -1));
   } else {
     print "The operation $op is not known!";
     return -1;
