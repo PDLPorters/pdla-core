@@ -244,16 +244,15 @@ sub handle_fixblib {
     File::Find::find({
         wanted => sub {
             -f or return;
-            if (m!^($inline_build_path/lib/auto/.*)\.$ext$!) {
-                my $blib_ext = $_;
-                $blib_ext =~ s!^$inline_build_path/lib!blib/arch! or die;
-                my $blib_ext_dir = $blib_ext;
-                $blib_ext_dir =~ s!(.*)/.*!$1! or die;
-                File::Path::mkpath $blib_ext_dir;
-                DEBUG "handle_fixblib copy $_ -> $blib_ext";
-                unlink $blib_ext;
-                File::Copy::cp $_, $blib_ext; # not ::copy to preserve perms
-            }
+            return unless m!^($inline_build_path/lib/auto/.*)\.$ext$!;
+            my $blib_ext = $_;
+            $blib_ext =~ s!^$inline_build_path/lib!blib/arch! or die;
+            my $blib_ext_dir = $blib_ext;
+            $blib_ext_dir =~ s!(.*)/.*!$1! or die;
+            File::Path::mkpath $blib_ext_dir;
+            DEBUG "handle_fixblib copy $_ -> $blib_ext";
+            unlink $blib_ext;
+            File::Copy::cp $_, $blib_ext; # not ::copy to preserve perms
         },
         no_chdir => 1,
     }, $inline_build_path);
