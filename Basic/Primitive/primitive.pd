@@ -2716,7 +2716,6 @@ pp_def('conv1d',
         OtherPars => 'int reflect;',
         HandleBad => 0,
         PMCode => '
-
 sub PDLA::conv1d {
    my $opt = pop @_ if ref($_[$#_]) eq \'HASH\';
    die \'Usage: conv1d( a(m), kern(p), [o]b(m), {Options} )\'
@@ -2728,7 +2727,6 @@ sub PDLA::conv1d {
 		     lc $$opt{Boundary} eq "reflect");
    return $c;
 }
-
 ',
         Code => '
            int i,i1,i2,poff,pflip;
@@ -2736,7 +2734,6 @@ sub PDLA::conv1d {
            int reflect = $COMP(reflect);
            int m_size = $COMP(__m_size);
            int p_size = $COMP(__p_size);
-
            poff = (p_size-1)/2;
            for(i=0; i<m_size; i++) {
               tmp = 0;
@@ -2747,7 +2744,6 @@ sub PDLA::conv1d {
                          i2 = -i2;
                      if (reflect && i2>=m_size)
                          i2 = m_size-(i2-m_size+1);
-
                      REALMOD(i2,m_size);
                      tmp += $a(m=>i2) * $kern(p=>pflip);
                   }
@@ -3113,7 +3109,6 @@ pp_def($_->{Name},
 	',
 	);
 }
-
 
 ###########################################################
 # a number of constructors: fibonacci, append, axisvalues &
