@@ -48,7 +48,7 @@ sub import {
         if $cmd eq 'makestub';
     return $class->handle_distdir(@ARGV)
         if $cmd eq 'distdir';
-    return $class->handle_fixblib()
+    return $class->handle_fixblib(@ARGV)
         if $cmd eq 'fixblib';
     return $class->handle_makeblibdyna(@ARGV)
         if $cmd eq 'makeblibdyna';
@@ -165,7 +165,7 @@ $this_mangled :
 \t\$(ABSPERLRUN) -Iinc -MInline::Module=makeblibproxy -e 1 -- $module
 \t\$(ABSPERLRUN) -Iinc -Ilib -Iblib/lib -MInline=Config,directory,$inline_build_path,build_noisy,1 -M$module -e 1 --
 \t\$(ABSPERLRUN) -Iinc -MInline::Module=makeblibdyna -e 1 -- $module
-\t\$(ABSPERLRUN) -Iinc -MInline::Module=fixblib -e 1 --
+\t\$(ABSPERLRUN) -Iinc -MInline::Module=fixblib -e 1 -- $module
 ...
     }
 
@@ -236,26 +236,22 @@ sub handle_makeblibproxy {
 }
 
 sub handle_fixblib {
-    my ($class) = @_;
+    my ($class, $module) = @_;
     DEBUG "Inline::Module::handle_fixblib(@_)";
     my $ext = $Config::Config{dlext};
     -d 'blib'
         or die "Inline::Module::fixblib expected to find 'blib' directory";
-    File::Find::find({
-        wanted => sub {
-            -f or return;
-            return unless m!\.$ext$!;
-            my $blib_ext = $_;
-            $blib_ext =~ s!^$inline_build_path/lib!blib/arch! or die;
-            my $blib_ext_dir = $blib_ext;
-            $blib_ext_dir =~ s!(.*)/.*!$1! or die;
-            File::Path::mkpath $blib_ext_dir;
-            DEBUG "handle_fixblib copy $_ -> $blib_ext";
-            unlink $blib_ext;
-            File::Copy::cp $_, $blib_ext; # not ::copy to preserve perms
-        },
-        no_chdir => 1,
-    }, "$inline_build_path/lib/auto");
+    my $filepath = $module;
+    $filepath =~ s!::!/!g;
+    $filepath = "auto/$filepath/Inline/Inline.$ext";
+    my $built_loc = "$inline_build_path/lib/$filepath";
+    my $install_loc = "blib/arch/$filepath";
+    my $dirpath = $install_loc;
+    $dirpath =~ s!(.*)/.*!$1! or die;
+    File::Path::mkpath($dirpath);
+    DEBUG "handle_fixblib copy $built_loc -> $install_loc";
+    unlink $install_loc;
+    File::Copy::cp $built_loc, $install_loc; # not ::copy to preserve perms
 }
 
 #------------------------------------------------------------------------------
