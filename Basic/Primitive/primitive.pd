@@ -1218,8 +1218,8 @@ sub grandom { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->grandom : PDLA->
 sub PDLA::grandom {
    my $class = shift;
    my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
-   use PDLA::Math 'ndtri';
-   $x .= ndtri(randsym($x));
+   require PDLA::Math;
+   $x .= PDLA::Math::ndtri(randsym($x));
    return $x;
 }
 
