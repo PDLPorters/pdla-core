@@ -165,6 +165,23 @@ footprint within cache as long as possible on most modern CPUs.
 
 For usage, see L<x|/x>, a description of the overloaded 'x' operator
 
+=cut
+
+sub PDLA::matmult {
+    my ($x,$y,$c) = @_;
+    $y = pdl($y) unless eval { $y->isa('PDLA') };
+    $c = PDLA->null unless eval { $c->isa('PDLA') };
+    while($x->getndims < 2) {$x = $x->dummy(-1)}
+    while($y->getndims < 2) {$y = $y->dummy(-1)}
+    return ($c .= $x * $y) if( ($x->dim(0)==1 && $x->dim(1)==1) ||
+                               ($y->dim(0)==1 && $y->dim(1)==1) );
+    if($y->dim(1) != $x->dim(0)) {
+        barf(sprintf("Dim mismatch in matmult of [%dx%d] x [%dx%d]: %d != %d",$x->dim(0),$x->dim(1),$y->dim(0),$y->dim(1),$x->dim(0),$y->dim(1)));
+    }
+    PDLA::_matmult_int($x,$y,$c);
+    $c;
+}
+
 =head2 innerwt
 
 =for sig
@@ -349,6 +366,20 @@ WARNING: C<conv1d> processes bad values in its inputs as
 the numeric value of C<< $pdl->badvalue >> so it is not
 recommended for processing pdls with bad values in them
 unless special care is taken.
+
+=cut
+
+sub PDLA::conv1d {
+   my $opt = pop @_ if ref($_[$#_]) eq 'HASH';
+   die 'Usage: conv1d( a(m), kern(p), [o]b(m), {Options} )'
+      if $#_<1 || $#_>2;
+   my($x,$kern) = @_;
+   my $c = $#_ == 2 ? $_[2] : PDLA->null;
+   &PDLA::_conv1d_int($x,$kern,$c,
+		     !(defined $opt && exists $$opt{Boundary}) ? 0 :
+		     lc $$opt{Boundary} eq "reflect");
+   return $c;
+}
 
 =head2 in
 
@@ -594,6 +625,18 @@ sub PDLA::uniqvec {
 
 clip (threshold) C<$a> by C<$b> (C<$b> is upper bound)
 
+=cut
+
+sub PDLA::hclip {
+   my ($x,$y) = @_;
+   my $c;
+   if ($x->is_inplace) {
+       $x->set_inplace(0); $c = $x;
+   } elsif ($#_ > 1) {$c=$_[2]} else {$c=PDLA->nullcreate($x)}
+   &PDLA::_hclip_int($x,$y,$c);
+   return $c;
+}
+
 =head2 lclip
 
 =for sig
@@ -601,6 +644,18 @@ clip (threshold) C<$a> by C<$b> (C<$b> is upper bound)
   Signature: (a(); b(); [o] c())
 
 clip (threshold) C<$a> by C<$b> (C<$b> is lower bound)
+
+=cut
+
+sub PDLA::lclip {
+   my ($x,$y) = @_;
+   my $c;
+   if ($x->is_inplace) {
+       $x->set_inplace(0); $c = $x;
+   } elsif ($#_ > 1) {$c=$_[2]} else {$c=PDLA->nullcreate($x)}
+   &PDLA::_lclip_int($x,$y,$c);
+   return $c;
+}
 
 =head2 clip
 
@@ -618,6 +673,40 @@ Clip (threshold) a piddle by (optional) upper or lower bounds.
 clip handles bad values since it is just a
 wrapper around L<hclip|/hclip> and
 L<lclip|/lclip>.
+
+=cut
+
+*clip = \&PDLA::clip;
+sub PDLA::clip {
+  my($x, $l, $h) = @_;
+  my $d;
+  unless(defined($l) || defined($h)) {
+      # Deal with pathological case
+      if($x->is_inplace) {
+	  $x->set_inplace(0);
+	  return $x;
+      } else {
+	  return $x->copy;
+      }
+  }
+  if($x->is_inplace) {
+      $x->set_inplace(0); $d = $x
+  } elsif ($#_ > 2) {
+      $d=$_[3]
+  } else {
+      $d = PDLA->nullcreate($x);
+  }
+  if(defined($l) && defined($h)) {
+      &PDLA::_clip_int($x,$l,$h,$d);
+  } elsif( defined($l) ) {
+      &PDLA::_lclip_int($x,$l,$d);
+  } elsif( defined($h) ) {
+      &PDLA::_hclip_int($x,$h,$d);
+  } else {
+      die "This can't happen (clip contingency) - file a bug";
+  }
+  return $d;
+}
 
 =head2 wtstat
 
@@ -699,6 +788,24 @@ use C<clump(-1)> directly on the piddle or call C<stats>.
 
 Bad values are simply ignored in the calculation, effectively reducing
 the sample size.  If all data are bad then the output data are marked bad.
+
+=cut
+
+sub PDLA::statsover {
+   barf('Usage: ($mean,[$prms, $median, $min, $max, $adev, $rms]) = statsover($data,[$weights])') if $#_>1;
+   my ($data, $weights) = @_;
+   $weights = $data->ones() if !defined($weights);
+   my $median = $data->medover();
+   my $mean = PDLA->nullcreate($data);
+   my $rms = PDLA->nullcreate($data);
+   my $min = PDLA->nullcreate($data);
+   my $max = PDLA->nullcreate($data);
+   my $adev = PDLA->nullcreate($data);
+   my $prms = PDLA->nullcreate($data);
+   &PDLA::_statsover_int($data, $weights, $mean, $prms, $median, $min, $max, $adev, $rms);
+   return $mean unless wantarray;
+   return ($mean, $prms, $median, $min, $max, $adev, $rms);
+}
 
 =head2 stats
 
@@ -894,6 +1001,16 @@ upper limit is put in the last bin.
 
 Constructor - a vector with Fibonacci's sequence
 
+=cut
+
+sub fibonacci { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->fibonacci : PDLA->fibonacci(@_) }
+sub PDLA::fibonacci{
+   my $class = shift;
+   my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
+   &PDLA::_fibonacci_int($x->clump(-1));
+   return $x;
+}
+
 =head2 append
 
 =for sig
@@ -1032,6 +1149,16 @@ You can use the perl function L<srand|perlfunc/srand> to seed the random
 generator. For further details consult Perl's  L<srand|perlfunc/srand>
 documentation.
 
+=cut
+
+sub random { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->random : PDLA->random(@_) }
+sub PDLA::random {
+   my $class = shift;
+   my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
+   &PDLA::_random_int($x);
+   return $x;
+}
+
 =head2 randsym
 
 =for ref
@@ -1052,6 +1179,16 @@ i.e. one can specify dimensions, types or give a template.
 You can use the perl function L<srand|perlfunc/srand> to seed the random
 generator. For further details consult Perl's  L<srand|perlfunc/srand>
 documentation.
+
+=cut
+
+sub randsym { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->randsym : PDLA->randsym(@_) }
+sub PDLA::randsym {
+   my $class = shift;
+   my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
+   &PDLA::_randsym_int($x);
+   return $x;
+}
 
 =head2 grandom
 
@@ -1876,6 +2013,16 @@ L<whichND|/whichND> returns N-D indices into a multidimensional PDLA.
  pdla> $indx = which($x>6); p $indx
  [7 8 9]
 
+=cut
+
+sub which { my ($this,$out) = @_;
+  $this = $this->flat;
+  $out = $this->nullcreate unless defined $out;
+  PDLA::_which_int($this,$out);
+  return $out;
+}
+*PDLA::which = \&which;
+
 =head2 which_both
 
 =for sig
@@ -1900,6 +2047,17 @@ C<$c_i>.
  pdla> ($small, $big) = which_both ($x >= 5); p "$small\n $big"
  [5 6 7 8 9]
  [0 1 2 3 4]
+
+=cut
+
+sub which_both { my ($this,$outi,$outni) = @_;
+  $this = $this->flat;
+  $outi = $this->nullcreate unless defined $outi;
+  $outni = $this->nullcreate unless defined $outni;
+  PDLA::_which_both_int($this,$outi,$outni);
+  return wantarray ? ($outi,$outni) : $outi;
+}
+*PDLA::which_both = \&which_both;
 
 =head2 where
 
@@ -2438,22 +2596,7 @@ pp_def(
 pp_def('matmult',
 	HandleBad=>0,
 	Pars => 'a(t,h); b(w,t); [o]c(w,h);',
-	PMCode => <<'EOPM',
-sub PDLA::matmult {
-    my ($x,$y,$c) = @_;
-    $y = pdl($y) unless eval { $y->isa('PDLA') };
-    $c = PDLA->null unless eval { $c->isa('PDLA') };
-    while($x->getndims < 2) {$x = $x->dummy(-1)}
-    while($y->getndims < 2) {$y = $y->dummy(-1)}
-    return ($c .= $x * $y) if( ($x->dim(0)==1 && $x->dim(1)==1) ||
-                               ($y->dim(0)==1 && $y->dim(1)==1) );
-    if($y->dim(1) != $x->dim(0)) {
-        barf(sprintf("Dim mismatch in matmult of [%dx%d] x [%dx%d]: %d != %d",$x->dim(0),$x->dim(1),$y->dim(0),$y->dim(1),$x->dim(0),$y->dim(1)));
-    }
-    PDLA::_matmult_int($x,$y,$c);
-    $c;
-}
-EOPM
+	PMCode => '#', # triggers the _int thing as true
 	Code => <<'EOC',
 	PDLA_Indx ih, iw, it, ow, oh, ot, wlim, hlim, tlim;
         $GENERIC() *ad, *bd, *cd;
@@ -2715,19 +2858,7 @@ pp_def('conv1d',
         Pars => 'a(m); kern(p); [o]b(m);',
         OtherPars => 'int reflect;',
         HandleBad => 0,
-        PMCode => '
-sub PDLA::conv1d {
-   my $opt = pop @_ if ref($_[$#_]) eq \'HASH\';
-   die \'Usage: conv1d( a(m), kern(p), [o]b(m), {Options} )\'
-      if $#_<1 || $#_>2;
-   my($x,$kern) = @_;
-   my $c = $#_ == 2 ? $_[2] : PDLA->null;
-   &PDLA::_conv1d_int($x,$kern,$c,
-		     !(defined $opt && exists $$opt{Boundary}) ? 0 :
-		     lc $$opt{Boundary} eq "reflect");
-   return $c;
-}
-',
+        PMCode => '#', # triggers the _int thing as true
         Code => '
            int i,i1,i2,poff,pflip;
            double tmp;
@@ -2778,17 +2909,7 @@ for my $opt (
             } else {
 	       $c() = ($a() '.$op.' $b()) ? $b() : $a();
             }',
-          PMCode=><<"EOD",
-sub PDLA::$name {
-   my (\$x,\$y) = \@_;
-   my \$c;
-   if (\$x->is_inplace) {
-       \$x->set_inplace(0); \$c = \$x;
-   } elsif (\$#_ > 1) {\$c=\$_[2]} else {\$c=PDLA->nullcreate(\$x)}
-   &PDLA::_${name}_int(\$x,\$y,\$c);
-   return \$c;
-}
-EOD
+	   PMCode => '#', # triggers the _int thing as true
     ); # pp_def $name
 
 } # for: my $opt
@@ -2806,39 +2927,7 @@ pp_def(
            $c() = ( $a() > $h() )   ?   $h()   :  ( $a() < $l()   ?   $l()   :   $a()   );
          }
 EOBC
-       PMCode => <<'EOPM',
-*clip = \&PDLA::clip;
-sub PDLA::clip {
-  my($x, $l, $h) = @_;
-  my $d;
-  unless(defined($l) || defined($h)) {
-      # Deal with pathological case
-      if($x->is_inplace) {
-	  $x->set_inplace(0);
-	  return $x;
-      } else {
-	  return $x->copy;
-      }
-  }
-  if($x->is_inplace) {
-      $x->set_inplace(0); $d = $x
-  } elsif ($#_ > 2) {
-      $d=$_[3]
-  } else {
-      $d = PDLA->nullcreate($x);
-  }
-  if(defined($l) && defined($h)) {
-      &PDLA::_clip_int($x,$l,$h,$d);
-  } elsif( defined($l) ) {
-      &PDLA::_lclip_int($x,$l,$d);
-  } elsif( defined($h) ) {
-      &PDLA::_hclip_int($x,$h,$d);
-  } else {
-      die "This can't happen (clip contingency) - file a bug";
-  }
-  return $d;
-}
-EOPM
+	PMCode => '#', # triggers the _int thing as true
     ); # end of clip pp_def call
 
 ############################################################
@@ -2966,23 +3055,7 @@ pp_def('statsover',
            $SETBAD(prms()); $PDLASTATESETBAD(prms);
          }',
       CopyBadStatusCode => '',
-      PMCode => '
-sub PDLA::statsover {
-   barf(\'Usage: ($mean,[$prms, $median, $min, $max, $adev, $rms]) = statsover($data,[$weights])\') if $#_>1;
-   my ($data, $weights) = @_;
-   $weights = $data->ones() if !defined($weights);
-   my $median = $data->medover();
-   my $mean = PDLA->nullcreate($data);
-   my $rms = PDLA->nullcreate($data);
-   my $min = PDLA->nullcreate($data);
-   my $max = PDLA->nullcreate($data);
-   my $adev = PDLA->nullcreate($data);
-   my $prms = PDLA->nullcreate($data);
-   &PDLA::_statsover_int($data, $weights, $mean, $prms, $median, $min, $max, $adev, $rms);
-   return $mean unless wantarray;
-   return ($mean, $prms, $median, $min, $max, $adev, $rms);
-}
-',
+      PMCode => '#', # triggers the _int thing as true
 );
 
 for(
@@ -3118,15 +3191,7 @@ pp_def($_->{Name},
 pp_def('fibonacci',
         Pars => '[o]x(n);',
 	PMFunc=>'',
-	PMCode=><<'EOD',
-sub fibonacci { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->fibonacci : PDLA->fibonacci(@_) }
-sub PDLA::fibonacci{
-   my $class = shift;
-   my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
-   &PDLA::_fibonacci_int($x->clump(-1));
-   return $x;
-}
-EOD
+	PMCode => '#', # triggers the _int thing as true
      Code => '
         PDLA_Indx i=0;
         $GENERIC() x1, x2;
@@ -3179,15 +3244,7 @@ pp_def(
 	Code =>
 	'$a() = Drand01();',
 	'NoPthread' => 1, # random isn't threadsafe
-	PMCode=><<'EOD',
-sub random { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->random : PDLA->random(@_) }
-sub PDLA::random {
-   my $class = shift;
-   my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
-   &PDLA::_random_int($x);
-   return $x;
-}
-EOD
+	PMCode => '#', # triggers the _int thing as true
 );
 
 pp_def(
@@ -3199,15 +3256,7 @@ pp_def(
 	'double tmp;
 	 do tmp = Drand01(); while (tmp == 0.0); /* 0 < tmp < 1 */
          $a() = tmp;',
-	PMCode=><<'EOD',
-sub randsym { ref($_[0]) && ref($_[0]) ne 'PDLA::Type' ? $_[0]->randsym : PDLA->randsym(@_) }
-sub PDLA::randsym {
-   my $class = shift;
-   my $x = scalar(@_)? $class->new_from_specification(@_) : $class->new_or_inplace;
-   &PDLA::_randsym_int($x);
-   return $x;
-}
-EOD
+	PMCode => '#', # triggers the _int thing as true
 );
 
 use Text::Tabs qw[ expand ];
@@ -3446,38 +3495,19 @@ use PDLA::Config;
 	  Variables => 'int dm=0;',
 	  Elseclause => "",
 	  Autosize => '$SIZE(m) = sum;',
-	  PMCode=><<'EOD',
-   sub which { my ($this,$out) = @_;
-		$this = $this->flat;
-		$out = $this->nullcreate unless defined $out;
-		PDLA::_which_int($this,$out);
-		return $out;
-   }
-   *PDLA::which = \&which;
-EOD
 	  },
 	 {Name => 'which_both',
 	  Pars => 'mask(n); indx [o] inds(m); indx [o]notinds(q)',
 	  Variables => 'int dm=0; int dm2=0;',
 	  Elseclause => "else { \n          \$notinds(q => dm2)=n; \n           dm2++;\n     }",
 	  Autosize => '$SIZE(m) = sum;'."\n".'	  $SIZE(q) = dpdl->dims[0]-sum;',
-	  PMCode=><<'EOD',
-   sub which_both { my ($this,$outi,$outni) = @_;
-		$this = $this->flat;
-		$outi = $this->nullcreate unless defined $outi;
-		$outni = $this->nullcreate unless defined $outni;
-		PDLA::_which_both_int($this,$outi,$outni);
-		return wantarray ? ($outi,$outni) : $outi;
-   }
-   *PDLA::which_both = \&which_both;
-EOD
 	  }
 	 )
 {
     pp_def($_->{Name},
 	   HandleBad => 1,
 	   Pars => $_->{Pars},
-	   PMCode => $_->{PMCode},
+	   PMCode => '#', # triggers the _int thing as true
 	   Code => $_->{Variables} .
                  'loop(n) %{
 		       if($mask()) {
