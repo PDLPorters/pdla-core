@@ -2125,7 +2125,10 @@ gave to pp_def in the first place. When you wish to eventually invoke the
 PP-generated function, you will need to supply all piddles in the exact
 order specified in the signature: output piddles are not optional, and the
 PP-generated function will not return anything. The obfuscated name that you
-will call is _<funcname>_int.
+will call is _<funcname>_int. If you wish to define the Perl function
+elsewhere (such as in a C<pp_addpm> call), you can give any true value
+for C<PMCode> such as C<#>, and it will still trigger the generation of
+the obfuscated name.
 
 I believe this documentation needs further clarification, but this will have
 to do. :-(
