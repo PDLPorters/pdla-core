@@ -3218,7 +3218,7 @@ $PDLA::PP::deftbl =
 # hmm, need to check on conditional check here (or rather, other bits of code prob need
 # to include it too; see Ops.xs, PDLA::assgn)
 ##
-##           sub { return (defined $_[0]) ? "int \$BADFLAGCACHE() = 0;" : ""; } ],
+##           sub { return (defined $_[0]) ? "int \$BADFLAGCACHE() = 0;" : ""; }
 ##
 ## why have I got a "_HandleBad" condition here? it isn't used in the routine
 ## and isn't required to fire the rule. Or should we actually check the value of
