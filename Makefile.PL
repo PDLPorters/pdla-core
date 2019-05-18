@@ -16,6 +16,10 @@ my ($forcebuild);
 my ($seen_pdlconf);
 my $pdl_conf_file = ''; # apparently for users to change
 
+# the modules in PDLA::LiteF, used in t/core.t
+my @INLINEMODULES = qw(Ops Bad Slices);
+my @COREMODULES = qw(Primitive Ufunc Math MatrixOps);
+
 # build-system globals
 our ($usenan, $bvalflag, $bvalPerPdl);
 
@@ -504,7 +508,7 @@ my %makefile_hash = (
 
   postamble => {
     inline => {
-      module => [ qw(PDLA::Ops PDLA::Bad PDLA::Slices) ],
+      module => [ map "PDLA::$_", @INLINEMODULES ],
       ilsm => 'Inline::Pdlapp',
       bundle => 0,
     },
@@ -656,9 +660,8 @@ sub coretarget {
     # @prereqs are named targets - undef=[]
     # all a left's rights are made concurrently, no sequence - list ALL prereqs
     my @left2rights = (
-        [ build_inline_PDLA_Ops => '$(INST_DYNAMIC)' ],
-        [ build_inline_PDLA_Bad => '$(INST_DYNAMIC)' ],
-        [ build_inline_PDLA_Slices => '$(INST_DYNAMIC)' ],
+        (map [ "build_inline_PDLA_$_" => '$(INST_DYNAMIC)' ],
+          @INLINEMODULES),
         [
             core => [
                 'build_inline',
@@ -666,8 +669,7 @@ sub coretarget {
                     [ 'Basic', $_ ],
                     [ qw(pm_to_blib dynamic) ],
                     [ qw(pm_to_blib $(INST_DYNAMIC)) ],
-                # the modules in PDLA::LiteF, used in t/core.t
-                ] } qw(Primitive Ufunc Math MatrixOps),
+                ] } @COREMODULES,
             ]
         ],
     );
