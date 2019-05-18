@@ -882,7 +882,7 @@ I<any> dimension.
         }',
 );
 
-pp_addpm(<<"EOD");
+pp_addpm(<<'EOD');
 
 =head2 pct
 
@@ -895,21 +895,21 @@ interpolated.
 
 =for usage
 
- \$x = pct(\$data, \$pct);
+ $x = pct($data, $pct);
 
 =cut
 
-*pct = \\&PDLA::pct;
+*pct = \&PDLA::pct;
 sub PDLA::pct {
-	my(\$x, \$p) = \@_; 
-    my \$tmp;
-	\$x->clump(-1)->pctover(\$p, \$tmp=PDLA->nullcreate(\$x));
-	return \$tmp->at();
+	my($x, $p) = @_;
+    my $tmp;
+	$x->clump(-1)->pctover($p, $tmp=PDLA->nullcreate($x));
+	return $tmp->at();
 }
 
 EOD
 
-pp_addpm(<<"EOD");
+pp_addpm(<<'EOD');
 
 =head2 oddpct
 
@@ -922,16 +922,16 @@ result.
 
 =for usage
 
- \$x = oddpct(\$data, \$pct);
+ $x = oddpct($data, $pct);
 
 =cut
 
-*oddpct = \\&PDLA::oddpct;
+*oddpct = \&PDLA::oddpct;
 sub PDLA::oddpct {
-	my(\$x, \$p) = \@_; 
-    my \$tmp;
-	\$x->clump(-1)->oddpctover(\$p, \$tmp=PDLA->nullcreate(\$x));
-	return \$tmp->at();
+	my($x, $p) = @_;
+    my $tmp;
+	$x->clump(-1)->oddpctover($p, $tmp=PDLA->nullcreate($x));
+	return $tmp->at();
 }
 
 EOD
