@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use Test::More;
 use PDLA::LiteF;
-
+use Cwd;
 
 BEGIN {
    plan skip_all => 'This test must be run from t/..' if ! -f 't/func.pdl';
@@ -15,7 +15,7 @@ BEGIN {
 
 $PDLA::debug = 1;
 
-our @PDLALIB = ("t/"); # this means you have to run the test from ../t
+our @PDLALIB = Cwd::abs_path("t");
 
 my $x = long(2 + ones(2,2));
 
