@@ -35,6 +35,21 @@ sub _synonym {
 }
 EOD
 
+pp_add_exported('avgover');
+pp_add_exported('davgover');
+pp_add_exported('pct');
+pp_add_exported('oddpct');
+pp_add_exported('any all');
+pp_add_exported('minmax');
+#pp_add_exported('minmax_ind');
+pp_add_exported('maxover');
+pp_add_exported('maxover_ind');
+pp_add_exported('maxover_n_ind');
+pp_add_exported('minover');
+pp_add_exported('minover_ind');
+pp_add_exported('minover_n_ind');
+pp_add_exported('minmaxover');
+
 # check for bad value support
 use PDLA::Config;
 my $bvalflag = $PDLA::Config{WITH_BADVAL} || 0;
@@ -381,8 +396,6 @@ pp_def(
 	Doc => projectdocs( 'average', 'average', '' ),
 	);
 
-pp_add_exported('PDLA::PP avgover');
-
 pp_addpm(<<'EOD');
 =head2 avgover
 
@@ -420,8 +433,6 @@ pp_def(
 "Unlike L<average|/average>, the calculation is performed in double\n" .
 "precision." ),
 	);
-
-pp_add_exported('PDLA::PP davgover');
 
 pp_addpm(<<'EOD');
 =head2 davgover
@@ -871,7 +882,6 @@ I<any> dimension.
         }',
 );
 
-pp_add_exported('', 'pct');
 pp_addpm(<<"EOD");
 
 =head2 pct
@@ -899,7 +909,6 @@ sub PDLA::pct {
 
 EOD
 
-pp_add_exported('', 'oddpct');
 pp_addpm(<<"EOD");
 
 =head2 oddpct
@@ -997,7 +1006,6 @@ EOD
 
 } # for $op
 
-pp_add_exported('','any all');
 pp_addpm(<<'EOPM');
 
 =head2 any
@@ -1092,10 +1100,6 @@ sub PDLA::minmax {
 }
 
 EOD
-
-pp_add_exported('', 'minmax');
-#pp_add_exported('', 'minmax_ind');
-
 
 # move all bad values to the end of the array
 #
@@ -1418,8 +1422,6 @@ otherwise the bad flag is cleared for the output piddle.',
 
 } # foreach: $which
 
-pp_add_exported('PDLA::PP maxover');
-
 pp_addpm(<<'EOD');
 =head2 maxover
 
@@ -1431,8 +1433,6 @@ pp_addpm(<<'EOD');
 
 _synonym(qw(maxover maximum));
 EOD
-
-pp_add_exported('PDLA::PP maxover_ind');
 
 pp_addpm(<<'EOD');
 =head2 maxover_ind
@@ -1446,8 +1446,6 @@ pp_addpm(<<'EOD');
 _synonym(qw(maxover_ind maximum_ind));
 EOD
 
-pp_add_exported('PDLA::PP maxover_n_ind');
-
 pp_addpm(<<'EOD');
 =head2 maxover_n_ind
 
@@ -1459,8 +1457,6 @@ pp_addpm(<<'EOD');
 
 _synonym(qw(maxover_n_ind maximum_n_ind));
 EOD
-
-pp_add_exported('PDLA::PP minover');
 
 pp_addpm(<<'EOD');
 =head2 minover
@@ -1474,8 +1470,6 @@ pp_addpm(<<'EOD');
 _synonym(qw(minover minimum));
 EOD
 
-pp_add_exported('PDLA::PP minover_ind');
-
 pp_addpm(<<'EOD');
 =head2 minover_ind
 
@@ -1487,8 +1481,6 @@ pp_addpm(<<'EOD');
 
 _synonym(qw(minover_ind minimum_ind));
 EOD
-
-pp_add_exported('PDLA::PP minover_n_ind');
 
 pp_addpm(<<'EOD');
 =head2 minover_n_ind
@@ -1581,8 +1573,6 @@ be set bad, along with their bad flag.
 Otherwise they will have their bad flags cleared,
 since they will not contain any bad values.',
 	); # pp_def minmaximum
-
-pp_add_exported('PDLA::PP minmaxover');
 
 pp_addpm(<<'EOD');
 =head2 minmaxover
