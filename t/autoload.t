@@ -3,22 +3,14 @@
 # Test PDLA::AutoLoader
 
 use strict;
-
+use warnings;
 use Test::More;
-
 use PDLA::LiteF;
 
+
 BEGIN {
-
-   if ( ! -f 't/func.pdl' ) {
-      plan skip_all => 'This test must be run from ../t';
-   }
-   else {
-      plan tests => 3;
-   }
-
+   plan skip_all => 'This test must be run from t/..' if ! -f 't/func.pdl';
    use_ok('PDLA::AutoLoader');
-
 }
 
 $PDLA::debug = 1;
@@ -45,3 +37,5 @@ SKIP: {
       is($tilde, $get, "Check tilde expansion (Got '$echo' from echo ~");
    }
 }
+
+done_testing;
