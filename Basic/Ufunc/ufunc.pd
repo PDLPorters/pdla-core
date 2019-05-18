@@ -33,6 +33,18 @@ sub _synonym {
   no strict 'refs';
   *{"$synonym"} = *{"PDLA::$synonym"} = \&{"PDLA::$realname"};
 }
+
+# if extra params passed, like with *pct, prepended to $tmp arg
+sub _synonymish {
+  my ($synonym, $realname) = @_;
+  no strict 'refs';
+  *$synonym = *{"PDLA::$synonym"} = sub {
+    my $x = shift;
+    my $tmp = PDLA->nullcreate($x);
+    $x->clump(-1)->$realname(@_, $tmp);
+    return $tmp->at();
+  }
+}
 EOD
 
 pp_add_exported('avgover');
@@ -899,14 +911,7 @@ interpolated.
 
 =cut
 
-*pct = \&PDLA::pct;
-sub PDLA::pct {
-	my($x, $p) = @_;
-    my $tmp;
-	$x->clump(-1)->pctover($p, $tmp=PDLA->nullcreate($x));
-	return $tmp->at();
-}
-
+_synonymish(qw(pct pctover));
 EOD
 
 pp_addpm(<<'EOD');
@@ -926,16 +931,8 @@ result.
 
 =cut
 
-*oddpct = \&PDLA::oddpct;
-sub PDLA::oddpct {
-	my($x, $p) = @_;
-    my $tmp;
-	$x->clump(-1)->oddpctover($p, $tmp=PDLA->nullcreate($x));
-	return $tmp->at();
-}
-
+_synonymish(qw(oddpct oddpctover));
 EOD
-
 
 # Generate small ops functions to do entire array
 #
@@ -995,13 +992,7 @@ EOD
 } # if: bvalflag
 
    pp_addpm(<<"EOD");
-
-*$name = \\&PDLA::$name;
-sub PDLA::$name {
-	my(\$x) = \@_; my \$tmp;
-	\$x->clump(-1)->${func}( \$tmp=PDLA->nullcreate(\$x) );
-	return \$tmp->at();
-}
+_synonymish(qw($name $func));
 EOD
 
 } # for $op
