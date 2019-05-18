@@ -142,7 +142,7 @@ sub postamble {
         $class->make_stub_modules(@{$meta->{stub}});
     }
 
-    my @mangled = _mangle_name(@$code_modules);
+    my @so_names = inline_so_name(@$code_modules);
     my $section = <<"...";
 clean ::
 \t- \$(RM_RF) $inline_build_path
@@ -155,13 +155,13 @@ distdir_inline : create_distdir
 # Inline currently only supports dynamic
 dynamic :: build_inline
 
-build_inline : @mangled
+build_inline : @so_names
 ...
     for my $module (@$code_modules) {
-        my ($this_mangled) = _mangle_name($module);
+        my ($this_so_name) = inline_so_name($module);
         $section .= <<"...";
 
-$this_mangled :
+$this_so_name :
 \t\$(ABSPERLRUN) -Iinc -MInline::Module=makeblibproxy -e 1 -- $module
 \t\$(ABSPERLRUN) -Iinc -Ilib -Iblib/lib -MInline=Config,directory,$inline_build_path,build_noisy,1 -M$module -e 1 --
 \t\$(ABSPERLRUN) -Iinc -MInline::Module=makeblibdyna -e 1 -- $module
@@ -172,8 +172,12 @@ $this_mangled :
     return $section;
 }
 
-sub _mangle_name {
-  map { my $n = $_; $n =~ s#:+#_#g; "build_inline_$n" } @_;
+sub inline_so_name {
+  map {
+    my @n = split '::', $_;
+    # last is because stem is both dirname, then filename within
+    join '/', '$(INST_ARCHLIB)/auto', @n, $n[-1].'.$(DLEXT)';
+  } @_;
 }
 
 #------------------------------------------------------------------------------

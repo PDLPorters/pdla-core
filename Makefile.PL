@@ -660,8 +660,8 @@ sub coretarget {
     # @prereqs are named targets - undef=[]
     # all a left's rights are made concurrently, no sequence - list ALL prereqs
     my @left2rights = (
-        (map [ "build_inline_PDLA_$_" => '$(INST_DYNAMIC)' ],
-          @INLINEMODULES),
+        (map [ Inline::Module::inline_so_name($_) => '$(INST_DYNAMIC)' ],
+          map "PDLA::$_", @INLINEMODULES),
         [
             core => [
                 'build_inline',
