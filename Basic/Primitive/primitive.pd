@@ -19,7 +19,8 @@ pp_add_exported('', 'matmult');
 
 pp_addpm({At=>'Top'},<<'EOD');
 
-use PDLA::Slices;
+use strict;
+use warnings;
 use Carp;
 
 =head1 NAME
@@ -1864,7 +1865,7 @@ sub PDLA::interpND {
 	  my $s0 = $gradient->slice("(0)");   # Just-under-gradient
 	  my $s1 = $gradient->slice("(1)");   # Just-over-gradient
 
-	  $bb = $y->slice("($i)");
+	  my $bb = $y->slice("($i)");
 
 	  # Collapse the sample...
 	  $samp = ( $a0 +
@@ -2294,7 +2295,7 @@ sub PDLA::whichND {
     return $mask ? pdl(indx,0) : PDLA::new_from_specification('PDLA',indx,0);
   }
 
-  $ind = $mask->flat->which->dummy(0,$mask->getndims)->make_physical;
+  my $ind = $mask->flat->which->dummy(0,$mask->getndims)->make_physical;
   if($ind->nelem==0) {
       # In the empty case, explicitly return the correct type of structured empty
       return PDLA::new_from_specification('PDLA',indx,$mask->ndims, 0);
