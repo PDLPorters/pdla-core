@@ -27,6 +27,12 @@ to many of the functions in this module.
 
 use PDLA::Slices;
 use Carp;
+
+sub _synonym {
+  my ($synonym, $realname) = @_;
+  no strict 'refs';
+  *{"$synonym"} = *{"PDLA::$synonym"} = \&{"PDLA::$realname"};
+}
 EOD
 
 # check for bad value support
@@ -375,8 +381,6 @@ pp_def(
 	Doc => projectdocs( 'average', 'average', '' ),
 	);
 
-pp_addpm("*PDLA::avgover = \\&PDLA::average;\n");
-pp_addpm("*avgover = \\&PDLA::average;\n");
 pp_add_exported('PDLA::PP avgover');
 
 pp_addpm(<<'EOD');
@@ -388,6 +392,7 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(avgover average));
 EOD
 
 
@@ -416,8 +421,6 @@ pp_def(
 "precision." ),
 	);
 
-pp_addpm("*PDLA::davgover = \\&PDLA::daverage;\n");
-pp_addpm("*davgover = \\&PDLA::daverage;\n");
 pp_add_exported('PDLA::PP davgover');
 
 pp_addpm(<<'EOD');
@@ -429,6 +432,7 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(davgover daverage));
 EOD
 
 
@@ -1010,6 +1014,7 @@ Useful in conditional expressions:
 
 =cut
 
+_synonym(qw(any or));
 EOPM
 
     if ( $bvalflag ) {
@@ -1020,13 +1025,10 @@ See L<or|/or> for comments on what happens when all elements
 in the check are bad.
 
 =cut
-
 EOPM
 } # if: bvalflag
 
 pp_addpm(<<'EOPM');
-*any = \&or;
-*PDLA::any = \&PDLA::or;
 
 =head2 all
 
@@ -1042,6 +1044,7 @@ Useful in conditional expressions:
 
 =cut
 
+_synonym(qw(all and));
 EOPM
 
     if ( $bvalflag ) {
@@ -1052,18 +1055,10 @@ See L<and|/and> for comments on what happens when all elements
 in the check are bad.
 
 =cut
-
 EOPM
 } # IF: BVALFLAG
 
-pp_addpm(<<'EOPM');
-
-*all = \&and;
-*PDLA::all = \&PDLA::and;
-
-EOPM
-
-pp_addpm(<<'EOD'
+pp_addpm(<<'EOD');
 
 =head2 minmax
 
@@ -1097,7 +1092,6 @@ sub PDLA::minmax {
 }
 
 EOD
-);
 
 pp_add_exported('', 'minmax');
 #pp_add_exported('', 'minmax_ind');
@@ -1424,8 +1418,6 @@ otherwise the bad flag is cleared for the output piddle.',
 
 } # foreach: $which
 
-pp_addpm("*PDLA::maxover = \\&PDLA::maximum;\n");
-pp_addpm("*maxover = \\&PDLA::maximum;\n");
 pp_add_exported('PDLA::PP maxover');
 
 pp_addpm(<<'EOD');
@@ -1437,10 +1429,9 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(maxover maximum));
 EOD
 
-pp_addpm("*PDLA::maxover_ind = \\&PDLA::maximum_ind;\n");
-pp_addpm("*maxover_ind = \\&PDLA::maximum_ind;\n");
 pp_add_exported('PDLA::PP maxover_ind');
 
 pp_addpm(<<'EOD');
@@ -1452,10 +1443,9 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(maxover_ind maximum_ind));
 EOD
 
-pp_addpm("*PDLA::maxover_n_ind = \\&PDLA::maximum_n_ind;\n");
-pp_addpm("*maxover_n_ind = \\&PDLA::maximum_n_ind;\n");
 pp_add_exported('PDLA::PP maxover_n_ind');
 
 pp_addpm(<<'EOD');
@@ -1467,10 +1457,9 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(maxover_n_ind maximum_n_ind));
 EOD
 
-pp_addpm("*PDLA::minover = \\&PDLA::minimum;\n");
-pp_addpm("*minover = \\&PDLA::minimum;\n");
 pp_add_exported('PDLA::PP minover');
 
 pp_addpm(<<'EOD');
@@ -1482,10 +1471,9 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(minover minimum));
 EOD
 
-pp_addpm("*PDLA::minover_ind = \\&PDLA::minimum_ind;\n");
-pp_addpm("*minover_ind = \\&PDLA::minimum_ind;\n");
 pp_add_exported('PDLA::PP minover_ind');
 
 pp_addpm(<<'EOD');
@@ -1497,10 +1485,9 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(minover_ind minimum_ind));
 EOD
 
-pp_addpm("*PDLA::minover_n_ind = \\&PDLA::minimum_n_ind;\n");
-pp_addpm("*minover_n_ind = \\&PDLA::minimum_n_ind;\n");
 pp_add_exported('PDLA::PP minover_n_ind');
 
 pp_addpm(<<'EOD');
@@ -1512,6 +1499,7 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(minover_n_ind minimum_n_ind));
 EOD
 
 # removed IsNaN handling, even from Code section
@@ -1594,8 +1582,6 @@ Otherwise they will have their bad flags cleared,
 since they will not contain any bad values.',
 	); # pp_def minmaximum
 
-pp_addpm("*PDLA::minmaxover = \\&PDLA::minmaximum;\n");
-pp_addpm("*minmaxover = \\&PDLA::minmaximum;\n");
 pp_add_exported('PDLA::PP minmaxover');
 
 pp_addpm(<<'EOD');
@@ -1607,6 +1593,7 @@ pp_addpm(<<'EOD');
 
 =cut
 
+_synonym(qw(minmaxover minmaximum));
 EOD
 
 pp_addpm({At=>'Bot'},<<'EOD');
