@@ -30,7 +30,7 @@ is $@, '', 'bind no error';
 my $x = sequence(3,3);
 my $y = $x->testinc;
 is myshape($x), myshape($y), 'myshape eq';
-ok(all $y == $x+1, '==');
+ok(all($y == $x+1), '==');
 
 sub myshape { join ',', $_[0]->dims }
 

@@ -1,4 +1,5 @@
  - reincorporate Inline::Pdlapp to use for build system
+ - ufunc synonyms will fail if given extra args - this is a good thing
 
 2.019107 2019-04-28
  - update Inline dep for ILSM-finding bug

@@ -149,7 +149,7 @@ $c = $x->double;
 
 ok(isempty $x, "isempty");                                     #20
 ok($y->avg == 0, "avg of Empty");                              #21
-ok(! any isfinite $c->average, "isfinite of Empty");           #22
+ok(! any(isfinite $c->average), "isfinite of Empty");           #22
 
 ##############################
 # Test uniqvec
